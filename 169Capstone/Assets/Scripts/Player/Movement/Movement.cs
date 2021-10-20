@@ -6,6 +6,9 @@ public class Movement : MonoBehaviour
 {
     public float speed = 5;
     public CharacterController player;
+    public float smoothing = 0.1f;
+
+    private float smoothingVelocity;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,12 +18,15 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
-        Vector3 direction = new Vector3(horizontal, 0, vertical).normalized;
+        float vertical = Input.GetAxisRaw("Horizontal");
+        float horizontal = Input.GetAxisRaw("Vertical");
+        Vector3 direction = new Vector3(-horizontal, 0, vertical).normalized;
 
         if(direction.magnitude >= 0.1f)
         {
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothingVelocity, smoothing);
+            transform.rotation = Quaternion.Euler(0, angle, 0);
             player.Move(direction * speed * Time.deltaTime);
         }
     }
