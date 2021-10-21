@@ -24,6 +24,25 @@ public class Movement : MonoBehaviour
 
         if(direction.magnitude >= 0.1f)
         {
+            float rad = 45 * Mathf.Deg2Rad;
+            if(horizontal > 0)
+            {
+                direction.z -= rad;
+            }
+            else if(horizontal < 0)
+            {
+                direction.z += rad;
+            }
+
+            if(vertical > 0)
+            {
+                direction.x -= rad;
+            }
+            else if(vertical < 0)
+            {
+                direction.x += rad;
+            }
+            
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothingVelocity, smoothing);
             transform.rotation = Quaternion.Euler(0, angle, 0);
