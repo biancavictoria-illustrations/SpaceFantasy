@@ -15,7 +15,12 @@ public class AnimationStateController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
+        if (Input.GetButtonDown("Fire1"))
+        {
+            animator.SetBool("IsAttacking", true);
+
+        }
+        if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
         {
             animator.SetBool("IsRunning", true);
         }
@@ -25,4 +30,12 @@ public class AnimationStateController : MonoBehaviour
         }
         
     }
+
+    public void TurnOffAttack()
+    {
+        Debug.Log("Done attacking");
+        animator.SetBool("IsAttacking", false);
+    }
+
 }
+
