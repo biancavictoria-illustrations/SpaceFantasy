@@ -17,7 +17,9 @@ public class AnimationStateController : MonoBehaviour
     {
         if (Input.GetButtonDown("Fire1"))
         {
-            animator.SetBool("IsAttacking", true);
+            //animator.SetBool("IsAttacking", true);
+            //Debug.Log(animator.GetLayerIndex("Slashing"));
+            animator.SetLayerWeight(1, 1);
 
         }
         if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
@@ -34,7 +36,8 @@ public class AnimationStateController : MonoBehaviour
     public void TurnOffAttack()
     {
         Debug.Log("Done attacking");
-        animator.SetBool("IsAttacking", false);
+        //animator.SetBool("IsAttacking", false);
+        animator.SetLayerWeight(1, 0);
     }
 
 }
