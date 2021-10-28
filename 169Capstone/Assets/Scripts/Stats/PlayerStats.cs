@@ -14,6 +14,11 @@ public class PlayerStats : EntityStats
 
             const float strengthDamagePerStrengthPoint = 1f;
             const float defenseBonusPerStrengthPoint = 0.1f;
+
+            public int Strength()
+            {
+                return strength;
+            }
         #endregion
 
         #region Dexterity
@@ -23,6 +28,11 @@ public class PlayerStats : EntityStats
 
             const float dexterityDamagePerDexterityPoint = 1f;
             const float dodgeBonusPerDexterityPoint = 0.1f;
+
+            public int Dexterity()
+            {
+                return dexterity;
+            }
         #endregion
 
         #region Constitution
@@ -32,6 +42,11 @@ public class PlayerStats : EntityStats
 
             const float maxHitPointBonusPerConstitutionPoint = 3f;
             const float statusResistBonusPerConstitutionPoint = 1f;
+
+            public int Constitution()
+            {
+                return constitution;
+            }
         #endregion
 
         #region Intelligence
@@ -41,6 +56,11 @@ public class PlayerStats : EntityStats
 
             const float intelligenceDamagePerIntelligencePoint = 1f;
             const float critChanceBonusPerIntelligencePoint = 0.5f;
+
+            public int Intelligence()
+            {
+                return intelligence;
+            }
         #endregion
 
         #region Wisdom
@@ -50,6 +70,11 @@ public class PlayerStats : EntityStats
 
             const float wisdomDamagePerWisdomPoint = 1f;
             const float cooldownReductionPerWisdomPoint = 1f;
+
+            public int Wisdom()
+            {
+                return wisdom;
+            }
         #endregion
 
         #region Charisma
@@ -59,6 +84,11 @@ public class PlayerStats : EntityStats
 
             const float shopPriceReductionPerCharismaPoint = 0.5f;
             const float luckPerCharismaPoint = 0.1f;
+
+            public int Charisma()
+            {
+                return charisma;
+            }
         #endregion
 
     #endregion
