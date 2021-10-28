@@ -617,7 +617,8 @@ MonoBehaviour:
   player: {fileID: 947665042}
   self: {fileID: 731393236}
   agent: {fileID: 731393241}
-  radius: 2
+  chaseRadius: 7
+  stopRadius: 2
 --- !u!195 &731393241
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1486,7 +1487,8 @@ MonoBehaviour:
   player: {fileID: 947665042}
   self: {fileID: 2093444858}
   agent: {fileID: 2093444862}
-  radius: 2
+  chaseRadius: 7
+  stopRadius: 2
 --- !u!114 &2093444864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1508,6 +1510,19 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 511615620}
     m_Modifications:
+<<<<<<< HEAD
+    - target: {fileID: 3199020426026612994, guid: 0ca13e5d4fba8694c89e8a27ff97c1ec,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3199020426026612995, guid: 0ca13e5d4fba8694c89e8a27ff97c1ec,
+        type: 3}
+      propertyPath: speed
+      value: 10
+      objectReference: {fileID: 0}
+=======
+>>>>>>> b35fe2e71237a813b14826aea4127d730734f685
     - target: {fileID: 3199020426026612997, guid: 0ca13e5d4fba8694c89e8a27ff97c1ec,
         type: 3}
       propertyPath: m_Name
@@ -1567,6 +1582,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3199020426026612999, guid: 0ca13e5d4fba8694c89e8a27ff97c1ec,
+        type: 3}
+      propertyPath: m_Height
+      value: 1.8589562
+      objectReference: {fileID: 0}
+    - target: {fileID: 3199020426026612999, guid: 0ca13e5d4fba8694c89e8a27ff97c1ec,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3199020426026612999, guid: 0ca13e5d4fba8694c89e8a27ff97c1ec,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 0.07052097
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ca13e5d4fba8694c89e8a27ff97c1ec, type: 3}

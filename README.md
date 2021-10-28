@@ -7,7 +7,7 @@ Chase Michael Taylor
 Jennifer Claire Siino
 Jorge Mario Torres
 Salil Sahir Lakhani
-Samantha May Terracciano
+Samantha Mary Terracciano
 
 2. Control Schemas
 "You can move with w,a,s,d" 
