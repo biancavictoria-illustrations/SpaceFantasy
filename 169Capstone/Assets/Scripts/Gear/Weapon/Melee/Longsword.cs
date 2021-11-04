@@ -18,7 +18,7 @@ public class Longsword : MonoBehaviour
     private float heldDuration = 0.25f;
     private float windDown = 0.75f;
     private float secondaryDuration = 3;
-    private bool bonus = false;
+    //private bool bonus = false;
     private float attackSpeedModifierBonus = 0.2f;
     private int bonusStackCounter = 0;
     private int bonusStackMax = 3;

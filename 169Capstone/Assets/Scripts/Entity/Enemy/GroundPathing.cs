@@ -20,7 +20,7 @@ public class GroundPathing : MonoBehaviour
     {
         agent.isStopped = true;
         player = GameObject.FindWithTag("Player").GetComponent<Transform>();
-        agent.speed = speed;
+        //agent.speed = speed;
     }
 
     // Update is called once per frame

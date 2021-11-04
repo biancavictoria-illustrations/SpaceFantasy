@@ -95,9 +95,13 @@ GameObject:
   - component: {fileID: 3199020426026612995}
   - component: {fileID: 3199020426026612994}
   - component: {fileID: 525690834}
+  - component: {fileID: 1408530065}
+  - component: {fileID: 1408530066}
+  - component: {fileID: 1408530067}
+  - component: {fileID: 1408530068}
   m_Layer: 8
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -129,9 +133,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
-  m_Height: 2
+  m_Height: 1.8589562
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.07052097, z: 0}
 --- !u!114 &3199020426026612995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,12 +176,87 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3199020426026612997}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 94bb3c889521d4acb8c3b307de595499, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   weapon: {fileID: 2053646958}
+--- !u!114 &1408530065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3199020426026612997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d5192e299cbed24a97da4925d9e2be3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1408530066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3199020426026612997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a7317d8163894e61a81c765f1fb0866, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gear:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  weapon: 
+  accessory: 
+  hand: 
+  legs: 
+  stats: {fileID: 1408530065}
+  currentStr: 0
+  currentDex: 0
+  currentConst: 0
+  currentInt: 0
+  currentWis: 0
+  currentCha: 0
+  currentAttackSpeed: 0
+  objectManager: {fileID: 0}
+  attack: {fileID: 1408530068}
+--- !u!114 &1408530067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3199020426026612997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f60802e625164bbb8c6aaf479fbf304, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHitpoints: 0
+  currentHitpoints: 0
+  objectManager: {fileID: 0}
+--- !u!114 &1408530068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3199020426026612997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97c7a8512389e42c6a3e19840c10cce2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interupted: 0
+  hit: 0
+  enemyDeath: 0
+  Completed: 0
+  damageDealt: 0
 --- !u!1001 &3024951759941052266
 PrefabInstance:
   m_ObjectHideFlags: 0
