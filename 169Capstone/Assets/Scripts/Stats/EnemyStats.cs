@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyStats : EntityStats
 {
-    public EnemyStatObject stats {get; private set;}
+    public EnemyStatObject stats;// {get; private set;}
 
     public void initializeStats()
     {
