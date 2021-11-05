@@ -357,7 +357,7 @@ VisualEffectResource:
       = uvData.blend;\n\t\t\t\t\t\t#if USE_FLIPBOOK_MOTIONVECTORS && defined(VFX_VARYING_MOTIONVECTORSCALE)\n\t\t\t\t\t\t\n\t\t\t\t\t\to.VFX_VARYING_MOTIONVECTORSCALE
       = motionVectorScale * invFlipBookSize;\n\t\t\t\t\t\t#endif\n\t\t\t\t\t\t#endif\n\t\t\t\t\t\t#endif\n\t\t\t\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t\t   
       \n\t\t\t    float Lightning_Width__ = (float)0;{\n\t\t\t        \n\t\t\t       
-      Lightning_Width__ = (float)0.300000012;\n\t\t\t    }\n\t\t\t    o.Lightning_Width
+      Lightning_Width__ = (float)0.100000001;\n\t\t\t    }\n\t\t\t    o.Lightning_Width
       = Lightning_Width__;float Lightning_Height__ = (float)0;{\n\t\t\t        \n\t\t\t       
       Lightning_Height__ = (float)0.800000012;\n\t\t\t    }\n\t\t\t    o.Lightning_Height
       = Lightning_Height__;float Lightning_NoiseScale__ = (float)0;{\n\t\t\t       
@@ -627,7 +627,7 @@ VisualEffectResource:
       = uvData.blend;\n\t\t\t\t\t\t#if USE_FLIPBOOK_MOTIONVECTORS && defined(VFX_VARYING_MOTIONVECTORSCALE)\n\t\t\t\t\t\t\n\t\t\t\t\t\to.VFX_VARYING_MOTIONVECTORSCALE
       = motionVectorScale * invFlipBookSize;\n\t\t\t\t\t\t#endif\n\t\t\t\t\t\t#endif\n\t\t\t\t\t\t#endif\n\t\t\t\t\t\t\n\t\t\t\n\t\t\t\t\n\t\t\t   
       \n\t\t\t    float Lightning_Width__ = (float)0;{\n\t\t\t        \n\t\t\t       
-      Lightning_Width__ = (float)0.300000012;\n\t\t\t    }\n\t\t\t    o.Lightning_Width
+      Lightning_Width__ = (float)0.100000001;\n\t\t\t    }\n\t\t\t    o.Lightning_Width
       = Lightning_Width__;float Lightning_Height__ = (float)0;{\n\t\t\t        \n\t\t\t       
       Lightning_Height__ = (float)0.800000012;\n\t\t\t    }\n\t\t\t    o.Lightning_Height
       = Lightning_Height__;float Lightning_NoiseScale__ = (float)0;{\n\t\t\t       
@@ -882,7 +882,7 @@ VisualEffectResource:
         - m_ExpressionIndex: 5
           m_Value: 2
         - m_ExpressionIndex: 7
-          m_Value: 0.3
+          m_Value: 0.1
         - m_ExpressionIndex: 8
           m_Value: 0.8
         - m_ExpressionIndex: 9
@@ -1888,7 +1888,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 0.3
+      m_SerializableObject: 0.1
     m_Space: 2147483647
   m_Property:
     name: Lightning_Width
