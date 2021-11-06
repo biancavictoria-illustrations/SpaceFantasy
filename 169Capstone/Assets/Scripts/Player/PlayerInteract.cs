@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class PlayerInteract : MonoBehaviour
 {
-    public bool isInDialogue = false;
+    public SpeakerData speakerData;
+    private bool isInDialogue = false;
 
-    public DialogueManager dialogueManager;
+    void Start()
+    {
+        DialogueManager.instance.AddSpeaker(speakerData);
+    }
 
-    public void Interact()
+    void Update()
     {
         // If interact input
-        if(Input.GetButtonDown("space")){
+        if(Input.GetKeyDown(KeyCode.Space)){
             // If NPC is active and not already talking
             if(NPC.ActiveNPC && !isInDialogue){
                 StartDialogue();
@@ -19,16 +23,19 @@ public class PlayerInteract : MonoBehaviour
         }
     }
 
-    public void StartDialogue()
+    // Called when the player clicks the interact button in range of an NPC with something to say
+    private void StartDialogue()
     {
+        // pause player movement (add this stuff to the normal player script -> start of Update: if(isindialogue){return};)
         isInDialogue = true;
-        dialogueManager.dialogueRunner.StartDialogue(NPC.ActiveNPC.yarnStartNode);
-        // Start dialogue, activate UI -> don't let the player move anymore (pause the game, basically)
+        DialogueManager.instance.dialogueRunner.StartDialogue(NPC.ActiveNPC.yarnStartNode);
     }
 
+    // Called when the dialogue ends/closes
     public void EndDialogue()
     {
+        // unpause player movement
         isInDialogue = false;
-        // End dialogue, close UI -> let the player move (unpause the game)
+        NPC.ActiveNPC.NewDialogueSpoken();
     }
 }
