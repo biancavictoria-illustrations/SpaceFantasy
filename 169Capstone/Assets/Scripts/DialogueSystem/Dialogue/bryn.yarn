@@ -1,7 +1,25 @@
-﻿title: brynTest
+﻿title: BrynStart
 tags:
 ---
-Bryn: This is test dialogue!
-Player: Dialogue successfully tested.
-Bryn: Nice!
+<<if Visited("BrynStart") is false>>
+    <<SetSpeaker Bryn>>
+    This is test dialogue!
+    <<SetSpeaker Player>>
+    Dialogue successfully tested.
+    <<SetSpeaker Bryn>>
+    Nice!
+<<else>>
+    [[BrynTestSecondDialogue]]
+<<endif>>
+===
+
+title: BrynTestSecondDialogue
+tags:
+---
+<<SetSpeaker Bryn>>
+This is a second dialogue interaction.
+<<SetSpeaker Player>>
+Sure is buddy.
+<<SetSpeaker Bryn>>
+Great work pal.
 ===
