@@ -2,6 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public enum DialogueTrigger
+{
+    // === Generic Triggers ===
+    defaultDialogue,
+    lowHealth,         // < 20%
+    barterAttempt,
+    barterSuccess,     // >=15 CHA
+    barterFail,        // < 10 CHA
+    // === High Priority Triggers ===
+    hasItem,
+    numberOfRuns,
+    plotEvents,        // Highest priority trigger -> highly specific event triggers, like beating a boss or something
+    // === For Looping Purposes ===
+    enumSize
+}
+
 public class NPC : MonoBehaviour
 {
     public static NPC ActiveNPC {get; private set;}
@@ -14,15 +31,43 @@ public class NPC : MonoBehaviour
     [HideInInspector] public bool hasNewDialogue;
     public GameObject newDialogueAlert;
 
+    // Generic triggers and where we're at in those branches so far
+    public Dictionary<DialogueTrigger, int> genericDialogueTriggers = new Dictionary<DialogueTrigger, int>();
+    // Every possible generic trigger this NPC has
+    [SerializeField] private List<DialogueTrigger> genericDialogueTriggerList = new List<DialogueTrigger>();
+
+    // Generic dialogue trigger numbers
+    public int numDefaultDialogue;
+    public int numLowHealthDialogue;
+    public int numBarterSuccessDialogue;
+    public int numBarterFailDialogue;
+
     void Start()
     {
         DialogueManager.instance.dialogueRunner.Add(yarnDialogue);
         DialogueManager.instance.AddSpeaker(speakerData);
 
+        // Set up the dictionary
+        foreach(DialogueTrigger t in genericDialogueTriggerList){
+            genericDialogueTriggers.Add(t,1);
+        }
+
         // TODO: Check if this NPC has new dialogue to say; if so, they have a UI alert above their head
         // also you should only be able to talk to the NPC once and then you can't again til next run
         hasNewDialogue = true;
         newDialogueAlert.SetActive(hasNewDialogue);
+        // How does this work with scene transitions? How do we keep track of this stuff?
+        // Should the dialogue manager just... hold all the NPCs' dialogue statuses, instead of the NPCs themselves?
+    }
+
+    // If all of the interactions for this trigger have been played, remove that trigger from the pool of options
+    public void RemoveDialogueTrigger(DialogueTrigger usedTrigger)
+    {
+        if(genericDialogueTriggers.ContainsKey(usedTrigger)){
+            genericDialogueTriggers.Remove(usedTrigger);
+            return;
+        }
+        Debug.Log("Tried to remove dialogue trigger " + usedTrigger + " from " + speakerData.speakerName + " but it doesn't exist!");
     }
 
     public void NewDialogueSpoken()

@@ -7,7 +7,6 @@ using Yarn.Unity;
 
 public class DialogueManager : MonoBehaviour
 {   
-    // Make this a singleton so that it can be accessed from anywhere and there's only one
     public static DialogueManager instance;
 
     public GameObject dialogueUICanvas;
@@ -18,17 +17,26 @@ public class DialogueManager : MonoBehaviour
     public TMP_Text speakerName;
 
     public DialogueRunner dialogueRunner;
+
     // Keeps track of what nodes the player has seen so that we don't see those again
     private HashSet<string> visitedNodes = new HashSet<string>();
 
+    // Number of distinct generic dialogue triggers
+    private int numGenericDialogueTriggers = 3;
+
     void Awake()
     {
+        // Make this a singleton so that it can be accessed from anywhere and there's only one
         if( instance ){
             Destroy(gameObject);
         }
         else{
             instance = this;
         }
+
+        DontDestroyOnLoad(this.gameObject);
+        // ... right?
+
 
         // Add SetSpeakerInfo to yarn so that we can set character portraits and names
         dialogueRunner.AddCommandHandler("SetSpeaker", SetSpeakerInfo);
@@ -39,8 +47,68 @@ public class DialogueManager : MonoBehaviour
             return visitedNodes.Contains(nodeName.AsString);
         });
 
-        DontDestroyOnLoad(this.gameObject);
-        // ... right?
+
+        // Add SelectNextTrigger so that we can find the next conditional category of dialogue to play
+        dialogueRunner.AddFunction("SelectNextTrigger", 0, delegate (Yarn.Value[] parameters){
+            PlayerStats playerStats = FindObjectsOfType<PlayerStats>()[0];
+
+            // TODO: Check for plot stuff and play the next relevant thing there if possible (then return)
+            // return DialogueTrigger.plotEvents.ToString();
+            
+            // TODO: Check for # runs triggers and play the next thing there if possible (then return)
+            // return DialogueTrigger.numberOfRuns.ToString();
+
+            // TODO: Check for item event triggers and play the next thing there if possible (then return)
+            // return DialogueTrigger.hasItem.ToString();
+
+            // === IF NO SPECIFIC EVENTS TRIGGERED, pick a random generic condition and do that ===
+
+            // Get a random number from 0 - max generic dialogue triggers, then convert to the trigger enum value
+            DialogueTrigger trigger = (DialogueTrigger)Random.Range(0,numGenericDialogueTriggers);
+            // If bartering, check if success or fail
+            if(trigger == DialogueTrigger.barterAttempt){
+                if( playerStats.Charisma() >= 15 ){
+                    return "barterSuccess";
+                }
+                else if( playerStats.Charisma() < 10 ){
+                    return "barterFail";
+                }
+                else{
+                    // If your CHA stat is 10-14
+                    return "defaultDialogue";
+                }
+            }
+            // If low HP, check if you're actually low HP
+            if(trigger == DialogueTrigger.lowHealth){
+                // Check if player is NOT actually low HP, and if that's the case set to default instead
+                // return "defaultDialogue";
+                // or if low HP should be higher priority, could check for it in a priority order instead of the random generation?
+            }
+
+            return trigger.ToString();        
+        });
+
+
+        // Add a function to tell yarn which node in that conditional branch to play
+        dialogueRunner.AddFunction("SelectGenericNode", 1, delegate (Yarn.Value[] parameters){
+            // Takes in a trigger; search the active NPC's dictionary for that key, the value is an int of where we're at
+            DialogueTrigger trigger = DialogueTrigger.defaultDialogue;
+            for(int i = 0; i < (int)DialogueTrigger.enumSize; ++i){
+                if(( (DialogueTrigger)i ).ToString().Equals(parameters[0])){
+                    trigger = (DialogueTrigger)i;
+                }
+            }
+            int currentNode = NPC.ActiveNPC.genericDialogueTriggers[trigger];   // Set the current position in the branch
+            NPC.ActiveNPC.genericDialogueTriggers[trigger] = currentNode + 1;   // Increment the value in the dictionary
+
+            // TODO: If this condition is now out of interactions, remove it from the pool (NPC.ActiveNPC.RemoveDialogueTrigger(trigger))
+            // Instead, play a default (NOT NEW) dialogue (TODO: add a new category for true default lame single line dialogue as opposed to default new progressing dialogue)
+
+
+            return currentNode;
+        });
+
+        // Ideally have a SelectSpecific version for the node selection above? Idk specific dialogue is gonna have it's whole own system so we'll see
     }
 
     public void AddSpeaker(SpeakerData data)
@@ -81,35 +149,4 @@ public class DialogueManager : MonoBehaviour
         // Log that the node has been run.
         visitedNodes.Add(nodeName);
     }
-
-    /*
-        TODO: Make functions to send to Yarn as commands to use to select which dialogue to play
-
-        Like depending on certain conditions, automatically go to different nodes (based on a set
-        priority order)
-
-        === Possible Node/Conditions ===
-        - default
-        - low HP
-        - # runs > ?
-        - has [item]
-        - has [item] from [NPC]
-        - stat values
-        - high CHA (successful barter)
-        - low CHA (unsuccessful barter)
-        - beat a boss
-        - lost to a boss
-
-        Condition node could be the starting place, and then it branches off into a variety
-        of sub-nodes from there. Each of those nodes can then be checked like "visited lowHP2" and it
-        could go in order there
-
-        So priority/some randomness selection for which condition node to access, and then goes linearly
-        down that branch each time you visit that condition node
-
-        Should probably keep track of where you're at in each tree HERE and then just tell Yarn that info?
-
-        Like "yarn go to CONDITION [lowHP], NODE [4]" for the fourth low HP interaction
-    */
-
 }
