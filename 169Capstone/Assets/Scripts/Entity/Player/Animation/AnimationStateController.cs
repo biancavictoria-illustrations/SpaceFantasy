@@ -19,7 +19,9 @@ public class AnimationStateController : MonoBehaviour
         {
             //animator.SetBool("IsAttacking", true);
             //Debug.Log(animator.GetLayerIndex("Slashing"));
+            gameObject.GetComponent<Animator>().Rebind();
             animator.SetLayerWeight(1, 1);
+            
 
         }
         if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
