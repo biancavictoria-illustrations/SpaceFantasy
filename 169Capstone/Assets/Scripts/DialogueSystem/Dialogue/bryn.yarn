@@ -1,25 +1,92 @@
 ﻿title: BrynStart
 tags:
 ---
-<<if Visited("BrynStart") is false>>
-    <<SetSpeaker Bryn>>
-    This is test dialogue!
-    <<SetSpeaker Player>>
-    Dialogue successfully tested.
-    <<SetSpeaker Bryn>>
-    Nice!
+<<set $trigger to SelectNextTrigger()>>
+<<if $trigger is "plotEvents">>
+    ???
+<<elseif $trigger is "numberOfRuns">>
+    ???
+<<elseif $trigger is "hasItem">>
+    ???
+<<elseif $trigger is "lowHealth">>
+    [[BrynLowHealthHead]]
+<<elseif $trigger is "barterSuccess">>
+    [[BrynBarterSuccessHead]]
+<<elseif $trigger is "barterFail">>
+    [[BrynBarterFailHead]]
 <<else>>
-    [[BrynTestSecondDialogue]]
+    [[BrynDefaultHead]]
 <<endif>>
 ===
 
-title: BrynTestSecondDialogue
+
+
+title: BrynLowHealthHead
+tags:
+---
+<<set $nodeNum to SelectGenericNode($trigger)>>
+<<if $nodeNum is 1>>
+    [[BrynLowHealth1]]
+<<elseif $nodeNum is 2>>
+    [[BrynLowHealth2]]
+<<elseif $nodeNum is 3>>
+    [[BrynLowHealth3]]
+<<else>>
+    [[BrynLowHealth4]]
+<<endif>>
+===
+
+title: BrynLowHealth1
 tags:
 ---
 <<SetSpeaker Bryn>>
-This is a second dialogue interaction.
-<<SetSpeaker Player>>
-Sure is buddy.
+This is the first LOW HEALTH dialogue interaction.
+===
+
+title: BrynLowHealth2
+tags:
+---
 <<SetSpeaker Bryn>>
-Great work pal.
+This is the second LOW HEALTH dialogue interaction.
+===
+
+title: BrynLowHealth3
+tags:
+---
+<<SetSpeaker Bryn>>
+This is the third LOW HEALTH dialogue interaction.
+===
+
+title: BrynLowHealth4
+tags:
+---
+<<SetSpeaker Bryn>>
+This is the last LOW HEALTH dialogue interaction.
+===
+
+
+
+title: BrynDefaultHead
+tags:
+---
+<<SetSpeaker Bryn>>
+This is a DEFAULT dialogue interaction.
+===
+
+
+
+title: BrynBarterSuccessHead
+tags:
+---
+<<SetSpeaker Bryn>>
+This is a successful BARTER ATTEMPT dialogue interaction.
+===
+
+
+
+title: BrynBarterFailHead
+tags:
+---
+<<SetSpeaker Bryn>>
+This is a failed BARTER ATTEMPT dialogue interaction.
 ===
