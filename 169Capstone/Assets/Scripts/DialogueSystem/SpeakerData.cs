@@ -3,15 +3,33 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+// EVERY speaker NPC has its own unique SpeakerID
+public enum SpeakerID
+{
+    Player,
+    // Final boss
+    TimeLich,
+    // Hub world
+    Stellan,
+    // Run shopkeepers
+    Bryn,
+    Weapons,
+    Doctor,
+    Sorrel,
+
+    enumSize
+}
+
 [CreateAssetMenu(menuName = "Narrative/Speaker")]
 public class SpeakerData : ScriptableObject
 {
     public const string EMOTION_NEUTRAL = "neutral";
     // Can add more of these (and more sprites) if we have more, like EMOTION_SURPRISE or EMOTION_ANGER
 
-    public string speakerName;
+    [SerializeField] private string speakerName;      // The name that shows up to payers
+    [SerializeField] private SpeakerID speakerID;     // Internal ID
     
-    public Sprite portraitNeutral;
+    [SerializeField] private Sprite portraitNeutral;
     // Can add different emotions
 
     public Sprite GetEmotionPortrait(string emotion)
@@ -22,5 +40,15 @@ public class SpeakerData : ScriptableObject
             case EMOTION_NEUTRAL: return portraitNeutral;
             // Can add different emotions
         }
+    }
+
+    public string SpeakerName()
+    {
+        return speakerName;
+    }
+
+    public SpeakerID SpeakerID()
+    {
+        return speakerID;
     }
 }

@@ -3,33 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum StoryBeatType
-{
-    creatureKilled,         // Generally high priority (only exists for bosses)
-    killedBy,               // Generally low priority unless killed by a boss for the first time
-    dialogueCompleted,      // Generally mid priority unless Big Character Story Stuff
-    enumSize
-}
-
-public enum CreatureID
-{
-    // === Monsters that Killed You OR You Killed ===
-    TimeLich,
-    slime,
-    enchantedCloak,
-
-    // === NPCs for Conversation ===
-    BrynNPC,
-    StellanNPC,
-    WeaponsNPC,
-    DoctorNPC,
-    SorrelNPC,
-
-    enumSize
-}
-
 public class StoryManager : MonoBehaviour
 {
+    // Struct for storing data about story beats that changes at runtime (current state stuff)
     public struct BeatStatus{
         public bool beatIsActive;          // If the player did this thing on their latest run (so characters can/should respond to it)
         public int numberOfCompletions;    // The number of times the player has done this thing
@@ -45,8 +21,10 @@ public class StoryManager : MonoBehaviour
 
     public int currentRunNumber {get; private set;}
 
-    public Dictionary<StoryBeat,BeatStatus> storyBeatDatabase = new Dictionary<StoryBeat,BeatStatus>();     // All story beats
-    public List<StoryBeat> activeStoryBeats = new List<StoryBeat>();    // For the DialogueManager to see just the active beats
+    public Dictionary<StoryBeat,BeatStatus> storyBeatDatabase = new Dictionary<StoryBeat,BeatStatus>();     // All story beats of type Conversation or Killed
+    public HashSet<StoryBeat> activeStoryBeats = new HashSet<StoryBeat>();    // For the DialogueManager to see just the active beats
+
+    public HashSet<ItemDialogueTrigger> itemDialogueTriggers = new HashSet<ItemDialogueTrigger>();  // All item dialogue triggers
 
 
     void Awake()
@@ -62,12 +40,19 @@ public class StoryManager : MonoBehaviour
 
         currentRunNumber = 1;
 
-        // Load in the StoryBeats from the StoryBeats folder in Resources
+        // Load in the StoryBeats (only of type Killed and Conversation) from the StoryBeats folder in Resources
         Object[] storyBeatList = Resources.LoadAll("StoryBeats", typeof(StoryBeat));
         foreach(Object s in storyBeatList){
             StoryBeat beat = (StoryBeat)s;
             // Add the storybeat to the dictionary
             storyBeatDatabase.Add( beat, new BeatStatus(false,0) );
+        }
+
+        // Load in the ItemDialogueTriggers from the ItemTriggers folder in Resources
+        Object[] itemDialogueList = Resources.LoadAll("ItemTriggers", typeof(ItemDialogueTrigger));
+        foreach(Object i in itemDialogueList){
+            ItemDialogueTrigger item = (ItemDialogueTrigger)i;
+            itemDialogueTriggers.Add(item);
         }
     }
 
@@ -86,7 +71,7 @@ public class StoryManager : MonoBehaviour
         if(prereqs.Count > 0){
             foreach(StoryBeat p in prereqs.Keys){
                 // If one of the prereqs has not been met, don't mark this story beat as active
-                if(storyBeatDatabase[p].numberOfCompletions < prereqs[p]){
+                if( storyBeatDatabase[p].numberOfCompletions < prereqs[p] ){
                     return;
                 }
             }
@@ -116,16 +101,43 @@ public class StoryManager : MonoBehaviour
         }
     }
 
-    // Called when the event is invoked either by killing a creature, being killed by a creature, or talking to a creature
-    // TODO: Invoke this whenever the situations occur in the game manager and possibly dialogue manager?
-    public void StoryEventOccurred(CreatureID creature, StoryBeatType beatType)
+    // Called when the event is invoked either by killing a creature OR being killed by a creature
+    // TODO: Invoke this whenever the situations occur in the game manager?
+    public void KilledEventOccurred(EnemyStatObject enemy, StoryBeatType beatType)
     {
+        // If this event's beatType is NOT creatureKilled OR killedBy, error
+        if( !(beatType == StoryBeatType.creatureKilled || beatType == StoryBeatType.killedBy) ){
+            Debug.LogError("KilledEventOccurred for wrong StoryBeatType: " + beatType + " " + enemy + "!");
+            return;
+        }   
+
         foreach( StoryBeat beat in storyBeatDatabase.Keys ){
-            if( beat.GetBeatType() == beatType && beat.GetOtherCreature() == creature ){
-                AchievedStoryBeat(beat);
-                return;
+            if( beat.GetBeatType() == beatType ){
+                // Definitely one of the two killed types at this point, so cast it and check if the enemy is correct
+                KilledDialogueTrigger trigger = (KilledDialogueTrigger)beat;
+                if( trigger.GetEnemy() == enemy ){
+                    AchievedStoryBeat(beat);
+                    return;
+                }
             }
         }
-        Debug.Log("No story beat found for " + beatType + " " + creature + "!");
+
+        Debug.Log("No story beat found for " + beatType + " " + enemy + "!");
+    }
+
+    // TODO: Invoke this whenever the situations occur in the dialogue manager?
+    public void ConversationEventOccurred(SpeakerID npc, string otherDialogueHeadNode)
+    {
+        foreach( StoryBeat beat in storyBeatDatabase.Keys ){
+            // Check only the ConversationTrigger type StoryBeats
+            if( beat.GetBeatType() == StoryBeatType.dialogueCompleted ){
+                ConversationTrigger trigger = (ConversationTrigger)beat;
+                if( trigger.GetTalkedToNPC() == npc && trigger.GetOtherDialogue() == otherDialogueHeadNode ){
+                    AchievedStoryBeat(beat);
+                    return;
+                }
+            }
+        }
+        Debug.Log("No story beat found for " + otherDialogueHeadNode + " " + npc + "!");
     }
 }
