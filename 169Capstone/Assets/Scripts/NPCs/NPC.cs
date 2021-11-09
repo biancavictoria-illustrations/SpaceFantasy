@@ -3,22 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum DialogueTrigger
-{
-    // === Generic Triggers ===
-    defaultDialogue,
-    lowHealth,         // < 20%
-    barterAttempt,
-    barterSuccess,     // >=15 CHA
-    barterFail,        // < 10 CHA
-    // === High Priority Triggers ===
-    hasItem,
-    numberOfRuns,
-    plotEvents,        // Highest priority trigger -> highly specific event triggers, like beating a boss or something
-    // === For Looping Purposes ===
-    enumSize
-}
-
 public class NPC : MonoBehaviour
 {
     public static NPC ActiveNPC {get; private set;}
@@ -34,7 +18,7 @@ public class NPC : MonoBehaviour
     public Dictionary<DialogueTrigger, int> genericDialogueTriggers = new Dictionary<DialogueTrigger, int>();   // Generic triggers and where we're at in those branches so far
     [SerializeField] private List<DialogueTrigger> genericDialogueTriggerList = new List<DialogueTrigger>();    // Every possible generic trigger this NPC has
 
-    public List<int> hasNumRunDialogue = new List<int>();   // Points at which this NPC comments on how many runs you've done
+    public List<int> hasNumRunDialogueList = new List<int>();   // Points at which this NPC comments on how many runs you've done; in order
 
     void Start()
     {
@@ -51,7 +35,7 @@ public class NPC : MonoBehaviour
         hasNewDialogue = true;
         newDialogueAlert.SetActive(hasNewDialogue);
         // How does this work with scene transitions? How do we keep track of this stuff?
-        // Should the dialogue manager just... hold all the NPCs' dialogue statuses, instead of the NPCs themselves?
+        // Should the dialogue/story manager just... hold all the NPCs' dialogue statuses, instead of the NPCs themselves?
     }
 
     // If all of the interactions for this trigger have been played, remove that trigger from the pool of options
@@ -61,7 +45,7 @@ public class NPC : MonoBehaviour
             genericDialogueTriggers.Remove(usedTrigger);
             return;
         }
-        Debug.Log("Tried to remove dialogue trigger " + usedTrigger + " from " + speakerData.speakerName + " but it doesn't exist!");
+        Debug.Log("Tried to remove dialogue trigger " + usedTrigger + " from " + speakerData.SpeakerName() + " but it doesn't exist!");
     }
 
     public void NewDialogueSpoken()

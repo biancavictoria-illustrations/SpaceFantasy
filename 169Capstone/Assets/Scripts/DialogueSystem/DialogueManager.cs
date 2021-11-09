@@ -5,6 +5,23 @@ using UnityEngine.UI;
 using TMPro;
 using Yarn.Unity;
 
+
+public enum DialogueTrigger
+{
+    // === Generic Triggers ===
+    defaultDialogue,
+    lowHealth,         // < 20%
+    barterAttempt,
+    barterSuccess,     // >=15 CHA
+    barterFail,        // < 10 CHA
+    // === High Priority Triggers ===
+    numRuns,
+    item,
+    plotEvents,        // Killed creature, killed by creature, finished conversation (handled by the StoryManager)
+    // === For Looping Purposes ===
+    enumSize
+}
+
 public class DialogueManager : MonoBehaviour
 {   
     public static DialogueManager instance;
@@ -13,16 +30,14 @@ public class DialogueManager : MonoBehaviour
 
     private Dictionary<string, SpeakerData> speakers = new Dictionary<string, SpeakerData>();
 
-    public Image characterPortrait;
+    public Image characterPortrait; 
     public TMP_Text speakerName;
 
     public DialogueRunner dialogueRunner;
 
-    // Keeps track of what nodes the player has seen so that we don't see those again
-    private HashSet<string> visitedNodes = new HashSet<string>();
+    private HashSet<string> visitedNodes = new HashSet<string>();   // Keeps track of what nodes the player has seen so that we don't see those again
 
-    // Number of distinct generic dialogue triggers
-    private int numGenericDialogueTriggers = 3;
+    private int numGenericDialogueTriggers = 3;     // Number of distinct generic dialogue triggers
 
     void Awake()
     {
@@ -50,16 +65,29 @@ public class DialogueManager : MonoBehaviour
 
         // Add SelectNextTrigger so that we can find the next conditional category of dialogue to play
         dialogueRunner.AddFunction("SelectNextTrigger", 0, delegate (Yarn.Value[] parameters){
-            PlayerStats playerStats = FindObjectsOfType<PlayerStats>()[0];
+            
+            /*
+                Change the structure so that it does something like:
+                - right off the bat, if there's a MAX PRIORITY plotEvent, just play that
+                - if not, keep looking -> gets the highest priority possible dialogue of each type
+                - once you gather the options that are applicable, if there's a single Highest Priority Thing, play that
+                - otherwise, choose randomly between everything on the same (highest) playing field
+                - what if this means we never get generic/default dialogue??? could have an element of randomness also...
+            */
 
-            // TODO: Check for plot stuff and play the next relevant thing there if possible (then return)
+            
+            // Check for plot stuff and play the next relevant thing there if possible (then return)
             if( StoryManager.instance.activeStoryBeats.Count > 0 ){
                 // Cycle the options and find the highest priority one
-                // TODO: Try to find associated dialogue in descending priority order (this will only check the first one) (speaker data check should fix it maybe???)
-                StoryBeat highestPriorityBeat = StoryManager.instance.activeStoryBeats[0];
+                // TODO: Try to find associated dialogue in descending priority order (this will only check the first one) (speaker data check should help maybe???)
+                StoryBeat highestPriorityBeat = null;
                 foreach(StoryBeat beat in StoryManager.instance.activeStoryBeats){
+                    // Set default value (first option)
+                    if( highestPriorityBeat == null ){
+                        highestPriorityBeat = beat;
+                    }
                     // If this NPC has something to say AND the priority is higher, set it to the interaction we'll choose
-                    if( beat.GetPriorityValue() > highestPriorityBeat.GetPriorityValue() && beat.GetSpeakersWithComments().Contains(NPC.ActiveNPC.speakerData) ){
+                    else if( beat.GetPriority() > highestPriorityBeat.GetPriority() && beat.GetSpeakersWithComments().Contains(NPC.ActiveNPC.speakerData) ){
                         highestPriorityBeat = beat;
                     }
                 }
@@ -67,20 +95,25 @@ public class DialogueManager : MonoBehaviour
             }
             // Maybe need to compare priority of ^^ to stuff below... (cuz there could be a lot of like "you killed a slime")
 
-            
-            // TODO: Check for # runs triggers and play the next thing there if possible (then return)
-            // (Depends on the character you're talking to)
-            if( NPC.ActiveNPC.hasNumRunDialogue.Contains(StoryManager.instance.currentRunNumber) ){
-                // ^^ will only check if it's the CURRENT run number; need to check a threshold
-                // (like if you're >= 2 runs of one of the values in the list, maybe?)
 
-                // return DialogueTrigger.numberOfRuns.ToString();
+            // Check for run number related dialogue (values depend on the character you're talking to)
+            int currentRunNumber = StoryManager.instance.currentRunNumber;
+            foreach(int num in NPC.ActiveNPC.hasNumRunDialogueList){
+                int difference = currentRunNumber - num;
+                if( difference <= 3 && difference >= 0 ){
+                    // return DialogueTrigger.numberOfRuns.ToString();
+                }
+                else if( difference > 3){
+                    // Remove it from the list so we stop looking for it
+                    NPC.ActiveNPC.hasNumRunDialogueList.Remove(num);
+                }
             }
 
 
-            // TODO: Check for item event triggers and play the next thing there if possible (then return)
-            // (maybe fire an event when you pick up certain items that logs that those items were purchased
-            // and prepares to give you dialogue for those things, like the StoryManager but less complex/comprehensive)
+            // Check for item event triggers and play the next thing there if possible (then return)
+            // TODO: Get a reference to the player's inventory and check if 
+            // foreach item the player has
+            // if( StoryManager.instance.itemDialogueTriggers.Contains(item) && thatItemTrigger.GetSpeakersWithComments().Contains(NPC.ActiveNPC.speakerData) )
             // return DialogueTrigger.hasItem.ToString();
 
 
@@ -88,7 +121,9 @@ public class DialogueManager : MonoBehaviour
 
             // Get a random number from 0 - max generic dialogue triggers, then convert to the trigger enum value
             DialogueTrigger trigger = (DialogueTrigger)Random.Range(0,numGenericDialogueTriggers);
+
             // If bartering, check if success or fail
+            PlayerStats playerStats = FindObjectsOfType<PlayerStats>()[0];
             if(trigger == DialogueTrigger.barterAttempt){
                 if( playerStats.Charisma() >= 15 ){
                     return "barterSuccess";
@@ -101,12 +136,11 @@ public class DialogueManager : MonoBehaviour
                     return "defaultDialogue";
                 }
             }
+
             // If low HP, check if you're actually low HP
             if(trigger == DialogueTrigger.lowHealth){
-                // TODO: Check if player is NOT actually low HP, and if that's the case set to default instead
+                // TODO: Check if player IS low HP before including this option...
                 // return "defaultDialogue";
-                // or if low HP should be higher priority, could check for it in a priority order instead of the random generation?
-                // maybe we should instead get a list of all possible met conditions and THEN randomly select one, rather than random selection and then check...
             }
 
             return trigger.ToString();        
@@ -136,13 +170,18 @@ public class DialogueManager : MonoBehaviour
         // Might need specific versions for story events vs item events vs etc.
     }
 
+    private string SelectPlotEventTopic()
+    {
+        return "";
+    }
+
     public void AddSpeaker(SpeakerData data)
     {
-        if(speakers.ContainsKey(data.speakerName)){
-            Debug.LogError("Attempting to add " + data.speakerName + " to the speaker database, but it already exists!");
+        if(speakers.ContainsKey(data.SpeakerName())){
+            Debug.LogError("Attempting to add " + data.SpeakerName() + " to the speaker database, but it already exists!");
             return;
         }
-        speakers.Add(data.speakerName, data);
+        speakers.Add(data.SpeakerName(), data);
     }
 
     private void SetSpeakerInfo(string[] info)
