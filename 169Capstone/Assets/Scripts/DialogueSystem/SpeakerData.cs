@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Dialogue/Speaker")]
+[CreateAssetMenu(menuName = "Narrative/Speaker")]
 public class SpeakerData : ScriptableObject
 {
     public const string EMOTION_NEUTRAL = "neutral";

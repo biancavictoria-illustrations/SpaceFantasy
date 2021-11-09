@@ -31,16 +31,10 @@ public class NPC : MonoBehaviour
     [HideInInspector] public bool hasNewDialogue;
     public GameObject newDialogueAlert;
 
-    // Generic triggers and where we're at in those branches so far
-    public Dictionary<DialogueTrigger, int> genericDialogueTriggers = new Dictionary<DialogueTrigger, int>();
-    // Every possible generic trigger this NPC has
-    [SerializeField] private List<DialogueTrigger> genericDialogueTriggerList = new List<DialogueTrigger>();
+    public Dictionary<DialogueTrigger, int> genericDialogueTriggers = new Dictionary<DialogueTrigger, int>();   // Generic triggers and where we're at in those branches so far
+    [SerializeField] private List<DialogueTrigger> genericDialogueTriggerList = new List<DialogueTrigger>();    // Every possible generic trigger this NPC has
 
-    // Generic dialogue trigger numbers
-    public int numDefaultDialogue;
-    public int numLowHealthDialogue;
-    public int numBarterSuccessDialogue;
-    public int numBarterFailDialogue;
+    public List<int> hasNumRunDialogue = new List<int>();   // Points at which this NPC comments on how many runs you've done
 
     void Start()
     {
