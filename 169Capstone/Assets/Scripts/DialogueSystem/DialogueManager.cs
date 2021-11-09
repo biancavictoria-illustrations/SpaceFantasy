@@ -53,13 +53,36 @@ public class DialogueManager : MonoBehaviour
             PlayerStats playerStats = FindObjectsOfType<PlayerStats>()[0];
 
             // TODO: Check for plot stuff and play the next relevant thing there if possible (then return)
-            // return DialogueTrigger.plotEvents.ToString();
+            if( StoryManager.instance.activeStoryBeats.Count > 0 ){
+                // Cycle the options and find the highest priority one
+                // TODO: Try to find associated dialogue in descending priority order (this will only check the first one) (speaker data check should fix it maybe???)
+                StoryBeat highestPriorityBeat = StoryManager.instance.activeStoryBeats[0];
+                foreach(StoryBeat beat in StoryManager.instance.activeStoryBeats){
+                    // If this NPC has something to say AND the priority is higher, set it to the interaction we'll choose
+                    if( beat.GetPriorityValue() > highestPriorityBeat.GetPriorityValue() && beat.GetSpeakersWithComments().Contains(NPC.ActiveNPC.speakerData) ){
+                        highestPriorityBeat = beat;
+                    }
+                }
+                return highestPriorityBeat.GetYarnHeadNode();
+            }
+            // Maybe need to compare priority of ^^ to stuff below... (cuz there could be a lot of like "you killed a slime")
+
             
             // TODO: Check for # runs triggers and play the next thing there if possible (then return)
-            // return DialogueTrigger.numberOfRuns.ToString();
+            // (Depends on the character you're talking to)
+            if( NPC.ActiveNPC.hasNumRunDialogue.Contains(StoryManager.instance.currentRunNumber) ){
+                // ^^ will only check if it's the CURRENT run number; need to check a threshold
+                // (like if you're >= 2 runs of one of the values in the list, maybe?)
+
+                // return DialogueTrigger.numberOfRuns.ToString();
+            }
+
 
             // TODO: Check for item event triggers and play the next thing there if possible (then return)
+            // (maybe fire an event when you pick up certain items that logs that those items were purchased
+            // and prepares to give you dialogue for those things, like the StoryManager but less complex/comprehensive)
             // return DialogueTrigger.hasItem.ToString();
+
 
             // === IF NO SPECIFIC EVENTS TRIGGERED, pick a random generic condition and do that ===
 
@@ -80,9 +103,10 @@ public class DialogueManager : MonoBehaviour
             }
             // If low HP, check if you're actually low HP
             if(trigger == DialogueTrigger.lowHealth){
-                // Check if player is NOT actually low HP, and if that's the case set to default instead
+                // TODO: Check if player is NOT actually low HP, and if that's the case set to default instead
                 // return "defaultDialogue";
                 // or if low HP should be higher priority, could check for it in a priority order instead of the random generation?
+                // maybe we should instead get a list of all possible met conditions and THEN randomly select one, rather than random selection and then check...
             }
 
             return trigger.ToString();        
@@ -109,12 +133,13 @@ public class DialogueManager : MonoBehaviour
         });
 
         // Ideally have a SelectSpecific version for the node selection above? Idk specific dialogue is gonna have it's whole own system so we'll see
+        // Might need specific versions for story events vs item events vs etc.
     }
 
     public void AddSpeaker(SpeakerData data)
     {
         if(speakers.ContainsKey(data.speakerName)){
-            Debug.Log("Attempting to add " + data.speakerName + " to the speaker database, but it already exists!");
+            Debug.LogError("Attempting to add " + data.speakerName + " to the speaker database, but it already exists!");
             return;
         }
         speakers.Add(data.speakerName, data);
@@ -140,7 +165,7 @@ public class DialogueManager : MonoBehaviour
             speakerName.text = speaker;
             return;
         }
-        Debug.Log("Could not set the speaker data for " + speaker);
+        Debug.LogError("Could not set the speaker data for " + speaker);
     }
 
     // Called by the Dialogue Runner to notify us that a node finished running
