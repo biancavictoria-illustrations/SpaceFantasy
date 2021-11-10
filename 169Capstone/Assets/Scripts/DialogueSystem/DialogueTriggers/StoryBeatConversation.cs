@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[CreateAssetMenu(menuName = "Narrative/ConversationTrigger")]
-public class ConversationTrigger : StoryBeat
+[CreateAssetMenu(menuName = "Narrative/StoryBeatConversation")]
+public class StoryBeatConversation : StoryBeat
 {    
     // Event Triggers
     [SerializeField] private SpeakerID talkedToNPC;         // The NPC associated with this event trigger (NPC talked to)
