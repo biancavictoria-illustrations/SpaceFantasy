@@ -24,7 +24,7 @@ public class StoryManager : MonoBehaviour
     public Dictionary<StoryBeat,BeatStatus> storyBeatDatabase = new Dictionary<StoryBeat,BeatStatus>();     // All story beats of type Conversation or Killed
     public HashSet<StoryBeat> activeStoryBeats = new HashSet<StoryBeat>();    // For the DialogueManager to see just the active beats
 
-    public HashSet<ItemDialogueTrigger> itemDialogueTriggers = new HashSet<ItemDialogueTrigger>();  // All item dialogue triggers
+    public HashSet<StoryBeatItem> itemDialogueTriggers = new HashSet<StoryBeatItem>();  // All item dialogue triggers
 
 
     void Awake()
@@ -49,9 +49,9 @@ public class StoryManager : MonoBehaviour
         }
 
         // Load in the ItemDialogueTriggers from the ItemTriggers folder in Resources
-        Object[] itemDialogueList = Resources.LoadAll("ItemTriggers", typeof(ItemDialogueTrigger));
+        Object[] itemDialogueList = Resources.LoadAll("ItemTriggers", typeof(StoryBeatItem));
         foreach(Object i in itemDialogueList){
-            ItemDialogueTrigger item = (ItemDialogueTrigger)i;
+            StoryBeatItem item = (StoryBeatItem)i;
             itemDialogueTriggers.Add(item);
         }
     }
@@ -114,7 +114,7 @@ public class StoryManager : MonoBehaviour
         foreach( StoryBeat beat in storyBeatDatabase.Keys ){
             if( beat.GetBeatType() == beatType ){
                 // Definitely one of the two killed types at this point, so cast it and check if the enemy is correct
-                KilledDialogueTrigger trigger = (KilledDialogueTrigger)beat;
+                StoryBeatCreatureKilled trigger = (StoryBeatCreatureKilled)beat;
                 if( trigger.GetEnemy() == enemy ){
                     AchievedStoryBeat(beat);
                     return;
@@ -131,7 +131,7 @@ public class StoryManager : MonoBehaviour
         foreach( StoryBeat beat in storyBeatDatabase.Keys ){
             // Check only the ConversationTrigger type StoryBeats
             if( beat.GetBeatType() == StoryBeatType.dialogueCompleted ){
-                ConversationTrigger trigger = (ConversationTrigger)beat;
+                StoryBeatConversation trigger = (StoryBeatConversation)beat;
                 if( trigger.GetTalkedToNPC() == npc && trigger.GetOtherDialogue() == otherDialogueHeadNode ){
                     AchievedStoryBeat(beat);
                     return;

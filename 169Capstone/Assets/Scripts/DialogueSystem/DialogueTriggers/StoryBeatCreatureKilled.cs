@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[CreateAssetMenu(menuName = "Narrative/KilledDialogueTrigger")]
-public class KilledDialogueTrigger : StoryBeat
+[CreateAssetMenu(menuName = "Narrative/StoryBeatCreatureKilled")]
+public class StoryBeatCreatureKilled : StoryBeat
 {
     // Unique Trigger
     [SerializeField] private EnemyStatObject enemy;     // The creature killed or killed by that can trigger dialogue

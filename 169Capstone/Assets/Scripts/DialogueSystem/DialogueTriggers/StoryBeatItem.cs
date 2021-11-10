@@ -11,8 +11,8 @@ public enum ItemID
     enumSize
 }
 
-[CreateAssetMenu(menuName = "Narrative/ItemDialogueTrigger")]
-public class ItemDialogueTrigger : StoryBeat
+[CreateAssetMenu(menuName = "Narrative/StoryBeatItem")]
+public class StoryBeatItem : StoryBeat
 {    
     // Unique Trigger
     [SerializeField] private ItemID item;     // The item that can trigger dialogue

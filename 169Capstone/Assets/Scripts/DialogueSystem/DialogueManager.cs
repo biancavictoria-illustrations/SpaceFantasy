@@ -6,12 +6,14 @@ using TMPro;
 using Yarn.Unity;
 
 
+// Types of dialogue -> the things the NPC responds to
 public enum DialogueTrigger
 {
     // === Generic Triggers ===
     defaultDialogue,
     lowHealth,         // < 20%
     barterAttempt,
+    repeatableGeneric,
     // === Specific Barter Conditions ===
     barterSuccess,     // >=15 CHA
     barterFail,        // < 10 CHA
@@ -36,9 +38,12 @@ public class DialogueManager : MonoBehaviour
 
     public DialogueRunner dialogueRunner;
 
-    private HashSet<string> visitedNodes = new HashSet<string>();   // Keeps track of what nodes the player has seen so that we don't see those again
+    private HashSet<string> visitedNodes = new HashSet<string>();       // Keeps track of what nodes the player has seen so that we don't see those again
+    private HashSet<string> visitedBranches = new HashSet<string>();    // Keeps track of what ENTIRE BRANCHES have been used up so that we don't even have to look at those again
+        // Stores the string of the HEAD NODE for that branch
+        // Neither visited hashset stores repeatableGeneric type nodes
 
-    private int numGenericDialogueTriggers = 3;     // Number of distinct generic dialogue triggers
+    private int numGenericDialogueTriggers = 4;     // Number of distinct generic dialogue triggers
 
     void Awake()
     {
@@ -182,7 +187,8 @@ public class DialogueManager : MonoBehaviour
             // If both are options
             if( isLowHP && canAttemptBarter != DialogueTrigger.enumSize ){
                 // Includes low HP, barter attempt, and default dialogue as options
-                trigger = (DialogueTrigger)Random.Range(0,numGenericDialogueTriggers);
+                // DOES NOT INCLUDE generic repeatable, which only plays if there's nothing new or good to play
+                trigger = (DialogueTrigger)Random.Range(0,numGenericDialogueTriggers-1);
             }
             // If only one of the two is an option
             else if( isLowHP || canAttemptBarter != DialogueTrigger.enumSize ){

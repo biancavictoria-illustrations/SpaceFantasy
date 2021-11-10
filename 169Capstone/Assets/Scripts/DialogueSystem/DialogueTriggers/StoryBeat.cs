@@ -5,10 +5,19 @@ using UnityEngine;
 
 public enum StoryBeatType
 {
+    // === Generic Triggers ===
+    defaultDialogue,    // Can be played whenever but is actual character/plot stuff
+    lowHealth,          // < 20%
+    barterSuccess,      // >=15 CHA
+    barterFail,         // < 10 CHA
+    repeatableGeneric,  // Not marked as seen, repeatable when you run out of other stuff to see
+    // === Specific Plot Event Triggers ===
+    numRums,
     creatureKilled,
     killedBy,
     dialogueCompleted,
     hasItem,
+    // === For Looping ===
     enumSize
 }
 
