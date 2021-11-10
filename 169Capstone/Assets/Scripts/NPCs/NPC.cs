@@ -7,23 +7,25 @@ public class NPC : MonoBehaviour
 {
     public static NPC ActiveNPC {get; private set;}
 
-    public string yarnStartNode = "Start";
+    [HideInInspector] public string yarnStartNode;      // Set on Start from the info in speakerData
     public YarnProgram yarnDialogue;
-
     public SpeakerData speakerData;
 
     [HideInInspector] public bool hasNewDialogue;
     public GameObject newDialogueAlert;
 
     public Dictionary<DialogueTrigger, int> genericDialogueTriggers = new Dictionary<DialogueTrigger, int>();   // Generic triggers and where we're at in those branches so far
-    [SerializeField] private List<DialogueTrigger> genericDialogueTriggerList = new List<DialogueTrigger>();    // Every possible generic trigger this NPC has
+    [SerializeField] private List<DialogueTrigger> genericDialogueTriggerList = new List<DialogueTrigger>();    // Every possible generic trigger this NPC has (not sure if this is gonna be necessary anymore... we'll see)
 
-    public List<int> hasNumRunDialogueList = new List<int>();   // Points at which this NPC comments on how many runs you've done; in order
+    public List<int> hasNumRunDialogueList = new List<int>();   // Times at which this NPC comments on how many runs you've done, in order
 
     void Start()
     {
         DialogueManager.instance.dialogueRunner.Add(yarnDialogue);
         DialogueManager.instance.AddSpeaker(speakerData);
+
+        // Start/head node for a speaker's yarn file is always their unique speakerID + "Start"
+        yarnStartNode = speakerData.SpeakerName() + "Start";
 
         // Set up the dictionary
         foreach(DialogueTrigger t in genericDialogueTriggerList){
@@ -31,7 +33,8 @@ public class NPC : MonoBehaviour
         }
 
         // TODO: Check if this NPC has new dialogue to say; if so, they have a UI alert above their head
-        // also you should only be able to talk to the NPC once and then you can't again til next run
+        // (set hasNewDialogue to true if the dialogue selected for them is anything BESIDES the super generic default repeatable category)
+        // also you should only be able to talk to the NPC once and then you can't again til next run...
         hasNewDialogue = true;
         newDialogueAlert.SetActive(hasNewDialogue);
         // How does this work with scene transitions? How do we keep track of this stuff?

@@ -36,7 +36,7 @@ public class StoryManager : MonoBehaviour
         else{
             instance = this;
         }
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject);      // ... right? (VERIFY THIS)
 
         currentRunNumber = 1;
 
@@ -121,7 +121,7 @@ public class StoryManager : MonoBehaviour
                 }
             }
         }
-
+        
         Debug.Log("No story beat found for " + beatType + " " + enemy + "!");
     }
 
