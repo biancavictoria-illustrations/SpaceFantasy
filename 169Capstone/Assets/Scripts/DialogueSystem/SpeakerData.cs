@@ -4,17 +4,19 @@ using UnityEditor;
 using UnityEngine;
 
 // EVERY speaker NPC has its own unique SpeakerID
+// Start/head node for a speaker's yarn file is always their unique speakerID + "Start"
 public enum SpeakerID
 {
     Player,
-    // Final boss
     TimeLich,
-    // Hub world
+
+    // === Hub World ===
     Stellan,
-    // Run shopkeepers
+
+    // === On-Run Shopkeepers ===
     Bryn,
-    Weapons,
-    Doctor,
+    Weapons,    // TODO: Update this
+    Doctor,     // TODO: Update this?
     Sorrel,
 
     enumSize

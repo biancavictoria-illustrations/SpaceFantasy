@@ -12,6 +12,7 @@ public enum DialogueTrigger
     defaultDialogue,
     lowHealth,         // < 20%
     barterAttempt,
+    // === Specific Barter Conditions ===
     barterSuccess,     // >=15 CHA
     barterFail,        // < 10 CHA
     // === High Priority Triggers ===
@@ -48,9 +49,7 @@ public class DialogueManager : MonoBehaviour
         else{
             instance = this;
         }
-
-        DontDestroyOnLoad(this.gameObject);
-        // ... right?
+        DontDestroyOnLoad(this.gameObject);     // ... right? (VERIFY THIS)
 
 
         // Add SetSpeakerInfo to yarn so that we can set character portraits and names
@@ -67,20 +66,43 @@ public class DialogueManager : MonoBehaviour
         dialogueRunner.AddFunction("SelectNextTrigger", 0, delegate (Yarn.Value[] parameters){
             
             /*
-                Change the structure so that it does something like:
-                - right off the bat, if there's a MAX PRIORITY plotEvent, just play that
                 - if not, keep looking -> gets the highest priority possible dialogue of each type
                 - once you gather the options that are applicable, if there's a single Highest Priority Thing, play that
                 - otherwise, choose randomly between everything on the same (highest) playing field
-                - what if this means we never get generic/default dialogue??? could have an element of randomness also...
+                
+
+                Current Problems/TODO:
+                ======================
+
+                - Need a BranchVisited function so that you can not only mark NODES as visited but entire BRANCHES starting from the YarnHeadNodes
+                defined in PlotBeats and stuff
+                    -> Once Yarn reaches the end of a branch, it marks the entire branch as visited
+                    -> Use NodeVisited stuff as a reference
+                    -> Mark the branch as visited, and then be able to check if a branch is visited HERE in Unity so that we can say
+                    if(BranchVisited){ pick a new topic/interaction/branch }
+                    -> Should entirely visited/expended branches just be removed from the available dialogue pool IN GENERAL? That's stored in
+                    the StoryManager so that could be doable...
+                    -> Hence also the need for a Generic Default Dialogue category that isn't just "can be played whenever" but a REPEATABLE pool
+                    (called Repeatable presumably, and the default if there are NO other options, or as occasional default/generic options so
+                    it's less jarring/obvious; single generic repeatable line that the NPC can say)
+                
+                - if certain plot beats (like killing slimes) always show up, we're never going to get any other options for the highest priorty (bc it'll keep
+                picking the first one seen which will always be the same I think???)
+                    -> like they're not ranked INDIVIDUALLY, they're priority CATEGORIES
+                    -> we need a way to randomly select one of the many options on the same priority level
+                    -> things need to be built into repeatable functions that you can 
+                
+                - so a lot of this seems to indicate we need this to be broken down into individual functions returning these values so that it can be more
+                modular and we can redo things in loops as necessary, basically
+                    -> like "loop through this thing and do this until you find a satisfactory* option, then move on to the next category and do the same"
+                    -> *branch NOT entirely completed yet for the currently active NPC (has new dialogue), all plot beat requirements met and triggered, etc.
             */
 
+            StoryBeat highestPriorityBeat = null;
             
             // Check for plot stuff and play the next relevant thing there if possible (then return)
             if( StoryManager.instance.activeStoryBeats.Count > 0 ){
                 // Cycle the options and find the highest priority one
-                // TODO: Try to find associated dialogue in descending priority order (this will only check the first one) (speaker data check should help maybe???)
-                StoryBeat highestPriorityBeat = null;
                 foreach(StoryBeat beat in StoryManager.instance.activeStoryBeats){
                     // Set default value (first option)
                     if( highestPriorityBeat == null ){
@@ -91,56 +113,93 @@ public class DialogueManager : MonoBehaviour
                         highestPriorityBeat = beat;
                     }
                 }
+            }
+
+            // If the current highest priority beat is MAX PRIORITY (Big Plot Events), just go ahead and return that now
+            if( highestPriorityBeat != null && highestPriorityBeat.GetPriority() == DialoguePriority.maxPriority ){
                 return highestPriorityBeat.GetYarnHeadNode();
             }
-            // Maybe need to compare priority of ^^ to stuff below... (cuz there could be a lot of like "you killed a slime")
 
-
-            // Check for run number related dialogue (values depend on the character you're talking to)
-            int currentRunNumber = StoryManager.instance.currentRunNumber;
-            foreach(int num in NPC.ActiveNPC.hasNumRunDialogueList){
-                int difference = currentRunNumber - num;
-                if( difference <= 3 && difference >= 0 ){
-                    // return DialogueTrigger.numberOfRuns.ToString();
-                }
-                else if( difference > 3){
-                    // Remove it from the list so we stop looking for it
-                    NPC.ActiveNPC.hasNumRunDialogueList.Remove(num);
+            // If the current highest priority beat is P1 or lower, check for current run number dialogue instead
+            if( highestPriorityBeat != null && highestPriorityBeat.GetPriority() <= DialoguePriority.p1 ){
+                // Values depend on the character you're talking to
+                int currentRunNumber = StoryManager.instance.currentRunNumber;
+                foreach(int num in NPC.ActiveNPC.hasNumRunDialogueList){
+                    int difference = currentRunNumber - num;
+                    if( difference <= 3 && difference >= 0 ){
+                        return DialogueTrigger.numRuns.ToString();
+                    }
+                    else if( difference > 3){
+                        // Remove it from the list so we stop looking for it
+                        NPC.ActiveNPC.hasNumRunDialogueList.Remove(num);    // (VERIFY) Can you do this in a foreach loop or does that mess it up?
+                    }
                 }
             }
 
+            // Check for item event triggers and if any are met, find the highest priority item trigger
+            // TODO: Get a reference to the player's inventory (remember to check if it's empty first presumably? unless foreach handles that well) and make this not pseudocode
+            // foreach( Item item in playerInventory ){
+            //     // TODO: Get that item's item trigger, if it has one (the below thing doesn't work for that)
+            //     if(StoryManager.instance.itemDialogueTriggers.Contains(itemTrigger) && itemTrigger.GetSpeakersWithComments().Contains(NPC.ActiveNPC.speakerData)){
+            //         if( highestPriorityBeat == null ){
+            //             highestPriorityBeat = itemTrigger;
+            //         }
+            //         // Compare priority of the item trigger to the plot event trigger
+            //         if( itemTrigger.GetPriority() > highestPriorityBeat.GetPriority() ){
+            //             highestPriorityBeat = itemTrigger;
+            //         }
+            //     }
+            // }
 
-            // Check for item event triggers and play the next thing there if possible (then return)
-            // TODO: Get a reference to the player's inventory and check if 
-            // foreach item the player has
-            // if( StoryManager.instance.itemDialogueTriggers.Contains(item) && thatItemTrigger.GetSpeakersWithComments().Contains(NPC.ActiveNPC.speakerData) )
-            // return DialogueTrigger.hasItem.ToString();
+            // If at this point the highest priority beat exists and is > P1, play that
+            if( highestPriorityBeat != null && highestPriorityBeat.GetPriority() > DialoguePriority.p1 ){
+                return highestPriorityBeat.GetYarnHeadNode();
+            }
 
+            // === Now include more generic/less high priority dialogue checks ===
 
-            // === IF NO SPECIFIC EVENTS TRIGGERED, pick a random generic condition and do that ===
-
-            // Get a random number from 0 - max generic dialogue triggers, then convert to the trigger enum value
-            DialogueTrigger trigger = (DialogueTrigger)Random.Range(0,numGenericDialogueTriggers);
-
-            // If bartering, check if success or fail
             PlayerStats playerStats = FindObjectsOfType<PlayerStats>()[0];
-            if(trigger == DialogueTrigger.barterAttempt){
-                if( playerStats.Charisma() >= 15 ){
-                    return "barterSuccess";
-                }
-                else if( playerStats.Charisma() < 10 ){
-                    return "barterFail";
-                }
-                else{
-                    // If your CHA stat is 10-14
-                    return "defaultDialogue";
+
+            // Default trigger value
+            DialogueTrigger trigger = DialogueTrigger.defaultDialogue;
+
+            // Check if the player is low health
+            bool isLowHP = false;
+            // TODO: Check if the player is <= 20% health (like currentHP / maxHP <= 0.2)
+            if( playerStats.getMaxHitPoints() == 0 ){
+                isLowHP = true;
+            }
+
+            // Check if you can get successful or failed barter attempt dialogue
+            DialogueTrigger canAttemptBarter = DialogueTrigger.enumSize;
+            if( playerStats.Charisma() >= 15 ){
+                canAttemptBarter = DialogueTrigger.barterSuccess;
+            }
+            else if( playerStats.Charisma() < 10 ){
+                canAttemptBarter = DialogueTrigger.barterFail;
+            }
+
+            // If both are options
+            if( isLowHP && canAttemptBarter != DialogueTrigger.enumSize ){
+                // Includes low HP, barter attempt, and default dialogue as options
+                trigger = (DialogueTrigger)Random.Range(0,numGenericDialogueTriggers);
+            }
+            // If only one of the two is an option
+            else if( isLowHP || canAttemptBarter != DialogueTrigger.enumSize ){
+                // Get a random number 0 or 1
+                // If 1, set trigger to lowHP or the barter attempt value, depending on which was true; (0 stays default)
+                int randomValue = Random.Range(0,2);
+                if( randomValue == 1 ){
+                    trigger = isLowHP ? DialogueTrigger.lowHealth : canAttemptBarter;
                 }
             }
 
-            // If low HP, check if you're actually low HP
-            if(trigger == DialogueTrigger.lowHealth){
-                // TODO: Check if player IS low HP before including this option...
-                // return "defaultDialogue";
+            // If we had a plot beat from before, randomly pick between that or this random interaction
+            if( highestPriorityBeat != null ){
+                int randomValue = Random.Range(0,2);
+                if(randomValue == 1){
+                    return highestPriorityBeat.GetYarnHeadNode();
+                }
             }
 
             return trigger.ToString();        
@@ -160,19 +219,18 @@ public class DialogueManager : MonoBehaviour
             NPC.ActiveNPC.genericDialogueTriggers[trigger] = currentNode + 1;   // Increment the value in the dictionary
 
             // TODO: If this condition is now out of interactions, remove it from the pool (NPC.ActiveNPC.RemoveDialogueTrigger(trigger))
-            // Instead, play a default (NOT NEW) dialogue (TODO: add a new category for true default lame single line dialogue as opposed to default new progressing dialogue)
-
+            // Update: based on recent changes (aka the entire StoryManager + StoryBeat system) that might not be the way to do it in general
+            // but yes we need some kind of BranchVisited function and stuff
 
             return currentNode;
         });
 
-        // Ideally have a SelectSpecific version for the node selection above? Idk specific dialogue is gonna have it's whole own system so we'll see
-        // Might need specific versions for story events vs item events vs etc.
-    }
 
-    private string SelectPlotEventTopic()
-    {
-        return "";
+        // TODO: Selecting a specific node for NON-GENERIC dialogue (aka PlotBeats :)  -> items, killed, & conversation events)
+        // Probably maybe needs its own function added to yarn for this...
+
+
+        // TODO: Selecting a specific node for runNum interactions, based on current run num & when this speaker comments on that :)
     }
 
     public void AddSpeaker(SpeakerData data)
@@ -210,7 +268,7 @@ public class DialogueManager : MonoBehaviour
     // Called by the Dialogue Runner to notify us that a node finished running
     public void NodeComplete(string nodeName)
     {
-        // Log that the node has been run.
+        // Log that the node has been run
         visitedNodes.Add(nodeName);
     }
 }
