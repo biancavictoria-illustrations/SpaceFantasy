@@ -8,5 +8,6 @@ public class StoryBeatDefault : StoryBeat
     void Awake()
     {
         beatType = StoryBeatType.defaultDialogue;
+        priorityValue = DialoguePriority.p1;
     }
 }

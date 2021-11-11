@@ -7,6 +7,7 @@ public class StoryBeatRepeatableGeneric : StoryBeat
 {
     void Awake()
     {
-        beatType = StoryBeatType.repeatableGeneric;
+        beatType = StoryBeatType.repeatable;
+        priorityValue = DialoguePriority.minRepeatable;
     }
 }

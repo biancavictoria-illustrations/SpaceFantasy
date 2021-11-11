@@ -19,7 +19,7 @@ public class StoryBeatItem : StoryBeat
 
     void Awake()
     {
-        beatType = StoryBeatType.hasItem;
+        beatType = StoryBeatType.item;
     }
 
     public ItemID GetItem()

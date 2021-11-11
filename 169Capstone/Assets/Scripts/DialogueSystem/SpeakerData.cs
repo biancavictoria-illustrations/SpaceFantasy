@@ -15,7 +15,7 @@ public enum SpeakerID
 
     // === On-Run Shopkeepers ===
     Bryn,
-    Weapons,    // TODO: Update this
+    Andy,
     Doctor,     // TODO: Update this?
     Sorrel,
 

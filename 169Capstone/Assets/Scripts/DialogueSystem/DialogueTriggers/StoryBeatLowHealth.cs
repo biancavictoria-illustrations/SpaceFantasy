@@ -10,6 +10,7 @@ public class StoryBeatLowHealth : StoryBeat
     void Awake()
     {
         beatType = StoryBeatType.lowHealth;
+        priorityValue = DialoguePriority.p1;
     }
 
     public float LowHealthThreshold()

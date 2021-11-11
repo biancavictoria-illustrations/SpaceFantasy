@@ -6,25 +6,6 @@ using TMPro;
 using Yarn.Unity;
 
 
-// Types of dialogue -> the things the NPC responds to
-public enum DialogueTrigger
-{
-    // === Generic Triggers ===
-    defaultDialogue,
-    lowHealth,         // < 20%
-    barterAttempt,
-    repeatableGeneric,
-    // === Specific Barter Conditions ===
-    barterSuccess,     // >=15 CHA
-    barterFail,        // < 10 CHA
-    // === High Priority Triggers ===
-    numRuns,
-    item,
-    plotEvents,        // Killed creature, killed by creature, finished conversation (handled by the StoryManager)
-    // === For Looping Purposes ===
-    enumSize
-}
-
 public class DialogueManager : MonoBehaviour
 {   
     public static DialogueManager instance;
@@ -114,7 +95,7 @@ public class DialogueManager : MonoBehaviour
                         highestPriorityBeat = beat;
                     }
                     // If this NPC has something to say AND the priority is higher, set it to the interaction we'll choose
-                    else if( beat.GetPriority() > highestPriorityBeat.GetPriority() && beat.GetSpeakersWithComments().Contains(NPC.ActiveNPC.speakerData) ){
+                    else if( beat.GetPriority() > highestPriorityBeat.GetPriority() && beat.GetSpeakersWithComments().Contains(NPC.ActiveNPC.speakerData.SpeakerID()) ){
                         highestPriorityBeat = beat;
                     }
                 }
@@ -132,7 +113,7 @@ public class DialogueManager : MonoBehaviour
                 foreach(int num in NPC.ActiveNPC.hasNumRunDialogueList){
                     int difference = currentRunNumber - num;
                     if( difference <= 3 && difference >= 0 ){
-                        return DialogueTrigger.numRuns.ToString();
+                        return StoryBeatType.numRums.ToString();
                     }
                     else if( difference > 3){
                         // Remove it from the list so we stop looking for it
@@ -163,72 +144,86 @@ public class DialogueManager : MonoBehaviour
 
             // === Now include more generic/less high priority dialogue checks ===
 
+            // TODO: Loop through StoryManager.instance.genericStoryBeats instead of what's currently happening...
+
             PlayerStats playerStats = FindObjectsOfType<PlayerStats>()[0];
 
             // Default trigger value
-            DialogueTrigger trigger = DialogueTrigger.defaultDialogue;
+            StoryBeatType genericTrigger = StoryBeatType.defaultDialogue;
 
             // Check if the player is low health
             bool isLowHP = false;
             // TODO: Check if the player is <= 20% health (like currentHP / maxHP <= 0.2)
+            // Check if it's less than the lowHP beat .HPthreshold thing
             if( playerStats.getMaxHitPoints() == 0 ){
                 isLowHP = true;
             }
 
             // Check if you can get successful or failed barter attempt dialogue
-            DialogueTrigger canAttemptBarter = DialogueTrigger.enumSize;
+            StoryBeatType canAttemptBarter = StoryBeatType.enumSize;
             if( playerStats.Charisma() >= 15 ){
-                canAttemptBarter = DialogueTrigger.barterSuccess;
+                canAttemptBarter = StoryBeatType.barterSuccess;
             }
             else if( playerStats.Charisma() < 10 ){
-                canAttemptBarter = DialogueTrigger.barterFail;
+                canAttemptBarter = StoryBeatType.barterFail;
             }
 
             // If both are options
-            if( isLowHP && canAttemptBarter != DialogueTrigger.enumSize ){
+            if( isLowHP && canAttemptBarter != StoryBeatType.enumSize ){
                 // Includes low HP, barter attempt, and default dialogue as options
                 // DOES NOT INCLUDE generic repeatable, which only plays if there's nothing new or good to play
-                trigger = (DialogueTrigger)Random.Range(0,numGenericDialogueTriggers-1);
+                genericTrigger = (StoryBeatType)Random.Range(0,numGenericDialogueTriggers-1);
+                if( genericTrigger == StoryBeatType.barterSuccess ){
+                    genericTrigger = canAttemptBarter;
+                }
             }
             // If only one of the two is an option
-            else if( isLowHP || canAttemptBarter != DialogueTrigger.enumSize ){
+            else if( isLowHP || canAttemptBarter != StoryBeatType.enumSize ){
                 // Get a random number 0 or 1
                 // If 1, set trigger to lowHP or the barter attempt value, depending on which was true; (0 stays default)
                 int randomValue = Random.Range(0,2);
                 if( randomValue == 1 ){
-                    trigger = isLowHP ? DialogueTrigger.lowHealth : canAttemptBarter;
+                    genericTrigger = isLowHP ? StoryBeatType.lowHealth : canAttemptBarter;
                 }
             }
 
-            // If we had a plot beat from before, randomly pick between that or this random interaction
+            // If we had a plot beat from before, compare priority
             if( highestPriorityBeat != null ){
-                int randomValue = Random.Range(0,2);
-                if(randomValue == 1){
-                    return highestPriorityBeat.GetYarnHeadNode();
-                }
+                // TODO: once trigger is NOT JUST THE StoryBeatType, uncomment this stuff
+                // if( highestPriorityBeat.GetPriority() > trigger.GetPriority() ){
+                //     return highestPriorityBeat.GetYarnHeadNode();
+                // }
+                // else{   // // If same priority, randomly pick between that or this random interaction
+                    int randomValue = Random.Range(0,2);
+                    if(randomValue == 1){
+                        return highestPriorityBeat.GetYarnHeadNode();
+                    }
+                // }
             }
 
-            return trigger.ToString();        
+            return genericTrigger.ToString();        
         });
 
 
         // Add a function to tell yarn which node in that conditional branch to play
         dialogueRunner.AddFunction("SelectGenericNode", 1, delegate (Yarn.Value[] parameters){
             // Takes in a trigger; search the active NPC's dictionary for that key, the value is an int of where we're at
-            DialogueTrigger trigger = DialogueTrigger.defaultDialogue;
-            for(int i = 0; i < (int)DialogueTrigger.enumSize; ++i){
-                if(( (DialogueTrigger)i ).ToString().Equals(parameters[0])){
-                    trigger = (DialogueTrigger)i;
+            StoryBeatType trigger = StoryBeatType.defaultDialogue;
+            for(int i = 0; i < (int)StoryBeatType.enumSize; ++i){
+                if(( (StoryBeatType)i ).ToString().Equals(parameters[0])){
+                    trigger = (StoryBeatType)i;
                 }
             }
-            int currentNode = NPC.ActiveNPC.genericDialogueTriggers[trigger];   // Set the current position in the branch
-            NPC.ActiveNPC.genericDialogueTriggers[trigger] = currentNode + 1;   // Increment the value in the dictionary
+            // TODO: Find the current node position and return it
+
+            // int currentNode = NPC.ActiveNPC.genericDialogueTriggers[trigger];   // Set the current position in the branch
+            // NPC.ActiveNPC.genericDialogueTriggers[trigger] = currentNode + 1;   // Increment the value in the dictionary
 
             // TODO: If this condition is now out of interactions, remove it from the pool (NPC.ActiveNPC.RemoveDialogueTrigger(trigger))
             // Update: based on recent changes (aka the entire StoryManager + StoryBeat system) that might not be the way to do it in general
             // but yes we need some kind of BranchVisited function and stuff
 
-            return currentNode;
+            return 0;
         });
 
 
