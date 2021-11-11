@@ -10,37 +10,39 @@ public enum StoryBeatType
     lowHealth,          // < 20%
     barterSuccess,      // >=15 CHA
     barterFail,         // < 10 CHA
-    repeatableGeneric,  // Not marked as seen, repeatable when you run out of other stuff to see
+    repeatable,         // Not marked as seen, repeatable when you run out of other stuff to see
     // === Specific Plot Event Triggers ===
     numRums,
     creatureKilled,
     killedBy,
     dialogueCompleted,
-    hasItem,
+    item,
     // === For Looping ===
     enumSize
 }
 
 public enum DialoguePriority
 {
-    minPriority,    // Lowest priority, for default options
-    p1,
-    p2,
-    p3,
-    maxPriority     // Reserved for killing the Time Lich or certain Stellan interactions (BIG. PLOT. THINGS.)
+    minRepeatable,  // Lowest priority; reserved for repeatable generic options ONLY
+    p1,             // Low priority; for default, lowHP, barter, very low priority conversation/death stuff (like killing slimes)
+    p2,             // Mid priority
+    p3,             // High prioirty
+    maxPriority     // Reserved ONLY for killing the Time Lich or certain Stellan interactions (BIG. PLOT. THINGS.)
 }
+
+// Yarn head nodes could be automatically set by the relevant enemy, item, etc. ID value for items and maybe killed creature/killed by creature
+// For things BESIDES conversation, at the very least, it would be [ActiveNPC.SpeakerID][StoryBeat.yarnHeadNode]
+// YarnHeadNode should be descriptive and non-repeated
 
 public class StoryBeat : ScriptableObject
 {
     [SerializeField] private string yarnHeadNode = "";        // Yarn node title (tag?) for the head node of responses to this beat (like a descriptive title)
-
-    [SerializeField] private DialoguePriority priorityValue;  // Priority compared to other story beats for someone to comment ( > # = higher priority )
-
+    [SerializeField] protected DialoguePriority priorityValue;  // Priority compared to other story beats for someone to comment ( > # = higher priority )
     [SerializeField] private bool carriesOver = false;        // If this event can be commented on on future runs beyond the immediate next one
 
     protected StoryBeatType beatType;     // Automatically set in the children
 
-    [SerializeField] private HashSet<SpeakerData> speakersWithComments = new HashSet<SpeakerData>();    // List of the speaking characters who have something to say about this event
+    [SerializeField] private List<SpeakerID> speakersWithComments = new List<SpeakerID>();    // List of the speaking characters who have something to say about this event
 
     private Dictionary<StoryBeat,int> prereqStoryBeatDatabase = new Dictionary<StoryBeat,int>();    // OPTIONAL list of prereq story beats that have to have numberOfCompletions >= int X
     [SerializeField] private List<StoryBeat> prereqBeats = new List<StoryBeat>();   // Because dictionaries aren't serializable, we get the data this way and build it in start
@@ -69,7 +71,7 @@ public class StoryBeat : ScriptableObject
         return priorityValue;
     }
 
-    public HashSet<SpeakerData> GetSpeakersWithComments()
+    public List<SpeakerID> GetSpeakersWithComments()
     {
         return speakersWithComments;
     }

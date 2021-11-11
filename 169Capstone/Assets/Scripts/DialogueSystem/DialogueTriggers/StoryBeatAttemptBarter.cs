@@ -10,6 +10,7 @@ public class StoryBeatAttemptBarter : StoryBeat
 
     void Awake()
     {
+        priorityValue = DialoguePriority.p1;
         if(isSuccess){
             beatType = StoryBeatType.barterSuccess;
             return;

@@ -10,8 +10,25 @@ public class StoryManager : MonoBehaviour
         public bool beatIsActive;          // If the player did this thing on their latest run (so characters can/should respond to it)
         public int numberOfCompletions;    // The number of times the player has done this thing
 
+        public HashSet<SpeakerID> speakersWithComments; // Things are removed once they no longer have new things to say on a topic
+
         // Constructor
-        public BeatStatus(bool active, int num){
+        public BeatStatus(bool active, int num, List<SpeakerID> speakers){
+            speakersWithComments = new HashSet<SpeakerID>();
+            // Add all the speakerIDs to the hashset
+            for(int i = 0; i < speakers.Count; ++i){
+                speakersWithComments.Add(speakers[i]);
+            }
+
+            this.beatIsActive = active;
+            this.numberOfCompletions = num;
+        }
+
+        // Constructor with HashSet instead of List
+        public BeatStatus(bool active, int num, HashSet<SpeakerID> speakers){
+            speakersWithComments = new HashSet<SpeakerID>();
+            this.speakersWithComments = speakers;
+
             this.beatIsActive = active;
             this.numberOfCompletions = num;
         }
@@ -25,7 +42,7 @@ public class StoryManager : MonoBehaviour
     public HashSet<StoryBeat> activeStoryBeats = new HashSet<StoryBeat>();    // For the DialogueManager to see just the active beats
 
     public HashSet<StoryBeatItem> itemDialogueTriggers = new HashSet<StoryBeatItem>();  // All item dialogue triggers
-
+    public HashSet<StoryBeat> genericStoryBeats = new HashSet<StoryBeat>();     // For attemptBarter, lowHP, default, and repeatable
 
     void Awake()
     {
@@ -41,31 +58,62 @@ public class StoryManager : MonoBehaviour
         currentRunNumber = 1;
 
         // Load in the StoryBeats (only of type Killed and Conversation) from the StoryBeats folder in Resources
-        Object[] storyBeatList = Resources.LoadAll("StoryBeats", typeof(StoryBeat));
+        Object[] storyBeatList = Resources.LoadAll("SpecificStoryBeats", typeof(StoryBeat));
         foreach(Object s in storyBeatList){
             StoryBeat beat = (StoryBeat)s;
             // Add the storybeat to the dictionary
-            storyBeatDatabase.Add( beat, new BeatStatus(false,0) );
+            storyBeatDatabase.Add( beat, new BeatStatus( false, 0, beat.GetSpeakersWithComments() ) );
         }
 
         // Load in the ItemDialogueTriggers from the ItemTriggers folder in Resources
-        Object[] itemDialogueList = Resources.LoadAll("ItemTriggers", typeof(StoryBeatItem));
+        Object[] itemDialogueList = Resources.LoadAll("ItemStoryBeats", typeof(StoryBeatItem));
         foreach(Object i in itemDialogueList){
             StoryBeatItem item = (StoryBeatItem)i;
             itemDialogueTriggers.Add(item);
         }
+
+        // Load in the generic story beats from the GenericStoryBeats folders in Resources
+        Object[] genericDialogueList = Resources.LoadAll("GenericStoryBeats", typeof (StoryBeat));
+        foreach(Object g in genericDialogueList){
+            StoryBeat beat = (StoryBeat)g;
+            genericStoryBeats.Add( beat );
+        }
     }
 
-    // Increment when you BEGIN a new run
+    // Increment when you BEGIN a new run (when leaving the hub world)?
     // TODO: Call this when you begin a new run (probably Game Manager)
     public void IncrementRunNumber()
     {
         currentRunNumber++;
     }
 
+    // Removes a speaker from a given beat's list of speakers who have something to say about that beat
+    // Called once an entire branch starting from that beat's head node is completed -> that way we no longer consider that in that speaker's pool of things to say
+    public void RemoveSpeakerFromBeat(StoryBeat beat, SpeakerID speakerID)
+    {
+        // Make sure the beat is in the database
+        if( !storyBeatDatabase.ContainsKey(beat) ){
+            Debug.LogError("Tried to remove " + speakerID + " from beat " + beat.GetYarnHeadNode() + " of type " + beat.GetBeatType() + ", but the beat is not in the database!");
+            return;
+        }
+
+        // Make sure the speaker is in the beat's speaker list
+        if( !storyBeatDatabase[beat].speakersWithComments.Contains(speakerID) ){
+            Debug.LogError("Tried to remove " + speakerID + " from beat " + beat.GetYarnHeadNode() + "'s speaker list, but it doesn't exist!");
+            return;
+        }
+
+        storyBeatDatabase[beat].speakersWithComments.Remove(speakerID);
+    }
+
     // When you achieve this story beat on a run, increment the # completions and set achieved to true
     public void AchievedStoryBeat(StoryBeat beat)
     {
+        if( beat.GetBeatType() != StoryBeatType.creatureKilled && beat.GetBeatType() != StoryBeatType.killedBy && beat.GetBeatType() != StoryBeatType.dialogueCompleted ){
+            Debug.LogError("Tried to call AchievedStoryBeat on wrong beat type: " + beat.GetBeatType() + " " + beat.GetYarnHeadNode() + "!");
+            return;
+        }
+
         // If there are prereqs, check them
         Dictionary<StoryBeat,int> prereqs = beat.GetPrereqStoryBeats();
         if(prereqs.Count > 0){
@@ -77,7 +125,7 @@ public class StoryManager : MonoBehaviour
             }
         }
         // If all potential prereqs are met, update the story beat status to be active and increment completion
-        storyBeatDatabase[beat] = new BeatStatus( true, storyBeatDatabase[beat].numberOfCompletions + 1 );
+        storyBeatDatabase[beat] = new BeatStatus( true, storyBeatDatabase[beat].numberOfCompletions + 1, storyBeatDatabase[beat].speakersWithComments );
     }
 
     // At the end of every run, check if any new story beats have been activated; if so, add them to the list for the DialogueManager to access
@@ -96,7 +144,7 @@ public class StoryManager : MonoBehaviour
         // Now that the latest achieved have been queued, reset everything that doesn't carry over to not active
         foreach( StoryBeat beat in storyBeatDatabase.Keys ){
             if( !beat.CarriesOver() ){
-                storyBeatDatabase[beat] = new BeatStatus(false, storyBeatDatabase[beat].numberOfCompletions);
+                storyBeatDatabase[beat] = new BeatStatus(false, storyBeatDatabase[beat].numberOfCompletions, storyBeatDatabase[beat].speakersWithComments);
             }
         }
     }
