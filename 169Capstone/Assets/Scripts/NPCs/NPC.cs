@@ -11,7 +11,7 @@ public class NPC : MonoBehaviour
     public YarnProgram yarnDialogue;
     public SpeakerData speakerData;
 
-    [HideInInspector] public bool hasNewDialogue;
+    [HideInInspector] public bool hasNewDialogue = true;
     public GameObject newDialogueAlert;
 
     public List<int> hasNumRunDialogueList = new List<int>();   // Times at which this NPC comments on how many runs you've done, in order
@@ -22,25 +22,18 @@ public class NPC : MonoBehaviour
         DialogueManager.instance.AddSpeaker(speakerData);
 
         // Start/head node for a speaker's yarn file is always their unique speakerID + "Start"
-        yarnStartNode = speakerData.SpeakerName() + "Start";
+        yarnStartNode = speakerData.SpeakerID() + "Start";
 
-        // TODO: Check if this NPC has new dialogue to say; if so, they have a UI alert above their head
-        // (set hasNewDialogue to true if the dialogue selected for them is anything BESIDES the super generic default repeatable category)
-        // also you should only be able to talk to the NPC once and then you can't again til next run...
-        hasNewDialogue = true;
+        // TODO: You should only be able to talk to the NPC once and then you can't again til next run...
+        // once you've talked to them, you can't again!
         newDialogueAlert.SetActive(hasNewDialogue);
-        // How does this work with scene transitions? How do we keep track of this stuff?
-        // Should the dialogue/story manager just... hold all the NPCs' dialogue statuses, instead of the NPCs themselves?
     }
 
-    public void NewDialogueSpoken()
+    // Toggles the newDialogueAlert on/off
+    public void HasNewDialogue(bool set)
     {
-        // TODO: Could just make this a function that takes in a bool and toggles the newdialoguealert on/off
-        // unless the bool has another purpose?
-        if(hasNewDialogue){
-            hasNewDialogue = false;
-            newDialogueAlert.SetActive(false);
-        }
+        hasNewDialogue = set;
+        newDialogueAlert.SetActive(set);
     }
 
     // When player gets within range, they can start dialogue
@@ -59,5 +52,14 @@ public class NPC : MonoBehaviour
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
             ActiveNPC = null;
         }
+    }
+
+    // After a player talks to them once, they can't again this run
+    // TODO: Call this after a player interacts with this NPC on a given run! (also write this lol)
+    // There MIGHT be a way to do this with yarn spinner...........
+    // Like it tells the dialogue manager who you talked to and the dialogue manager says great no more talking to that person i forbid it
+    public void NotInteractable()
+    {
+        // Could take in a bool set and toggle NPC interactability, if we need that functionality
     }
 }

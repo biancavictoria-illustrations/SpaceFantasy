@@ -36,6 +36,6 @@ public class PlayerInteract : MonoBehaviour
     {
         // unpause player movement
         isInDialogue = false;
-        NPC.ActiveNPC.NewDialogueSpoken();
+        NPC.ActiveNPC.HasNewDialogue(false);
     }
 }
