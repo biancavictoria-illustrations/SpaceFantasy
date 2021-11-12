@@ -41,8 +41,10 @@ public class StoryManager : MonoBehaviour
     public Dictionary<StoryBeat,BeatStatus> storyBeatDatabase = new Dictionary<StoryBeat,BeatStatus>();     // All story beats of type Conversation or Killed
     public HashSet<StoryBeat> activeStoryBeats = new HashSet<StoryBeat>();    // For the DialogueManager to see just the active beats
 
-    public HashSet<StoryBeatItem> itemDialogueTriggers = new HashSet<StoryBeatItem>();  // All item dialogue triggers
-    public HashSet<StoryBeat> genericStoryBeats = new HashSet<StoryBeat>();     // For attemptBarter, lowHP, default, and repeatable
+    // TODO: Update their beat status values??? -> UpdateBeatStatus() can do that for them too, just need to call it somewhere
+    // But if calling them to set them active somewhere, like in the DialogueManager, should also set them inactive after (end of a run presumably)
+    public Dictionary<StoryBeatItem,BeatStatus> itemStoryBeats = new Dictionary<StoryBeatItem,BeatStatus>();  // All item dialogue triggers
+    public Dictionary<StoryBeat,BeatStatus> genericStoryBeats = new Dictionary<StoryBeat,BeatStatus>();     // For attemptBarter, lowHP, default, and repeatable
 
     void Awake()
     {
@@ -69,14 +71,14 @@ public class StoryManager : MonoBehaviour
         Object[] itemDialogueList = Resources.LoadAll("ItemStoryBeats", typeof(StoryBeatItem));
         foreach(Object i in itemDialogueList){
             StoryBeatItem item = (StoryBeatItem)i;
-            itemDialogueTriggers.Add(item);
+            itemStoryBeats.Add(item,new BeatStatus( false, 0, item.GetSpeakersWithComments() ));
         }
 
         // Load in the generic story beats from the GenericStoryBeats folders in Resources
         Object[] genericDialogueList = Resources.LoadAll("GenericStoryBeats", typeof (StoryBeat));
         foreach(Object g in genericDialogueList){
             StoryBeat beat = (StoryBeat)g;
-            genericStoryBeats.Add( beat );
+            genericStoryBeats.Add( beat, new BeatStatus( false, 0, beat.GetSpeakersWithComments() ) );
         }
     }
 
@@ -87,27 +89,154 @@ public class StoryManager : MonoBehaviour
         currentRunNumber++;
     }
 
+    // Returns true if the speakerID is in that beat's speaker list at this time
+    public bool SpeakerIsInSpeakerList(StoryBeat beat, SpeakerID speakerID)
+    {
+        StoryBeatType beatType = beat.GetBeatType();
+        bool flag = true;
+
+        // If it's a Killed Event or Conversation Event
+        if((beatType == StoryBeatType.killedBy || beatType == StoryBeatType.creatureKilled || beatType == StoryBeatType.dialogueCompleted) && (!BeatIsInDatabase(beat) || !storyBeatDatabase[beat].speakersWithComments.Contains(speakerID))){
+            flag = false;
+        }
+        // If it's an item
+        else if(beatType == StoryBeatType.item){
+            StoryBeatItem item = (StoryBeatItem)beat;
+            if( !BeatIsInDatabase(beat) || !itemStoryBeats[item].speakersWithComments.Contains(speakerID) ){
+                flag = false;
+            }
+        }
+        // If it's a generic storybeat
+        else if(((int)beatType <= 5) && (!BeatIsInDatabase(beat) || !genericStoryBeats[beat].speakersWithComments.Contains(speakerID))){
+            flag = false;
+        }
+        if(flag == false){
+            Debug.LogError("Failed to access " + speakerID + " in beat " + beat.GetYarnHeadNode() + "'s speaker list!");
+        }
+        return flag;
+    }
+
+    private bool BeatIsInDatabase(StoryBeat beat)
+    {
+        StoryBeatType beatType = beat.GetBeatType();
+        bool flag = true;
+        // If it's a Killed Event or Conversation Event
+        if((beatType == StoryBeatType.killedBy || beatType == StoryBeatType.creatureKilled || beatType == StoryBeatType.dialogueCompleted) && (!storyBeatDatabase.ContainsKey(beat))){
+            flag = false;
+        }
+        // If it's an item
+        else if(beatType == StoryBeatType.item){
+            StoryBeatItem item = (StoryBeatItem)beat;
+            if( !itemStoryBeats.ContainsKey(item) ){
+                flag = false;
+            }
+        }
+        // If it's a generic storybeat
+        else if((int)beatType <= 5 && !genericStoryBeats.ContainsKey(beat)){
+            flag = false;
+        }
+        if( flag == false ){
+            Debug.LogError("Tried to access beat " + beat.GetYarnHeadNode() + " of type " + beat.GetBeatType() + ", but the beat is not in the database!");
+        }
+        return flag;
+    }
+
     // Removes a speaker from a given beat's list of speakers who have something to say about that beat
     // Called once an entire branch starting from that beat's head node is completed -> that way we no longer consider that in that speaker's pool of things to say
     public void RemoveSpeakerFromBeat(StoryBeat beat, SpeakerID speakerID)
     {
-        // Make sure the beat is in the database
-        if( !storyBeatDatabase.ContainsKey(beat) ){
-            Debug.LogError("Tried to remove " + speakerID + " from beat " + beat.GetYarnHeadNode() + " of type " + beat.GetBeatType() + ", but the beat is not in the database!");
-            return;
+        StoryBeatType beatType = beat.GetBeatType();
+        if( SpeakerIsInSpeakerList(beat, speakerID) ){
+            // If Killed or Conversation Event
+            if( beatType == StoryBeatType.creatureKilled || beatType == StoryBeatType.killedBy || beatType == StoryBeatType.dialogueCompleted ){
+                // VERIFY that this works; might not bc of struct stuff, in which case would have to make a new BeatStatus with a new hash set that doesn't have that speakerID
+                storyBeatDatabase[beat].speakersWithComments.Remove(speakerID);
+            }
+            // If item
+            else if( beatType == StoryBeatType.item ){
+                StoryBeatItem item = (StoryBeatItem)beat;
+                itemStoryBeats[item].speakersWithComments.Remove(speakerID);
+            }
+            // If generic
+            else if( (int)beatType <= 5 ){
+                genericStoryBeats[beat].speakersWithComments.Remove(speakerID);
+            }
         }
+    }
 
-        // Make sure the speaker is in the beat's speaker list
-        if( !storyBeatDatabase[beat].speakersWithComments.Contains(speakerID) ){
-            Debug.LogError("Tried to remove " + speakerID + " from beat " + beat.GetYarnHeadNode() + "'s speaker list, but it doesn't exist!");
-            return;
+    // Find the StoryBeat corresponding to a given node name string, given a beat type
+    public StoryBeat FindBeatFromNodeName(string nodeName, StoryBeatType beatType)
+    {
+        // If Killed or Conversation Event search storyBeatDatabase
+        if( beatType == StoryBeatType.creatureKilled || beatType == StoryBeatType.killedBy || beatType == StoryBeatType.dialogueCompleted ){
+            foreach(StoryBeat beat in storyBeatDatabase.Keys){
+                if( beat.GetYarnHeadNode().Equals(nodeName) ){
+                    return beat;
+                }
+            }
         }
+        // If item search itemDialogueTriggers
+        else if( beatType == StoryBeatType.item ){
+            foreach(StoryBeatItem beat in itemStoryBeats.Keys){
+                if( beat.GetYarnHeadNode().Equals(nodeName) ){
+                    return beat;
+                }
+            }
+        }
+        // If generic search genericStoryBeats
+        else if( (int)beatType <= 5 ){
+            foreach(StoryBeat beat in genericStoryBeats.Keys){
+                if( beat.GetYarnHeadNode().Equals(nodeName) ){
+                    return beat;
+                }
+            }
+        }
+        else{
+            Debug.LogError("No beats found for beat type: " + beatType);
+            return null;
+        }
+        Debug.LogError("No beats found for node name " + nodeName + " with beat type " + beatType);
+        return null;
+    }
 
-        storyBeatDatabase[beat].speakersWithComments.Remove(speakerID);
+    // Takes in a string that should match a StoryBeatType enum string value perfectly; convert to the enum value
+    public StoryBeatType GetBeatTypeFromString(string beatTypeString)
+    {
+        StoryBeatType beatType = StoryBeatType.enumSize;
+        for(int i = 0; i < (int)StoryBeatType.enumSize; ++i){
+            if( ((StoryBeatType)i).ToString() == beatTypeString ){
+                beatType = (StoryBeatType)i;
+            }
+        }
+        if( beatType == StoryBeatType.enumSize ){
+            Debug.LogError("No story beat type found for string: " + beatTypeString + ". Beat type set to " + beatType + ".");
+        }
+        return beatType;
+    }
+
+    // Update beat status to reflect the given active/inactive bool value + increment by the num provided (either 0 or 1)
+    public void UpdateBeatStatus(StoryBeat beat, bool setActive, int incrementCompletionNum)
+    {
+        StoryBeatType beatType = beat.GetBeatType();
+        if( BeatIsInDatabase(beat) ){
+            // If Killed or Conversation Event
+            if( beatType == StoryBeatType.creatureKilled || beatType == StoryBeatType.killedBy || beatType == StoryBeatType.dialogueCompleted ){
+                storyBeatDatabase[beat] = new BeatStatus( setActive, storyBeatDatabase[beat].numberOfCompletions + incrementCompletionNum, storyBeatDatabase[beat].speakersWithComments );
+            }
+            // If item
+            else if( beatType == StoryBeatType.item ){
+                StoryBeatItem item = (StoryBeatItem)beat;
+                itemStoryBeats[item] = new BeatStatus( setActive, storyBeatDatabase[beat].numberOfCompletions + incrementCompletionNum, storyBeatDatabase[beat].speakersWithComments );
+            }
+            // If generic
+            else if( (int)beatType <= 5 ){
+                genericStoryBeats[beat] = new BeatStatus( setActive, storyBeatDatabase[beat].numberOfCompletions + incrementCompletionNum, storyBeatDatabase[beat].speakersWithComments );
+            }
+        }
     }
 
     // When you achieve this story beat on a run, increment the # completions and set achieved to true
-    public void AchievedStoryBeat(StoryBeat beat)
+    private void AchievedStoryBeat(StoryBeat beat)
     {
         if( beat.GetBeatType() != StoryBeatType.creatureKilled && beat.GetBeatType() != StoryBeatType.killedBy && beat.GetBeatType() != StoryBeatType.dialogueCompleted ){
             Debug.LogError("Tried to call AchievedStoryBeat on wrong beat type: " + beat.GetBeatType() + " " + beat.GetYarnHeadNode() + "!");
@@ -125,10 +254,11 @@ public class StoryManager : MonoBehaviour
             }
         }
         // If all potential prereqs are met, update the story beat status to be active and increment completion
-        storyBeatDatabase[beat] = new BeatStatus( true, storyBeatDatabase[beat].numberOfCompletions + 1, storyBeatDatabase[beat].speakersWithComments );
+        UpdateBeatStatus(beat, true, 1);
     }
 
     // At the end of every run, check if any new story beats have been activated; if so, add them to the list for the DialogueManager to access
+    // TODO: call at the end of every run
     public void CheckForNewStoryBeats()
     {
         // Reset active story beats
@@ -144,7 +274,7 @@ public class StoryManager : MonoBehaviour
         // Now that the latest achieved have been queued, reset everything that doesn't carry over to not active
         foreach( StoryBeat beat in storyBeatDatabase.Keys ){
             if( !beat.CarriesOver() ){
-                storyBeatDatabase[beat] = new BeatStatus(false, storyBeatDatabase[beat].numberOfCompletions, storyBeatDatabase[beat].speakersWithComments);
+                UpdateBeatStatus(beat, false, 0);
             }
         }
     }

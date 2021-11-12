@@ -20,11 +20,8 @@ public class DialogueManager : MonoBehaviour
     public DialogueRunner dialogueRunner;
 
     private HashSet<string> visitedNodes = new HashSet<string>();       // Keeps track of what nodes the player has seen so that we don't see those again
-    private HashSet<string> visitedBranches = new HashSet<string>();    // Keeps track of what ENTIRE BRANCHES have been used up so that we don't even have to look at those again
-        // Stores the string of the HEAD NODE for that branch
-        // Neither visited hashset stores repeatableGeneric type nodes
 
-    private int numGenericDialogueTriggers = 4;     // Number of distinct generic dialogue triggers
+    [SerializeField] private int numRunsThreshold = 3;   // Threshold for # runs beyond the exact num run that numRun dialogue can trigger
 
     void Awake()
     {
@@ -38,8 +35,8 @@ public class DialogueManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);     // ... right? (VERIFY THIS)
 
 
-        // Add SetSpeakerInfo to yarn so that we can set character portraits and names
-        dialogueRunner.AddCommandHandler("SetSpeaker", SetSpeakerInfo);
+        // VERIFY: Uncomment this if the property above the function doesn't work (and add the BranchComplete one too)
+        // dialogueRunner.AddCommandHandler("SetSpeaker", SetSpeakerUI);      // Add SetSpeakerInfo to yarn so that we can set character portraits and names
 
         // Add Visited to yarn so that we can check if a node has been visited yet
         dialogueRunner.AddFunction("Visited", 1, delegate (Yarn.Value[] parameters){
@@ -50,158 +47,96 @@ public class DialogueManager : MonoBehaviour
 
         // Add SelectNextTrigger so that we can find the next conditional category of dialogue to play
         dialogueRunner.AddFunction("SelectNextTrigger", 0, delegate (Yarn.Value[] parameters){
+            // Sorted database of all beats available at the moment (all for which conditions are met)
+            SortedSet<StoryBeat> sortedStoryBeats = new SortedSet<StoryBeat>(new CompareBeatsByPriority());
             
-            /*
-                - if not, keep looking -> gets the highest priority possible dialogue of each type
-                - once you gather the options that are applicable, if there's a single Highest Priority Thing, play that
-                - otherwise, choose randomly between everything on the same (highest) playing field
-                
-
-                Current Problems/TODO:
-                ======================
-
-                - Need a BranchVisited function so that you can not only mark NODES as visited but entire BRANCHES starting from the YarnHeadNodes
-                defined in PlotBeats and stuff
-                    -> Once Yarn reaches the end of a branch, it marks the entire branch as visited
-                    -> Use NodeVisited stuff as a reference
-                    -> Mark the branch as visited, and then be able to check if a branch is visited HERE in Unity so that we can say
-                    if(BranchVisited){ pick a new topic/interaction/branch }
-                    -> Should entirely visited/expended branches just be removed from the available dialogue pool IN GENERAL? That's stored in
-                    the StoryManager so that could be doable...
-                    -> Hence also the need for a Generic Default Dialogue category that isn't just "can be played whenever" but a REPEATABLE pool
-                    (called Repeatable presumably, and the default if there are NO other options, or as occasional default/generic options so
-                    it's less jarring/obvious; single generic repeatable line that the NPC can say)
-                
-                - if certain plot beats (like killing slimes) always show up, we're never going to get any other options for the highest priorty (bc it'll keep
-                picking the first one seen which will always be the same I think???)
-                    -> like they're not ranked INDIVIDUALLY, they're priority CATEGORIES
-                    -> we need a way to randomly select one of the many options on the same priority level
-                    -> things need to be built into repeatable functions that you can 
-                
-                - so a lot of this seems to indicate we need this to be broken down into individual functions returning these values so that it can be more
-                modular and we can redo things in loops as necessary, basically
-                    -> like "loop through this thing and do this until you find a satisfactory* option, then move on to the next category and do the same"
-                    -> *branch NOT entirely completed yet for the currently active NPC (has new dialogue), all plot beat requirements met and triggered, etc.
-            */
-
-            StoryBeat highestPriorityBeat = null;
-            
-            // Check for plot stuff and play the next relevant thing there if possible (then return)
+            // Check for Killed Events and Conversation Events
             if( StoryManager.instance.activeStoryBeats.Count > 0 ){
-                // Cycle the options and find the highest priority one
+                // Cycle the options and add ones for which the active NPC has something to say
                 foreach(StoryBeat beat in StoryManager.instance.activeStoryBeats){
-                    // Set default value (first option)
-                    if( highestPriorityBeat == null ){
-                        highestPriorityBeat = beat;
-                    }
-                    // If this NPC has something to say AND the priority is higher, set it to the interaction we'll choose
-                    else if( beat.GetPriority() > highestPriorityBeat.GetPriority() && beat.GetSpeakersWithComments().Contains(NPC.ActiveNPC.speakerData.SpeakerID()) ){
-                        highestPriorityBeat = beat;
+                    if( StoryManager.instance.SpeakerIsInSpeakerList(beat, NPC.ActiveNPC.speakerData.SpeakerID()) ){
+                        sortedStoryBeats.Add(beat);
                     }
                 }
             }
 
-            // If the current highest priority beat is MAX PRIORITY (Big Plot Events), just go ahead and return that now
-            if( highestPriorityBeat != null && highestPriorityBeat.GetPriority() == DialoguePriority.maxPriority ){
-                return highestPriorityBeat.GetYarnHeadNode();
-            }
-
-            // If the current highest priority beat is P1 or lower, check for current run number dialogue instead
-            if( highestPriorityBeat != null && highestPriorityBeat.GetPriority() <= DialoguePriority.p1 ){
-                // Values depend on the character you're talking to
-                int currentRunNumber = StoryManager.instance.currentRunNumber;
-                foreach(int num in NPC.ActiveNPC.hasNumRunDialogueList){
-                    int difference = currentRunNumber - num;
-                    if( difference <= 3 && difference >= 0 ){
-                        return StoryBeatType.numRums.ToString();
-                    }
-                    else if( difference > 3){
-                        // Remove it from the list so we stop looking for it
-                        NPC.ActiveNPC.hasNumRunDialogueList.Remove(num);    // (VERIFY) Can you do this in a foreach loop or does that mess it up?
-                    }
-                }
-            }
-
-            // Check for item event triggers and if any are met, find the highest priority item trigger
-            // TODO: Get a reference to the player's inventory (remember to check if it's empty first presumably? unless foreach handles that well) and make this not pseudocode
-            // foreach( Item item in playerInventory ){
-            //     // TODO: Get that item's item trigger, if it has one (the below thing doesn't work for that)
-            //     if(StoryManager.instance.itemDialogueTriggers.Contains(itemTrigger) && itemTrigger.GetSpeakersWithComments().Contains(NPC.ActiveNPC.speakerData)){
-            //         if( highestPriorityBeat == null ){
-            //             highestPriorityBeat = itemTrigger;
-            //         }
-            //         // Compare priority of the item trigger to the plot event trigger
-            //         if( itemTrigger.GetPriority() > highestPriorityBeat.GetPriority() ){
-            //             highestPriorityBeat = itemTrigger;
-            //         }
+            // // Check for item event triggers and if any are met, find the highest priority item trigger
+            // // TODO: Get a reference to the player's inventory (remember to check if it's empty first presumably? unless foreach handles that well) and make this not pseudocode
+            // foreach( string itemName in playerInventory ){
+            //     // TODO: Check if this item has a story beat associated with it (don't break everything if not, but if so save it to item)
+            //     StoryBeat item = StoryManager.instance.FindBeatFromNodeName(itemName, StoryBeatType.item);
+            //     // If the active NPC has nothing to say about this beat, skip it
+            //     if( !StoryManager.instance.SpeakerIsInSpeakerList(item, NPC.ActiveNPC.speakerData.SpeakerID()) ){
+            //         continue;
             //     }
+            //     // Otherwise, add it to the pool of dialogue options
+            //     sortedStoryBeats.Add(item);
             // }
 
-            // If at this point the highest priority beat exists and is > P1, play that
-            if( highestPriorityBeat != null && highestPriorityBeat.GetPriority() > DialoguePriority.p1 ){
-                return highestPriorityBeat.GetYarnHeadNode();
-            }
-
-            // === Now include more generic/less high priority dialogue checks ===
-
-            // TODO: Loop through StoryManager.instance.genericStoryBeats instead of what's currently happening...
-
             PlayerStats playerStats = FindObjectsOfType<PlayerStats>()[0];
-
-            // Default trigger value
-            StoryBeatType genericTrigger = StoryBeatType.defaultDialogue;
-
-            // Check if the player is low health
-            bool isLowHP = false;
-            // TODO: Check if the player is <= 20% health (like currentHP / maxHP <= 0.2)
-            // Check if it's less than the lowHP beat .HPthreshold thing
-            if( playerStats.getMaxHitPoints() == 0 ){
-                isLowHP = true;
-            }
-
-            // Check if you can get successful or failed barter attempt dialogue
-            StoryBeatType canAttemptBarter = StoryBeatType.enumSize;
-            if( playerStats.Charisma() >= 15 ){
-                canAttemptBarter = StoryBeatType.barterSuccess;
-            }
-            else if( playerStats.Charisma() < 10 ){
-                canAttemptBarter = StoryBeatType.barterFail;
-            }
-
-            // If both are options
-            if( isLowHP && canAttemptBarter != StoryBeatType.enumSize ){
-                // Includes low HP, barter attempt, and default dialogue as options
-                // DOES NOT INCLUDE generic repeatable, which only plays if there's nothing new or good to play
-                genericTrigger = (StoryBeatType)Random.Range(0,numGenericDialogueTriggers-1);
-                if( genericTrigger == StoryBeatType.barterSuccess ){
-                    genericTrigger = canAttemptBarter;
+            // Loop through genericDialogueList and check if the conditions are met for each trigger type, then add if necessary
+            foreach( StoryBeat beat in StoryManager.instance.genericStoryBeats.Keys ){
+                // Confirm that the active NPC has something to say about this beat; if not, skip it and move on to the next option
+                if( !StoryManager.instance.SpeakerIsInSpeakerList(beat, NPC.ActiveNPC.speakerData.SpeakerID()) ){
+                    continue;
                 }
-            }
-            // If only one of the two is an option
-            else if( isLowHP || canAttemptBarter != StoryBeatType.enumSize ){
-                // Get a random number 0 or 1
-                // If 1, set trigger to lowHP or the barter attempt value, depending on which was true; (0 stays default)
-                int randomValue = Random.Range(0,2);
-                if( randomValue == 1 ){
-                    genericTrigger = isLowHP ? StoryBeatType.lowHealth : canAttemptBarter;
-                }
-            }
 
-            // If we had a plot beat from before, compare priority
-            if( highestPriorityBeat != null ){
-                // TODO: once trigger is NOT JUST THE StoryBeatType, uncomment this stuff
-                // if( highestPriorityBeat.GetPriority() > trigger.GetPriority() ){
-                //     return highestPriorityBeat.GetYarnHeadNode();
-                // }
-                // else{   // // If same priority, randomly pick between that or this random interaction
-                    int randomValue = Random.Range(0,2);
-                    if(randomValue == 1){
-                        return highestPriorityBeat.GetYarnHeadNode();
+                StoryBeatType beatType = beat.GetBeatType();
+
+                // If beat type is repeatable, add it regardless of conditions
+                if( beatType == StoryBeatType.repeatable ){
+                    sortedStoryBeats.Add(beat);
+                }
+                // If beat type is default, add it as long as this NPC has something to say
+                else if( beatType == StoryBeatType.defaultDialogue ){
+                    sortedStoryBeats.Add(beat);
+                }
+                // If the beat type is numRuns, check conditions and add it to the pool if necessary
+                else if( beatType == StoryBeatType.numRums ){
+                    int currentRunNumber = StoryManager.instance.currentRunNumber;
+                    foreach(int num in NPC.ActiveNPC.hasNumRunDialogueList){
+                        int difference = currentRunNumber - num;
+                        // If THIS NPC has something to say about your number of runs within threshold runs, add it to the pool
+                        if( difference <= numRunsThreshold && difference >= 0 ){
+                            sortedStoryBeats.Add(beat);
+                        }
+                        else if( difference > 3){
+                            // If we've passed the threshold, remove it from the list so we stop looking for it
+                            NPC.ActiveNPC.hasNumRunDialogueList.Remove(num);    // (VERIFY) Can you do this in a foreach loop or does that mess it up?
+                        }
                     }
-                // }
+                }
+                // If the beat type is lowHP, check conditions and maybe add it
+                else if( beatType == StoryBeatType.lowHealth ){
+                    StoryBeatLowHealth lowHPBeat = (StoryBeatLowHealth)beat;
+                    // TODO: Change  MAX  to  CURRENT / MAX
+                    if( playerStats.getMaxHitPoints() <= lowHPBeat.LowHealthThreshold() ){
+                        sortedStoryBeats.Add(beat);
+                    }
+                }
+                // If beat type is barter, check conditions and maybe add it
+                else if( beatType == StoryBeatType.barterFail || beatType == StoryBeatType.barterSuccess ){
+                    if( (beatType == StoryBeatType.barterSuccess && playerStats.Charisma() >= 15) || (beatType == StoryBeatType.barterFail && playerStats.Charisma() < 10) ){
+                        sortedStoryBeats.Add(beat);
+                    }
+                }
+                else{
+                    Debug.LogError("Found beat of type " + beatType + " in StoryManager.instance.genericStoryBeats.");
+                }
             }
 
-            return genericTrigger.ToString();        
+            // TODO: Eventually this is not a good idea because it'll only toggle it once you're in range! need a way to set this differently
+            // if we end up changing how ActiveNPC stuff works, then that could be feasible to change...
+            // otherwise, might just not have UI alerts for new dialogue whoops
+            if( sortedStoryBeats.Max.GetBeatType() == StoryBeatType.repeatable ){
+                NPC.ActiveNPC.HasNewDialogue(false);
+            }
+            else{
+                NPC.ActiveNPC.HasNewDialogue(true);
+            }
+
+            // Return the highest priority beat
+            return sortedStoryBeats.Max.GetYarnHeadNode();
         });
 
 
@@ -229,8 +164,6 @@ public class DialogueManager : MonoBehaviour
 
         // TODO: Selecting a specific node for NON-GENERIC dialogue (aka PlotBeats :)  -> items, killed, & conversation events)
         // Probably maybe needs its own function added to yarn for this...
-
-
         // TODO: Selecting a specific node for runNum interactions, based on current run num & when this speaker comments on that :)
     }
 
@@ -243,7 +176,9 @@ public class DialogueManager : MonoBehaviour
         speakers.Add(data.SpeakerName(), data);
     }
 
-    private void SetSpeakerInfo(string[] info)
+    // Called in yarn scripts to set UI speaker info
+    [YarnCommand("SetSpeaker")]
+    private void SetSpeakerUI(string[] info)
     {
         // Set speaker name
         string speaker = info[0];
@@ -266,10 +201,45 @@ public class DialogueManager : MonoBehaviour
         Debug.LogError("Could not set the speaker data for " + speaker);
     }
 
+    // Called in yarn scripts to remove speakers from StoryBeats, in the final node of branches; called as  <<BranchComplete [beatType] [nodeNameBase]>>
+    // Must pass in a beatType (identical to the enum string value) and a nodeName (without the speakerID or # in the branch, just the base) IN THAT ORDER
+    // NEVER call this on repeatable type dialogue -> it should never be removed from the dialogue pool bc it's repeatable
+    [YarnCommand("BranchComplete")]
+    public void BranchComplete(string beatTypeString, string nodeName)
+    {
+        // Convert beat type string and find corresponding beat from node title
+        StoryBeatType beatType = StoryManager.instance.GetBeatTypeFromString(beatTypeString);
+        StoryBeat beat = StoryManager.instance.FindBeatFromNodeName(nodeName, beatType);
+
+        // Remove the speaker
+        StoryManager.instance.RemoveSpeakerFromBeat(beat, NPC.ActiveNPC.speakerData.SpeakerID());
+    }
+
     // Called by the Dialogue Runner to notify us that a node finished running
     public void NodeComplete(string nodeName)
     {
         // Log that the node has been run
         visitedNodes.Add(nodeName);
+    }
+}
+
+// Defines a comparer for StoryBeats (by priority)
+public class CompareBeatsByPriority : IComparer<StoryBeat>
+{
+    public int Compare(StoryBeat beat1, StoryBeat beat2)
+    {
+        // Compare beat1 to beat2 by priority
+        int priority1 = (int)beat1.GetPriority();
+        int priority2 = (int)beat2.GetPriority();
+
+        int difference = priority1 - priority2;
+
+        // If they're the same, choose randomly between the two
+        if( difference == 0 ){
+            int num = Random.Range(0,2);
+            difference = num == 0 ? 1 : -1;
+        }
+
+        return difference;
     }
 }
