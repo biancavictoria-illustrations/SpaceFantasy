@@ -5,9 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Narrative/StoryBeatDefault")]
 public class StoryBeatDefault : StoryBeat
 {
-    void Awake()
+    public override void SetValues()
     {
-        beatType = StoryBeatType.defaultDialogue;
+        beatType = StoryBeatType.DefaultDialogue;
         priorityValue = DialoguePriority.p1;
+        yarnHeadNode = beatType.ToString();
     }
 }

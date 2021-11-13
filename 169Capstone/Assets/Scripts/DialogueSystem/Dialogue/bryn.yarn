@@ -1,92 +1,185 @@
 ﻿title: BrynStart
 tags:
 ---
-<<set $trigger to SelectNextTrigger()>>
-<<if $trigger is "plotEvents">>
-    ???
-<<elseif $trigger is "item">>
-    ???
-<<elseif $trigger is "numRuns">>
-    ???
-<<elseif $trigger is "lowHealth">>
-    [[BrynLowHealthHead]]
-<<elseif $trigger is "barterSuccess">>
-    [[BrynBarterSuccessHead]]
-<<elseif $trigger is "barterFail">>
-    [[BrynBarterFailHead]]
+<<set $headNode to SelectNextNode()>>
+
+// === Enemy Killed ===
+
+<<if $headNode is "EnemyKilled">>
+    [[BrynEnemyKilled]]
+<<elseif $headNode is "EnemyKilledTimeLich">>
+    [[BrynEnemyKilledTimeLich]]
+<<elseif $headNode is "EnemyKilledSlime">>
+    [[BrynEnemyKilledSlime]]
+
+// === Killed By ===
+
+<<elseif $headNode is "KilledBy">>
+    [[BrynKilledBy]]
+<<elseif $headNode is "KilledByEnchantedCloak">>
+    [[BrynKilledByEnchantedCloak]]
+
+// === Dialogue Completed ===
+
+<<elseif $headNode is "DialogueCompleted">>
+    [[BrynDialogueCompleted]]
+<<elseif $headNode is "DialogueCompletedBrynEnemyKilledSlime">>
+    [[BrynDialogueCompleted]]
+
+// === Items ===
+
+<<elseif $headNode is "Item">>
+    [[BrynItem]]
+
+// === Generic Stuff ===
+
+<<elseif $headNode is "NumRuns">>
+    [[BrynNumRuns]]
+<<elseif $headNode is "LowHealth">>
+    [[BrynLowHealth]]
+<<elseif $headNode is "BarterSuccess">>
+    [[BrynBarterSuccess]]
+<<elseif $headNode is "BarterFail">>
+    [[BrynBarterFail]]
+<<elseif $headNode is "DefaultDialogue">>
+    [[BrynDefaultDialogue]]
+<<elseif $headNode is "Repeatable">>
+    [[BrynRepeatable]]
+
 <<else>>
-    [[BrynDefaultHead]]
+    ERROR: No head node found for {$headNode}!
 <<endif>>
 ===
 
 
 
-title: BrynLowHealthHead
+title: BrynEnemyKilled
 tags:
 ---
-<<set $nodeNum to SelectGenericNode($trigger)>>
-<<if $nodeNum is 1>>
-    [[BrynLowHealth1]]
-<<elseif $nodeNum is 2>>
-    [[BrynLowHealth2]]
-<<elseif $nodeNum is 3>>
-    [[BrynLowHealth3]]
+<<SetSpeaker Bryn>>
+This is an ENEMY KILLED dialogue interaction.
+===
+
+title: BrynEnemyKilledTimeLich
+tags:
+---
+<<SetSpeaker Bryn>>
+Wow! You killed the Time Lich! That's a max priority event!
+===
+
+title: BrynEnemyKilledSlime
+tags:
+---
+<<SetSpeaker Bryn>>
+You killed a slime! Nice!
+===
+
+
+
+title: BrynKilledBy
+tags:
+---
+<<SetSpeaker Bryn>>
+This is a KILLED BY dialogue interaction.
+===
+
+title: BrynKilledByEnchantedCloak
+tags:
+---
+<<SetSpeaker Bryn>>
+Oh no! You were killed by an enchanted cloak last time? Yeah, those things are nasty.
+===
+
+
+
+title: BrynDialogueCompleted
+tags:
+---
+<<SetSpeaker Bryn>>
+This is a DIALOGUE COMPLETED dialogue interaction. So you killed a slime, huh?
+===
+
+
+
+title: BrynItem
+tags:
+---
+<<SetSpeaker Bryn>>
+This is an ITEM dialogue interaction.
+===
+
+
+
+title: BrynNumRuns
+tags:
+---
+<<if Visited("BrynNumRuns")>>
+    [[BrynNumRuns10]]
 <<else>>
-    [[BrynLowHealth4]]
+    <<SetSpeaker Bryn>>
+    Wow! You're on your fifth run! That's wild.
 <<endif>>
 ===
 
-title: BrynLowHealth1
+title: BrynNumRuns10
 tags:
 ---
 <<SetSpeaker Bryn>>
-This is the first LOW HEALTH dialogue interaction.
-===
-
-title: BrynLowHealth2
-tags:
----
-<<SetSpeaker Bryn>>
-This is the second LOW HEALTH dialogue interaction.
-===
-
-title: BrynLowHealth3
-tags:
----
-<<SetSpeaker Bryn>>
-This is the third LOW HEALTH dialogue interaction.
-===
-
-title: BrynLowHealth4
-tags:
----
-<<SetSpeaker Bryn>><<BranchComplete lowHealth LowHealth>>
-This is the last LOW HEALTH dialogue interaction.
+Wow! You're on your TENTH run! That's crazy!
 ===
 
 
 
-title: BrynDefaultHead
+title: BrynLowHealth
 tags:
 ---
 <<SetSpeaker Bryn>>
-This is a DEFAULT dialogue interaction.
+This is a LOW HEALTH dialogue interaction.
 ===
 
 
 
-title: BrynBarterSuccessHead
+title: BrynDefaultDialogue
 tags:
 ---
-<<SetSpeaker Bryn>>
-This is a successful BARTER ATTEMPT dialogue interaction.
+<<if Visited("BrynDefaultDialogue")>>
+    [[BrynDefaultDialogue1]]
+<<else>>
+    <<SetSpeaker Bryn>>
+    This is a DEFAULT dialogue interaction.
+<<endif>>
+===
+
+title: BrynDefaultDialogue1
+tags:
+---
+<<SetSpeaker Bryn>><<BranchComplete DefaultDialogue DefaultDialogue>>
+This is a second DEFAULT dialogue interaction. Nice!
 ===
 
 
 
-title: BrynBarterFailHead
+title: BrynBarterSuccess
 tags:
 ---
 <<SetSpeaker Bryn>>
-This is a failed BARTER ATTEMPT dialogue interaction.
+This is a BARTER SUCCESS dialogue interaction.
+===
+
+
+
+title: BrynBarterFail
+tags:
+---
+<<SetSpeaker Bryn>>
+This is a FAILED barter ATTEMPT dialogue interaction.
+===
+
+
+
+title: BrynRepeatable
+tags:
+---
+<<SetSpeaker Bryn>>
+This is a REPEATABLE dialogue interaction.
 ===

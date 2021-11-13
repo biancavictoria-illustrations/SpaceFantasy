@@ -8,13 +8,17 @@ public class StoryBeatAttemptBarter : StoryBeat
 {
     [SerializeField] private bool isSuccess;
 
-    void Awake()
+    public override void SetValues()
     {
         priorityValue = DialoguePriority.p1;
+
         if(isSuccess){
-            beatType = StoryBeatType.barterSuccess;
-            return;
+            beatType = StoryBeatType.BarterSuccess;
         }
-        beatType = StoryBeatType.barterFail;
+        else{
+            beatType = StoryBeatType.BarterFail;
+        }
+
+        yarnHeadNode = beatType.ToString();
     }
 }

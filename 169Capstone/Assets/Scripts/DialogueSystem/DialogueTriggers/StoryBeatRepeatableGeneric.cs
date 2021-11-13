@@ -5,9 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Narrative/StoryBeatRepeatableGeneric")]
 public class StoryBeatRepeatableGeneric : StoryBeat
 {
-    void Awake()
+    public override void SetValues()
     {
-        beatType = StoryBeatType.repeatable;
+        beatType = StoryBeatType.Repeatable;
         priorityValue = DialoguePriority.minRepeatable;
+        yarnHeadNode = beatType.ToString();
     }
 }
