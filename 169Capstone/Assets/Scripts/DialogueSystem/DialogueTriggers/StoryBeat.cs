@@ -6,17 +6,17 @@ using UnityEngine;
 public enum StoryBeatType
 {
     // === Generic Triggers ===
-    defaultDialogue,    // Can be played whenever but is actual character/plot stuff
-    lowHealth,          // < 20%
-    barterSuccess,      // >=15 CHA
-    barterFail,         // < 10 CHA
-    repeatable,         // Not marked as seen, repeatable when you run out of other stuff to see
+    DefaultDialogue,    // Can be played whenever but is actual character/plot stuff
+    LowHealth,          // < 20%
+    BarterSuccess,      // >=15 CHA
+    BarterFail,         // < 10 CHA
+    Repeatable,         // Not marked as seen, repeatable when you run out of other stuff to see
     // === Specific Plot Event Triggers ===
-    numRums,
-    creatureKilled,
-    killedBy,
-    dialogueCompleted,
-    item,
+    NumRuns,
+    EnemyKilled,
+    KilledBy,
+    DialogueCompleted,
+    Item,
     // === For Looping ===
     enumSize
 }
@@ -30,13 +30,9 @@ public enum DialoguePriority
     maxPriority     // Reserved ONLY for killing the Time Lich or certain Stellan interactions (BIG. PLOT. THINGS.)
 }
 
-// Yarn head nodes could be automatically set by the relevant enemy, item, etc. ID value for items and maybe killed creature/killed by creature
-// For things BESIDES conversation, at the very least, it would be [ActiveNPC.SpeakerID][StoryBeat.yarnHeadNode]
-// YarnHeadNode should be descriptive and non-repeated
-
-public class StoryBeat : ScriptableObject
+public abstract class StoryBeat : ScriptableObject
 {
-    [SerializeField] private string yarnHeadNode = "";        // Yarn node title (tag?) for the head node of responses to this beat (like a descriptive title)
+    [SerializeField] protected string yarnHeadNode = "";  // Yarn node title base for the head node of responses to this beat (set automatically by generic, manually for specific)
     [SerializeField] protected DialoguePriority priorityValue;  // Priority compared to other story beats for someone to comment ( > # = higher priority )
     [SerializeField] private bool carriesOver = false;        // If this event can be commented on on future runs beyond the immediate next one
 
@@ -47,9 +43,9 @@ public class StoryBeat : ScriptableObject
     private Dictionary<StoryBeat,int> prereqStoryBeatDatabase = new Dictionary<StoryBeat,int>();    // OPTIONAL list of prereq story beats that have to have numberOfCompletions >= int X
     [SerializeField] private List<StoryBeat> prereqBeats = new List<StoryBeat>();   // Because dictionaries aren't serializable, we get the data this way and build it in start
     [SerializeField] private List<int> prereqCompletionNumbers = new List<int>();
-    // Switch to a list of key value pairs??? that doesn't seem to be working
+    // TODO: Maybe switch to a list of key value pairs??? that doesn't seem to be working
 
-    void Awake()
+    public void CreatePrereqDatabase()
     {
         if( prereqBeats.Count != prereqCompletionNumbers.Count ){
             Debug.LogError("Story Beat " + yarnHeadNode + " number of prereq beats does not match the number of prereq completion numbers!");
@@ -60,6 +56,8 @@ public class StoryBeat : ScriptableObject
             prereqStoryBeatDatabase.Add( prereqBeats[i], prereqCompletionNumbers[i] );
         }
     }
+
+    public abstract void SetValues();   // Set in the children
 
     public string GetYarnHeadNode()
     {

@@ -6,8 +6,8 @@ using UnityEngine;
 // Every item (gear, weapons) has its own unique ID
 public enum ItemID
 {
-    sword,
-    helm,
+    Sword,
+    Helm,
     enumSize
 }
 
@@ -17,9 +17,11 @@ public class StoryBeatItem : StoryBeat
     // Unique Trigger
     [SerializeField] private ItemID item;     // The item that can trigger dialogue
 
-    void Awake()
+    public override void SetValues()
     {
-        beatType = StoryBeatType.item;
+        beatType = StoryBeatType.Item;
+
+        yarnHeadNode = beatType.ToString() + item;
     }
 
     public ItemID GetItem()

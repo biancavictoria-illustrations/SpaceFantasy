@@ -500,6 +500,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 279274418}
   m_CullTransparentMesh: 0
+--- !u!1 &280863287
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 280863289}
+  - component: {fileID: 280863288}
+  m_Layer: 0
+  m_Name: StoryManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &280863288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280863287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c19bdb2582910784e8ffb2d383fd1da8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentRunNumber: 0
+--- !u!4 &280863289
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280863287}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 703.6763, y: 316.54425, z: 1120.4513}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &298655706
 GameObject:
   m_ObjectHideFlags: 0
@@ -551,6 +595,7 @@ MonoBehaviour:
   characterPortrait: {fileID: 2058225851}
   speakerName: {fileID: 2095072166}
   dialogueRunner: {fileID: 298655711}
+  numRunsThreshold: 3
 --- !u!114 &298655709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1768,11 +1813,7 @@ MonoBehaviour:
   speakerData: {fileID: 11400000, guid: 00d2672bcf9499e42878654865ef3ccf, type: 2}
   hasNewDialogue: 0
   newDialogueAlert: {fileID: 1685243506}
-  genericDialogueTriggerList: 000000000100000004000000
-  numDefaultDialogue: 0
-  numLowHealthDialogue: 0
-  numBarterSuccessDialogue: 0
-  numBarterFailDialogue: 0
+  hasNumRunDialogueList: 050000000a000000
 --- !u!135 &1683818319
 SphereCollider:
   m_ObjectHideFlags: 0

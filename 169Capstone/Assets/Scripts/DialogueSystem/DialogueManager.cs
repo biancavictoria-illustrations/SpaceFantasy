@@ -34,9 +34,9 @@ public class DialogueManager : MonoBehaviour
         }
         DontDestroyOnLoad(this.gameObject);     // ... right? (VERIFY THIS)
 
-
-        // VERIFY: Uncomment this if the property above the function doesn't work (and add the BranchComplete one too)
-        // dialogueRunner.AddCommandHandler("SetSpeaker", SetSpeakerUI);      // Add SetSpeakerInfo to yarn so that we can set character portraits and names
+        // Add commands to Yarn so that we can send Unity info from there
+        dialogueRunner.AddCommandHandler("SetSpeaker", SetSpeakerUI);
+        dialogueRunner.AddCommandHandler("BranchComplete", BranchComplete);
 
         // Add Visited to yarn so that we can check if a node has been visited yet
         dialogueRunner.AddFunction("Visited", 1, delegate (Yarn.Value[] parameters){
@@ -46,7 +46,7 @@ public class DialogueManager : MonoBehaviour
 
 
         // Add SelectNextTrigger so that we can find the next conditional category of dialogue to play
-        dialogueRunner.AddFunction("SelectNextTrigger", 0, delegate (Yarn.Value[] parameters){
+        dialogueRunner.AddFunction("SelectNextNode", 0, delegate (Yarn.Value[] parameters){
             // Sorted database of all beats available at the moment (all for which conditions are met)
             SortedSet<StoryBeat> sortedStoryBeats = new SortedSet<StoryBeat>(new CompareBeatsByPriority());
             
@@ -74,6 +74,10 @@ public class DialogueManager : MonoBehaviour
             // }
 
             PlayerStats playerStats = FindObjectsOfType<PlayerStats>()[0];
+            
+            // If we see a numRun dialogue interaction, we need to be able to remove that option from the pool later
+            int currentNumRunRemoveValue = 0;   
+
             // Loop through genericDialogueList and check if the conditions are met for each trigger type, then add if necessary
             foreach( StoryBeat beat in StoryManager.instance.genericStoryBeats.Keys ){
                 // Confirm that the active NPC has something to say about this beat; if not, skip it and move on to the next option
@@ -84,30 +88,34 @@ public class DialogueManager : MonoBehaviour
                 StoryBeatType beatType = beat.GetBeatType();
 
                 // If beat type is repeatable, add it regardless of conditions
-                if( beatType == StoryBeatType.repeatable ){
+                if( beatType == StoryBeatType.Repeatable ){
                     sortedStoryBeats.Add(beat);
                 }
                 // If beat type is default, add it as long as this NPC has something to say
-                else if( beatType == StoryBeatType.defaultDialogue ){
+                else if( beatType == StoryBeatType.DefaultDialogue ){
                     sortedStoryBeats.Add(beat);
                 }
                 // If the beat type is numRuns, check conditions and add it to the pool if necessary
-                else if( beatType == StoryBeatType.numRums ){
+                else if( beatType == StoryBeatType.NumRuns ){
+                    // Separate from currentNumRunRemoveValue, if one has passed the threshold in which we're okay with seeing runNum dialogue, remove it
+                    int opportunityPassedRemoveValue = 0;
                     int currentRunNumber = StoryManager.instance.currentRunNumber;
                     foreach(int num in NPC.ActiveNPC.hasNumRunDialogueList){
                         int difference = currentRunNumber - num;
                         // If THIS NPC has something to say about your number of runs within threshold runs, add it to the pool
                         if( difference <= numRunsThreshold && difference >= 0 ){
                             sortedStoryBeats.Add(beat);
+                            currentNumRunRemoveValue = num;
                         }
-                        else if( difference > 3){
+                        else if( difference > numRunsThreshold ){
                             // If we've passed the threshold, remove it from the list so we stop looking for it
-                            NPC.ActiveNPC.hasNumRunDialogueList.Remove(num);    // (VERIFY) Can you do this in a foreach loop or does that mess it up?
+                            opportunityPassedRemoveValue = num;
                         }
                     }
+                    NPC.ActiveNPC.hasNumRunDialogueList.Remove(opportunityPassedRemoveValue);
                 }
                 // If the beat type is lowHP, check conditions and maybe add it
-                else if( beatType == StoryBeatType.lowHealth ){
+                else if( beatType == StoryBeatType.LowHealth ){
                     StoryBeatLowHealth lowHPBeat = (StoryBeatLowHealth)beat;
                     // TODO: Change  MAX  to  CURRENT / MAX
                     if( playerStats.getMaxHitPoints() <= lowHPBeat.LowHealthThreshold() ){
@@ -115,8 +123,8 @@ public class DialogueManager : MonoBehaviour
                     }
                 }
                 // If beat type is barter, check conditions and maybe add it
-                else if( beatType == StoryBeatType.barterFail || beatType == StoryBeatType.barterSuccess ){
-                    if( (beatType == StoryBeatType.barterSuccess && playerStats.Charisma() >= 15) || (beatType == StoryBeatType.barterFail && playerStats.Charisma() < 10) ){
+                else if( beatType == StoryBeatType.BarterFail || beatType == StoryBeatType.BarterSuccess ){
+                    if( (beatType == StoryBeatType.BarterSuccess && playerStats.Charisma() >= 15) || (beatType == StoryBeatType.BarterFail && playerStats.Charisma() < 10) ){
                         sortedStoryBeats.Add(beat);
                     }
                 }
@@ -125,15 +133,11 @@ public class DialogueManager : MonoBehaviour
                 }
             }
 
-            // TODO: Eventually this is not a good idea because it'll only toggle it once you're in range! need a way to set this differently
-            // if we end up changing how ActiveNPC stuff works, then that could be feasible to change...
-            // otherwise, might just not have UI alerts for new dialogue whoops
-            if( sortedStoryBeats.Max.GetBeatType() == StoryBeatType.repeatable ){
-                NPC.ActiveNPC.HasNewDialogue(false);
+            if( sortedStoryBeats.Max.GetBeatType() == StoryBeatType.NumRuns ){
+                NPC.ActiveNPC.hasNumRunDialogueList.Remove(currentNumRunRemoveValue);
             }
-            else{
-                NPC.ActiveNPC.HasNewDialogue(true);
-            }
+
+            Debug.Log("PLAYING DIALOGUE INTERACTION for " + NPC.ActiveNPC.speakerData.SpeakerID() + ": " + sortedStoryBeats.Max.GetYarnHeadNode());
 
             // Return the highest priority beat
             return sortedStoryBeats.Max.GetYarnHeadNode();
@@ -143,7 +147,7 @@ public class DialogueManager : MonoBehaviour
         // Add a function to tell yarn which node in that conditional branch to play
         dialogueRunner.AddFunction("SelectGenericNode", 1, delegate (Yarn.Value[] parameters){
             // Takes in a trigger; search the active NPC's dictionary for that key, the value is an int of where we're at
-            StoryBeatType trigger = StoryBeatType.defaultDialogue;
+            StoryBeatType trigger = StoryBeatType.DefaultDialogue;
             for(int i = 0; i < (int)StoryBeatType.enumSize; ++i){
                 if(( (StoryBeatType)i ).ToString().Equals(parameters[0])){
                     trigger = (StoryBeatType)i;
@@ -177,7 +181,7 @@ public class DialogueManager : MonoBehaviour
     }
 
     // Called in yarn scripts to set UI speaker info
-    [YarnCommand("SetSpeaker")]
+    // [YarnCommand("SetSpeaker")]
     private void SetSpeakerUI(string[] info)
     {
         // Set speaker name
@@ -204,12 +208,17 @@ public class DialogueManager : MonoBehaviour
     // Called in yarn scripts to remove speakers from StoryBeats, in the final node of branches; called as  <<BranchComplete [beatType] [nodeNameBase]>>
     // Must pass in a beatType (identical to the enum string value) and a nodeName (without the speakerID or # in the branch, just the base) IN THAT ORDER
     // NEVER call this on repeatable type dialogue -> it should never be removed from the dialogue pool bc it's repeatable
-    [YarnCommand("BranchComplete")]
-    public void BranchComplete(string beatTypeString, string nodeName)
+    // [YarnCommand("BranchComplete")]
+    public void BranchComplete(string[] info)
     {
+        string beatTypeString = info[0];
+        string nodeName = info[1];
+
         // Convert beat type string and find corresponding beat from node title
         StoryBeatType beatType = StoryManager.instance.GetBeatTypeFromString(beatTypeString);
         StoryBeat beat = StoryManager.instance.FindBeatFromNodeName(nodeName, beatType);
+
+        Debug.Log("Removing " + beat.GetYarnHeadNode() + " from " + NPC.ActiveNPC.speakerData.SpeakerID());
 
         // Remove the speaker
         StoryManager.instance.RemoveSpeakerFromBeat(beat, NPC.ActiveNPC.speakerData.SpeakerID());
