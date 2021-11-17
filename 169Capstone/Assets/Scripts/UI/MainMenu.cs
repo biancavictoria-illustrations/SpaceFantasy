@@ -9,10 +9,13 @@ public class MainMenu : MonoBehaviour
     {
         // SceneManager.LoadScene("Game");
         // Do we have save files??? Probably should. Gonna have to deal with that here
+
+        Debug.Log("Loading game!");
     }
 
     public void QuitGame()
     {
         Application.Quit();
+        Debug.Log("Quitting game!");
     }
 }
