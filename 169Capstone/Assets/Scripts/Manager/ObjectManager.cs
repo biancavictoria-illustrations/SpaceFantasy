@@ -6,7 +6,7 @@ public class ObjectManager : MonoBehaviour
 {
     // gear and titles should be in the same order
     [SerializeField] private GameObject[] gear;
-    private string[] titles = new string[] { "Berserker's Zweihander" };
+    private string[] titles = new string[] { "Berserker's Zweihander", "Bow And Arrows" };
     public bool playerDeath = false;
     [SerializeField] private Transform mainHub;
     [SerializeField] private GameObject playerPrefab;

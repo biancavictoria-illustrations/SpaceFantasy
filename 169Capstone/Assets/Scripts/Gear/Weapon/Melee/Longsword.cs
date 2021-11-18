@@ -6,9 +6,6 @@ public class Longsword : MonoBehaviour
 {
     private string title = "Berserker's Zweihander";
     private float[] damageModifier = new float[] { 0.75f, 1, 1.25f };
-    //private string damageStat = "Strength";
-    // float attackSpeedModifier = 1;
-    //private string attackSpeedStat = "Attack Speed";
     private float meleeRange = 3;
     private float range;
     [SerializeField] private float rangeModifier = 0.1f; 
@@ -18,7 +15,6 @@ public class Longsword : MonoBehaviour
     private float heldDuration = 0.25f;
     private float windDown = 0.75f;
     private float secondaryDuration = 3;
-    //private bool bonus = false;
     private float attackSpeedModifierBonus = 0.2f;
     private int bonusStackCounter = 0;
     private int bonusStackMax = 3;
@@ -86,7 +82,7 @@ public class Longsword : MonoBehaviour
         RaycastHit hit;
         if(Physics.SphereCast(player.GetComponent<Transform>().position, 3, player.GetComponent<Transform>().forward, out hit, range))
         {
-            return hit.collider.GetComponent<EntityHealth>().Damage(damageModifier[heldEffectCounter] * player.currentStr);
+            return hit.collider.tag == "Enemy" ? hit.collider.GetComponent<EntityHealth>().Damage(damageModifier[heldEffectCounter] * player.currentStr) : false;
         }
         else
         {

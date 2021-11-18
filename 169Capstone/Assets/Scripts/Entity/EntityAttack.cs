@@ -98,7 +98,7 @@ public class EntityAttack : MonoBehaviour
 
         while (inWindUp)
         {
-            Debug.Log(timer.timeRemaining);
+            //Debug.Log(timer.timeRemaining);
             WindUpRoutine();
             yield return null;
         }
@@ -110,7 +110,7 @@ public class EntityAttack : MonoBehaviour
 
         while (inDuration)
         {
-            Debug.Log(timer.timeRemaining);
+            //Debug.Log(timer.timeRemaining);
             StartCoroutine(DurationRoutine());
             yield return new WaitUntil(() => durationCompleted);
         }
@@ -122,7 +122,7 @@ public class EntityAttack : MonoBehaviour
 
         while (inWindDown)
         {
-            Debug.Log(timer.timeRemaining);
+            //Debug.Log(timer.timeRemaining);
             WindDownRoutine();
             yield return null;
         }
