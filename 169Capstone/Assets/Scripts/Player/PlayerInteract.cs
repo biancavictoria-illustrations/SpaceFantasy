@@ -7,6 +7,9 @@ public class PlayerInteract : MonoBehaviour
     public SpeakerData speakerData;
     private bool isInDialogue = false;
 
+    // TODO: Change the way this is done
+    public PauseMenu pauseMenu;
+
     void Start()
     {
         DialogueManager.instance.AddSpeaker(speakerData);
@@ -15,10 +18,20 @@ public class PlayerInteract : MonoBehaviour
     void Update()
     {
         // If interact input
-        if(Input.GetKeyDown(KeyCode.Space)){
+        if(Input.GetKeyDown(KeyCode.Space)){            
             // If NPC is active and not already talking
             if(NPC.ActiveNPC && !isInDialogue){
                 StartDialogue();
+            }
+        }
+
+        // If pause input
+        if(Input.GetKeyDown(KeyCode.Escape)){
+            if(PauseMenu.GameIsPaused){
+                pauseMenu.ResumeGame();
+            }
+            else{
+                pauseMenu.PauseGame();
             }
         }
 
