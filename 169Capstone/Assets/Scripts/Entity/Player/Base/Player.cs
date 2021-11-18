@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
     private EntityHealth health;
 
     public int currentStr;
-    [SerializeField] private int currentDex;
+    public int currentDex;
     [SerializeField] private int currentConst;
     [SerializeField] private int currentInt;
     [SerializeField] private int currentWis;
@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        weapon = "Berserker's Zweihander";
+        weapon = "Bow And Arrows";
         gear[0] = objectManager.GetGearObject(weapon);
         health = gameObject.GetComponent<EntityHealth>();
         health.maxHitpoints = stats.getMaxHitPoints();
