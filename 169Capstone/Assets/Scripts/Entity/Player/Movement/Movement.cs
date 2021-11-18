@@ -5,6 +5,7 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
     public float speed = 5;
+    public Transform model;
     public CharacterController player;
     public float smoothing = 0.1f;
 
@@ -44,8 +45,8 @@ public class Movement : MonoBehaviour
             }
             
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref smoothingVelocity, smoothing);
-            transform.rotation = Quaternion.Euler(0, angle, 0);
+            float angle = Mathf.SmoothDampAngle(model.eulerAngles.y, targetAngle, ref smoothingVelocity, smoothing);
+            model.rotation = Quaternion.Euler(0, angle, 0);
             player.Move(direction * speed * Time.deltaTime);
         }
     }
