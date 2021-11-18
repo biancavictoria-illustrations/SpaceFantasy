@@ -11,13 +11,15 @@ public class NPC : MonoBehaviour
     public YarnProgram yarnDialogue;
     public SpeakerData speakerData;
 
-    [HideInInspector] public bool hasNewDialogue = true;
+    [HideInInspector] public bool hasNewDialogue;
     public GameObject newDialogueAlert;
 
     public List<int> hasNumRunDialogueList = new List<int>();   // Times at which this NPC comments on how many runs you've done, in order
 
     void Start()
     {
+        hasNewDialogue = true;
+        
         DialogueManager.instance.dialogueRunner.Add(yarnDialogue);
         DialogueManager.instance.AddSpeaker(speakerData);
 
