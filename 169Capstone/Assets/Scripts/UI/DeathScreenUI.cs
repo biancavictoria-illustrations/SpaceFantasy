@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class DeathScreenUI : MonoBehaviour
 {
@@ -27,7 +28,6 @@ public class DeathScreenUI : MonoBehaviour
     public void GoToMainHub()
     {
         Time.timeScale = 1f;
-        // SceneManager.LoadScene("MainHub");
-        Debug.Log("Transporting player to main hub!");
+        SceneManager.LoadScene("Main Hub");
     }
 }

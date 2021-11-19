@@ -37,8 +37,7 @@ public class PauseMenu : MonoBehaviour
     public void LoadMenu()
     {
         Time.timeScale = 1f;
-        // SceneManager.LoadScene("MainMenu");
-        Debug.Log("Returning to main menu!");
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void ApplySettingsChange()
@@ -64,6 +63,7 @@ public class PauseMenu : MonoBehaviour
     - once we implement saving, "are you sure" panel should mention if your progress was saved recently or whatever
     - settings menu stuff (make it on either main menu or pause menu and then basically copy everything over from there to the other)
         -> volume (separated master(?), music, SFX)
+        -> dimensions/resolution/full screen or otherwise whatever
         -> ???
         -> if we use the new input system we could have custom keybindings which i could handle :)
     - change where player pauses the game (in a more permanent player script)
