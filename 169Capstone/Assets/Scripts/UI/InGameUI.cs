@@ -6,21 +6,14 @@ using UnityEngine.UI;
 
 public class InGameUI : MonoBehaviour
 {
-    // Should this whole class be static/singleton??? so that we can conveniently access it elsewhere to call stuff???
+    public static InGameUI instance;
 
     [SerializeField] private GameObject inGameUIPanel;
-
-    // Might want these to be prefabs with different components rather than just text. we'll see, depends on how much we need here
-    [SerializeField] private TMP_Text headGearDescription;
-    [SerializeField] private TMP_Text accessoryDescription;
-    [SerializeField] private TMP_Text bootsDescription;
-    [SerializeField] private TMP_Text weaponDescription;
 
     [SerializeField] private Image headGearIMG;
     [SerializeField] private Image accessoryIMG;
     [SerializeField] private Image bootsIMG;
     [SerializeField] private Image weaponIMG;
-
 
     [SerializeField] private TMP_Text permanentCurrencyValue;
     [SerializeField] private TMP_Text tempCurrencyValue;
@@ -30,10 +23,24 @@ public class InGameUI : MonoBehaviour
     private int maxHealthValue = 100;
     private int currentHPValue;
 
-    [SerializeField] private TMP_Text potionValue;
+    [SerializeField] private TMP_Text healthPotionValue;
+    
+    [SerializeField] private Image otherPotionIMG;
+    [SerializeField] private TMP_Text otherPotionValue;
 
     
     // TODO: UI visibility/active status while in shop
+
+    void Awake()
+    {
+        // Make this a singleton
+        if( instance ){
+            Destroy(gameObject);
+        }
+        else{
+            instance = this;
+        }
+    } 
 
     public void SetGameUIActive(bool set)
     {
@@ -48,67 +55,60 @@ public class InGameUI : MonoBehaviour
         SetTempCurrencyValue(0);
         SetCurrentHealthValue(maxHealthValue);
         SetHealthPotionValue(0);
-
-        RefreshUI();
     }
 
-    public void SetHeadGearData()
+    public void SetHeadGearUI()
     {
         // TODO: Get item data and set values -> could take in an item?
-        headGearDescription.text = "";
         // headGearIMG.sprite = ;
 
-        RefreshUI();
+        // InventoryUI.instance.helmetPanel.SetItemPanelValues(); // Pass in the values from the item
     }
 
-    public void SetAccessoryData()
+    public void SetAccessoryUI()
     {
         // TODO: Get item data and set values -> could take in an item?
-        accessoryDescription.text = "";
         // accessoryIMG.sprite = ;
 
-        RefreshUI();
+        // InventoryUI.instance.accessoryPanel.SetItemPanelValues(); // Pass in the values from the item
     }
 
-    public void SetBootsData()
+    public void SetBootsUI()
     {
         // TODO: Get item data and set values -> could take in an item?
-        bootsDescription.text = "";
         // bootsIMG.sprite = ;
 
-        RefreshUI();
+        // InventoryUI.instance.bootsPanel.SetItemPanelValues(); // Pass in the values from the item
     }
 
-    public void SetWeaponData()
+    public void SetWeaponUI()
     {
         // TODO: Get item data and set values -> could take in an item?
-        weaponDescription.text = "";
         // weaponIMG.sprite = ;
 
-        RefreshUI();
+        // InventoryUI.instance.weaponPanel.SetItemPanelValues(); // Pass in the values from the item
     }
 
     public void SetPermanentCurrencyValue(int money)
     {
         permanentCurrencyValue.text = "" + money;
-
-        RefreshUI();
+        InventoryUI.instance.permanentCurrencyValue.text = permanentCurrencyValue.text;
     }
 
     public void SetTempCurrencyValue(int money)
     {
         tempCurrencyValue.text = "" + money;
-
-        RefreshUI();
+        InventoryUI.instance.tempCurrencyValue.text = tempCurrencyValue.text;
     }
 
     public void SetCurrentHealthValue(int currentHP)
     {
         currentHPValue = currentHP;
-        healthText.text = currentHP + " / " + maxHealthValue;
-        healthSlider.value = currentHP;
 
-        RefreshUI();
+        healthText.text = currentHP + " / " + maxHealthValue;
+        InventoryUI.instance.healthValue.text = healthText.text;
+
+        healthSlider.value = currentHP;
 
         if( currentHP > maxHealthValue ){
             Debug.LogError("Current HP set greater than max HP!");
@@ -121,21 +121,32 @@ public class InGameUI : MonoBehaviour
         healthSlider.maxValue = maxHP;
 
         SetCurrentHealthValue(currentHPValue);
-
-        RefreshUI();
     }
 
     public void SetHealthPotionValue(int numPotions)
     {
-        potionValue.text = "" + numPotions;
-
-        RefreshUI();
+        healthPotionValue.text = "" + numPotions;
+        InventoryUI.instance.healthPotionValue.text = healthPotionValue.text;
     }
 
-    private void RefreshUI()
+    public void SetOtherPotionUI(int numPotions, Sprite sprite)
     {
-        // do we have to do this after setting new values...? i don't remember
+        otherPotionValue.text = "" + numPotions;
+        otherPotionIMG.sprite = sprite;
+
+        // InventoryUI.instance.potionPanel.SetItemPanelValues(); // Pass in the values from the potion
+        // Override the potion name to include the (#)
+        // InventoryUI.instance.potionPanel.itemName.text = iName + "  <i>(numPotions)</i>";
     }
 
-    // TODO: Hover over gear to see info about stuff
+    public void UpdateOtherPotionNumber(int numPotions)
+    {
+        otherPotionValue.text = "" + numPotions;
+        // InventoryUI.instance.potionPanel.itemName.text = iName + "  <i>(numPotions)</i>";
+
+        if(numPotions == 0){
+            // Change the icon to the default icon
+            // InventoryUI.instance.potionPanel.SetItemPanelValues(); // Set default values
+        }
+    }
 }

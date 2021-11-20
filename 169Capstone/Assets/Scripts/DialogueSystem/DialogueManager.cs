@@ -32,7 +32,6 @@ public class DialogueManager : MonoBehaviour
         else{
             instance = this;
         }
-        DontDestroyOnLoad(this.gameObject);     // ... right? (VERIFY THIS)
 
         // Add commands to Yarn so that we can send Unity info from there
         dialogueRunner.AddCommandHandler("SetSpeaker", SetSpeakerUI);
