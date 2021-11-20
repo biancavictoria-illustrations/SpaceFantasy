@@ -19,8 +19,8 @@ public class PlayerInteract : MonoBehaviour
     {
         // If interact input
         if(Input.GetKeyDown(KeyCode.Space)){            
-            // If NPC is active and not already talking
-            if(NPC.ActiveNPC && !isInDialogue){
+            // If NPC is active and not already talking and has something to say
+            if(NPC.ActiveNPC && !isInDialogue && !NPC.ActiveNPC.HaveTalkedToNPC()){
                 StartDialogue();
             }
         }
@@ -44,7 +44,7 @@ public class PlayerInteract : MonoBehaviour
     {
         // Numpad 1 = Increment run number
         if( Input.GetKeyDown(KeyCode.Keypad1) ){
-            StoryManager.instance.IncrementRunNumber();
+            StoryManager.instance.StartNewRun();
             Debug.Log("Current run number: " + StoryManager.instance.currentRunNumber);
         }
 
@@ -118,6 +118,6 @@ public class PlayerInteract : MonoBehaviour
     {
         // unpause player movement
         isInDialogue = false;
-        NPC.ActiveNPC.HasNewDialogue(false);
+        NPC.ActiveNPC.TalkedToNPC();
     }
 }

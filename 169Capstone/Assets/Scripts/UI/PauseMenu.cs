@@ -58,9 +58,8 @@ public class PauseMenu : MonoBehaviour
 /*
     UI TODO:
     ========
-    - make it all scalable w/ screen size/pretty-ish/sized well/etc.
-    - add scenes to build settings and then use the scenemanager to switch between scenes with the UI stuff
     - once we implement saving, "are you sure" panel should mention if your progress was saved recently or whatever
+    - lots of "TODO"s everywhere in different UI manager files
     - settings menu stuff (make it on either main menu or pause menu and then basically copy everything over from there to the other)
         -> volume (separated master(?), music, SFX)
         -> dimensions/resolution/full screen or otherwise whatever
@@ -68,13 +67,8 @@ public class PauseMenu : MonoBehaviour
         -> if we use the new input system we could have custom keybindings which i could handle :)
     - change where player pauses the game (in a more permanent player script)
         -> new input system would affect this
-
-
-    Dialogue TODO:
-    ==============
-    - add player input for dialogue stuff NOT in it's own script, in the player controller probably
-        -> new input system would affect this
-    - make it so that you don't have to physically click the button on the screen (click anywhere on screen/space/A button)
-        -> ... bring up new input system?
-    - SET ACTIVE AGAIN and make it a prefab?
+    - all UI input in fact
+        -> including dialogue stuff
+        -> make it so you don't have to physically click the button on the screen (click anywhere on screen/space/A button)
+    - most UI value stuff (items especially)
 */
