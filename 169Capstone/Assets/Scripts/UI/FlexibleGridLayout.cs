@@ -66,7 +66,7 @@ public class FlexibleGridLayout : LayoutGroup
             var yPos = (cellSize.y * rowCount) + (spacing.y * rowCount) + padding.top;
 
             SetChildAlongAxis(item, 0, xPos, cellSize.x);
-            SetChildAlongAxis(item, 0, yPos, cellSize.y);
+            SetChildAlongAxis(item, 1, yPos, cellSize.y);
         }
     }
 
