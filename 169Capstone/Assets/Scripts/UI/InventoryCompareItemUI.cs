@@ -43,7 +43,7 @@ public class InventoryCompareItemUI : MonoBehaviour
         
     }
 
-    public void SetEquippedItemValues(InventoryItemType itemType)
+    public void SetEquippedItemValues(InventoryItemSlot itemType)
     {
         equippedItemSlotTitle.text = itemType.ToString();
         // TODO: Get the equipped item of the correct type and fill in the values
