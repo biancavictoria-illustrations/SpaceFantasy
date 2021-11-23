@@ -12,6 +12,7 @@ public class ObjectManager : MonoBehaviour
     //[SerializeField] private Transform mainHub;
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private string mainHub;
+    public static int bossesKilled = 0;
 
     // Start is called before the first frame update
     void Start()
