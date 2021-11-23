@@ -9,18 +9,21 @@ public class InGameUIManager : MonoBehaviour
     public static InGameUIManager instance;
 
     [SerializeField] private GameObject inGameUIPanel;
-    [SerializeField] private GameObject inventoryIconPanel;
+    [SerializeField] private GameObject inGameUIGearIconPanel;  // Sometimes toggled separately from the rest of the in game UI
+
+    [SerializeField] private Image inGameWeaponIMG;
+    [SerializeField] private Image inGameAccessoryIMG;
+    [SerializeField] private Image inGameHelmetIMG;
+    [SerializeField] private Image inGameBootsIMG;
+    [SerializeField] private Image inGamePotionIMG;
 
     [SerializeField] private GameObject darkBackgroundPanel;
 
     public InventoryUI inventoryUI;
-    [SerializeField] private GameObject inventoryItemDescriptionsPanel;
     [SerializeField] private GameObject inventoryStatsPanel;
+    // One for hovering over each slot + neutral
+    [SerializeField] private GameObject neutralInventoryItemsPanel;
 
-    [SerializeField] private Image weaponIMG;
-    [SerializeField] private Image accessoryIMG;
-    [SerializeField] private Image headGearIMG;
-    [SerializeField] private Image bootsIMG;
 
     [SerializeField] private TMP_Text permanentCurrencyValue;
     [SerializeField] private TMP_Text tempCurrencyValue;
@@ -31,8 +34,6 @@ public class InGameUIManager : MonoBehaviour
     private int currentHPValue;
 
     [SerializeField] private TMP_Text healthPotionValue;
-    
-    [SerializeField] private Image otherPotionIMG;
 
 
     void Awake()
@@ -46,16 +47,21 @@ public class InGameUIManager : MonoBehaviour
         }
     } 
 
+    // Called when you enter dialogue or other similar things
     public void SetGameUIActive(bool set)
     {
         inGameUIPanel.SetActive(set);
-        inventoryIconPanel.SetActive(set);
+        // inGameUIGearIconPanel.SetActive(set);
     }
 
+    // Called when player input opens or closes the inventory
     public void SetInventoryUIActive(bool set)
     {
+        inGameUIGearIconPanel.SetActive(!set);
+
         darkBackgroundPanel.SetActive(set);
-        inventoryItemDescriptionsPanel.SetActive(set);
+
+        neutralInventoryItemsPanel.SetActive(set);
         inventoryStatsPanel.SetActive(set);
     }
 
@@ -101,6 +107,18 @@ public class InGameUIManager : MonoBehaviour
         // InventoryUI.instance.bootsPanel.SetItemPanelValues(); // Pass in the values from the item
     }
 
+    public void SetOtherPotionUI()
+    {
+
+    }
+
+    // Called when you lose an item and the slot is clear
+    // Particularly used for the other potion slot
+    public void ClearItemUI(InventoryItemSlot itemSlot)
+    {
+        // Set all values to default, maybe change the background color of the panel
+    }
+
     public void SetPermanentCurrencyValue(int money)
     {
         permanentCurrencyValue.text = "" + money;
@@ -135,21 +153,5 @@ public class InGameUIManager : MonoBehaviour
     public void SetHealthPotionValue(int numPotions)
     {
         healthPotionValue.text = "" + numPotions;
-    }
-
-    public void SetOtherPotionUI(Sprite sprite)
-    {
-        otherPotionIMG.sprite = sprite;
-
-        // InventoryUI.instance.potionPanel.SetItemPanelValues(); // Pass in the values from the potion
-        // Override the potion name to include the (#)
-        // InventoryUI.instance.potionPanel.itemName.text = iName + "  <i>(numPotions)</i>";
-    }
-
-    // Called when you use your single use other potion
-    public void RemoveOtherPotionUI()
-    {
-        // Change the icon to the default icon
-        // InventoryUI.instance.potionPanel.SetItemPanelValues(); // Set default values
     }
 }

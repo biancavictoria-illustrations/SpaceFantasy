@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 // TODO: set these to whatever we're actually calling them in game
 public enum InventoryItemSlot
@@ -21,6 +22,7 @@ public enum ItemRarity
     Common,
     Uncommon,
     Rare,
+    Epic,
     Legendary
 }
 
@@ -30,18 +32,18 @@ public class InventoryUIItemPanel : MonoBehaviour
     [SerializeField] private InventoryItemSlot itemSlot;
     [HideInInspector] public ItemRarity rarity;
 
+    public Image itemIcon;
     public TMP_Text itemName;
     public TMP_Text itemTypeRarity;
     public TMP_Text itemDescription;
 
-    void Start()
-    {
-        itemTypeRarity.text = "(" + rarity.ToString() + " " + itemSlot.ToString() + ")";
-    }
-
-    public void SetItemPanelValues(string iName, string iDescription)
+    public void SetItemPanelValues(string iName, ItemRarity iRarity, string description, Sprite icon)
     {
         itemName.text = iName;
-        itemDescription.text = iDescription;
+        rarity = iRarity;
+        itemDescription.text = description;
+        itemIcon.sprite = icon;
+
+        itemTypeRarity.text = "(" + iRarity.ToString() + " " + itemSlot.ToString() + ")";
     }
 }

@@ -56,15 +56,24 @@ public class PauseMenu : MonoBehaviour
 }
 
 /*
+    New Inventory Plan
+    ==================
+    - use TABS and tab groups for the expanded item UI
+        -> default panel where none of them are expanded
+        -> a separate panel for each where one is expanded
+        -> instead of on click, they swap on hover (over the small card)
+            -> for controller support, that would be on select (not a button press, just moving to it with the stick)
+        -> this might get weird but it's worth a shot!
+
+
+
+
+
+
     UI TODO:
     ========
-    - fix inventory icon spacing when sizes change
-        -> but that's gonna get all screwed up with lining up with the things and stuff so
-    - compare item UI
-    - expanded item UI
     - redo death screen, pause menu, dialogue UI, and main menu with new UI grid stuff
-
-
+    - compare item UI
     - once we implement saving, "are you sure" panel should mention if your progress was saved recently or whatever
     - lots of "TODO"s everywhere in different UI manager files
     - settings menu stuff (make it on either main menu or pause menu and then basically copy everything over from there to the other)
