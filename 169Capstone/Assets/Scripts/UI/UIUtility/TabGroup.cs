@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class TabGroup : MonoBehaviour
 {
-    public List<TabButton> tabButtons;
+    [HideInInspector] public List<TabButton> tabButtons;
 
     // Color values for the backgrounds of tabs
     public Vector4 tabIdle;

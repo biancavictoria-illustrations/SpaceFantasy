@@ -64,6 +64,8 @@ public class PauseMenu : MonoBehaviour
         -> instead of on click, they swap on hover (over the small card)
             -> for controller support, that would be on select (not a button press, just moving to it with the stick)
         -> this might get weird but it's worth a shot!
+        -> (it is, in fact, weird. because of panel things and button things, idk if it's gonna work, but generally the concept
+        is good)
 
 
 
