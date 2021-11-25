@@ -35,6 +35,11 @@ public class PlayerInteract : MonoBehaviour
             }
         }
 
+        // If inventory input
+        if(Input.GetKeyDown(KeyCode.I)){
+            InGameUIManager.instance.SetInventoryUIActive(!InGameUIManager.instance.inventoryIsOpen);
+        }
+
         // TEMP - REMOVE THIS!!!!!!!
         CheckForTestCaseSetInput();
     }

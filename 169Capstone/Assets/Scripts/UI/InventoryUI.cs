@@ -5,12 +5,23 @@ using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
+    [SerializeField] private TabGroupHover tabGroup;
+
     public List<InventoryUIItemPanel> itemPanels = new List<InventoryUIItemPanel>();
 
     [SerializeField] private VerticalLayoutGroup verticalLayoutGroup;
 
     public int expandedPanelSize;
     public int shrunkPanelSize;
+
+    public int defaultDescriptionBoxSize;
+    public int expandedDescriptionBoxSize;
+
+    public float defaultDescriptionYPos;
+    public float expandedDescriptionYPos;
+
+    public int expandedItemHorizontalGroupTopPadding;
+    public int shrunkItemTextGridTopPadding;
     
     public void OnCardSelect( InventoryUIItemPanel hoverPanel )
     {
@@ -25,16 +36,9 @@ public class InventoryUI : MonoBehaviour
 
                 // Formatting!!!
                 panel.horizontalLayoutGroup.childAlignment = TextAnchor.UpperLeft;
-                panel.horizontalLayoutGroup.padding.top = 8;
-                panel.itemDescription.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 195);
-                
-                // TODO: Set the expanded text position
-
-                // panel.itemDescription.GetComponent<RectTransform>().position = new Vector3(panel.itemDescription.GetComponent<RectTransform>().position.x, expandedTextYPos, panel.itemDescription.GetComponent<RectTransform>().position.z);
-                // set y position to -97.5
-                // panel.itemDescription.alignment = TMPro.TextAlignmentOptions.TopLeft;
-                // panel.itemDescription.GetComponent<RectTransform>().anchorMin = new Vector2(0,1);
-                // panel.itemDescription.GetComponent<RectTransform>().anchorMax = new Vector2(0,1);
+                panel.horizontalLayoutGroup.padding.top = expandedItemHorizontalGroupTopPadding;
+                panel.itemDescription.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, expandedDescriptionBoxSize);
+                panel.itemDescription.GetComponent<RectTransform>().localPosition = new Vector3(panel.itemDescription.GetComponent<RectTransform>().localPosition.x, expandedDescriptionYPos, panel.itemDescription.GetComponent<RectTransform>().localPosition.z);
             }
             else{
                 // Shrink it 
@@ -45,7 +49,7 @@ public class InventoryUI : MonoBehaviour
                 panel.descriptionPanel.SetActive(false);
 
                 // Set padding so that the text lines up nicely
-                panel.textGrid.padding.top = 12;
+                panel.textGrid.padding.top = shrunkItemTextGridTopPadding;
             }
         }
     }
@@ -63,7 +67,8 @@ public class InventoryUI : MonoBehaviour
                 // Revert formatting
                 panel.horizontalLayoutGroup.childAlignment = TextAnchor.MiddleLeft;
                 panel.horizontalLayoutGroup.padding.top = 0;
-                panel.itemDescription.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 24);
+                panel.itemDescription.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, defaultDescriptionBoxSize);
+                panel.itemDescription.GetComponent<RectTransform>().localPosition = new Vector3(panel.itemDescription.GetComponent<RectTransform>().localPosition.x, defaultDescriptionYPos, panel.itemDescription.GetComponent<RectTransform>().localPosition.z);
             }
             else{
                 // Reveal icon and description
@@ -76,4 +81,8 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
+    public void OnInventoryClose()
+    {
+        tabGroup.UnselectAllTabs();
+    }
 }
