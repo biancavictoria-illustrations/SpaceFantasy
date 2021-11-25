@@ -37,15 +37,43 @@ public class InventoryUIItemPanel : MonoBehaviour
     public TMP_Text itemTypeRarity;
     public TMP_Text itemDescription;
 
-    public GameObject descriptionPanel;
+    // TODO: Set to private after testing
+    [TextArea(5,10)]
+    public string shortDescription;    // Single line
+    [TextArea(5,10)]
+    public string expandedDescription; // Detailed additions
 
-    public void SetItemPanelValues(string iName, ItemRarity iRarity, string description, Sprite icon)
+    public GameObject descriptionPanel;
+    public FlexibleGridLayout textGrid;
+    public HorizontalLayoutGroup horizontalLayoutGroup;
+
+    // Remove after testing
+    void Start()
+    {
+        itemDescription.text = shortDescription;
+    }
+
+    public void SetItemPanelValues(string iName, ItemRarity iRarity, string shortDesc, string expandedDesc, Sprite icon)
     {
         itemName.text = iName;
         rarity = iRarity;
-        itemDescription.text = description;
-        itemIcon.sprite = icon;
 
         itemTypeRarity.text = "(" + iRarity.ToString() + " " + itemSlot.ToString() + ")";
+
+        shortDescription = shortDesc;
+        expandedDescription = expandedDesc;
+        itemDescription.text = shortDesc;
+        
+        itemIcon.sprite = icon;
+    }
+
+    public void SetExpandedDescription(bool set)
+    {
+        if(set){
+            itemDescription.text = shortDescription + expandedDescription;
+        }
+        else{
+            itemDescription.text = shortDescription;
+        }
     }
 }
