@@ -11,6 +11,16 @@ public class InventoryUI : MonoBehaviour
     
     public void OnHoverCardEnter( InventoryUIItemPanel hoverPanel )
     {
+        
+    }
+
+    public void OnHoverCardExit( InventoryUIItemPanel hoverPanel )
+    {
+        
+    }
+
+    public void OnCardSelect( InventoryUIItemPanel hoverPanel )
+    {
         foreach( InventoryUIItemPanel panel in itemPanels ){
             if(panel == hoverPanel){
                 // Expand it
@@ -28,7 +38,7 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    public void OnHoverCardExit( InventoryUIItemPanel hoverPanel )
+    public void OnCardDeselect( InventoryUIItemPanel hoverPanel )
     {
         // Reset all to default
         foreach( InventoryUIItemPanel panel in itemPanels ){
