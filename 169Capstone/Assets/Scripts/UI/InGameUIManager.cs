@@ -20,10 +20,8 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private GameObject darkBackgroundPanel;
 
     public InventoryUI inventoryUI;
-    [SerializeField] private GameObject inventoryStatsPanel;
-    // One for hovering over each slot + neutral
-    [SerializeField] private GameObject neutralInventoryItemsPanel;
-
+    [SerializeField] private GameObject inventoryUIPanel;
+    public bool inventoryIsOpen {get; private set;}
 
     [SerializeField] private TMP_Text permanentCurrencyValue;
     [SerializeField] private TMP_Text tempCurrencyValue;
@@ -57,12 +55,13 @@ public class InGameUIManager : MonoBehaviour
     // Called when player input opens or closes the inventory
     public void SetInventoryUIActive(bool set)
     {
+        if(!set){
+            inventoryUI.OnInventoryClose();
+        }
         inGameUIGearIconPanel.SetActive(!set);
-
         darkBackgroundPanel.SetActive(set);
-
-        neutralInventoryItemsPanel.SetActive(set);
-        inventoryStatsPanel.SetActive(set);
+        inventoryUIPanel.SetActive(set);
+        inventoryIsOpen = set;
     }
 
     public void SetNewRunDefaultValues()

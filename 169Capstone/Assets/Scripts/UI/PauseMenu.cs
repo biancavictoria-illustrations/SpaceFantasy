@@ -56,32 +56,18 @@ public class PauseMenu : MonoBehaviour
 }
 
 /*
-    New Inventory Plan
-    ==================
-    - use TABS and tab groups for the expanded item UI
-        -> default panel where none of them are expanded
-        -> a separate panel for each where one is expanded
-        -> instead of on click, they swap on hover (over the small card)
-            -> for controller support, that would be on select (not a button press, just moving to it with the stick)
-        -> this might get weird but it's worth a shot!
-        -> (it is, in fact, weird. because of panel things and button things, idk if it's gonna work, but generally the concept
-        is good)
-
-
-
-
-
-
     UI TODO:
     ========
-    - redo death screen, pause menu, dialogue UI, and main menu with new UI grid stuff
+    - redo death screen, pause menu, dialogue UI, and main menu with new UI grid stuff?
     - compare item UI
+        -> get the sizing right on the inventory screen before this so that we can just copy that and then mess with it
+    - the rightmost part of the item cards isn't interactable??? just the part around the rarity/type
     - once we implement saving, "are you sure" panel should mention if your progress was saved recently or whatever
     - lots of "TODO"s everywhere in different UI manager files
     - settings menu stuff (make it on either main menu or pause menu and then basically copy everything over from there to the other)
         -> volume (separated master(?), music, SFX)
         -> dimensions/resolution/full screen or otherwise whatever
-        -> ???
+        -> UI size would be awesome
         -> if we use the new input system we could have custom keybindings which i could handle :)
     - change where player pauses the game (in a more permanent player script)
         -> new input system would affect this

@@ -99,5 +99,16 @@ public class TabGroupHover : MonoBehaviour
         }
     }
 
+    public void UnselectAllTabs()
+    {
+        foreach(TabButtonHover button in tabButtons){
+            button.Deselect();
+            button.background.color = tabBackgroundIdle;
+            button.tabTitle.color = tabTitleIdle;
+            button.tabSubtitle.color = tabSubtitleIdle;
+            button.tabDescription.color = tabDescriptionIdle;
+        }
+    }
+
 
 }
