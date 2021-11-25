@@ -38,20 +38,14 @@ public class InventoryUIItemPanel : MonoBehaviour
     public TMP_Text itemDescription;
 
     // TODO: Set to private after testing
-    [TextArea(5,10)]
-    public string shortDescription;    // Single line
-    [TextArea(5,10)]
-    public string expandedDescription; // Detailed additions
+    // [TextArea(5,10)]
+    private string shortDescription = "";    // Single line
+    // [TextArea(5,10)]
+    private string expandedDescription = ""; // Detailed additions
 
     public GameObject descriptionPanel;
     public FlexibleGridLayout textGrid;
     public HorizontalLayoutGroup horizontalLayoutGroup;
-
-    // Remove after testing
-    void Start()
-    {
-        itemDescription.text = shortDescription;
-    }
 
     public void SetItemPanelValues(string iName, ItemRarity iRarity, string shortDesc, string expandedDesc, Sprite icon)
     {
