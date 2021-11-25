@@ -37,6 +37,8 @@ public class InventoryUIItemPanel : MonoBehaviour
     public TMP_Text itemTypeRarity;
     public TMP_Text itemDescription;
 
+    public GameObject descriptionPanel;
+
     public void SetItemPanelValues(string iName, ItemRarity iRarity, string description, Sprite icon)
     {
         itemName.text = iName;
