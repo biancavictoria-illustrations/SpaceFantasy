@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(Image))]
-public class TabButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler//, IPointerClickHandler
+public class TabButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     public TabGroupHover tabGroup;
     public Image background;
@@ -17,6 +17,9 @@ public class TabButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public UnityEvent onTabHover;
     public UnityEvent onTabExit;
+
+    public UnityEvent onTabSelected;
+    public UnityEvent onTabDeselcted;
 
     void Start()
     {
@@ -29,15 +32,28 @@ public class TabButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         tabGroup.OnTabEnter(this);
     }
 
-    // Could add something like this that pins it...
-    // public void OnPointerClick(PointerEventData eventData)
-    // {
-    //     tabGroup.OnTabSelected(this);
-    // }
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        tabGroup.OnTabSelected(this);
+    }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         tabGroup.OnTabExit(this);
+    }
+
+    public void Select()
+    {
+        if(onTabSelected != null){
+            onTabSelected.Invoke();
+        }
+    }
+
+    public void Deselect()
+    {
+        if(onTabDeselcted != null){
+            onTabDeselcted.Invoke();
+        }
     }
 
     public void OnHover()

@@ -17,7 +17,13 @@ public class TabGroupHover : MonoBehaviour
     public Color tabSubtitleHover;
     public Color tabDescriptionHover;
 
-    [HideInInspector] public TabButtonHover selectedTab;
+    public Color tabBackgroundActive;
+    public Color tabTitleActive;
+    public Color tabSubtitleActive;
+    public Color tabDescriptionActive;
+
+    private TabButtonHover selectedTab;
+    private TabButtonHover highlightedTab;
 
     public void Subscribe(TabButtonHover button)
     {
@@ -29,27 +35,55 @@ public class TabGroupHover : MonoBehaviour
 
     public void OnTabEnter(TabButtonHover button)
     {
-        // If there already is a selected tab, deselect it
-        if(selectedTab != null){
-            selectedTab.OnExit();
+        // If there already is a highlighted tab, un-highlight it
+        if(highlightedTab != null){
+            highlightedTab.OnExit();
         }
 
-        // Select the new tab
-        selectedTab = button;
-        selectedTab.OnHover();
+        // As long as this tab isn't the currently selected tab, highlight this one
+        if( button != selectedTab ){
+            highlightedTab = button;
+            highlightedTab.OnHover();
 
-
-        // Reset all the other tabs and set this tab to the active appearance
-        ResetTabs();
-        button.background.color = tabBackgroundHover;
-        button.tabTitle.color = tabTitleHover;
-        button.tabSubtitle.color = tabSubtitleHover;
-        button.tabDescription.color = tabDescriptionHover;
+            // Reset all the other tabs and set this tab to the hover appearance
+            ResetTabs();
+            button.background.color = tabBackgroundHover;
+            button.tabTitle.color = tabTitleHover;
+            button.tabSubtitle.color = tabSubtitleHover;
+            button.tabDescription.color = tabDescriptionHover;
+        }
     }
 
     public void OnTabExit(TabButtonHover button)
     {
         ResetTabs();
+    }
+
+    public void OnTabSelected(TabButtonHover button)
+    {
+        // If you're clicking the currently selected tab again, deselect it and return
+        if( selectedTab == button ){
+            selectedTab.Deselect();
+            selectedTab = null;
+            OnTabEnter(button);
+            return;
+        }
+
+        // If there already is a selected tab, deselect it
+        if(selectedTab != null){
+            selectedTab.Deselect();
+        }
+
+        // Select the new tab
+        selectedTab = button;
+        selectedTab.Select();
+
+        // Reset all the other tabs and set this tab to the active appearance
+        ResetTabs();
+        button.background.color = tabBackgroundActive;
+        button.tabTitle.color = tabTitleActive;
+        button.tabSubtitle.color = tabSubtitleActive;
+        button.tabDescription.color = tabDescriptionActive;
     }
 
     public void ResetTabs()
