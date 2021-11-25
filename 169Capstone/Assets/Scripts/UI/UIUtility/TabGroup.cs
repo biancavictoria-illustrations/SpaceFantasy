@@ -8,9 +8,9 @@ public class TabGroup : MonoBehaviour
     [HideInInspector] public List<TabButton> tabButtons;
 
     // Color values for the backgrounds of tabs
-    public Vector4 tabIdle;
-    public Vector4 tabHover;
-    public Vector4 tabActive;
+    public Color tabIdle;
+    public Color tabHover;
+    public Color tabActive;
 
     public TabButton selectedTab;
 
