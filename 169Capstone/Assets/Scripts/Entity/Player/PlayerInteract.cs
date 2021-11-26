@@ -4,47 +4,8 @@ using UnityEngine;
 
 public class PlayerInteract : MonoBehaviour
 {
-    public SpeakerData speakerData;
-    private bool isInDialogue = false;
-
-    // TODO: Change the way this is done
-    public PauseMenu pauseMenu;
-
-    void Start()
-    {
-        DialogueManager.instance.AddSpeaker(speakerData);
-    }
-
-    void Update()
-    {
-        // If interact input
-        if(Input.GetKeyDown(KeyCode.Space)){            
-            // If NPC is active and not already talking and has something to say
-            if(NPC.ActiveNPC && !isInDialogue && !NPC.ActiveNPC.HaveTalkedToNPC()){
-                StartDialogue();
-            }
-        }
-
-        // If pause input
-        if(Input.GetKeyDown(KeyCode.Escape)){
-            if(PauseMenu.GameIsPaused){
-                pauseMenu.ResumeGame();
-            }
-            else{
-                pauseMenu.PauseGame();
-            }
-        }
-
-        // If inventory input
-        if(Input.GetKeyDown(KeyCode.I)){
-            InGameUIManager.instance.SetInventoryUIActive(!InGameUIManager.instance.inventoryIsOpen);
-        }
-
-        // TEMP - REMOVE THIS!!!!!!!
-        CheckForTestCaseSetInput();
-    }
-
     // SET TEST CASES FOR DIALOGUE SYSTEM
+    // NOTE: None of this works anymore because new input system whoops
     public void CheckForTestCaseSetInput()
     {
         // Numpad 1 = Increment run number
@@ -108,21 +69,5 @@ public class PlayerInteract : MonoBehaviour
             - specific prereqs
                 -> like a special EnemyKilledSlime50 story beat that only plays once you've completed EnemyKilledSlime 50 times
         */
-    }
-
-    // Called when the player clicks the interact button in range of an NPC with something to say
-    private void StartDialogue()
-    {
-        // pause player movement (add this stuff to the normal player script -> start of Update: if(isindialogue){return};)
-        isInDialogue = true;
-        DialogueManager.instance.dialogueRunner.StartDialogue(NPC.ActiveNPC.yarnStartNode);
-    }
-
-    // Called when the dialogue ends/closes
-    public void EndDialogue()
-    {
-        // unpause player movement
-        isInDialogue = false;
-        NPC.ActiveNPC.TalkedToNPC();
     }
 }

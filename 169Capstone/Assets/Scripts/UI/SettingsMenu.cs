@@ -18,7 +18,7 @@ public class SettingsMenu : MonoBehaviour
 
     public void Start()
     {
-        SetSettingsUIToSavedValues();
+        // TODO: SetSettingsUIToSavedValues();
     }
 
     public void SetSettingsUIToSavedValues()
@@ -35,16 +35,16 @@ public class SettingsMenu : MonoBehaviour
     {
         Debug.Log("Applying settings changes...");
 
-        PlayerSettings.instance.AdjustMasterVolume(masterVolume.value);
-        PlayerSettings.instance.AdjustMusicVolume(musicVolume.value);
-        PlayerSettings.instance.AdjustSFXVolume(sfxVolume.value);
+        // PlayerSettings.instance.AdjustMasterVolume(masterVolume.value);
+        // PlayerSettings.instance.AdjustMusicVolume(musicVolume.value);
+        // PlayerSettings.instance.AdjustSFXVolume(sfxVolume.value);
 
-        PlayerSettings.instance.AdjustMinTextSize((int)textSize.value);
+        // PlayerSettings.instance.AdjustMinTextSize((int)textSize.value);
     }
 
     public void CancelSettingsChange()
     {
         Debug.Log("No settings changes applied.");
-        SetSettingsUIToSavedValues();
+        // SetSettingsUIToSavedValues();
     }
 }
