@@ -7,6 +7,7 @@ public class EntityHealth : MonoBehaviour
     public float maxHitpoints;
     public float currentHitpoints;
     private bool startCoroutine = true;
+    [SerializeField] private Drop drop;
 
     [SerializeField] private ObjectManager objectManager;
 
@@ -52,6 +53,10 @@ public class EntityHealth : MonoBehaviour
         if(gameObject.tag == "Player")
         {
             objectManager.playerDeath = true;
+        }
+        else
+        {
+            Debug.Log(drop.GetDrop(ObjectManager.bossesKilled));
         }
 
         Destroy(gameObject);

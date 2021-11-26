@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ObjectManager : MonoBehaviour
 {
@@ -8,13 +9,15 @@ public class ObjectManager : MonoBehaviour
     [SerializeField] private GameObject[] gear;
     private string[] titles = new string[] { "Berserker's Zweihander", "Bow And Arrows" };
     public bool playerDeath = false;
-    [SerializeField] private Transform mainHub;
+    //[SerializeField] private Transform mainHub;
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private string mainHub;
+    public static int bossesKilled = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        Instantiate(playerPrefab);
     }
 
     // Update is called once per frame
@@ -22,7 +25,8 @@ public class ObjectManager : MonoBehaviour
     {
         if(playerDeath)
         {
-            Instantiate(playerPrefab, mainHub);
+            //Instantiate(playerPrefab, mainHub);
+            SceneManager.LoadScene(mainHub);
         }
     }
 

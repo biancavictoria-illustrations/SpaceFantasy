@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        weapon = "Bow And Arrows";
+        weapon = "Berserker's Zweihander";
         gear[0] = objectManager.GetGearObject(weapon);
         health = gameObject.GetComponent<EntityHealth>();
         health.maxHitpoints = stats.getMaxHitPoints();
