@@ -49,7 +49,6 @@ public class InGameUIManager : MonoBehaviour
     public void SetGameUIActive(bool set)
     {
         inGameUIPanel.SetActive(set);
-        // inGameUIGearIconPanel.SetActive(set);
     }
 
     // Called when player input opens or closes the inventory
@@ -66,7 +65,7 @@ public class InGameUIManager : MonoBehaviour
 
     public void SetNewRunDefaultValues()
     {
-        // TODO: Make sure all inventory slots are set to nothing (no hover description, no images)
+        // TODO: Make sure all inventory slots are set to nothing/default
 
         // Could have different default values set, or variable default values
         SetTempCurrencyValue(0);
@@ -74,41 +73,11 @@ public class InGameUIManager : MonoBehaviour
         SetHealthPotionValue(0);
     }
 
-    public void SetWeaponUI()
+    public void SetGearItemUI() // Pass in an item?
     {
-        // TODO: Get item data and set values -> could take in an item?
-        // weaponIMG.sprite = ;
+        // TODO: Get item data and set values
 
         // InventoryUI.instance.weaponPanel.SetItemPanelValues(); // Pass in the values from the item
-    }
-
-    public void SetAccessoryUI()
-    {
-        // TODO: Get item data and set values -> could take in an item?
-        // accessoryIMG.sprite = ;
-
-        // InventoryUI.instance.accessoryPanel.SetItemPanelValues(); // Pass in the values from the item
-    }
-
-    public void SetHeadGearUI()
-    {
-        // TODO: Get item data and set values -> could take in an item?
-        // headGearIMG.sprite = ;
-
-        // InventoryUI.instance.helmetPanel.SetItemPanelValues(); // Pass in the values from the item
-    }
-
-    public void SetBootsUI()
-    {
-        // TODO: Get item data and set values -> could take in an item?
-        // bootsIMG.sprite = ;
-
-        // InventoryUI.instance.bootsPanel.SetItemPanelValues(); // Pass in the values from the item
-    }
-
-    public void SetOtherPotionUI()
-    {
-
     }
 
     // Called when you lose an item and the slot is clear
