@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(Image))]
-public class TabButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class TabButtonHover : Selectable, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler, ISubmitHandler, IPointerClickHandler
 {
     public TabGroupHover tabGroup;
     public Image background;
@@ -18,41 +18,86 @@ public class TabButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public UnityEvent onTabHover;
     public UnityEvent onTabExit;
 
-    public UnityEvent onTabSelected;
-    public UnityEvent onTabDeselcted;
+    public UnityEvent onTabClicked;
+    public UnityEvent onTabUnclicked;
 
-    void Start()
+    new void Start()
     {
         background = GetComponent<Image>();
         tabGroup.Subscribe(this);
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
+    private bool CanAcceptInput()
     {
+        if(PauseMenu.GameIsPaused){
+            return false;
+        }
+        return true;
+    }
+
+    // Click/button press to interact
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if(!CanAcceptInput()){
+            return;
+        }
+        tabGroup.OnTabClicked(this);
+    }
+
+    public void OnSubmit(BaseEventData eventData)
+    {
+        if(!CanAcceptInput()){
+            return;
+        }
+        tabGroup.OnTabClicked(this);
+    }
+
+    // Hover
+    public new void OnPointerEnter(PointerEventData eventData)
+    {
+        if(!CanAcceptInput()){
+            return;
+        }
         tabGroup.OnTabEnter(this);
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    public new void OnPointerExit(PointerEventData eventData)
     {
-        tabGroup.OnTabSelected(this);
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
+        if(!CanAcceptInput()){
+            return;
+        }
         tabGroup.OnTabExit(this);
     }
 
-    public void Select()
+    // "Hover" for controller/keyboard
+    public new void OnSelect(BaseEventData eventData)
     {
-        if(onTabSelected != null){
-            onTabSelected.Invoke();
+        if(!CanAcceptInput()){
+            return;
+        }
+        tabGroup.OnTabEnter(this);
+    }
+
+    public new void OnDeselect(BaseEventData eventData)
+    {
+        if(!CanAcceptInput()){
+            return;
+        }        
+        tabGroup.OnTabExit(this);
+    }
+
+
+    public void OnClicked()
+    {
+        if(onTabClicked != null){
+            onTabClicked.Invoke();
         }
     }
 
-    public void Deselect()
+    public void OnUnclicked()
     {
-        if(onTabDeselcted != null){
-            onTabDeselcted.Invoke();
+        if(onTabUnclicked != null){
+            onTabUnclicked.Invoke();
         }
     }
 

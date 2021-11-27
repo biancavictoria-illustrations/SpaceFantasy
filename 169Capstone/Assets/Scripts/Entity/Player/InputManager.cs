@@ -16,7 +16,11 @@ public class InputManager : MonoBehaviour
     public Animator animator;
 
     public SpeakerData speakerData;     // This should be stored in a different player script
-    private bool isInDialogue = false;
+
+    private bool isInDialogue;
+    private bool inventoryIsOpen;
+    private bool shopIsOpen;
+    private bool compareItemIsOpen;
 
     public PauseMenu pauseMenu;     // Should that be a singleton instead?
 
@@ -24,6 +28,8 @@ public class InputManager : MonoBehaviour
     {
         DialogueManager.instance.AddSpeaker(speakerData);
         InputActionAsset controls = gameObject.GetComponent<PlayerInput>().actions;
+        inventoryIsOpen = false;
+        isInDialogue = false;
 
         // Add STOPPING moving when you're no longer holding the button
         controls.FindAction("MoveLeft").canceled += x => OnMoveLeftCanceled();
@@ -33,6 +39,14 @@ public class InputManager : MonoBehaviour
         
         controls.FindAction("Jump").canceled += x => OnJumpCanceled();
         controls.FindAction("Attack").canceled += x => OnAttackCanceled();
+    }
+
+    private bool CanAcceptGameplayInput()
+    {
+        if(isInDialogue || PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen){
+            return false;
+        }
+        return true;
     }
 
     // This could be in a separate script...
@@ -70,7 +84,7 @@ public class InputManager : MonoBehaviour
 
     public void OnMoveLeft(InputValue input)
     {
-        if(isInDialogue || PauseMenu.GameIsPaused){
+        if(!CanAcceptGameplayInput()){
             return;
         }
 
@@ -90,7 +104,7 @@ public class InputManager : MonoBehaviour
 
     public void OnMoveRight(InputValue input)
     {
-        if(isInDialogue || PauseMenu.GameIsPaused){
+        if(!CanAcceptGameplayInput()){
             return;
         }
 
@@ -110,7 +124,7 @@ public class InputManager : MonoBehaviour
 
     public void OnMoveUp(InputValue input)
     {
-        if(isInDialogue || PauseMenu.GameIsPaused){
+        if(!CanAcceptGameplayInput()){
             return;
         }
 
@@ -130,7 +144,7 @@ public class InputManager : MonoBehaviour
 
     public void OnMoveDown(InputValue input)
     {
-        if(isInDialogue || PauseMenu.GameIsPaused){
+        if(!CanAcceptGameplayInput()){
             return;
         }
 
@@ -150,7 +164,7 @@ public class InputManager : MonoBehaviour
 
     public void OnJump(InputValue input)
     {
-        if(isInDialogue || PauseMenu.GameIsPaused){
+        if(!CanAcceptGameplayInput()){
             return;
         }
 
@@ -164,7 +178,7 @@ public class InputManager : MonoBehaviour
 
     public void OnAttack(InputValue input)
     {
-        if(isInDialogue || PauseMenu.GameIsPaused){
+        if(!CanAcceptGameplayInput()){
             return;
         }
 
@@ -186,25 +200,14 @@ public class InputManager : MonoBehaviour
 
     public void OnInteract(InputValue input)
     {
-        if(PauseMenu.GameIsPaused){
+        if(!CanAcceptGameplayInput()){
             return;
         }
 
         // If nearby NPC is active and not already talking and has something to say
-        if(NPC.ActiveNPC && !isInDialogue && !NPC.ActiveNPC.HaveTalkedToNPC()){
+        else if(NPC.ActiveNPC && !NPC.ActiveNPC.HaveTalkedToNPC()){
             StartDialogue();
         }
-
-        // If you're currently in dialogue, progress to the next line (DialogueUI.MarkLineComplete)
-        else if(isInDialogue){
-            
-        }
-
-        // TODO: If you're in a shop, you can buy stuff
-
-
-        // TODO: If inventory is open, interact with those buttons
-
     }
 
     public void OnPause(InputValue input)
@@ -219,15 +222,16 @@ public class InputManager : MonoBehaviour
 
     public void OnToggleInventory(InputValue input)
     {
-        if(isInDialogue || PauseMenu.GameIsPaused){
+        if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen){
             return;
         }
         InGameUIManager.instance.SetInventoryUIActive(!InGameUIManager.instance.inventoryIsOpen);
+        inventoryIsOpen = !inventoryIsOpen;
     }
 
     public void OnUseHealthPotion(InputValue input)
     {
-        if(isInDialogue || PauseMenu.GameIsPaused){
+        if(!CanAcceptGameplayInput()){
             return;
         }
 
@@ -236,7 +240,7 @@ public class InputManager : MonoBehaviour
 
     public void OnUseOtherPotion(InputValue input)
     {
-        if(isInDialogue || PauseMenu.GameIsPaused){
+        if(!CanAcceptGameplayInput()){
             return;
         }
 

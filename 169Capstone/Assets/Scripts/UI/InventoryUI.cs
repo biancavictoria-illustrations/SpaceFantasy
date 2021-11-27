@@ -81,6 +81,16 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
+    public void OnInventoryOpen()
+    {
+        if(itemPanels.Count == 0){
+            Debug.LogError("No item panels found!");
+        }
+
+        // Select the top panel
+        tabGroup.OnTabEnter(itemPanels[0].GetComponent<TabButtonHover>());
+    }
+
     public void OnInventoryClose()
     {
         tabGroup.UnselectAllTabs();

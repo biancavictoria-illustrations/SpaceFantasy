@@ -59,11 +59,11 @@ public class TabGroupHover : MonoBehaviour
         ResetTabs();
     }
 
-    public void OnTabSelected(TabButtonHover button)
+    public void OnTabClicked(TabButtonHover button)
     {
         // If you're clicking the currently selected tab again, deselect it and return
         if( selectedTab == button ){
-            selectedTab.Deselect();
+            selectedTab.OnUnclicked();
             selectedTab = null;
             OnTabEnter(button);
             return;
@@ -71,12 +71,12 @@ public class TabGroupHover : MonoBehaviour
 
         // If there already is a selected tab, deselect it
         if(selectedTab != null){
-            selectedTab.Deselect();
+            selectedTab.OnUnclicked();
         }
 
         // Select the new tab
         selectedTab = button;
-        selectedTab.Select();
+        selectedTab.OnClicked();
 
         // Reset all the other tabs and set this tab to the active appearance
         ResetTabs();
@@ -102,7 +102,7 @@ public class TabGroupHover : MonoBehaviour
     public void UnselectAllTabs()
     {
         foreach(TabButtonHover button in tabButtons){
-            button.Deselect();
+            button.OnUnclicked();
             button.background.color = tabBackgroundIdle;
             button.tabTitle.color = tabTitleIdle;
             button.tabSubtitle.color = tabSubtitleIdle;
