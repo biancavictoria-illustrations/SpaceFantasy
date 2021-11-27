@@ -57,10 +57,15 @@ public class InGameUIManager : MonoBehaviour
         if(!set){
             inventoryUI.OnInventoryClose();
         }
+
         inGameUIGearIconPanel.SetActive(!set);
         darkBackgroundPanel.SetActive(set);
         inventoryUIPanel.SetActive(set);
         inventoryIsOpen = set;
+
+        if(set){
+            inventoryUI.OnInventoryOpen();
+        }
     }
 
     public void SetNewRunDefaultValues()

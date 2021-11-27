@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMenuPanel;
     public GameObject settingsMenuPanel;
     public GameObject areYouSurePanel;
+
+    public Button continueButton;
 
     public void ResumeGame()
     {
@@ -24,6 +27,7 @@ public class PauseMenu : MonoBehaviour
         settingsMenuPanel.SetActive(false);
         areYouSurePanel.SetActive(false);
         pauseMenuPanel.SetActive(true);
+        
         pauseMenuUI.SetActive(false);
     }
 
@@ -32,6 +36,7 @@ public class PauseMenu : MonoBehaviour
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         GameIsPaused = true;
+        continueButton.Select();
     }
 
     public void LoadMenu()
