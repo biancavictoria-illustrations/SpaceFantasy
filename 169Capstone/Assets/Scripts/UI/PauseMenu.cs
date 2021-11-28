@@ -20,6 +20,10 @@ public class PauseMenu : MonoBehaviour
         ResetPauseUI();
         Time.timeScale = 1f;
         GameIsPaused = false;
+
+        if(InGameUIManager.instance.inventoryIsOpen){
+            InGameUIManager.instance.inventoryUI.SetInventoryInteractable(true);
+        }
     }
 
     private void ResetPauseUI()
@@ -37,6 +41,10 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 0f;
         GameIsPaused = true;
         continueButton.Select();
+
+        if(InGameUIManager.instance.inventoryIsOpen){
+            InGameUIManager.instance.inventoryUI.SetInventoryInteractable(false);
+        }
     }
 
     public void LoadMenu()
@@ -49,6 +57,9 @@ public class PauseMenu : MonoBehaviour
 /*
     UI TODO:
     ========
+    - pause menu opens BEHIND dialogue UI
+        -> is there a way to just set it to open on top of literally anything and everything else?
+
     - redo death screen, pause menu, dialogue UI, and main menu with new UI grid stuff?
 
     - compare item UI
