@@ -11,6 +11,9 @@ public class DialogueManager : MonoBehaviour
     public static DialogueManager instance;
 
     public GameObject dialogueUICanvas;
+    public DialogueUI dialogueUI;
+
+    public Button nextButton;
 
     private Dictionary<string, SpeakerData> speakers = new Dictionary<string, SpeakerData>();
 

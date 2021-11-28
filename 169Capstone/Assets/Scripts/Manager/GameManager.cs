@@ -18,6 +18,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void StartNewRun()
+    {
+        
+    }
+
+    public void ChangeScene()
+    {
+        SaveGame();
+    }
+
     private Save CreateSaveGameObject()
     {
         Save saveFile = new Save();
@@ -27,7 +37,6 @@ public class GameManager : MonoBehaviour
         return saveFile;
     }
 
-    // TODO: Connect to a manual save button or automatically save at various points
     public void SaveGame()
     {
         Save save = CreateSaveGameObject();

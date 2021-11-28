@@ -11,15 +11,16 @@ public enum PlayerPrefKeys
 
     minTextSize,
 
-    attackKey,
-    interactKey,    // Talking and picking up item drops...?
+    attack,
+    interact,    // Talking and picking up item drops...?
+    useHealthPotion,
+    useOtherPotion,
+    toggleInventory,
     moveUp,
     moveDown,
     moveLeft,
     moveRight,
     jumpKey
-    // Do we have a dash?
-    // Is use potion interact or is that a different button?
 }
 
 // Goes on the game manager I think?
@@ -27,7 +28,6 @@ public class PlayerSettings : MonoBehaviour
 {
     public static PlayerSettings instance;
 
-    // Can swap all this to floats if necessary...? Depends on how Chase is doing music I guess
     public float masterVolumeValue {get; private set;}
     public float musicVolumeValue {get; private set;}
     public float sfxVolumeValue {get; private set;}

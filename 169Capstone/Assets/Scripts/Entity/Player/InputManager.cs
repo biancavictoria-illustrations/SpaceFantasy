@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
+    public static InputManager instance;
+
     // This stuff can either be here OR just in the Movement script and this script tells that one to handle input based on the input
     // it receives (like OnMoveLeft could call something like Movement.HandleMovement(inputValue); that does the calculations and the movement)
     public float speed = 5;
@@ -17,12 +19,22 @@ public class InputManager : MonoBehaviour
 
     public SpeakerData speakerData;     // This should be stored in a different player script
 
-    private bool isInDialogue;
-    private bool inventoryIsOpen;
-    private bool shopIsOpen;
-    private bool compareItemIsOpen;
+    [HideInInspector] public bool isInDialogue;
+    [HideInInspector] bool inventoryIsOpen;
+    [HideInInspector] bool shopIsOpen;
+    [HideInInspector] bool compareItemIsOpen;
 
     public PauseMenu pauseMenu;     // Should that be a singleton instead?
+
+    void Awake()
+    {
+        if( instance ){
+            Destroy(gameObject);
+        }
+        else{
+            instance = this;
+        }
+    }
 
     void Start()
     {
@@ -207,6 +219,14 @@ public class InputManager : MonoBehaviour
         // If nearby NPC is active and not already talking and has something to say
         else if(NPC.ActiveNPC && !NPC.ActiveNPC.HaveTalkedToNPC()){
             StartDialogue();
+        }
+    }
+
+    // If you're in dialogue, click anywhere to progress
+    public void OnClick(InputValue input)
+    {
+        if(isInDialogue && !PauseMenu.GameIsPaused){
+            DialogueManager.instance.dialogueUI.MarkLineComplete();
         }
     }
 

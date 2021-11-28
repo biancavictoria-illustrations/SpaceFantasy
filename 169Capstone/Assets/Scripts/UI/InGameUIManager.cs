@@ -33,6 +33,8 @@ public class InGameUIManager : MonoBehaviour
 
     [SerializeField] private TMP_Text healthPotionValue;
 
+    public int minTextSize;
+
 
     void Awake()
     {
@@ -43,7 +45,23 @@ public class InGameUIManager : MonoBehaviour
         else{
             instance = this;
         }
-    } 
+    }
+
+    void Start()
+    {
+        if(!PlayerPrefs.HasKey(PlayerPrefKeys.minTextSize.ToString())){
+            SetMinTextSize(12);
+        }
+        else{
+            SetMinTextSize(PlayerPrefs.GetInt(PlayerPrefKeys.minTextSize.ToString()));
+        }
+    }
+
+    public void SetMinTextSize(int size)
+    {
+        minTextSize = size;
+        // Set it *everywhere*
+    }
 
     // Called when you enter dialogue or other similar things
     public void SetGameUIActive(bool set)

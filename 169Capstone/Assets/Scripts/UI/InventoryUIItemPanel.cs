@@ -39,7 +39,7 @@ public class InventoryUIItemPanel : MonoBehaviour
     // [TextArea(5,10)]
     private string shortDescription = "";    // Single line
     // [TextArea(5,10)]
-    private string expandedDescription = ""; // Detailed additions
+    private string expandedDescription = "\n\n +X% Stat 1\n+X% Stat 2\n\nModifier Name\nModifier description text goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."; // Detailed additions
 
     public GameObject descriptionPanel;
     public FlexibleGridLayout textGrid;
