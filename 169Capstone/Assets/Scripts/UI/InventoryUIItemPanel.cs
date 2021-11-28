@@ -16,7 +16,6 @@ public enum InventoryItemSlot
     enumSize
 }
 
-// TODO: set these to whatever we're actually calling them in game
 public enum ItemRarity
 {
     Common,
@@ -37,7 +36,6 @@ public class InventoryUIItemPanel : MonoBehaviour
     public TMP_Text itemTypeRarity;
     public TMP_Text itemDescription;
 
-    // TODO: Set to private after testing
     // [TextArea(5,10)]
     private string shortDescription = "";    // Single line
     // [TextArea(5,10)]

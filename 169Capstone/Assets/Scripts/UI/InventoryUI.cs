@@ -5,11 +5,10 @@ using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
-    [SerializeField] private TabGroupHover tabGroup;
-
     public List<InventoryUIItemPanel> itemPanels = new List<InventoryUIItemPanel>();
 
     [SerializeField] private VerticalLayoutGroup verticalLayoutGroup;
+    private InventoryUIItemPanel activePanel;
 
     public int expandedPanelSize;
     public int shrunkPanelSize;
@@ -22,12 +21,33 @@ public class InventoryUI : MonoBehaviour
 
     public int expandedItemHorizontalGroupTopPadding;
     public int shrunkItemTextGridTopPadding;
-    
-    public void OnCardSelect( InventoryUIItemPanel hoverPanel )
+
+    // Called when you click on a panel
+    public void CardToggle( InventoryUIItemPanel hoverPanel )
     {
+        // Get the NEW status of this panel
+        bool isOn = hoverPanel.GetComponent<Toggle>().isOn;
+        if(isOn){
+            // If there was already an active panel, deactivate it
+            if(activePanel != null && activePanel != hoverPanel){
+                OnCardDeselect(activePanel);
+            }
+
+            // Set this panel to the new active panel
+            OnCardSelect(hoverPanel);
+        }
+        else{
+            OnCardDeselect(hoverPanel);
+        }
+    }
+    
+    private void OnCardSelect( InventoryUIItemPanel selectedPanel )
+    {
+        activePanel = selectedPanel;
+
         verticalLayoutGroup.childControlHeight = false;
         foreach( InventoryUIItemPanel panel in itemPanels ){
-            if(panel == hoverPanel){
+            if(panel == selectedPanel){
                 // Expand it
                 panel.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, expandedPanelSize);
 
@@ -54,13 +74,21 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    public void OnCardDeselect( InventoryUIItemPanel hoverPanel )
+    private void OnCardDeselect( InventoryUIItemPanel deselectedPanel )
     {
         // Reset all to default
-        verticalLayoutGroup.childControlHeight = true;
+        activePanel = null;
+        if(deselectedPanel.GetComponent<Toggle>().isOn){
+            deselectedPanel.GetComponent<Toggle>().isOn = false;
+        }
 
+        // TODO: Set the background color to the normal color
+        // can't do the following because it changes the actual image color which messes up the color tint stuff...
+        // deselectedPanel.GetComponent<Image>().color = deselectedPanel.GetComponent<Toggle>().colors.normalColor;
+
+        verticalLayoutGroup.childControlHeight = true;
         foreach( InventoryUIItemPanel panel in itemPanels ){
-            if(panel == hoverPanel){
+            if(panel == deselectedPanel){
                 // Remove excess info
                 panel.SetExpandedDescription(false);
 
@@ -88,11 +116,23 @@ public class InventoryUI : MonoBehaviour
         }
 
         // Select the top panel
-        tabGroup.OnTabEnter(itemPanels[0].GetComponent<TabButtonHover>());
+        itemPanels[0].GetComponent<Toggle>().Select();
     }
 
     public void OnInventoryClose()
     {
-        tabGroup.UnselectAllTabs();
+        // Make sure all tabs are closed
+        if(activePanel != null){
+            OnCardDeselect(activePanel);
+        }
+    }
+
+    // TODO: This is buggy because if you open a panel and then open the pause menu and then close the pause menu you can't select stuff anymore
+    // at least on controller
+    public void SetInventoryInteractable(bool set)
+    {
+        foreach(InventoryUIItemPanel panel in itemPanels){
+            panel.GetComponent<Toggle>().interactable = set;
+        }
     }
 }
