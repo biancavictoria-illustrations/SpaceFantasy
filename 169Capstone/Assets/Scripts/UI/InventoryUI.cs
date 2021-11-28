@@ -22,6 +22,9 @@ public class InventoryUI : MonoBehaviour
     public int expandedItemHorizontalGroupTopPadding;
     public int shrunkItemTextGridTopPadding;
 
+    public int shrunkItemHorizontalGroupLeftPadding;
+    public int defaultItemHorizontalGroupLeftPadding;
+
     // Called when you click on a panel
     public void CardToggle( InventoryUIItemPanel hoverPanel )
     {
@@ -57,6 +60,7 @@ public class InventoryUI : MonoBehaviour
                 // Formatting!!!
                 panel.horizontalLayoutGroup.childAlignment = TextAnchor.UpperLeft;
                 panel.horizontalLayoutGroup.padding.top = expandedItemHorizontalGroupTopPadding;
+                panel.horizontalLayoutGroup.padding.left = defaultItemHorizontalGroupLeftPadding;
                 panel.itemDescription.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, expandedDescriptionBoxSize);
                 panel.itemDescription.GetComponent<RectTransform>().localPosition = new Vector3(panel.itemDescription.GetComponent<RectTransform>().localPosition.x, expandedDescriptionYPos, panel.itemDescription.GetComponent<RectTransform>().localPosition.z);
             }
@@ -70,6 +74,7 @@ public class InventoryUI : MonoBehaviour
 
                 // Set padding so that the text lines up nicely
                 panel.textGrid.padding.top = shrunkItemTextGridTopPadding;
+                panel.horizontalLayoutGroup.padding.left = shrunkItemHorizontalGroupLeftPadding;
             }
         }
     }
@@ -105,6 +110,7 @@ public class InventoryUI : MonoBehaviour
                 
                 // Reset the padding
                 panel.textGrid.padding.top = 0;
+                panel.horizontalLayoutGroup.padding.left = defaultItemHorizontalGroupLeftPadding;
             }
         }
     }
@@ -127,12 +133,17 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    // TODO: This is buggy because if you open a panel and then open the pause menu and then close the pause menu you can't select stuff anymore
-    // at least on controller
     public void SetInventoryInteractable(bool set)
     {
         foreach(InventoryUIItemPanel panel in itemPanels){
             panel.GetComponent<Toggle>().interactable = set;
+        }
+
+        if(set){
+            // Select the top panel
+            // If it matters we can change this so that it specifically reselects the one you were on before, but that seems like a pain
+            // and Idk how necessary it is
+            itemPanels[0].GetComponent<Toggle>().Select();
         }
     }
 }
