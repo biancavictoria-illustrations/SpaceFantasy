@@ -81,6 +81,9 @@ public class InventoryUI : MonoBehaviour
         slowResistChance.text = "Slow Resist Chance: " + stats.getStatusResistChance();
     }
 
+    public int shrunkItemHorizontalGroupLeftPadding;
+    public int defaultItemHorizontalGroupLeftPadding;
+
     // Called when you click on a panel
     public void CardToggle( InventoryUIItemPanel hoverPanel )
     {
