@@ -19,6 +19,8 @@ public class InGameUIManager : MonoBehaviour
 
     [SerializeField] private GameObject darkBackgroundPanel;
 
+    public DeathScreenUI deathScreen;
+
     public InventoryUI inventoryUI;
     [SerializeField] private GameObject inventoryUIPanel;
     public bool inventoryIsOpen {get; private set;}
@@ -28,8 +30,8 @@ public class InGameUIManager : MonoBehaviour
 
     [SerializeField] private Slider healthSlider;
     [SerializeField] private TMP_Text healthText;
-    private int maxHealthValue = 100;
-    private int currentHPValue;
+    private float maxHealthValue;
+    private float currentHPValue;
 
     [SerializeField] private TMP_Text healthPotionValue;
 
@@ -120,7 +122,7 @@ public class InGameUIManager : MonoBehaviour
         tempCurrencyValue.text = "" + money;
     }
 
-    public void SetCurrentHealthValue(int currentHP)
+    public void SetCurrentHealthValue(float currentHP)
     {
         currentHPValue = currentHP;
 
@@ -133,7 +135,7 @@ public class InGameUIManager : MonoBehaviour
         }
     }
 
-    public void SetMaxHealthValue(int maxHP)
+    public void SetMaxHealthValue(float maxHP)
     {
         maxHealthValue = maxHP;
         healthSlider.maxValue = maxHP;

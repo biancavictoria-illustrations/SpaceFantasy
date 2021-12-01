@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class InventoryUI : MonoBehaviour
 {
@@ -10,20 +11,75 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private VerticalLayoutGroup verticalLayoutGroup;
     private InventoryUIItemPanel activePanel;
 
-    public int expandedPanelSize;
-    public int shrunkPanelSize;
+    [SerializeField] private int expandedPanelSize;
+    [SerializeField] private int shrunkPanelSize;
 
-    public int defaultDescriptionBoxSize;
-    public int expandedDescriptionBoxSize;
+    [SerializeField] private int defaultDescriptionBoxSize;
+    [SerializeField] private int expandedDescriptionBoxSize;
 
-    public float defaultDescriptionYPos;
-    public float expandedDescriptionYPos;
+    [SerializeField] private float defaultDescriptionYPos;
+    [SerializeField] private float expandedDescriptionYPos;
 
-    public int expandedItemHorizontalGroupTopPadding;
-    public int shrunkItemTextGridTopPadding;
+    [SerializeField] private int expandedItemHorizontalGroupTopPadding;
+    [SerializeField] private int shrunkItemTextGridTopPadding;
 
-    public int shrunkItemHorizontalGroupLeftPadding;
-    public int defaultItemHorizontalGroupLeftPadding;
+    [SerializeField] private int shrunkItemHorizontalGroupLeftPadding;
+    [SerializeField] private int defaultItemHorizontalGroupLeftPadding;
+
+    [SerializeField] private PlayerStats stats;
+
+    [SerializeField] private TMP_Text statSTR;
+    [SerializeField] private TMP_Text statDEX;
+    [SerializeField] private TMP_Text statCON;
+    [SerializeField] private TMP_Text statINT;
+    [SerializeField] private TMP_Text statWIS;
+    [SerializeField] private TMP_Text statCHA;
+
+    [SerializeField] private TMP_Text attackSpeed;
+    [SerializeField] private TMP_Text moveSpeed;
+    [SerializeField] private TMP_Text defense;
+    [SerializeField] private TMP_Text dodgeChance;
+    [SerializeField] private TMP_Text critChance;
+    [SerializeField] private TMP_Text critDamage;
+    [SerializeField] private TMP_Text stunChance;
+    [SerializeField] private TMP_Text stunResistChance;
+    [SerializeField] private TMP_Text burnChance;
+    [SerializeField] private TMP_Text burnResistChance;
+    [SerializeField] private TMP_Text slowChance;
+    [SerializeField] private TMP_Text slowResistChance;
+
+    void Start()
+    {
+        // TODO: Call this somewhere else (start of game + beginning of each run)
+        SetStatValues();
+        SetOtherStatText();
+    }
+
+    public void SetStatValues()
+    {
+        statSTR.text = stats.Strength() + "";
+        statDEX.text = stats.Dexterity() + "";
+        statCON.text = stats.Constitution() + "";
+        statINT.text = stats.Intelligence() + "";
+        statWIS.text = stats.Wisdom() + "";
+        statCHA.text = stats.Charisma() + "";
+    }
+
+    public void SetOtherStatText()
+    {
+        attackSpeed.text = "Attack Speed: " + stats.getAttackSpeed();
+        moveSpeed.text = "Move Speed: " + stats.getMoveSpeed();
+        defense.text = "Defense: " + stats.getDefense();
+        dodgeChance.text = "Dodge Chance: " + stats.getDodgeChance();
+        critChance.text = "Crit Chance: " + stats.getCritChance();
+        critDamage.text = "Crit Damage: " + stats.getCritDamage();
+        stunChance.text = "Stun Chance: " + stats.getStunChance();
+        stunResistChance.text = "Stun Resist Chance: " + stats.getStatusResistChance();     // TODO: Check the resist ones
+        burnChance.text = "Burn Chance: " + stats.getBurnChance();
+        burnResistChance.text = "Burn Resist Chance: " + stats.getStatusResistChance();
+        slowChance.text = "Slow Chance: " + stats.getSlowChance();
+        slowResistChance.text = "Slow Resist Chance: " + stats.getStatusResistChance();
+    }
 
     // Called when you click on a panel
     public void CardToggle( InventoryUIItemPanel hoverPanel )
