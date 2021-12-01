@@ -11,12 +11,12 @@ public class EnemyHealthBar : MonoBehaviour
 
     public Slider slider;
 
-    public void SetHealth(int health)
+    public void SetCurrentHealth(float health)
     {
         slider.value = health;
     }
 
-    public void SetMaxHealth(int health)
+    public void SetMaxHealth(float health)
     {
         slider.maxValue = health;
         slider.value = health;

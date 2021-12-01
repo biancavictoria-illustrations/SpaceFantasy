@@ -26,7 +26,9 @@ public class ObjectManager : MonoBehaviour
         if(playerDeath)
         {
             //Instantiate(playerPrefab, mainHub);
-            SceneManager.LoadScene(mainHub);
+            // SceneManager.LoadScene(mainHub);
+
+            InGameUIManager.instance.deathScreen.OpenPlayerDeathUI();
         }
     }
 
