@@ -34,7 +34,7 @@ public class Longsword : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetButtonDown("Fire1") && !currentlyAttacking)
+        if(InputManager.instance.isAttacking && !currentlyAttacking)
         {
             currentlyAttacking = true;
             StartCoroutine(PrimaryAttack());
@@ -53,7 +53,7 @@ public class Longsword : MonoBehaviour
 
             heldEffectCounter++;
 
-            if(!Input.GetButton("Fire1"))
+            if(!InputManager.instance.isAttacking)
             {
                 break;
             }
