@@ -7,26 +7,13 @@ public class InputManager : MonoBehaviour
 {
     public static InputManager instance;
 
-    // This stuff can either be here OR just in the Movement script and this script tells that one to handle input based on the input
-    // it receives (like OnMoveLeft could call something like Movement.HandleMovement(inputValue); that does the calculations and the movement)
-    public float speed = 5;
-    public Transform model;
-    public CharacterController player;
-    public float smoothing = 0.1f;
-    private float smoothingVelocity;
-    private float horizontalMove;
-    private float verticalMove;
-
-    public Animator animator;
-
     public SpeakerData speakerData;     // This should be stored in a different player script
 
-    [HideInInspector] public bool isInDialogue;
-    [HideInInspector] bool inventoryIsOpen;
-    [HideInInspector] bool shopIsOpen;
-    [HideInInspector] bool compareItemIsOpen;
-
-    public PauseMenu pauseMenu;     // Should that be a singleton instead?
+    [HideInInspector] public bool isInDialogue = false;
+    [HideInInspector] public bool inventoryIsOpen = false;
+    [HideInInspector] public bool shopIsOpen = false;
+    [HideInInspector] public bool compareItemIsOpen = false;
+    [HideInInspector] public bool isAttacking = false;
 
     void Awake()
     {
@@ -42,99 +29,18 @@ public class InputManager : MonoBehaviour
     {
         DialogueManager.instance.AddSpeaker(speakerData);
         InputActionAsset controls = gameObject.GetComponent<PlayerInput>().actions;
-        inventoryIsOpen = false;
-        isInDialogue = false;
 
         // Add STOPPING moving when you're no longer holding the button
-        controls.FindAction("MoveHorizontal").canceled += x => OnMoveHorizontalCanceled();
-        controls.FindAction("MoveVertical").canceled += x => OnMoveVerticalCanceled();
         controls.FindAction("Jump").canceled += x => OnJumpCanceled();
         controls.FindAction("Attack").canceled += x => OnAttackCanceled();
     }
 
-    void Update()
-    {
-        if(!CanAcceptGameplayInput()){
-            return;
-        }
-        HandleMovement();
-    }
-
-    private bool CanAcceptGameplayInput()
+    public bool CanAcceptGameplayInput()
     {
         if(isInDialogue || PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen){
             return false;
         }
         return true;
-    }
-
-    // This could be in a separate script...
-    public void HandleMovement()
-    {
-        Vector3 direction = new Vector3(-horizontalMove, 0, verticalMove).normalized;
-
-        if(direction.magnitude >= 0.1f)
-        {
-            float rad = 45 * Mathf.Deg2Rad;
-            if(horizontalMove > 0)
-            {
-                direction.z -= rad;
-            }
-            else if(horizontalMove < 0)
-            {
-                direction.z += rad;
-            }
-
-            if(verticalMove > 0)
-            {
-                direction.x -= rad;
-            }
-            else if(verticalMove < 0)
-            {
-                direction.x += rad;
-            }
-            
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-            float angle = Mathf.SmoothDampAngle(model.eulerAngles.y, targetAngle, ref smoothingVelocity, smoothing);
-            model.rotation = Quaternion.Euler(0, angle, 0);
-            player.Move(direction * speed * Time.deltaTime);
-        }
-    }
-
-    public void OnMoveHorizontal(InputValue input)
-    {
-        if(!CanAcceptGameplayInput()){
-            return;
-        }
-
-        verticalMove = input.Get<float>();
-        animator.SetBool("IsRunning", true);
-    }
-
-    public void OnMoveHorizontalCanceled()
-    {
-        verticalMove = 0;
-        if(horizontalMove == 0){
-            animator.SetBool("IsRunning", false);
-        }
-    }
-
-    public void OnMoveVertical(InputValue input)
-    {
-        if(!CanAcceptGameplayInput()){
-            return;
-        }
-
-        horizontalMove = input.Get<float>();
-        animator.SetBool("IsRunning", true);
-    }
-
-    public void OnMoveVerticalCanceled()
-    {
-        horizontalMove = 0;
-        if(verticalMove == 0){
-            animator.SetBool("IsRunning", false);
-        }
     }
 
     public void OnJump(InputValue input)
@@ -156,8 +62,7 @@ public class InputManager : MonoBehaviour
         if(!CanAcceptGameplayInput()){
             return;
         }
-
-        // TODO: Attack
+        isAttacking = true;
 
         // animator.SetBool("IsAttacking", true);
         // Debug.Log(animator.GetLayerIndex("Slashing"));
@@ -167,7 +72,7 @@ public class InputManager : MonoBehaviour
 
     public void OnAttackCanceled()
     {
-        // TODO: Stop attacking
+        isAttacking = false;
 
         // animator.SetBool("IsAttacking", false);
         // animator.SetLayerWeight(1, 0);
@@ -196,10 +101,10 @@ public class InputManager : MonoBehaviour
     public void OnPause(InputValue input)
     {
         if(PauseMenu.GameIsPaused){
-            pauseMenu.ResumeGame();
+            InGameUIManager.instance.pauseMenu.ResumeGame();
         }
         else{
-            pauseMenu.PauseGame();
+            InGameUIManager.instance.pauseMenu.PauseGame();
         }
     }
 
@@ -238,7 +143,7 @@ public class InputManager : MonoBehaviour
     }
 
     // Called automatically when the dialogue ends/closes
-    public void EndDialogue()
+    public void OnDialogueEnd()
     {
         isInDialogue = false;
         NPC.ActiveNPC.TalkedToNPC();
