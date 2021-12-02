@@ -14,10 +14,10 @@ public class Player : MonoBehaviour
 
     public int currentStr;
     public int currentDex;
-    [SerializeField] private int currentConst;
-    [SerializeField] private int currentInt;
-    [SerializeField] private int currentWis;
-    [SerializeField] private int currentCha;
+    public int currentConst;
+    public int currentInt;
+    public int currentWis;
+    public int currentCha;
 
     public float currentAttackSpeed;
     //private float currentHitpoints;
