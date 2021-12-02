@@ -6,11 +6,27 @@
             "id": "9dcfdc89-ef61-4a73-a18d-c64c368a01d9",
             "actions": [
                 {
+                    "name": "MoveVertical",
+                    "type": "Button",
+                    "id": "8df7a044-7273-46d7-a389-95cd26967672",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "MoveHorizontal",
+                    "type": "Button",
+                    "id": "12f9bb09-520d-4a91-950a-94be84021d9c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
                     "name": "MoveLeft",
                     "type": "Button",
                     "id": "078cfab5-fa71-4bf0-87f2-253db2e71e7a",
                     "expectedControlType": "Button",
-                    "processors": "Invert",
+                    "processors": "",
                     "interactions": ""
                 },
                 {
@@ -378,6 +394,94 @@
                     "processors": "",
                     "groups": "",
                     "action": "UseOtherPotion",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6db6efb5-c832-45e2-9fb2-5011adb19529",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "Invert",
+                    "groups": "",
+                    "action": "MoveHorizontal",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0bb9fbfd-613b-427c-891a-1a06921ec3a2",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveHorizontal",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "039eb295-a6af-44dd-b728-66cb6494ff66",
+                    "path": "<Joystick>/stick/left",
+                    "interactions": "",
+                    "processors": "Invert",
+                    "groups": "",
+                    "action": "MoveHorizontal",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f16097be-503d-442d-9091-8d12c3f8c243",
+                    "path": "<Joystick>/stick/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveHorizontal",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ae8133bb-3c95-4292-b7bc-a88d84dfa00a",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveVertical",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "360c6413-9a50-4acc-9201-66ce7f197a79",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "Invert",
+                    "groups": "",
+                    "action": "MoveVertical",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "592412d0-dc22-4d64-bc06-d0f3a6fecbe6",
+                    "path": "<Joystick>/stick/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveVertical",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "06a691eb-1ed8-4758-9fc4-8a671c06967b",
+                    "path": "<Joystick>/stick/down",
+                    "interactions": "",
+                    "processors": "Invert",
+                    "groups": "",
+                    "action": "MoveVertical",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
