@@ -14,6 +14,8 @@ public class InputManager : MonoBehaviour
     public CharacterController player;
     public float smoothing = 0.1f;
     private float smoothingVelocity;
+    private float horizontalMove;
+    private float verticalMove;
 
     public Animator animator;
 
@@ -44,13 +46,18 @@ public class InputManager : MonoBehaviour
         isInDialogue = false;
 
         // Add STOPPING moving when you're no longer holding the button
-        controls.FindAction("MoveLeft").canceled += x => OnMoveLeftCanceled();
-        controls.FindAction("MoveRight").canceled += x => OnMoveRightCanceled();
-        controls.FindAction("MoveUp").canceled += x => OnMoveUpCanceled();
-        controls.FindAction("MoveDown").canceled += x => OnMoveDownCanceled();
-        
+        controls.FindAction("MoveHorizontal").canceled += x => OnMoveHorizontalCanceled();
+        controls.FindAction("MoveVertical").canceled += x => OnMoveVerticalCanceled();
         controls.FindAction("Jump").canceled += x => OnJumpCanceled();
         controls.FindAction("Attack").canceled += x => OnAttackCanceled();
+    }
+
+    void Update()
+    {
+        if(!CanAcceptGameplayInput()){
+            return;
+        }
+        HandleMovement();
     }
 
     private bool CanAcceptGameplayInput()
@@ -62,27 +69,27 @@ public class InputManager : MonoBehaviour
     }
 
     // This could be in a separate script...
-    public void HandleMovement(float vertical, float horizontal)
+    public void HandleMovement()
     {
-        Vector3 direction = new Vector3(-horizontal, 0, vertical).normalized;
+        Vector3 direction = new Vector3(-horizontalMove, 0, verticalMove).normalized;
 
         if(direction.magnitude >= 0.1f)
         {
             float rad = 45 * Mathf.Deg2Rad;
-            if(horizontal > 0)
+            if(horizontalMove > 0)
             {
                 direction.z -= rad;
             }
-            else if(horizontal < 0)
+            else if(horizontalMove < 0)
             {
                 direction.z += rad;
             }
 
-            if(vertical > 0)
+            if(verticalMove > 0)
             {
                 direction.x -= rad;
             }
-            else if(vertical < 0)
+            else if(verticalMove < 0)
             {
                 direction.x += rad;
             }
@@ -94,84 +101,40 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    public void OnMoveLeft(InputValue input)
+    public void OnMoveHorizontal(InputValue input)
     {
         if(!CanAcceptGameplayInput()){
             return;
         }
 
-        // TODO: Move
-        HandleMovement(0,input.Get<float>());
-
+        verticalMove = input.Get<float>();
         animator.SetBool("IsRunning", true);
     }
 
-    public void OnMoveLeftCanceled()
+    public void OnMoveHorizontalCanceled()
     {
-        // TODO: Stop moving
-        HandleMovement(0,0);
-
-        animator.SetBool("IsRunning", false);
+        verticalMove = 0;
+        if(horizontalMove == 0){
+            animator.SetBool("IsRunning", false);
+        }
     }
 
-    public void OnMoveRight(InputValue input)
+    public void OnMoveVertical(InputValue input)
     {
         if(!CanAcceptGameplayInput()){
             return;
         }
 
-        // TODO: Move
-        HandleMovement(0,input.Get<float>());
-
+        horizontalMove = input.Get<float>();
         animator.SetBool("IsRunning", true);
     }
 
-    public void OnMoveRightCanceled()
+    public void OnMoveVerticalCanceled()
     {
-        // TODO: Stop moving
-        HandleMovement(0,0);
-
-        animator.SetBool("IsRunning", false);
-    }
-
-    public void OnMoveUp(InputValue input)
-    {
-        if(!CanAcceptGameplayInput()){
-            return;
+        horizontalMove = 0;
+        if(verticalMove == 0){
+            animator.SetBool("IsRunning", false);
         }
-
-        // TODO: Move
-        HandleMovement(input.Get<float>(),0);
-
-        animator.SetBool("IsRunning", true);
-    }
-
-    public void OnMoveUpCanceled()
-    {
-        // TODO: Stop moving
-        HandleMovement(0,0);
-
-        animator.SetBool("IsRunning", false);
-    }
-
-    public void OnMoveDown(InputValue input)
-    {
-        if(!CanAcceptGameplayInput()){
-            return;
-        }
-
-        // TODO: Move
-        HandleMovement(input.Get<float>(),0);
-
-        animator.SetBool("IsRunning", true);
-    }
-
-    public void OnMoveDownCanceled()
-    {
-        // TODO: Stop moving
-        HandleMovement(0,0);
-
-        animator.SetBool("IsRunning", false);
     }
 
     public void OnJump(InputValue input)
@@ -270,14 +233,14 @@ public class InputManager : MonoBehaviour
     // Called when the player clicks the interact button in range of an NPC with something to say
     private void StartDialogue()
     {
-        isInDialogue = true;    // Used to pause player movement/interactions while in dialogue
+        isInDialogue = true;
         DialogueManager.instance.dialogueRunner.StartDialogue(NPC.ActiveNPC.yarnStartNode);
     }
 
     // Called automatically when the dialogue ends/closes
     public void EndDialogue()
     {
-        isInDialogue = false;   // Unpause player control
+        isInDialogue = false;
         NPC.ActiveNPC.TalkedToNPC();
     }
 }
