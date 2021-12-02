@@ -32,7 +32,7 @@ public class InputManager : MonoBehaviour
 
         // Add STOPPING moving when you're no longer holding the button
         controls.FindAction("Jump").canceled += x => OnJumpCanceled();
-        controls.FindAction("Attack").canceled += x => OnAttackCanceled();
+        controls.FindAction("AttackPrimary").canceled += x => OnAttackPrimaryCanceled();
     }
 
     public bool CanAcceptGameplayInput()
@@ -57,7 +57,7 @@ public class InputManager : MonoBehaviour
         // TODO: Stop jumping
     }
 
-    public void OnAttack(InputValue input)
+    public void OnAttackPrimary(InputValue input)
     {
         if(!CanAcceptGameplayInput()){
             return;
@@ -70,7 +70,7 @@ public class InputManager : MonoBehaviour
         // animator.SetLayerWeight(1, 1);
     }
 
-    public void OnAttackCanceled()
+    public void OnAttackPrimaryCanceled()
     {
         isAttacking = false;
 
