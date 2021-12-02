@@ -38,7 +38,7 @@ public class BowAndArrows : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetButtonDown("Fire1") && !currentlyAttacking)
+        if(InputManager.instance.isAttacking && !currentlyAttacking)
         {
             currentlyAttacking = true;
             StartCoroutine(PrimaryAttack());
@@ -51,7 +51,7 @@ public class BowAndArrows : MonoBehaviour
         float charge = 0;
         int superChargedCall = 0;
 
-        while(Input.GetButton("Fire1"))
+        while(InputManager.instance.isAttacking)
         {
             //Debug.Log(minDamageModifier + (charge * heldCounter));
             if(minDamageModifier + (charge * heldCounter) == maxDamageModifier && superChargedCall == 0)
@@ -115,7 +115,7 @@ public class BowAndArrows : MonoBehaviour
         Debug.Log("Start of bonus");
         yield return new WaitUntil(() => timer.timeRemaining <= 0);
 
-        if(!Input.GetButton("Fire1"))
+        if(!InputManager.instance.isAttacking)
         {
             yield return new WaitUntil(() => baseAttack.Completed);
         }

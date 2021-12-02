@@ -11,11 +11,24 @@ public class EntityHealth : MonoBehaviour
 
     [SerializeField] private ObjectManager objectManager;
 
+    private EnemyHealthBar enemyHealthUI;
+
     // Start is called before the first frame update
     void Start()
     {
         Debug.Log(maxHitpoints);
         //StartCoroutine(Death());
+
+        if(gameObject.tag != "Player"){
+            enemyHealthUI = gameObject.GetComponentInChildren<EnemyHealthBar>();
+            if(enemyHealthUI == null){
+                Debug.LogError("No enemy health UI found for unit!");
+                return;
+            }
+        }
+
+        SetMaxHealthUI();
+        SetCurrentHealthUI();
     }
 
     // Update is called once per frame
@@ -33,6 +46,9 @@ public class EntityHealth : MonoBehaviour
         currentHitpoints -= damage;
         Debug.Log("Hitpoints");
         Debug.Log(currentHitpoints);
+        
+        SetCurrentHealthUI();
+
         return currentHitpoints <= 0;
     }
 
@@ -43,6 +59,28 @@ public class EntityHealth : MonoBehaviour
         if(currentHitpoints > maxHitpoints)
         {
             currentHitpoints = maxHitpoints;
+        }
+
+        SetCurrentHealthUI();
+    }
+
+    public void SetCurrentHealthUI()
+    {
+        if(gameObject.tag == "Player"){
+            InGameUIManager.instance.SetCurrentHealthValue(currentHitpoints);   
+        }
+        else{
+            enemyHealthUI.SetCurrentHealth(currentHitpoints);
+        }
+    }
+
+    public void SetMaxHealthUI()
+    {
+        if(gameObject.tag == "Player"){
+            InGameUIManager.instance.SetMaxHealthValue(maxHitpoints);
+        }
+        else{
+            enemyHealthUI.SetMaxHealth(maxHitpoints);
         }
     }
 
