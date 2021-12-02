@@ -7,10 +7,8 @@ public class MainMenu : MonoBehaviour
 {
     public void PlayGame()
     {
-        // SceneManager.LoadScene("Game");
-        // Do we have save files??? Probably should. Gonna have to deal with that here
-
-        Debug.Log("Loading game!");
+        SceneManager.LoadScene("Main Hub");
+        // TODO: Load save files
     }
 
     public void QuitGame()

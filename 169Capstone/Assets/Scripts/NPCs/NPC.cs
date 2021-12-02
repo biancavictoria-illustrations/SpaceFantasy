@@ -11,29 +11,21 @@ public class NPC : MonoBehaviour
     public YarnProgram yarnDialogue;
     public SpeakerData speakerData;
 
-    [HideInInspector] public bool hasNewDialogue = true;
     public GameObject newDialogueAlert;
 
     public List<int> hasNumRunDialogueList = new List<int>();   // Times at which this NPC comments on how many runs you've done, in order
 
+
     void Start()
     {
+        // If you haven't interacted with this NPC on this run yet, set interactable to true; otherwise, false
+        SetNPCInteractable(!HaveTalkedToNPC());
+        
         DialogueManager.instance.dialogueRunner.Add(yarnDialogue);
         DialogueManager.instance.AddSpeaker(speakerData);
 
         // Start/head node for a speaker's yarn file is always their unique speakerID + "Start"
         yarnStartNode = speakerData.SpeakerID() + "Start";
-
-        // TODO: You should only be able to talk to the NPC once and then you can't again til next run...
-        // once you've talked to them, you can't again!
-        newDialogueAlert.SetActive(hasNewDialogue);
-    }
-
-    // Toggles the newDialogueAlert on/off
-    public void HasNewDialogue(bool set)
-    {
-        hasNewDialogue = set;
-        newDialogueAlert.SetActive(set);
     }
 
     // When player gets within range, they can start dialogue
@@ -54,12 +46,68 @@ public class NPC : MonoBehaviour
         }
     }
 
-    // After a player talks to them once, they can't again this run
-    // TODO: Call this after a player interacts with this NPC on a given run! (also write this lol)
-    // There MIGHT be a way to do this with yarn spinner...........
-    // Like it tells the dialogue manager who you talked to and the dialogue manager says great no more talking to that person i forbid it
-    public void NotInteractable()
+    // Toggles the newDialogueAlert on/off
+    public void SetNPCInteractable(bool set)
     {
-        // Could take in a bool set and toggle NPC interactability, if we need that functionality
+        newDialogueAlert.SetActive(set);
+    }
+
+    // When you finish dialogue, call this to deactivate the NPC
+    public void TalkedToNPC()
+    {
+        SetNPCInteractable(false);
+
+        SpeakerID speaker = speakerData.SpeakerID();
+        if( speaker == SpeakerID.Bryn ){
+            StoryManager.instance.talkedToBryn = true;
+            return;
+        }
+        else if( speaker == SpeakerID.Andy ){
+            StoryManager.instance.talkedToAndy = true;
+            return;
+        }
+        else if( speaker == SpeakerID.Sorrel ){
+            StoryManager.instance.talkedToSorrel = true;
+            return;
+        }
+        else if( speaker == SpeakerID.Doctor ){
+            StoryManager.instance.talkedToDoctor = true;
+            return;
+        }
+        else if( speaker == SpeakerID.Stellan ){
+            StoryManager.instance.talkedToStellan = true;
+            return;
+        }
+        else if( speaker == SpeakerID.TimeLich ){
+            StoryManager.instance.talkedToLich = true;
+            return;
+        }
+        Debug.LogError("Tried to log talking to an NPC who does not exist! SpeakerID: " + speaker);
+    }
+
+    // Ask the story manager if we've talked to this NPC yet
+    public bool HaveTalkedToNPC()
+    {
+        SpeakerID speaker = speakerData.SpeakerID();
+        if( speaker == SpeakerID.Bryn ){
+            return StoryManager.instance.talkedToBryn;
+        }
+        else if( speaker == SpeakerID.Andy ){
+            return StoryManager.instance.talkedToAndy;
+        }
+        else if( speaker == SpeakerID.Sorrel ){
+            return StoryManager.instance.talkedToSorrel;
+        }
+        else if( speaker == SpeakerID.Doctor ){
+            return StoryManager.instance.talkedToDoctor;
+        }
+        else if( speaker == SpeakerID.Stellan ){
+            return StoryManager.instance.talkedToStellan;
+        }
+        else if( speaker == SpeakerID.TimeLich ){
+            return StoryManager.instance.talkedToLich;
+        }
+        Debug.LogError("Tried to check if you have talked to an NPC who does not exist! SpeakerID: " + speaker);
+        return false;
     }
 }
