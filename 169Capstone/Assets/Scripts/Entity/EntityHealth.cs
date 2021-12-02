@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EntityHealth : MonoBehaviour
 {
-    public float maxHitpoints;
+    public float maxHitpoints; // Stats
     public float currentHitpoints;
     private bool startCoroutine = true;
     [SerializeField] private Drop drop;
