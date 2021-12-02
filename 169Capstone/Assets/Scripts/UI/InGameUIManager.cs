@@ -20,6 +20,7 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private GameObject darkBackgroundPanel;
 
     public DeathScreenUI deathScreen;
+    public PauseMenu pauseMenu;
 
     public InventoryUI inventoryUI;
     [SerializeField] private GameObject inventoryUIPanel;
