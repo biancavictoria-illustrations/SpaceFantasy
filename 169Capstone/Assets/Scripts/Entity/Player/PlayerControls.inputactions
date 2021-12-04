@@ -6,7 +6,7 @@
             "id": "9dcfdc89-ef61-4a73-a18d-c64c368a01d9",
             "actions": [
                 {
-                    "name": "MoveVertical",
+                    "name": "MoveUp",
                     "type": "Button",
                     "id": "8df7a044-7273-46d7-a389-95cd26967672",
                     "expectedControlType": "Button",
@@ -14,9 +14,25 @@
                     "interactions": ""
                 },
                 {
-                    "name": "MoveHorizontal",
+                    "name": "MoveDown",
                     "type": "Button",
                     "id": "12f9bb09-520d-4a91-950a-94be84021d9c",
+                    "expectedControlType": "Button",
+                    "processors": "Invert",
+                    "interactions": ""
+                },
+                {
+                    "name": "MoveLeft",
+                    "type": "Button",
+                    "id": "4f7fc349-967c-4df9-9f5f-d4dda36526cf",
+                    "expectedControlType": "Button",
+                    "processors": "Invert",
+                    "interactions": ""
+                },
+                {
+                    "name": "MoveRight",
+                    "type": "Button",
+                    "id": "c314203a-9f37-455d-b6a8-e17ce2558bc6",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -135,28 +151,6 @@
                 },
                 {
                     "name": "",
-                    "id": "2e383830-dc92-4391-b201-4132b142567b",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Jump",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "37b020e4-0528-4ccd-b73a-0eb74791b568",
-                    "path": "<Gamepad>/buttonNorth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Jump",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "38c4dd22-639a-446f-b7c9-d0e0fa7f40fa",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
@@ -245,67 +239,12 @@
                 },
                 {
                     "name": "",
-                    "id": "6db6efb5-c832-45e2-9fb2-5011adb19529",
-                    "path": "<Keyboard>/a",
-                    "interactions": "",
-                    "processors": "Invert",
-                    "groups": "",
-                    "action": "MoveHorizontal",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "0bb9fbfd-613b-427c-891a-1a06921ec3a2",
-                    "path": "<Keyboard>/d",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "MoveHorizontal",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "039eb295-a6af-44dd-b728-66cb6494ff66",
-                    "path": "<Joystick>/stick/left",
-                    "interactions": "",
-                    "processors": "Invert",
-                    "groups": "",
-                    "action": "MoveHorizontal",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f16097be-503d-442d-9091-8d12c3f8c243",
-                    "path": "<Joystick>/stick/right",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "MoveHorizontal",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "ae8133bb-3c95-4292-b7bc-a88d84dfa00a",
                     "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MoveVertical",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "360c6413-9a50-4acc-9201-66ce7f197a79",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "Invert",
-                    "groups": "",
-                    "action": "MoveVertical",
+                    "action": "MoveUp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -316,18 +255,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MoveVertical",
+                    "action": "MoveUp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "06a691eb-1ed8-4758-9fc4-8a671c06967b",
-                    "path": "<Joystick>/stick/down",
+                    "id": "794b5a7b-e6e9-4769-a371-5c7b8ec79ab7",
+                    "path": "<Gamepad>/leftStick/up",
                     "interactions": "",
-                    "processors": "Invert",
+                    "processors": "",
                     "groups": "",
-                    "action": "MoveVertical",
+                    "action": "MoveUp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -372,6 +311,127 @@
                     "processors": "",
                     "groups": "",
                     "action": "BootsAbility",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2e383830-dc92-4391-b201-4132b142567b",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "37b020e4-0528-4ccd-b73a-0eb74791b568",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0bb9fbfd-613b-427c-891a-1a06921ec3a2",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f16097be-503d-442d-9091-8d12c3f8c243",
+                    "path": "<Joystick>/stick/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8e3faa8d-e9d6-48ee-8386-725671956036",
+                    "path": "<Gamepad>/leftStick/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6db6efb5-c832-45e2-9fb2-5011adb19529",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "039eb295-a6af-44dd-b728-66cb6494ff66",
+                    "path": "<Joystick>/stick/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f921a7c2-516d-4669-826d-d168ea4644fa",
+                    "path": "<Gamepad>/leftStick/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "360c6413-9a50-4acc-9201-66ce7f197a79",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "06a691eb-1ed8-4758-9fc4-8a671c06967b",
+                    "path": "<Joystick>/stick/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "288650f5-6619-4a17-9578-9693b72fd053",
+                    "path": "<Gamepad>/leftStick/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveDown",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

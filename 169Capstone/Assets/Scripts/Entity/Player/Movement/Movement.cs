@@ -15,14 +15,18 @@ public class Movement : MonoBehaviour
     private float verticalMove;
 
     public Animator animator;
+
+    private bool movingLeft, movingRight, movingUp, movingDown = false;
     
     void Start()
     {
         InputActionAsset controls = gameObject.GetComponent<PlayerInput>().actions;
 
         // Add STOPPING moving when you're no longer holding the button
-        controls.FindAction("MoveHorizontal").canceled += x => OnMoveHorizontalCanceled();
-        controls.FindAction("MoveVertical").canceled += x => OnMoveVerticalCanceled();
+        controls.FindAction("MoveLeft").canceled += x => OnMoveLeftCanceled();
+        controls.FindAction("MoveRight").canceled += x => OnMoveRightCanceled();
+        controls.FindAction("MoveUp").canceled += x => OnMoveUpCanceled();
+        controls.FindAction("MoveDown").canceled += x => OnMoveDownCanceled();
     }
 
     void Update()
@@ -33,34 +37,112 @@ public class Movement : MonoBehaviour
         HandleMovement();
     }
 
-    public void OnMoveHorizontal(InputValue input)
+    public void OnMoveLeft(InputValue input)
     {
         if(!InputManager.instance.CanAcceptGameplayInput()){
             return;
         }
-        verticalMove = input.Get<float>();
+        movingLeft = true;
+        if(input != null){
+            horizontalMove = input.Get<float>();
+        }
+        else{
+            horizontalMove = -1f;            
+        }
         animator.SetBool("IsRunning", true);
     }
 
-    public void OnMoveHorizontalCanceled()
+    public void OnMoveLeftCanceled()
     {
-        verticalMove = 0;
-        CheckForIdle();
+        movingLeft = false;
+        if(!movingRight){
+            horizontalMove = 0;
+            CheckForIdle();
+        }
+        else{
+            OnMoveRight(null);
+        }
     }
 
-    public void OnMoveVertical(InputValue input)
+    public void OnMoveRight(InputValue input)
     {
         if(!InputManager.instance.CanAcceptGameplayInput()){
             return;
         }
-        horizontalMove = input.Get<float>();
+        movingRight = true;
+        if(input != null){
+            horizontalMove = input.Get<float>();
+        }
+        else{            
+            horizontalMove = 1f;
+        }
         animator.SetBool("IsRunning", true);
     }
 
-    public void OnMoveVerticalCanceled()
+    public void OnMoveRightCanceled()
     {
-        horizontalMove = 0;
-        CheckForIdle();
+        movingRight = false;
+        if(!movingLeft){
+            horizontalMove = 0;
+            CheckForIdle();
+        }
+        else{
+            OnMoveLeft(null);
+        }
+    }
+
+    public void OnMoveUp(InputValue input)
+    {
+        if(!InputManager.instance.CanAcceptGameplayInput()){
+            return;
+        }
+        movingUp = true;
+        if(input != null){
+            verticalMove = input.Get<float>();            
+        }
+        else{
+            verticalMove = 1f;
+        }
+        animator.SetBool("IsRunning", true);
+    }
+
+    public void OnMoveUpCanceled()
+    {
+        movingUp = false;
+        if(!movingDown){
+            verticalMove = 0;
+            CheckForIdle();
+        }
+        else{
+            OnMoveDown(null);
+        }
+    }
+
+    public void OnMoveDown(InputValue input)
+    {
+        if(!InputManager.instance.CanAcceptGameplayInput()){
+            return;
+        }
+        movingDown = true;
+        if(input != null){
+            verticalMove = input.Get<float>();            
+        }
+        else{
+            verticalMove = -1f;
+        }
+        animator.SetBool("IsRunning", true);
+    }
+
+    public void OnMoveDownCanceled()
+    {
+        movingDown = false;
+        if(!movingUp){
+            verticalMove = 0;
+            CheckForIdle();
+        }
+        else{
+            OnMoveUp(null);
+        }
     }
 
     private void CheckForIdle()
@@ -72,25 +154,25 @@ public class Movement : MonoBehaviour
 
     private void HandleMovement()
     {
-        Vector3 direction = new Vector3(-horizontalMove, 0, verticalMove).normalized;
+        Vector3 direction = new Vector3(-verticalMove, 0, horizontalMove).normalized;
 
         if(direction.magnitude >= 0.1f)
         {
             float rad = 45 * Mathf.Deg2Rad;
-            if(horizontalMove > 0)
+            if(verticalMove > 0)
             {
                 direction.z -= rad;
             }
-            else if(horizontalMove < 0)
+            else if(verticalMove < 0)
             {
                 direction.z += rad;
             }
 
-            if(verticalMove > 0)
+            if(horizontalMove > 0)
             {
                 direction.x -= rad;
             }
-            else if(verticalMove < 0)
+            else if(horizontalMove < 0)
             {
                 direction.x += rad;
             }
