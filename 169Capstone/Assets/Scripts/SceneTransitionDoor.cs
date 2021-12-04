@@ -34,7 +34,7 @@ public class SceneTransitionDoor : MonoBehaviour
 
 
 /*
-    InputManager bottom of OnInteract function
+    TODO: Add to InputManager bottom of OnInteract function
 
     // If you're in range of a door, walk through it
     else if(SceneTransitionDoor.ActiveDoor){

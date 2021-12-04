@@ -68,9 +68,6 @@ public class PauseMenu : MonoBehaviour
     - compare item UI
     - shop UI
 
-    - move dialogue manager and story manager to game manager object so that they dontdestroyonload but the UI stuff is separate and does destroy on load
-    - move player speaker data to Player script (along with the dialogue functions) and make sure the managers can access the data correctly
-
     - UI item values, currency values, potion values, etc.
     
     - pause menu opens BEHIND dialogue UI
@@ -80,7 +77,7 @@ public class PauseMenu : MonoBehaviour
     
     - the rightmost part of the item cards isn't interactable??? just the part around the rarity/type (polish fix)
 
-    - once saving exists: UI alert about how recently you saved in the "are you sure you want to quit" popup
+    - UI alert about how recently you saved in the "are you sure you want to quit" popup
 
     - lots of "TODO"s everywhere in different UI manager files
 */
