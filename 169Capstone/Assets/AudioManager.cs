@@ -62,13 +62,17 @@ public class AudioManager : MonoBehaviour
         //Combat Music Transition Properties
         private const float combatTransitionDuration = 1;
         private float combatTransitionProgress = 0;
+        private bool isInCombat;
         private Coroutine combatTransitionRoutine;
     #endregion
 
-    void Start()
+    void Awake()
     {
         Instance = this;
+    }
 
+    void Start()
+    {
         masterVCA = FMODUnity.RuntimeManager.GetVCA(masterVCAPath);
         masterVCA.setVolume(masterVolume);
 
@@ -77,35 +81,13 @@ public class AudioManager : MonoBehaviour
 
         sfxVCA = FMODUnity.RuntimeManager.GetVCA(sfxVCAPath);
         sfxVCA.setVolume(sfxVolume);
+
+        playMusic(MusicTrack.Level1, false);
     }
 
     void Update()
     {
-        //A short demo of the music system
-        if(Time.time > 30)
-        {
-            FMOD.Studio.PLAYBACK_STATE state;
-            musicInstance.getPlaybackState(out state);
-            if(state == FMOD.Studio.PLAYBACK_STATE.PLAYING)
-                stopMusic(true);
-        }
-        else if(Time.time > 20)
-        {
-            if(combatTransitionProgress == 1)
-                toggleCombat(false);
-        }
-        else if(Time.time > 10)
-        {
-            if(combatTransitionProgress == 0)
-                toggleCombat(true);
-        }
-        else
-        {
-            FMOD.Studio.PLAYBACK_STATE state;
-            musicInstance.getPlaybackState(out state);
-            if(state != FMOD.Studio.PLAYBACK_STATE.PLAYING)
-                playMusic(MusicTrack.Level1, false);
-        }
+        
     }
 
     public void playMusic(MusicTrack track, bool isCombat)
@@ -132,37 +114,11 @@ public class AudioManager : MonoBehaviour
 
     public void toggleCombat(bool isInCombat)
     {
-        if(combatTransitionRoutine != null)
-            StopCoroutine(combatTransitionRoutine);
+        if(this.isInCombat == isInCombat)
+            return;
 
-        StartCoroutine(CombatMusicTransitionRoutine(isInCombat));
-    }
-
-    private IEnumerator CombatMusicTransitionRoutine(bool isInCombat)
-    {
-        bool hasCompletedTransition = false;
-        while(!hasCompletedTransition)
-        {
-            if(isInCombat && combatTransitionProgress < 1)
-                combatTransitionProgress += Time.deltaTime / combatTransitionDuration;
-
-            if(!isInCombat && combatTransitionProgress > 0)
-                combatTransitionProgress -= Time.deltaTime / combatTransitionDuration;
-
-            if(isInCombat && combatTransitionProgress >= 1)
-            {
-                combatTransitionProgress = 1;
-                hasCompletedTransition = true;
-            }
-            if(!isInCombat && combatTransitionProgress <= 0)
-            {
-                combatTransitionProgress = 0;
-                hasCompletedTransition = true;
-            }
-
-            musicInstance.setParameterByName("Combat", combatTransitionProgress);
-
-            yield return null;
-        }
+        Debug.Log("Set combat to: " + isInCombat);
+        this.isInCombat = isInCombat;
+        musicInstance.setParameterByName("Combat", isInCombat ? 1 : 0);
     }
 }

@@ -9,37 +9,68 @@ public class Movement : MonoBehaviour
     public CharacterController player;
     public float smoothing = 0.1f;
 
+    private float inputVertical;
+    private float inputHorizontal;
     private float smoothingVelocity;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 0.1f, LayerMask.GetMask("RoomBounds"));
+
+        foreach(Collider col in colliders)
+        {
+            if(col.bounds.Contains(transform.position))
+            {
+                Room roomScript = col.GetComponent<Room>();
+                if(roomScript != null)
+                    AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, roomScript.hasEnemies());
+                break;
+            }
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        float vertical = Input.GetAxisRaw("Horizontal");
-        float horizontal = Input.GetAxisRaw("Vertical");
-        Vector3 direction = new Vector3(-horizontal, 0, vertical).normalized;
+        inputVertical = Input.GetAxisRaw("Horizontal");
+        inputHorizontal = Input.GetAxisRaw("Vertical");
+
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 0.1f, LayerMask.GetMask("RoomBounds"));
+
+        foreach(Collider col in colliders)
+        {
+            if(col.bounds.Contains(transform.position))
+            {
+                Room roomScript = col.GetComponent<Room>();
+                if(roomScript != null)
+                    AudioManager.Instance.toggleCombat(roomScript.hasEnemies());
+                break;
+            }
+        }
+    }
+
+    void FixedUpdate()
+    {
+        Vector3 direction = new Vector3(-inputHorizontal, 0, inputVertical).normalized;
 
         if(direction.magnitude >= 0.1f)
         {
             float rad = 45 * Mathf.Deg2Rad;
-            if(horizontal > 0)
+            if(inputHorizontal > 0)
             {
                 direction.z -= rad;
             }
-            else if(horizontal < 0)
+            else if(inputHorizontal < 0)
             {
                 direction.z += rad;
             }
 
-            if(vertical > 0)
+            if(inputVertical > 0)
             {
                 direction.x -= rad;
             }
-            else if(vertical < 0)
+            else if(inputVertical < 0)
             {
                 direction.x += rad;
             }
