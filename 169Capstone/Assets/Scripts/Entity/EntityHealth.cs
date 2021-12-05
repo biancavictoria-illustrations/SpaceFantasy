@@ -27,7 +27,7 @@ public class EntityHealth : MonoBehaviour
     public float currentHitpoints;
 
     [SerializeField] private Drop drop;
-    [SerializeField] private ObjectManager objectManager;
+    //[SerializeField] private ObjectManager objectManager;
 
     private EnemyHealthBar enemyHealthUI;
 
@@ -109,7 +109,8 @@ public class EntityHealth : MonoBehaviour
         Debug.Log("Death");
         if(gameObject.tag == "Player")
         {
-            objectManager.playerDeath = true;
+            //objectManager.playerDeath = true;
+            GameManager.instance.playerDeath = true;
         }
         else
         {

@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
 
     //public Timer timer;
 
-    public ObjectManager objectManager;
+    //public ObjectManager objectManager;
 
     //public bool test = true;
 
@@ -33,7 +33,8 @@ public class Player : MonoBehaviour
     void Start()
     {
         weapon = "Berserker's Zweihander";
-        gear[0] = objectManager.GetGearObject(weapon);
+        //gear[0] = objectManager.GetGearObject(weapon);
+        gear[0] = GameManager.instance.GetGearObject(weapon, "Weapon");
         health = gameObject.GetComponent<EntityHealth>();
         health.maxHitpoints = stats.getMaxHitPoints();
         health.currentHitpoints = stats.getMaxHitPoints();

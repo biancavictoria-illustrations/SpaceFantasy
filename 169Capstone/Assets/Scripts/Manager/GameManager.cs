@@ -8,8 +8,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    [SerializeField] private Dictionary<string, GameObject[]> gear;
-    [SerializeField] private Dictionary<string, string[]> titles;
+    private Dictionary<string, GameObject[]> gear = new Dictionary<string, GameObject[]>();
+    private Dictionary<string, string[]> titles = new Dictionary<string, string[]>();
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GearManagerObject gearManager;
     [SerializeField] private TitleManagerObject titleManager;
