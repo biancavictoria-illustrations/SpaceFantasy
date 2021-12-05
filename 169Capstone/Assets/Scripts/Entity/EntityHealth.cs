@@ -1,24 +1,41 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class EntityHealth : MonoBehaviour
 {
-    public float maxHitpoints; // Stats
-    public float currentHitpoints;
-    private bool startCoroutine = true;
-    [SerializeField] private Drop drop;
+    #region OnDeath
+        public class OnDeathEvent : UnityEvent<EntityHealth> {}
 
-    [SerializeField] private ObjectManager objectManager;
+        public OnDeathEvent OnDeath
+        {
+            get 
+            { 
+                if(onDeath == null) 
+                    onDeath = new OnDeathEvent(); 
+                
+                return onDeath;
+            }
+
+            set { onDeath = value; }
+        }
+        private OnDeathEvent onDeath;
+    #endregion
+
+    public float maxHitpoints;
+    public float currentHitpoints;
+
+    [SerializeField] private Drop drop;
+    //[SerializeField] private ObjectManager objectManager;
 
     private EnemyHealthBar enemyHealthUI;
 
-    // Start is called before the first frame update
     void Start()
     {
         Debug.Log(maxHitpoints);
-        //StartCoroutine(Death());
-
+        OnDeath.AddListener(onEntityDeath);
+        
         if(gameObject.tag != "Player"){
             enemyHealthUI = gameObject.GetComponentInChildren<EnemyHealthBar>();
             if(enemyHealthUI == null){
@@ -34,11 +51,6 @@ public class EntityHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (startCoroutine && currentHitpoints == maxHitpoints)
-        {
-            startCoroutine = false;
-            StartCoroutine(Death());
-        }
     }
 
     public bool Damage(float damage)
@@ -48,6 +60,11 @@ public class EntityHealth : MonoBehaviour
         Debug.Log(currentHitpoints);
         
         SetCurrentHealthUI();
+
+        if(currentHitpoints <= 0)
+        {
+            OnDeath.Invoke(this);
+        }
 
         return currentHitpoints <= 0;
     }
@@ -84,17 +101,20 @@ public class EntityHealth : MonoBehaviour
         }
     }
 
-    private IEnumerator Death()
+    private void onEntityDeath(EntityHealth health)
     {
-        yield return new WaitUntil(() => currentHitpoints <= 0 && maxHitpoints > 0);
+        if(health != this)
+            return;
+
         Debug.Log("Death");
         if(gameObject.tag == "Player")
         {
-            objectManager.playerDeath = true;
+            //objectManager.playerDeath = true;
+            GameManager.instance.playerDeath = true;
         }
         else
         {
-            Debug.Log(drop.GetDrop(ObjectManager.bossesKilled));
+            //Debug.Log(drop.GetDrop(ObjectManager.bossesKilled));
         }
 
         Destroy(gameObject);

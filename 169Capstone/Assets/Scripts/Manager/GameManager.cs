@@ -8,6 +8,15 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    private Dictionary<string, GameObject[]> gear = new Dictionary<string, GameObject[]>();
+    private Dictionary<string, string[]> titles = new Dictionary<string, string[]>();
+    [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GearManagerObject gearManager;
+    [SerializeField] private TitleManagerObject titleManager;
+
+    [HideInInspector] public bool playerDeath = false;
+    [HideInInspector] public int bossesKilled = 0;
+
     void Awake()
     {
         if( instance ){
@@ -15,6 +24,29 @@ public class GameManager : MonoBehaviour
         }
         else{
             instance = this;
+        }
+    }
+
+    private void Start()
+    {
+        gear.Add("Weapon", gearManager.weapons);
+        gear.Add("Accessory", gearManager.accessories);
+        gear.Add("Head", gearManager.head);
+        gear.Add("Leg", gearManager.legs);
+
+        titles.Add("Weapon", titleManager.weapons);
+        titles.Add("Accessory", titleManager.accessories);
+        titles.Add("Head", titleManager.head);
+        titles.Add("Leg", titleManager.legs);
+
+        Instantiate(playerPrefab);
+    }
+
+    private void Update()
+    {
+        if(playerDeath)
+        {
+            InGameUIManager.instance.deathScreen.OpenPlayerDeathUI();
         }
     }
 
@@ -66,5 +98,11 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("No game saved!");
         }
+    }
+
+    public GameObject GetGearObject(string title, string gearType)
+    {
+        int index = System.Array.IndexOf(titles[gearType], title);
+        return Instantiate(gear[gearType][index]);
     }
 }
