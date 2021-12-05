@@ -5,16 +5,16 @@ using UnityEngine.InputSystem;
 
 public class Movement : MonoBehaviour
 {
+    public Animator animator;
+    
     public float speed = 5;
     public Transform model;
     public CharacterController player;
     public float smoothing = 0.1f;
-    private float smoothingVelocity;
     
+    private float smoothingVelocity;
     private float horizontalMove;
     private float verticalMove;
-
-    public Animator animator;
 
     private bool movingLeft, movingRight, movingUp, movingDown = false;
     
@@ -27,9 +27,38 @@ public class Movement : MonoBehaviour
         controls.FindAction("MoveRight").canceled += x => OnMoveRightCanceled();
         controls.FindAction("MoveUp").canceled += x => OnMoveUpCanceled();
         controls.FindAction("MoveDown").canceled += x => OnMoveDownCanceled();
+        
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 0.1f, LayerMask.GetMask("RoomBounds"));
+
+        foreach(Collider col in colliders)
+        {
+            if(col.bounds.Contains(transform.position))
+            {
+                Room roomScript = col.GetComponent<Room>();
+                if(roomScript != null)
+                    AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, roomScript.hasEnemies());
+                break;
+            }
+        }
+    }
+    
+    void Update()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 0.1f, LayerMask.GetMask("RoomBounds"));
+
+        foreach(Collider col in colliders)
+        {
+            if(col.bounds.Contains(transform.position))
+            {
+                Room roomScript = col.GetComponent<Room>();
+                if(roomScript != null)
+                    AudioManager.Instance.toggleCombat(roomScript.hasEnemies());
+                break;
+            }
+        }
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if(!InputManager.instance.CanAcceptGameplayInput()){
             return;
