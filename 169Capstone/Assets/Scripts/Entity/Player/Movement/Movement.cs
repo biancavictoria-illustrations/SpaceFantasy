@@ -16,8 +16,6 @@ public class Movement : MonoBehaviour
     private float horizontalMove;
     private float verticalMove;
 
-    public Animator animator;
-
     private bool movingLeft, movingRight, movingUp, movingDown = false;
     
     void Start()
@@ -29,6 +27,7 @@ public class Movement : MonoBehaviour
         controls.FindAction("MoveRight").canceled += x => OnMoveRightCanceled();
         controls.FindAction("MoveUp").canceled += x => OnMoveUpCanceled();
         controls.FindAction("MoveDown").canceled += x => OnMoveDownCanceled();
+        
         Collider[] colliders = Physics.OverlapSphere(transform.position, 0.1f, LayerMask.GetMask("RoomBounds"));
 
         foreach(Collider col in colliders)
