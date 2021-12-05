@@ -14,17 +14,17 @@ public class Player : MonoBehaviour
 
     public int currentStr;
     public int currentDex;
-    [SerializeField] private int currentConst;
-    [SerializeField] private int currentInt;
-    [SerializeField] private int currentWis;
-    [SerializeField] private int currentCha;
+    public int currentConst;
+    public int currentInt;
+    public int currentWis;
+    public int currentCha;
 
     public float currentAttackSpeed;
     //private float currentHitpoints;
 
     //public Timer timer;
 
-    public ObjectManager objectManager;
+    //public ObjectManager objectManager;
 
     //public bool test = true;
 
@@ -33,7 +33,8 @@ public class Player : MonoBehaviour
     void Start()
     {
         weapon = "Berserker's Zweihander";
-        gear[0] = objectManager.GetGearObject(weapon);
+        //gear[0] = objectManager.GetGearObject(weapon);
+        gear[0] = GameManager.instance.GetGearObject(weapon, "Weapon");
         health = gameObject.GetComponent<EntityHealth>();
         health.maxHitpoints = stats.getMaxHitPoints();
         health.currentHitpoints = stats.getMaxHitPoints();
