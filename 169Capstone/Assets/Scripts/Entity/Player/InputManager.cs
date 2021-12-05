@@ -30,10 +30,13 @@ public class InputManager : MonoBehaviour
 
     void Start()
     {
-        DialogueManager.instance.AddSpeaker(speakerData);
+        if(DialogueManager.instance != null){
+            DialogueManager.instance.AddSpeaker(speakerData);
+        }
         InputActionAsset controls = gameObject.GetComponent<PlayerInput>().actions;
 
-        // Add STOPPING moving when you're no longer holding the button
+        // Add STOPPING when you're no longer holding the button
+        controls.FindAction("Jump").canceled += x => OnJumpCanceled();
         controls.FindAction("AttackPrimary").canceled += x => OnAttackPrimaryCanceled();
     }
 
@@ -43,6 +46,20 @@ public class InputManager : MonoBehaviour
             return false;
         }
         return true;
+    }
+
+    public void OnJump(InputValue input)
+    {
+        if(!CanAcceptGameplayInput()){
+            return;
+        }
+
+        // TODO: Jump
+    }
+
+    public void OnJumpCanceled()
+    {
+        // TODO: Stop jumping
     }
 
     public void OnAttackPrimary(InputValue input)
@@ -75,6 +92,11 @@ public class InputManager : MonoBehaviour
         // If nearby NPC is active and not already talking and has something to say
         else if(NPC.ActiveNPC && !NPC.ActiveNPC.HaveTalkedToNPC()){
             StartDialogue();
+        }
+
+        // If you're in range of a door, walk through it
+        else if(SceneTransitionDoor.ActiveDoor){
+            SceneTransitionDoor.ActiveDoor.ChangeScene();
         }
     }
 
