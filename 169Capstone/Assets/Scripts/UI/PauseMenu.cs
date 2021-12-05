@@ -65,19 +65,19 @@ public class PauseMenu : MonoBehaviour
 /*
     UI TODO:
     ========
+    - compare item UI
+    - shop UI
+
+    - UI item values, currency values, potion values, etc.
+    
     - pause menu opens BEHIND dialogue UI
         -> is there a way to just set it to open on top of literally anything and everything else?
 
-    - when you click off buttons with the mouse and then switch back to controller it doesn't work anymore (nothing is selected anymore)
-
     - redo dialogue UI and main menu with new UI grid stuff?
-
-    - compare item UI
-        -> get the sizing right on the inventory screen before this so that we can just copy that and then mess with it
-    - the rightmost part of the item cards isn't interactable??? just the part around the rarity/type
+    
+    - the rightmost part of the item cards isn't interactable??? just the part around the rarity/type (polish fix)
 
     - UI alert about how recently you saved in the "are you sure you want to quit" popup
 
     - lots of "TODO"s everywhere in different UI manager files
-    - most UI value stuff (items especially)
 */
