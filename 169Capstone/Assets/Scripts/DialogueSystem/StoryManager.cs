@@ -34,9 +34,11 @@ public class StoryManager : MonoBehaviour
         }
     }
 
-    public static StoryManager instance;    // Singleton
+    public static StoryManager instance;
 
-    public int currentRunNumber; //{get; private set;} // TODO: UNCOMMENT THIS AFTER TESTING
+    public int currentRunNumber {get; private set;}
+
+    [HideInInspector] public bool talkedToBryn, talkedToStellan, talkedToAndy, talkedToDoctor, talkedToSorrel, talkedToLich = false;
 
     public Dictionary<StoryBeat,BeatStatus> storyBeatDatabase = new Dictionary<StoryBeat,BeatStatus>();     // All story beats of type Conversation or Killed
     public HashSet<StoryBeat> activeStoryBeats = new HashSet<StoryBeat>();    // For the DialogueManager to see just the active beats
@@ -88,11 +90,19 @@ public class StoryManager : MonoBehaviour
         }
     }
 
-    // Increment when you BEGIN a new run (when leaving the hub world)?
+    // Increment run num when you BEGIN a new run (when leaving the hub world)?
     // TODO: Call this when you begin a new run (probably Game Manager)
-    public void IncrementRunNumber()
+    public void StartNewRun()
     {
         currentRunNumber++;
+
+        // Also when you begin a new run, reset all talked to bools
+        talkedToBryn = false;
+        talkedToStellan = false;
+        talkedToAndy = false;
+        talkedToDoctor = false;
+        talkedToSorrel = false;
+        talkedToLich = false;
     }
 
     // Returns true if the speakerID is in that beat's speaker list at this time

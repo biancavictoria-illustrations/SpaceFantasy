@@ -11,6 +11,9 @@ public class DialogueManager : MonoBehaviour
     public static DialogueManager instance;
 
     public GameObject dialogueUICanvas;
+    public DialogueUI dialogueUI;
+
+    public Button nextButton;
 
     private Dictionary<string, SpeakerData> speakers = new Dictionary<string, SpeakerData>();
 
@@ -32,7 +35,6 @@ public class DialogueManager : MonoBehaviour
         else{
             instance = this;
         }
-        DontDestroyOnLoad(this.gameObject);     // ... right? (VERIFY THIS)
 
         // Add commands to Yarn so that we can send Unity info from there
         dialogueRunner.AddCommandHandler("SetSpeaker", SetSpeakerUI);
