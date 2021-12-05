@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Accessories : Item
 {
-    public float damage;
+    [HideInInspector] public float damage = -1;
 
     // Start is called before the first frame update
     void Start()
@@ -14,8 +14,13 @@ public class Accessories : Item
 
     private void Update()
     {
-        if(Input.GetButtonDown("Fire2"))
+        /*if(Input.GetButtonDown("Fire2"))
         {
+            fire = true;
+        }*/
+        if(InputManager.instance.useAccessory)
+        {
+            Debug.Log("fire");
             fire = true;
         }
     }

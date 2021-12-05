@@ -7,18 +7,29 @@ public class WristRocket : Accessories
     // Start is called before the first frame update
     void Start()
     {
-        GameObject player = GameObject.FindWithTag("Player");
-        damage = itemObject.damage * player.GetComponent<Player>().currentInt;
+        //GameObject player = GameObject.FindWithTag("Player");
+        //damage = itemObject.damage * player.GetComponent<Player>().currentInt;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(fire)
+        if(damage < 0)
+        {
+            GameObject player = GameObject.FindWithTag("Player");
+            damage = itemObject.damage * player.GetComponent<Player>().currentInt;
+        }
+        if (fire && clearToFire)
         {
             fire = false;
+            clearToFire = false;
             List<GameObject> hit = Fire();
             Damage(hit);
+            StartCoroutine(CoolDown());
+        }
+        else if(fire)
+        {
+            fire = false;
         }
     }
 

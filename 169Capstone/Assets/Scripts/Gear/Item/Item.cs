@@ -7,6 +7,16 @@ public class Item : MonoBehaviour
     public GameObject timerPrefab;
     public ItemObject itemObject;
     [HideInInspector] public int slot;
-    [HideInInspector] public bool fire = false;
-    [HideInInspector] public Timer timer;
+    public bool fire = false;
+    [HideInInspector] public bool clearToFire = true;
+    //[HideInInspector] public Timer timer;
+
+    public IEnumerator CoolDown()
+    {
+        Timer timer = Instantiate(timerPrefab).GetComponent<Timer>();
+        timer.StartTimer(itemObject.coolDown);
+        yield return new WaitUntil(() => timer.timeRemaining <= 0);
+        Destroy(timer);
+        clearToFire = true;
+    }
 }

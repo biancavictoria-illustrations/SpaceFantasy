@@ -14,6 +14,9 @@ public class InputManager : MonoBehaviour
     [HideInInspector] public bool shopIsOpen = false;
     [HideInInspector] public bool compareItemIsOpen = false;
     [HideInInspector] public bool isAttacking = false;
+    [HideInInspector] public bool useAccessory = false;
+    [HideInInspector] public bool useHead = false;
+    [HideInInspector] public bool useLegs = false;
 
     void Awake()
     {
@@ -147,5 +150,35 @@ public class InputManager : MonoBehaviour
     {
         isInDialogue = false;
         NPC.ActiveNPC.TalkedToNPC();
+    }
+
+    public void OnAccessoryAbility()
+    {
+        if(!CanAcceptGameplayInput())
+        {
+            return;
+        }
+
+        useAccessory = true;
+    }
+
+    public void OnHelmetAbility()
+    {
+        if(!CanAcceptGameplayInput())
+        {
+            return;
+        }
+
+        useHead = true;
+    }
+
+    public void OnBootsAbility()
+    {
+        if(!CanAcceptGameplayInput())
+        {
+            return;
+        }
+
+        useLegs = true;
     }
 }
