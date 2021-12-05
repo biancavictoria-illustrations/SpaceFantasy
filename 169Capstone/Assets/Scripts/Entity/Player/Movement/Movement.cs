@@ -6,15 +6,19 @@ using UnityEngine.InputSystem;
 public class Movement : MonoBehaviour
 {
     public Animator animator;
-    
     public float speed = 5;
     public Transform model;
     public CharacterController player;
     public float smoothing = 0.1f;
+    public float gravityAccel = -10f;
+    public float jumpSpeed = 10;
     
     private float smoothingVelocity;
     private float horizontalMove;
     private float verticalMove;
+    private float fallingVelocity;
+    private bool isGrounded;
+    private bool isJumping;
     
     void Start()
     {
@@ -23,6 +27,7 @@ public class Movement : MonoBehaviour
         // Add STOPPING moving when you're no longer holding the button
         controls.FindAction("MoveHorizontal").canceled += x => OnMoveHorizontalCanceled();
         controls.FindAction("MoveVertical").canceled += x => OnMoveVerticalCanceled();
+        controls.FindAction("Jump").canceled += x => OnJumpCanceled();
         
         Collider[] colliders = Physics.OverlapSphere(transform.position, 0.1f, LayerMask.GetMask("RoomBounds"));
 
@@ -92,6 +97,25 @@ public class Movement : MonoBehaviour
         CheckForIdle();
     }
 
+    public void OnJump(InputValue input)
+    {
+        if(!InputManager.instance.CanAcceptGameplayInput()){
+            return;
+        }
+
+        if(isGrounded)
+        {
+            fallingVelocity = jumpSpeed * Time.fixedDeltaTime;
+            isGrounded = false;
+            isJumping = true;
+        }
+    }
+
+    public void OnJumpCanceled()
+    {
+        //If we need to put code for what happens when the player lets go of jump
+    }
+
     private void CheckForIdle()
     {
         if(verticalMove == 0 && horizontalMove == 0){
@@ -123,11 +147,40 @@ public class Movement : MonoBehaviour
             {
                 direction.x += rad;
             }
+
+            direction *= speed * Time.fixedDeltaTime;
             
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
             float angle = Mathf.SmoothDampAngle(model.eulerAngles.y, targetAngle, ref smoothingVelocity, smoothing);
             model.rotation = Quaternion.Euler(0, angle, 0);
-            player.Move(direction * speed * Time.deltaTime);
         }
+        else
+        {
+            direction = Vector3.zero;
+        }
+
+        if(!isJumping && Physics.Raycast(transform.position, Vector3.down, 0.1f, LayerMask.GetMask("Environment")))
+        {
+            fallingVelocity = -10000;
+            isGrounded = true;
+        }
+        else
+        {
+            if(isGrounded)
+            {
+                fallingVelocity = 0;
+                isGrounded = false;
+            }
+
+            fallingVelocity += gravityAccel * Time.fixedDeltaTime;
+        }
+
+        if(fallingVelocity < 0)
+        {
+            isJumping = false;
+        }
+
+        direction += Vector3.up * fallingVelocity;
+        player.Move(direction);
     }
 }
