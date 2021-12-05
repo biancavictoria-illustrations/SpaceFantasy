@@ -57,7 +57,6 @@ public class StoryManager : MonoBehaviour
         else{
             instance = this;
         }
-        DontDestroyOnLoad(gameObject);      // ... right? (VERIFY THIS)
 
         currentRunNumber = 1;
 
