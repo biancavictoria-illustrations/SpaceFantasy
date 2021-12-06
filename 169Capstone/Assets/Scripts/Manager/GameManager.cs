@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GearManagerObject gearManager;
     [SerializeField] private TitleManagerObject titleManager;
+    [SerializeField] private Transform playerTransform;
 
     [HideInInspector] public bool playerDeath = false;
     [HideInInspector] public int bossesKilled = 0;
@@ -39,7 +40,7 @@ public class GameManager : MonoBehaviour
         titles.Add("Head", titleManager.head);
         titles.Add("Leg", titleManager.legs);
 
-        Instantiate(playerPrefab);
+        Instantiate(playerPrefab, playerTransform.position, playerTransform.rotation);
     }
 
     private void Update()
