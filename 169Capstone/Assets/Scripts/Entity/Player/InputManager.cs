@@ -36,7 +36,6 @@ public class InputManager : MonoBehaviour
         InputActionAsset controls = gameObject.GetComponent<PlayerInput>().actions;
 
         // Add STOPPING when you're no longer holding the button
-        controls.FindAction("Jump").canceled += x => OnJumpCanceled();
         controls.FindAction("AttackPrimary").canceled += x => OnAttackPrimaryCanceled();
     }
 
