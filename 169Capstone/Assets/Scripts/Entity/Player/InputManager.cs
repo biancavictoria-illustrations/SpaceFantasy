@@ -48,20 +48,6 @@ public class InputManager : MonoBehaviour
         return true;
     }
 
-    public void OnJump(InputValue input)
-    {
-        if(!CanAcceptGameplayInput()){
-            return;
-        }
-
-        // TODO: Jump
-    }
-
-    public void OnJumpCanceled()
-    {
-        // TODO: Stop jumping
-    }
-
     public void OnAttackPrimary(InputValue input)
     {
         if(!CanAcceptGameplayInput()){
