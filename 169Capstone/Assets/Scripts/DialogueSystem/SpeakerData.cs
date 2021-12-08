@@ -30,7 +30,10 @@ public class SpeakerData : ScriptableObject
 
     [SerializeField] private string speakerName;      // The name that shows up to payers
     [SerializeField] private SpeakerID speakerID;     // Internal ID
-    
+    [SerializeField] private YarnProgram yarnDialogue;
+
+    [SerializeField] private List<int> hasNumRunDialogueList = new List<int>();   // Times at which this NPC comments on how many runs you've done, in order
+
     [SerializeField] private Sprite portraitNeutral;
     // Can add different emotions
 
@@ -52,5 +55,15 @@ public class SpeakerData : ScriptableObject
     public SpeakerID SpeakerID()
     {
         return speakerID;
+    }
+
+    public YarnProgram YarnDialogue()
+    {
+        return yarnDialogue;
+    }
+
+    public List<int> NumRunDialogueList()
+    {
+        return hasNumRunDialogueList;
     }
 }
