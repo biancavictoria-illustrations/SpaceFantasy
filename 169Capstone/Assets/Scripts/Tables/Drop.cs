@@ -7,6 +7,7 @@ using UnityEngine;
 public class Drop : ScriptableObject
 {
     public List<DropTable> DropTables;
+    public LineTable Lines;
 
     public string GetDrop(int tier)
     {
