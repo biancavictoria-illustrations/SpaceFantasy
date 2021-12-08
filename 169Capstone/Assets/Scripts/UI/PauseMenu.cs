@@ -68,19 +68,19 @@ public class PauseMenu : MonoBehaviour
     - compare item UI
     - shop UI
 
-    - move dialogue manager and story manager to game manager object so that they dontdestroyonload but the UI stuff is separate and does destroy on load
-    - move player speaker data to Player script (along with the dialogue functions) and make sure the managers can access the data correctly
-
-    - UI item values, currency values, potion values, etc.
+    - UI item values
+    - lots of "TODO"s everywhere in different UI scripts
     
-    - pause menu opens BEHIND dialogue UI
-        -> is there a way to just set it to open on top of literally anything and everything else?
-
-    - redo dialogue UI and main menu with new UI grid stuff?
-    
-    - the rightmost part of the item cards isn't interactable??? just the part around the rarity/type (polish fix)
+    - redo main menu with new UI grid stuff?
 
     - once saving exists: UI alert about how recently you saved in the "are you sure you want to quit" popup
+*/
 
-    - lots of "TODO"s everywhere in different UI manager files
+
+
+
+/*
+    Future Polish TODO:
+    ===================
+    - the rightmost part of the item cards isn't interactable??? just the part around the rarity/type
 */

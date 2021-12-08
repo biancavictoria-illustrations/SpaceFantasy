@@ -101,7 +101,7 @@ public class DialogueManager : MonoBehaviour
                 else if( beatType == StoryBeatType.NumRuns ){
                     // Separate from currentNumRunRemoveValue, if one has passed the threshold in which we're okay with seeing runNum dialogue, remove it
                     int opportunityPassedRemoveValue = 0;
-                    int currentRunNumber = StoryManager.instance.currentRunNumber;
+                    int currentRunNumber = GameManager.instance.currentRunNumber;
                     foreach(int num in NPC.ActiveNPC.hasNumRunDialogueList){
                         int difference = currentRunNumber - num;
                         // If THIS NPC has something to say about your number of runs within threshold runs, add it to the pool
