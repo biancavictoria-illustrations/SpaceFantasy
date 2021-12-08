@@ -7,8 +7,6 @@ public class InputManager : MonoBehaviour
 {
     public static InputManager instance;
 
-    public SpeakerData speakerData;     // This should be stored in a different player script
-
     [HideInInspector] public bool isInDialogue = false;
     [HideInInspector] public bool inventoryIsOpen = false;
     [HideInInspector] public bool shopIsOpen = false;
@@ -30,9 +28,6 @@ public class InputManager : MonoBehaviour
 
     void Start()
     {
-        if(DialogueManager.instance != null){
-            DialogueManager.instance.AddSpeaker(speakerData);
-        }
         InputActionAsset controls = gameObject.GetComponent<PlayerInput>().actions;
 
         // Add STOPPING when you're no longer holding the button
@@ -130,17 +125,19 @@ public class InputManager : MonoBehaviour
         // TODO: Use your other potion, if you have one
     }
 
-    // Called when the player clicks the interact button in range of an NPC with something to say
+    // Called automatically when the player clicks the interact button in range of an NPC with something to say
     private void StartDialogue()
     {
         isInDialogue = true;
+        InGameUIManager.instance.SetGameUIActive(false);
         DialogueManager.instance.dialogueRunner.StartDialogue(NPC.ActiveNPC.yarnStartNode);
     }
 
-    // Called automatically when the dialogue ends/closes
+    // Called when the dialogue ends/closes
     public void OnDialogueEnd()
     {
         isInDialogue = false;
+        InGameUIManager.instance.SetGameUIActive(true);
         NPC.ActiveNPC.TalkedToNPC();
     }
 

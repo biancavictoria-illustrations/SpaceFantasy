@@ -36,8 +36,6 @@ public class StoryManager : MonoBehaviour
 
     public static StoryManager instance;
 
-    public int currentRunNumber {get; private set;}
-
     [HideInInspector] public bool talkedToBryn, talkedToStellan, talkedToAndy, talkedToDoctor, talkedToSorrel, talkedToLich = false;
 
     public Dictionary<StoryBeat,BeatStatus> storyBeatDatabase = new Dictionary<StoryBeat,BeatStatus>();     // All story beats of type Conversation or Killed
@@ -57,8 +55,6 @@ public class StoryManager : MonoBehaviour
         else{
             instance = this;
         }
-
-        currentRunNumber = 1;
 
         // Load in the StoryBeats (only of type Killed and Conversation) from the StoryBeats folder in Resources
         Object[] storyBeatList = Resources.LoadAll("SpecificStoryBeats", typeof(StoryBeat));
@@ -93,8 +89,6 @@ public class StoryManager : MonoBehaviour
     // TODO: Call this when you begin a new run (probably Game Manager)
     public void StartNewRun()
     {
-        currentRunNumber++;
-
         // Also when you begin a new run, reset all talked to bools
         talkedToBryn = false;
         talkedToStellan = false;
