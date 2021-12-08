@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour
     [HideInInspector] public EntityAttack baseAttack;
     public GameObject timerPrefab;
     public bool coroutineRunning = false;
+    [SerializeField] protected Animator animator;
     // Start is called before the first frame update
     void Start()
     {
