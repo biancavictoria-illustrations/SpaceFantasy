@@ -183,7 +183,6 @@ public class DialogueManager : MonoBehaviour
     }
 
     // Called in yarn scripts to set UI speaker info
-    // [YarnCommand("SetSpeaker")]
     private void SetSpeakerUI(string[] info)
     {
         // Set speaker name
@@ -200,7 +199,7 @@ public class DialogueManager : MonoBehaviour
         
         if(speakers.TryGetValue(speaker, out SpeakerData data)){
             // TODO: Uncomment once we have sprites :)
-            // characterPortrait.sprite = data.GetEmotionPortrait(emotion);
+            characterPortrait.sprite = data.GetEmotionPortrait(emotion);
             speakerName.text = speaker;
             return;
         }
@@ -210,7 +209,6 @@ public class DialogueManager : MonoBehaviour
     // Called in yarn scripts to remove speakers from StoryBeats, in the final node of branches; called as  <<BranchComplete [beatType] [nodeNameBase]>>
     // Must pass in a beatType (identical to the enum string value) and a nodeName (without the speakerID or # in the branch, just the base) IN THAT ORDER
     // NEVER call this on repeatable type dialogue -> it should never be removed from the dialogue pool bc it's repeatable
-    // [YarnCommand("BranchComplete")]
     public void BranchComplete(string[] info)
     {
         string beatTypeString = info[0];
