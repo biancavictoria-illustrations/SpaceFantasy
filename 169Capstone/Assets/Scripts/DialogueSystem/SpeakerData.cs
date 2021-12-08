@@ -16,7 +16,7 @@ public enum SpeakerID
     // === On-Run Shopkeepers ===
     Bryn,
     Andy,
-    Doctor,     // TODO: Update this?
+    Doctor,
     Sorrel,
 
     enumSize

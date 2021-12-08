@@ -2398,8 +2398,6 @@ MonoBehaviour:
   maxHitpoints: 0
   currentHitpoints: 0
   drop: {fileID: 0}
-  objectManager: {fileID: 803674284809045806, guid: 4b4e7185af2bf4ff3af83f53b0c25789,
-    type: 3}
 --- !u!114 &3199020426167894423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2429,9 +2427,8 @@ MonoBehaviour:
   currentWis: 0
   currentCha: 0
   currentAttackSpeed: 0
-  objectManager: {fileID: 803674284809045806, guid: 4b4e7185af2bf4ff3af83f53b0c25789,
-    type: 3}
   attack: {fileID: 3199020426167894425}
+  speakerData: {fileID: 11400000, guid: c623398a288a81444a29a450e4dc6816, type: 2}
 --- !u!114 &1602048180999287726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2444,12 +2441,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e940bdf0b4fc0a642b32e5858be2f6d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speakerData: {fileID: 11400000, guid: c623398a288a81444a29a450e4dc6816, type: 2}
   isInDialogue: 0
   inventoryIsOpen: 0
   shopIsOpen: 0
   compareItemIsOpen: 0
   isAttacking: 0
+  useAccessory: 0
+  useHead: 0
+  useLegs: 0
 --- !u!114 &1138510495868641593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2493,11 +2492,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b62aab8945e8543d9bb38133181fb2e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 5287445784285189824}
   speed: 5
   model: {fileID: 3543362744425224887}
   player: {fileID: 4294933676052933463}
   smoothing: 0.1
-  animator: {fileID: 5287445784285189824}
+  gravityAccel: -10
+  jumpSpeed: 10
 --- !u!1 &8148422908052316366
 GameObject:
   m_ObjectHideFlags: 0

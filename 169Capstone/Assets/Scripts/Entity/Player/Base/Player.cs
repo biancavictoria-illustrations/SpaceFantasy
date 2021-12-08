@@ -29,6 +29,9 @@ public class Player : MonoBehaviour
     //public bool test = true;
 
     [SerializeField] private EntityAttack attack;
+
+    [SerializeField] private SpeakerData speakerData;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -47,6 +50,10 @@ public class Player : MonoBehaviour
         currentCha = stats.Charisma();
         currentAttackSpeed = stats.getAttackSpeed();
         //currentHitpoints = stats.getMaxHitPoints();
+
+        if(DialogueManager.instance != null){
+            DialogueManager.instance.AddSpeaker(speakerData);
+        }
     }
 
     // Update is called once per frame

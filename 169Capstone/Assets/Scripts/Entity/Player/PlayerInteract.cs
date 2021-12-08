@@ -11,7 +11,7 @@ public class PlayerInteract : MonoBehaviour
         // Numpad 1 = Increment run number
         if( Input.GetKeyDown(KeyCode.Keypad1) ){
             StoryManager.instance.StartNewRun();
-            Debug.Log("Current run number: " + StoryManager.instance.currentRunNumber);
+            Debug.Log("Current run number: " + GameManager.instance.currentRunNumber);
         }
 
         // Numpad 2 = Killed a slime
