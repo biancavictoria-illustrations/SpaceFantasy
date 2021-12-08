@@ -70,8 +70,8 @@ public class PauseMenu : MonoBehaviour
 
     - UI item values
     - lots of "TODO"s everywhere in different UI scripts
-    
-    - redo main menu with new UI grid stuff?
+
+    - default inventory values (if you have nothng in a slot)
 
     - once saving exists: UI alert about how recently you saved in the "are you sure you want to quit" popup
 */
