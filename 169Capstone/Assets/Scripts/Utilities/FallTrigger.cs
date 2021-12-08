@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FallTrigger : MonoBehaviour
 {
-    private void OnTriggerExit(Collider other)
+    private void OnCollisionEnter(Collider other)
     {
         Debug.Log("Fell onto trigger");
         if(other.tag == "Player")
