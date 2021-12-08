@@ -101,7 +101,7 @@ public class DialogueManager : MonoBehaviour
                 else if( beatType == StoryBeatType.NumRuns ){
                     // Separate from currentNumRunRemoveValue, if one has passed the threshold in which we're okay with seeing runNum dialogue, remove it
                     int opportunityPassedRemoveValue = 0;
-                    int currentRunNumber = StoryManager.instance.currentRunNumber;
+                    int currentRunNumber = GameManager.instance.currentRunNumber;
                     foreach(int num in NPC.ActiveNPC.hasNumRunDialogueList){
                         int difference = currentRunNumber - num;
                         // If THIS NPC has something to say about your number of runs within threshold runs, add it to the pool
@@ -183,7 +183,6 @@ public class DialogueManager : MonoBehaviour
     }
 
     // Called in yarn scripts to set UI speaker info
-    // [YarnCommand("SetSpeaker")]
     private void SetSpeakerUI(string[] info)
     {
         // Set speaker name
@@ -200,7 +199,7 @@ public class DialogueManager : MonoBehaviour
         
         if(speakers.TryGetValue(speaker, out SpeakerData data)){
             // TODO: Uncomment once we have sprites :)
-            // characterPortrait.sprite = data.GetEmotionPortrait(emotion);
+            characterPortrait.sprite = data.GetEmotionPortrait(emotion);
             speakerName.text = speaker;
             return;
         }
@@ -210,7 +209,6 @@ public class DialogueManager : MonoBehaviour
     // Called in yarn scripts to remove speakers from StoryBeats, in the final node of branches; called as  <<BranchComplete [beatType] [nodeNameBase]>>
     // Must pass in a beatType (identical to the enum string value) and a nodeName (without the speakerID or # in the branch, just the base) IN THAT ORDER
     // NEVER call this on repeatable type dialogue -> it should never be removed from the dialogue pool bc it's repeatable
-    // [YarnCommand("BranchComplete")]
     public void BranchComplete(string[] info)
     {
         string beatTypeString = info[0];

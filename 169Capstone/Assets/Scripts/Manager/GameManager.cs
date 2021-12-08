@@ -8,6 +8,11 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public int currentRunNumber {get; private set;}
+
+    public int permanentCurrency {get; private set;}
+    public int tempCurrency {get; private set;}
+
     private Dictionary<string, GameObject[]> gear = new Dictionary<string, GameObject[]>();
     private Dictionary<string, string[]> titles = new Dictionary<string, string[]>();
     [SerializeField] private GameObject playerPrefab;
@@ -26,6 +31,13 @@ public class GameManager : MonoBehaviour
         else{
             instance = this;
         }
+        DontDestroyOnLoad(this.gameObject);
+
+        currentRunNumber = 1;
+
+        SetPermanentCurrency(0);
+        SetTempCurrency(0);
+        
     }
 
     private void Start()
@@ -53,7 +65,24 @@ public class GameManager : MonoBehaviour
 
     public void StartNewRun()
     {
-        
+        currentRunNumber++;
+    }
+
+    public void EndRun()
+    {
+        SetTempCurrency(0);
+    }
+
+    public void SetPermanentCurrency(int value)
+    {
+        permanentCurrency = value;
+        InGameUIManager.instance.SetPermanentCurrencyValue(permanentCurrency);
+    }
+
+    public void SetTempCurrency(int value)
+    {
+        tempCurrency = value;
+        InGameUIManager.instance.SetTempCurrencyValue(tempCurrency);
     }
 
     public void ChangeScene()
