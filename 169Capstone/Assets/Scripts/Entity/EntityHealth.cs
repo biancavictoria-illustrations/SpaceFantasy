@@ -63,6 +63,7 @@ public class EntityHealth : MonoBehaviour
 
         if(currentHitpoints <= 0)
         {
+            //Debug.Log("Dead");
             OnDeath.Invoke(this);
         }
 
@@ -114,9 +115,9 @@ public class EntityHealth : MonoBehaviour
         }
         else
         {
+            Destroy(gameObject);
             //Debug.Log(drop.GetDrop(ObjectManager.bossesKilled));
         }
-
-        Destroy(gameObject);
+        
     }
 }

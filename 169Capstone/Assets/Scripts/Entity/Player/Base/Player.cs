@@ -42,6 +42,8 @@ public class Player : MonoBehaviour
         health.maxHitpoints = stats.getMaxHitPoints();
         health.currentHitpoints = stats.getMaxHitPoints();
 
+        //Debug.Log(health.maxHitpoints);
+
         currentStr = stats.Strength();
         currentDex = stats.Dexterity();
         currentConst = stats.Constitution();
@@ -51,9 +53,11 @@ public class Player : MonoBehaviour
         currentAttackSpeed = stats.getAttackSpeed();
         //currentHitpoints = stats.getMaxHitPoints();
 
-        if(DialogueManager.instance != null){
+        if(DialogueManager.instance != null && !DialogueManager.instance.DialogueManagerHasSpeaker(speakerData)){
             DialogueManager.instance.AddSpeaker(speakerData);
         }
+
+        StartCoroutine(DetectFall());
     }
 
     // Update is called once per frame
@@ -68,5 +72,11 @@ public class Player : MonoBehaviour
     public float CurrentAttackSpeed()
     {
         return currentAttackSpeed;
+    }
+
+    private IEnumerator DetectFall()
+    {
+        yield return new WaitUntil(() => transform.position.y <= -6);
+        health.Damage(health.maxHitpoints);
     }
 }
