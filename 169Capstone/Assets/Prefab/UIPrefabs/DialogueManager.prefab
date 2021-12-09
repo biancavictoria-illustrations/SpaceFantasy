@@ -88,6 +88,8 @@ GameObject:
   - component: {fileID: 1820936868177001085}
   - component: {fileID: 1820936868177001084}
   - component: {fileID: 1820936868177001087}
+  - component: {fileID: 1140705749963367792}
+  - component: {fileID: 6652353283800090294}
   m_Layer: 0
   m_Name: DialogueManager
   m_TagString: Untagged
@@ -259,6 +261,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultVariables: []
   debugTextView: {fileID: 0}
+--- !u!114 &1140705749963367792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820936868177001080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdf94354890bb5549b7cdfa8d57a280b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueUICanvas: {fileID: 1820936869565859326}
+  dialogueUI: {fileID: 1820936868177001084}
+  nextButton: {fileID: 1820936868544814607}
+  characterPortrait: {fileID: 1820936869911276825}
+  speakerName: {fileID: 1820936870007629316}
+  dialogueRunner: {fileID: 1820936868177001085}
+  numRunsThreshold: 3
+--- !u!114 &6652353283800090294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820936868177001080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c19bdb2582910784e8ffb2d383fd1da8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  talkedToBryn: 0
+  talkedToStellan: 0
+  talkedToAndy: 0
+  talkedToDoctor: 0
+  talkedToSorrel: 0
+  talkedToLich: 0
 --- !u!1 &1820936868199548432
 GameObject:
   m_ObjectHideFlags: 0
@@ -718,7 +757,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.4392157}
+  m_Color: {r: 0.9019608, g: 0.9019608, b: 0.9019608, a: 0.4392157}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -892,7 +931,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5754717, g: 0.5754717, b: 0.5754717, a: 0.4392157}
+  m_Color: {r: 0.43137255, g: 0.43137255, b: 0.43137255, a: 0.4392157}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:

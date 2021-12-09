@@ -74,6 +74,9 @@ public class PauseMenu : MonoBehaviour
     - default inventory values (if you have nothng in a slot)
 
     - once saving exists: UI alert about how recently you saved in the "are you sure you want to quit" popup
+
+
+    - game -> pause -> main menu -> play -> can't move anymore (trying to access dead animator???)
 */
 
 
