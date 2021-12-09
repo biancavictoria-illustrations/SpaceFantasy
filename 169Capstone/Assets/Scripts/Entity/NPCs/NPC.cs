@@ -7,25 +7,39 @@ public class NPC : MonoBehaviour
 {
     public static NPC ActiveNPC {get; private set;}
 
-    [HideInInspector] public string yarnStartNode;      // Set on Start from the info in speakerData
-    public YarnProgram yarnDialogue;
     public SpeakerData speakerData;
+
+    [HideInInspector] public YarnProgram yarnDialogue;      // Set on Start from the info in speakerData
+    [HideInInspector] public string yarnStartNode;
 
     public GameObject newDialogueAlert;
 
-    public List<int> hasNumRunDialogueList = new List<int>();   // Times at which this NPC comments on how many runs you've done, in order
+    [HideInInspector] public List<int> hasNumRunDialogueList = new List<int>();   // Times at which this NPC comments on how many runs you've done, in order
 
+
+    // TODO: Set speakerData when initializing the NPC in randomly generated shop rooms (no more than one of each NPC on a floor)
+    // -> so all that stuff probably shouldn't happen in start but instead a function called when that happens
+    // (Otherwise, make sure it's set in the inspector)
 
     void Start()
     {
-        // If you haven't interacted with this NPC on this run yet, set interactable to true; otherwise, false
-        SetNPCInteractable(!HaveTalkedToNPC());
-        
+        if(speakerData == null){
+            Debug.LogWarning("No speaker data set for NPC! NPC not able to initialize properly.");
+            return;
+        }
+
+        yarnDialogue = speakerData.YarnDialogue();
+
         DialogueManager.instance.dialogueRunner.Add(yarnDialogue);
         DialogueManager.instance.AddSpeaker(speakerData);
 
+        hasNumRunDialogueList = speakerData.NumRunDialogueList();
+        
         // Start/head node for a speaker's yarn file is always their unique speakerID + "Start"
         yarnStartNode = speakerData.SpeakerID() + "Start";
+
+        // If you haven't interacted with this NPC on this run yet, set interactable to true; otherwise, false
+        SetNPCInteractable(!HaveTalkedToNPC());
     }
 
     // When player gets within range, they can start dialogue

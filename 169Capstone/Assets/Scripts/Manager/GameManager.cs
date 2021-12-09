@@ -32,12 +32,6 @@ public class GameManager : MonoBehaviour
             instance = this;
         }
         DontDestroyOnLoad(this.gameObject);
-
-        currentRunNumber = 1;
-
-        SetPermanentCurrency(0);
-        SetTempCurrency(0);
-        
     }
 
     private void Start()
@@ -52,6 +46,11 @@ public class GameManager : MonoBehaviour
         titles.Add("Head", titleManager.head);
         titles.Add("Leg", titleManager.legs);
 
+        
+        currentRunNumber = 1;
+
+        SetPermanentCurrency(0);
+        SetTempCurrency(0);
         Instantiate(playerPrefab, playerTransform.position, playerTransform.rotation);
     }
 
