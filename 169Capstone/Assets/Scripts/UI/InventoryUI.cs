@@ -26,7 +26,7 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private int shrunkItemHorizontalGroupLeftPadding;
     [SerializeField] private int defaultItemHorizontalGroupLeftPadding;
 
-    [SerializeField] private PlayerStats stats;
+    private PlayerStats stats;
 
     [SerializeField] private TMP_Text statSTR;
     [SerializeField] private TMP_Text statDEX;
@@ -50,6 +50,8 @@ public class InventoryUI : MonoBehaviour
 
     void Start()
     {
+        stats = FindObjectsOfType<PlayerStats>()[0];
+
         // TODO: Call this somewhere else (start of game + beginning of each run)
         SetStatValues();
         SetOtherStatText();
