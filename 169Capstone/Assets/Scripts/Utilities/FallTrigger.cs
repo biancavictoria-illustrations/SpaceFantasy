@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class FallTrigger : MonoBehaviour
 {
-    private void OnCollisionEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Fell onto trigger");
-        if(other.tag == "Player")
+        //collision.
+        Debug.Log(collision.collider.tag);
+        if(collision.collider.tag == "Player")
         {
-            EntityHealth playerHealth = other.GetComponent<EntityHealth>();
+            Debug.Log("Player fell onto trigger");
+            EntityHealth playerHealth = collision.collider.GetComponent<EntityHealth>();
             playerHealth.Damage(playerHealth.currentHitpoints);
         }
     }

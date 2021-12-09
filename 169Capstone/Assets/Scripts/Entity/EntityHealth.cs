@@ -63,6 +63,7 @@ public class EntityHealth : MonoBehaviour
 
         if(currentHitpoints <= 0)
         {
+            //Debug.Log("Dead");
             OnDeath.Invoke(this);
         }
 
