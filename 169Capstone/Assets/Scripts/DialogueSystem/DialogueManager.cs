@@ -248,6 +248,22 @@ public class DialogueManager : MonoBehaviour
         // Log that the node has been run
         visitedNodes.Add(nodeName);
     }
+
+    // Called automatically when the player clicks the interact button in range of an NPC with something to say
+    public void OnNPCInteracted()
+    {
+        InputManager.instance.isInDialogue = true;
+        InGameUIManager.instance.SetGameUIActive(false);
+        dialogueRunner.StartDialogue(NPC.ActiveNPC.yarnStartNode);
+    }
+
+    // Called when the dialogue ends/closes
+    public void OnDialogueEnd()
+    {
+        InputManager.instance.isInDialogue = false;
+        InGameUIManager.instance.SetGameUIActive(true);
+        NPC.ActiveNPC.TalkedToNPC();
+    }
 }
 
 // Defines a comparer for StoryBeats (by priority)
