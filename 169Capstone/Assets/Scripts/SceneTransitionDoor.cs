@@ -31,13 +31,3 @@ public class SceneTransitionDoor : MonoBehaviour
         }
     }
 }
-
-
-/*
-    InputManager bottom of OnInteract function
-
-    // If you're in range of a door, walk through it
-    else if(SceneTransitionDoor.ActiveDoor){
-        SceneTransitionDoor.ActiveDoor.ChangeScene();
-    }
-*/
