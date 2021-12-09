@@ -57,6 +57,13 @@ public class StoryManager : MonoBehaviour
         }
         DontDestroyOnLoad(this.gameObject);
 
+        if(storyBeatDatabase.Count == 0){
+            LoadAllStoryBeats();
+        }
+    }
+
+    private void LoadAllStoryBeats()
+    {
         // Load in the StoryBeats (only of type Killed and Conversation) from the StoryBeats folder in Resources
         Object[] storyBeatList = Resources.LoadAll("SpecificStoryBeats", typeof(StoryBeat));
         foreach(Object s in storyBeatList){

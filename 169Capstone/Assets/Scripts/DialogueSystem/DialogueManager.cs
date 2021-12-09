@@ -26,6 +26,8 @@ public class DialogueManager : MonoBehaviour
 
     [SerializeField] private int numRunsThreshold = 3;   // Threshold for # runs beyond the exact num run that numRun dialogue can trigger
 
+    private bool hasBeenInitialized = false;
+
     void Awake()
     {
         // Make this a singleton so that it can be accessed from anywhere and there's only one
@@ -36,6 +38,14 @@ public class DialogueManager : MonoBehaviour
             instance = this;
         }
 
+        if(!hasBeenInitialized){
+            SetYarnFunctions();
+            hasBeenInitialized = true;
+        }
+    }
+
+    private void SetYarnFunctions()
+    {
         // Add commands to Yarn so that we can send Unity info from there
         dialogueRunner.AddCommandHandler("SetSpeaker", SetSpeakerUI);
         dialogueRunner.AddCommandHandler("BranchComplete", BranchComplete);
@@ -173,9 +183,17 @@ public class DialogueManager : MonoBehaviour
         // TODO: Selecting a specific node for runNum interactions, based on current run num & when this speaker comments on that :)
     }
 
-    public void AddSpeaker(SpeakerData data)
+    public bool DialogueManagerHasSpeaker(SpeakerData data)
     {
         if(speakers.ContainsKey(data.SpeakerName())){
+            return true;
+        }
+        return false;
+    }
+
+    public void AddSpeaker(SpeakerData data)
+    {
+        if(DialogueManagerHasSpeaker(data)){
             Debug.LogError("Attempting to add " + data.SpeakerName() + " to the speaker database, but it already exists!");
             return;
         }

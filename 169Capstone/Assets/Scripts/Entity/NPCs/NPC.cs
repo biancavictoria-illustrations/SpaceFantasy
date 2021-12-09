@@ -30,8 +30,10 @@ public class NPC : MonoBehaviour
 
         yarnDialogue = speakerData.YarnDialogue();
 
-        DialogueManager.instance.dialogueRunner.Add(yarnDialogue);
-        DialogueManager.instance.AddSpeaker(speakerData);
+        if(!DialogueManager.instance.DialogueManagerHasSpeaker(speakerData)){
+            DialogueManager.instance.dialogueRunner.Add(yarnDialogue);
+            DialogueManager.instance.AddSpeaker(speakerData);
+        }
 
         hasNumRunDialogueList = speakerData.NumRunDialogueList();
         
