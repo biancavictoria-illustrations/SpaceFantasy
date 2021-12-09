@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
         health.maxHitpoints = stats.getMaxHitPoints();
         health.currentHitpoints = stats.getMaxHitPoints();
 
-        //Debug.Log(health.maxHitpoints);
+        Debug.Log(health.maxHitpoints);
 
         currentStr = stats.Strength();
         currentDex = stats.Dexterity();

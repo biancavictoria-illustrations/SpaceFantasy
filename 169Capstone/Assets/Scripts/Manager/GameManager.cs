@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
 
         SetPermanentCurrency(0);
         SetTempCurrency(0);
-        Instantiate(playerPrefab, playerTransform.position, playerTransform.rotation);
+        //Instantiate(playerPrefab, playerTransform.position, playerTransform.rotation);
     }
 
     private void Update()
