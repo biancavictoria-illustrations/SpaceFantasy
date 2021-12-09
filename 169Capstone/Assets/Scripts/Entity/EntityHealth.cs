@@ -33,7 +33,7 @@ public class EntityHealth : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(maxHitpoints);
+        //Debug.Log(maxHitpoints);
         OnDeath.AddListener(onEntityDeath);
         
         if(gameObject.tag != "Player"){

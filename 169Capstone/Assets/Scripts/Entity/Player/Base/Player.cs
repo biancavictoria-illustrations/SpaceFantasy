@@ -37,10 +37,13 @@ public class Player : MonoBehaviour
     {
         weapon = "Berserker's Zweihander";
         //gear[0] = objectManager.GetGearObject(weapon);
-        gear[0] = GameManager.instance.GetGearObject(weapon, "Weapon");
+        //gear[0] = GameManager.instance.GetGearObject(weapon, "Weapon");
         health = gameObject.GetComponent<EntityHealth>();
-        health.maxHitpoints = stats.getMaxHitPoints();
-        health.currentHitpoints = stats.getMaxHitPoints();
+        health.maxHitpoints = 30;
+        health.currentHitpoints = 30;
+        //Debug.Log("here");
+        //health.maxHitpoints = stats.getMaxHitPoints();
+        //health.currentHitpoints = stats.getMaxHitPoints();
 
         Debug.Log(health.maxHitpoints);
 
@@ -63,6 +66,11 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(gear[0] == null)
+        {
+            //Debug.Log("No Weapon");
+            gear[0] = GameManager.instance.GetGearObject(weapon, "Weapon");
+        }
         /*if (Input.GetButtonDown("Fire1"))
         {
             attack.Attack(timer, true, 10, 10, 10);
