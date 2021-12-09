@@ -16,6 +16,11 @@ public class Slime : Enemy
             StartCoroutine(SlimeLogic());
             StartCoroutine(CallDamage());
         }
+
+        if(path.Provoked())
+        {
+            Debug.Log(transform.position);
+        }
     }
 
     private IEnumerator SlimeLogic() //special

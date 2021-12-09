@@ -128,7 +128,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject GetGearObject(string title, string gearType)
     {
-        Debug.Log(gearType);
+        /*Debug.Log(gearType);
 
         foreach(string key in titles.Keys)
         {
@@ -137,7 +137,7 @@ public class GameManager : MonoBehaviour
         foreach(string key in gear.Keys)
         {
             Debug.Log(key);
-        }
+        }*/
         int index = System.Array.IndexOf(titles[gearType], title);
         return Instantiate(gear[gearType][index]);
     }
