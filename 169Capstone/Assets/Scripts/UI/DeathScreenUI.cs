@@ -12,7 +12,6 @@ public class DeathScreenUI : MonoBehaviour
 
     public Button continueButton;
 
-    // TODO: Call this when the player dies
     public void OpenPlayerDeathUI()
     {
         SetDeathMessage();
@@ -24,7 +23,7 @@ public class DeathScreenUI : MonoBehaviour
     private void SetDeathMessage()
     {
         // TODO: Fill this in!
-        deathMessage.text = "deth message";
+        deathMessage.text = "You died!";
     }
 
     // TODO: Add all the reset stuff here too
@@ -32,6 +31,7 @@ public class DeathScreenUI : MonoBehaviour
     public void GoToMainHub()
     {
         Time.timeScale = 1f;
+        GameManager.instance.EndRun();
         SceneManager.LoadScene("Main Hub");
     }
 }

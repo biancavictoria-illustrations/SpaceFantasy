@@ -10,8 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8682984153458562422}
   - component: {fileID: 8682984153458562421}
-  - component: {fileID: 513270630}
-  - component: {fileID: 513270631}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -51,40 +49,3 @@ MonoBehaviour:
   titleManager: {fileID: 0}
   playerDeath: 0
   bossesKilled: 0
---- !u!114 &513270630
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8682984153458562420}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c19bdb2582910784e8ffb2d383fd1da8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  talkedToBryn: 0
-  talkedToStellan: 0
-  talkedToAndy: 0
-  talkedToDoctor: 0
-  talkedToSorrel: 0
-  talkedToLich: 0
---- !u!114 &513270631
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8682984153458562420}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdf94354890bb5549b7cdfa8d57a280b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogueUICanvas: {fileID: 0}
-  dialogueUI: {fileID: 0}
-  nextButton: {fileID: 0}
-  characterPortrait: {fileID: 0}
-  speakerName: {fileID: 0}
-  dialogueRunner: {fileID: 0}
-  numRunsThreshold: 3
