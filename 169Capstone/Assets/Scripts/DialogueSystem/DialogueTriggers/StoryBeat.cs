@@ -53,6 +53,9 @@ public abstract class StoryBeat : ScriptableObject
         }
         // Build the prereq story beat database
         for(int i = 0; i < prereqBeats.Count; ++i){
+            if(prereqStoryBeatDatabase.ContainsKey(prereqBeats[i])){
+                continue;
+            }
             prereqStoryBeatDatabase.Add( prereqBeats[i], prereqCompletionNumbers[i] );
         }
     }
