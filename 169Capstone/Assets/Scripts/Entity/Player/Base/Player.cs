@@ -51,7 +51,7 @@ public class Player : MonoBehaviour
         currentAttackSpeed = stats.getAttackSpeed();
         //currentHitpoints = stats.getMaxHitPoints();
 
-        if(DialogueManager.instance != null){
+        if(DialogueManager.instance != null && !DialogueManager.instance.DialogueManagerHasSpeaker(speakerData)){
             DialogueManager.instance.AddSpeaker(speakerData);
         }
     }

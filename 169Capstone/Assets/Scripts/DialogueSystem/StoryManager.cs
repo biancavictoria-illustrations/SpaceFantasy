@@ -57,10 +57,22 @@ public class StoryManager : MonoBehaviour
         }
         DontDestroyOnLoad(this.gameObject);
 
+        if(storyBeatDatabase.Count == 0){
+            LoadAllStoryBeats();
+        }
+    }
+
+    private void LoadAllStoryBeats()
+    {
         // Load in the StoryBeats (only of type Killed and Conversation) from the StoryBeats folder in Resources
         Object[] storyBeatList = Resources.LoadAll("SpecificStoryBeats", typeof(StoryBeat));
         foreach(Object s in storyBeatList){
             StoryBeat beat = (StoryBeat)s;
+            
+            if(storyBeatDatabase.ContainsKey(beat)){
+                continue;
+            }
+
             beat.CreatePrereqDatabase();
             beat.SetValues();
             // Add the storybeat to the dictionary
@@ -71,6 +83,11 @@ public class StoryManager : MonoBehaviour
         Object[] itemDialogueList = Resources.LoadAll("ItemStoryBeats", typeof(StoryBeatItem));
         foreach(Object i in itemDialogueList){
             StoryBeatItem beat = (StoryBeatItem)i;
+
+            if(itemStoryBeats.ContainsKey(beat)){
+                continue;
+            }
+
             beat.CreatePrereqDatabase();
             beat.SetValues();
             itemStoryBeats.Add(beat,new BeatStatus( false, 0, beat.GetSpeakersWithComments() ));
@@ -80,6 +97,11 @@ public class StoryManager : MonoBehaviour
         Object[] genericDialogueList = Resources.LoadAll("GenericStoryBeats", typeof (StoryBeat));
         foreach(Object g in genericDialogueList){
             StoryBeat beat = (StoryBeat)g;
+
+            if(genericStoryBeats.ContainsKey(beat)){
+                continue;
+            }
+
             beat.CreatePrereqDatabase();
             beat.SetValues();
             genericStoryBeats.Add( beat, new BeatStatus( false, 0, beat.GetSpeakersWithComments() ) );

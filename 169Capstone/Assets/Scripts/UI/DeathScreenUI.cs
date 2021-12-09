@@ -16,8 +16,15 @@ public class DeathScreenUI : MonoBehaviour
     {
         SetDeathMessage();
         deathScreenUI.SetActive(true);
+        InGameUIManager.instance.SetGameUIActive(false);
         Time.timeScale = 0f;
         continueButton.Select();
+    }
+
+    public void ClosePlayerDeathUI()
+    {
+        deathScreenUI.SetActive(false);
+        InGameUIManager.instance.SetGameUIActive(true);
     }
 
     private void SetDeathMessage()
@@ -31,7 +38,9 @@ public class DeathScreenUI : MonoBehaviour
     public void GoToMainHub()
     {
         Time.timeScale = 1f;
+        ClosePlayerDeathUI();
         GameManager.instance.EndRun();
         SceneManager.LoadScene("Main Hub");
+
     }
 }
