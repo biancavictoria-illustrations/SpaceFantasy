@@ -71,7 +71,7 @@ public class InputManager : MonoBehaviour
 
         // If nearby NPC is active and not already talking and has something to say
         else if(NPC.ActiveNPC && !NPC.ActiveNPC.HaveTalkedToNPC()){
-            StartDialogue();
+            DialogueManager.instance.OnNPCInteracted();
         }
 
         // If you're in range of a door, walk through it
@@ -123,22 +123,6 @@ public class InputManager : MonoBehaviour
         }
 
         // TODO: Use your other potion, if you have one
-    }
-
-    // Called automatically when the player clicks the interact button in range of an NPC with something to say
-    private void StartDialogue()
-    {
-        isInDialogue = true;
-        InGameUIManager.instance.SetGameUIActive(false);
-        DialogueManager.instance.dialogueRunner.StartDialogue(NPC.ActiveNPC.yarnStartNode);
-    }
-
-    // Called when the dialogue ends/closes
-    public void OnDialogueEnd()
-    {
-        isInDialogue = false;
-        InGameUIManager.instance.SetGameUIActive(true);
-        NPC.ActiveNPC.TalkedToNPC();
     }
 
     public void OnAccessoryAbility()
