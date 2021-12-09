@@ -59,6 +59,7 @@ public class GameManager : MonoBehaviour
         if(playerDeath)
         {
             InGameUIManager.instance.deathScreen.OpenPlayerDeathUI();
+            playerDeath = false;
         }
     }
 
