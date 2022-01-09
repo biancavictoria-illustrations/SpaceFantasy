@@ -18,7 +18,8 @@ public class Enemy : MonoBehaviour
         stats = gameObject.GetComponent<EnemyStats>();
         baseAttack = gameObject.GetComponent<EntityAttack>();
 
-        path.speed = stats.getMoveSpeed();
+        //path.speed = stats.getMoveSpeed();
+        path.speed = 5;
         path.provokedRadius = logic.provokedRange;
         path.attackRadius = logic.attackRange;
     }

@@ -26,6 +26,7 @@ public class GroundPathing : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Debug.Log(agent.isStopped);
         if(player == null)
         {
             player = GameObject.FindWithTag("Player").GetComponent<Transform>();
@@ -46,9 +47,14 @@ public class GroundPathing : MonoBehaviour
 
         if(!agent.isStopped)
         {
+            //Debug.Log("Chase");
+            //Debug.Log(player.position);
             agent.speed = speed;
             //Debug.Log(agent.speed);
+            //agent.CalculatePath(player)
             agent.SetDestination(player.position);
+            //agent.CalculatePath(player.position, agent.path);
+            //agent.destination = player.position;
         }
         
     }

@@ -36,26 +36,22 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        gear.Add("Weapon", gearManager.weapons);
-        gear.Add("Accessory", gearManager.accessories);
-        gear.Add("Head", gearManager.head);
-        gear.Add("Leg", gearManager.legs);
 
-        titles.Add("Weapon", titleManager.weapons);
-        titles.Add("Accessory", titleManager.accessories);
-        titles.Add("Head", titleManager.head);
-        titles.Add("Leg", titleManager.legs);
-
+        SetKeys();
         
         currentRunNumber = 1;
 
         SetPermanentCurrency(0);
         SetTempCurrency(0);
-        Instantiate(playerPrefab, playerTransform.position, playerTransform.rotation);
+        //Instantiate(playerPrefab, playerTransform.position, playerTransform.rotation);
     }
 
     private void Update()
     {
+        if(gear.Keys.Count == 0 || titles.Keys.Count == 0)
+        {
+            SetKeys();
+        }
         if(playerDeath)
         {
             InGameUIManager.instance.deathScreen.OpenPlayerDeathUI();
@@ -132,7 +128,30 @@ public class GameManager : MonoBehaviour
 
     public GameObject GetGearObject(string title, string gearType)
     {
+        /*Debug.Log(gearType);
+
+        foreach(string key in titles.Keys)
+        {
+            Debug.Log(key);
+        }
+        foreach(string key in gear.Keys)
+        {
+            Debug.Log(key);
+        }*/
         int index = System.Array.IndexOf(titles[gearType], title);
         return Instantiate(gear[gearType][index]);
+    }
+
+    private void SetKeys()
+    {
+        gear.Add("Weapon", gearManager.weapons);
+        gear.Add("Accessory", gearManager.accessories);
+        gear.Add("Head", gearManager.head);
+        gear.Add("Leg", gearManager.legs);
+
+        titles.Add("Weapon", titleManager.weapons);
+        titles.Add("Accessory", titleManager.accessories);
+        titles.Add("Head", titleManager.head);
+        titles.Add("Leg", titleManager.legs);
     }
 }
