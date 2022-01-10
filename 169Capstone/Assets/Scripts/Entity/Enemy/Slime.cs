@@ -19,7 +19,7 @@ public class Slime : Enemy
 
         if(path.Provoked())
         {
-            Debug.Log(transform.position);
+            //Debug.Log(transform.position);
         }
     }
 
