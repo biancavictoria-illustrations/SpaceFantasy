@@ -67,6 +67,7 @@ public class PauseMenu : MonoBehaviour
     UI TODO:
     ========
     - resize/fix placement of inventory UI now that potions are gone
+    - add "are you sure" to quit on main menu
     
     - compare item UI
 
