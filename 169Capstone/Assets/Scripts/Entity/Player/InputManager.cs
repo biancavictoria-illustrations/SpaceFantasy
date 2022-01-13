@@ -78,6 +78,20 @@ public class InputManager : MonoBehaviour
         else if(SceneTransitionDoor.ActiveDoor){
             SceneTransitionDoor.ActiveDoor.ChangeScene();
         }
+
+        // TODO: Check if you're in range of an item (could do this the same way as ActiveNPCs?)
+        // TODO: Deal with what happens if you're in range of an item AND a door...
+        else if(!compareItemIsOpen){
+            // TODO: if you don't have anything equipped in that slot it doesn't open the UI, you just equip the item
+            ToggleCompareItemUI(true);
+        }
+        // TODO: How do you close it if you're not taking the new item???
+    }
+
+    public void ToggleCompareItemUI(bool set)
+    {
+        compareItemIsOpen = set;
+        InGameUIManager.instance.SetGearSwapUIActive(set);
     }
 
     // If you're in dialogue, click anywhere to progress

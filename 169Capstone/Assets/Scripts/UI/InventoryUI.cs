@@ -52,9 +52,20 @@ public class InventoryUI : MonoBehaviour
     {
         stats = FindObjectsOfType<PlayerStats>()[0];
 
-        // TODO: Call this somewhere else (start of game + beginning of each run)
+        // TODO: Call this somewhere else (start of game + beginning of each run, whenever values are updated)
+        SetAllInventoryValues();
+    }
+
+    public void SetAllInventoryValues()
+    {
+        SetInventoryItemValues();
         SetStatValues();
         SetOtherStatText();
+    }
+
+    public void SetInventoryItemValues()
+    {
+
     }
 
     public void SetStatValues()
@@ -104,7 +115,7 @@ public class InventoryUI : MonoBehaviour
     
     private void OnCardSelect( InventoryUIItemPanel selectedPanel )
     {
-        activePanel = selectedPanel;
+       activePanel = selectedPanel;
 
         verticalLayoutGroup.childControlHeight = false;
         foreach( InventoryUIItemPanel panel in itemPanels ){
