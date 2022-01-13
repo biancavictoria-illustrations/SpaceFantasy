@@ -9,7 +9,7 @@ public class Slime : Enemy
     // Update is called once per frame
     void Update()
     {
-        if(path.Provoked() && !coroutineRunning) // Update for damage later
+        if(path.Provoked() && !coroutineRunning && canAttack) // Update for damage later
         {
             //Debug.Log("in here");
             coroutineRunning = true;

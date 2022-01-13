@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
 
     private Dictionary<string, GameObject[]> gear = new Dictionary<string, GameObject[]>();
     private Dictionary<string, string[]> titles = new Dictionary<string, string[]>();
+    private InputManager inputManager;
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GearManagerObject gearManager;
     [SerializeField] private TitleManagerObject titleManager;
@@ -22,6 +23,7 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public bool playerDeath = false;
     [HideInInspector] public int bossesKilled = 0;
+    [HideInInspector] public bool inShopMode = false;
 
     void Awake()
     {
@@ -48,6 +50,10 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        if(inputManager == null)
+        {
+            inputManager = GameObject.FindWithTag("Player").GetComponent<InputManager>();
+        }
         if(gear.Keys.Count == 0 || titles.Keys.Count == 0)
         {
             SetKeys();
@@ -56,6 +62,14 @@ public class GameManager : MonoBehaviour
         {
             InGameUIManager.instance.deathScreen.OpenPlayerDeathUI();
             playerDeath = false;
+        }
+        if(inputManager.shopIsOpen)
+        {
+            inShopMode = true;
+        }
+        else
+        {
+            inShopMode = false;
         }
     }
 

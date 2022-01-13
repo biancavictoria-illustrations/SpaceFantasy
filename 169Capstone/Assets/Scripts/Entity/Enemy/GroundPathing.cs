@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public class GroundPathing : MonoBehaviour
 {
     private Transform player;
+    private GameManager gameManager;
     public Transform self;
     public NavMeshAgent agent;
     [HideInInspector] public float provokedRadius;
@@ -31,15 +32,19 @@ public class GroundPathing : MonoBehaviour
         {
             player = GameObject.FindWithTag("Player").GetComponent<Transform>();
         }
+        if(gameManager == null)
+        {
+            gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        }
         
         float distance = Vector3.Distance(player.position, self.position);
 
-        if(distance < attackRadius)
+        if(distance < attackRadius || gameManager.inShopMode)
         {
             //Debug.Log("Stop Moving");
             agent.isStopped = true;
         }
-        else if(distance < provokedRadius && !attacking)
+        else if(distance < provokedRadius && !attacking && !gameManager.inShopMode)
         {
             //Debug.Log("Start Moving");
             agent.isStopped = false;
