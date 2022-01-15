@@ -23,6 +23,9 @@ public class Enemy : MonoBehaviour
         health = gameObject.GetComponent<EntityHealth>();
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
+        if(stats)
+            stats.initializeStats();
+
         //path.speed = stats.getMoveSpeed();
         //Debug.Log("Pathing speed = " + path.speed.ToString());
         path.speed = 5;
