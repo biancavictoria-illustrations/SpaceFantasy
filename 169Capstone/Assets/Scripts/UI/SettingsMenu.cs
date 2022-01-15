@@ -14,8 +14,6 @@ public class SettingsMenu : MonoBehaviour
 
     // Screen resolution? Full screen or otherwise?
 
-    // Keybindings
-
     public void Start()
     {
         // TODO: SetSettingsUIToSavedValues();

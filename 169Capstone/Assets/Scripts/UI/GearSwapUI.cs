@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class GearSwapUI : MonoBehaviour
 {
     public InventoryUI gearSwapInventoryUI;
+    public Button replaceItemButton;
+    public Button keepCurrentItemButton;
 
     [SerializeField] private InventoryUIItemPanel newItemPanel;
 
@@ -25,22 +27,24 @@ public class GearSwapUI : MonoBehaviour
         gearSwapInventoryUI.CardToggle(gearSwapInventoryUI.itemPanels[0]);
     }
 
-    public void OnGearSwapUIClose()
+    public void CloseGearSwapUI()
     {
         gearSwapInventoryUI.OnInventoryClose();
+        InputManager.instance.ToggleCompareItemUI(false);    // Close the menu
     }
 
     public void OnNewItemSelect()
     {
         // TODO: Update inventory so that you now have the new item equipped
 
-        OnGearSwapUIClose();
-        InputManager.instance.ToggleCompareItemUI(false);    // Close the menu
+        CloseGearSwapUI();
     }
 
     public void SetSwapUIInteractable(bool set)
     {
         newItemPanel.GetComponent<Button>().interactable = set;
+        replaceItemButton.interactable = set;
+        keepCurrentItemButton.interactable = set;
         gearSwapInventoryUI.SetInventoryInteractable(set);
     }
 }

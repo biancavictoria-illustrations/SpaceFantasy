@@ -96,10 +96,6 @@ public class InGameUIManager : MonoBehaviour
     // Called when the player goes to pick up a new item
     public void SetGearSwapUIActive(bool set)
     {
-        if(!set){
-            gearSwapUI.OnGearSwapUIClose();
-        }
-
         inGameUIGearIconPanel.SetActive(!set);
         darkBackgroundPanel.SetActive(set);
         gearSwapUIPanel.SetActive(set);

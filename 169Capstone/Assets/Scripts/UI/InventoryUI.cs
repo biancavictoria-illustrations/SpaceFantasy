@@ -53,7 +53,7 @@ public class InventoryUI : MonoBehaviour
         stats = FindObjectsOfType<PlayerStats>()[0];
 
         // TODO: Call this somewhere else (start of game + beginning of each run, whenever values are updated)
-        SetAllInventoryValues();
+        // SetAllInventoryValues();
     }
 
     public void SetAllInventoryValues()
