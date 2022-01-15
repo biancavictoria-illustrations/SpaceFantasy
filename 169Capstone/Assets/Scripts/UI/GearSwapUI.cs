@@ -1,19 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GearSwapUI : MonoBehaviour
 {
     public InventoryUI gearSwapInventoryUI;
 
     [SerializeField] private InventoryUIItemPanel newItemPanel;
-
-    [HideInInspector] public bool newItemSelected;
-
-    void Start()
-    {
-        newItemSelected = false;
-    }
 
     // TODO: Passes in the item to compare to
     public void OnGearSwapUIOpen()
@@ -27,19 +21,26 @@ public class GearSwapUI : MonoBehaviour
         if(gearSwapInventoryUI.itemPanels.Count == 0){
             Debug.LogError("No item panels found in gear swap inventory UI!");
         }
+        gearSwapInventoryUI.OnInventoryOpen();
         gearSwapInventoryUI.CardToggle(gearSwapInventoryUI.itemPanels[0]);
     }
 
     public void OnGearSwapUIClose()
     {
-        newItemSelected = false;
+        gearSwapInventoryUI.OnInventoryClose();
     }
 
     public void OnNewItemSelect()
     {
-        newItemSelected = true;
         // TODO: Update inventory so that you now have the new item equipped
 
+        OnGearSwapUIClose();
         InputManager.instance.ToggleCompareItemUI(false);    // Close the menu
+    }
+
+    public void SetSwapUIInteractable(bool set)
+    {
+        newItemPanel.GetComponent<Button>().interactable = set;
+        gearSwapInventoryUI.SetInventoryInteractable(set);
     }
 }

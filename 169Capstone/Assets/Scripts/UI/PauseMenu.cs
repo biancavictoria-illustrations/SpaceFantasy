@@ -24,6 +24,9 @@ public class PauseMenu : MonoBehaviour
         if(InGameUIManager.instance.inventoryIsOpen){
             InGameUIManager.instance.inventoryUI.SetInventoryInteractable(true);
         }
+        if(InGameUIManager.instance.gearSwapIsOpen){
+            InGameUIManager.instance.gearSwapUI.SetSwapUIInteractable(true);
+        }
         if(InputManager.instance.isInDialogue){
             // Select the next button
             DialogueManager.instance.nextButton.interactable = true;
@@ -50,6 +53,9 @@ public class PauseMenu : MonoBehaviour
         if(InGameUIManager.instance.inventoryIsOpen){
             InGameUIManager.instance.inventoryUI.SetInventoryInteractable(false);
         }
+        if(InGameUIManager.instance.gearSwapIsOpen){
+            InGameUIManager.instance.gearSwapUI.SetSwapUIInteractable(false);
+        }
         if(InputManager.instance.isInDialogue){
             DialogueManager.instance.nextButton.interactable = false;
         }
@@ -66,7 +72,7 @@ public class PauseMenu : MonoBehaviour
 /*
     UI TODO:
     ========
-    - compare item UI
+    - compare item UI -> don't select new option cancel button thing
 
     - shop UI
     - UI interact alerts
