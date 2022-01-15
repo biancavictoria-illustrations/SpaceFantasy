@@ -12,7 +12,7 @@ public class GroundPathing : MonoBehaviour
     [HideInInspector] public float provokedRadius;
     [HideInInspector] public float attackRadius;
     [HideInInspector] public float speed = 1;
-    [HideInInspector] public bool attacking = false;
+    [HideInInspector]public bool attacking = false;
 
     //private bool chase = false;
 
