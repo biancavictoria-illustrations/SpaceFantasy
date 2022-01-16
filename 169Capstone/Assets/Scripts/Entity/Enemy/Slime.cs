@@ -13,8 +13,8 @@ public class Slime : Enemy
         {
             //Debug.Log("in here");
             coroutineRunning = true;
-            StartCoroutine(SlimeLogic());
-            StartCoroutine(CallDamage());
+            StartCoroutine(SlimeLogic2());
+            //StartCoroutine(CallDamage());
         }
 
         if(path.Provoked())
@@ -36,5 +36,22 @@ public class Slime : Enemy
         path.attacking = false;
         coroutineRunning = false;
         animator.SetBool("IsMoving", false);
+    }
+
+    private IEnumerator SlimeLogic2() //special
+    {
+        animator.SetBool("IsMoving", true);
+        //Debug.Log("chasing");
+        yield return new WaitUntil(() => path.InAttackRange() && !path.attacking);
+        //Debug.Log("Attacking");
+        animator.SetBool("IsMoving", false);
+        path.attacking = true;
+        animator.SetTrigger("StartAttacking");
+        //StartCoroutine(baseAttack.Attack(Instantiate(timerPrefab).GetComponent<Timer>(), false, logic.windUp, logic.duration, logic.windDown, logic.coolDown));
+        //yield return new WaitUntil(() => baseAttack.Completed);
+        //animator.SetBool("InCoolDown", true);
+        //path.attacking = false;
+        //coroutineRunning = false;
+        //animator.SetBool("IsMoving", false);
     }
 }
