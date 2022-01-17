@@ -24,6 +24,9 @@ public class PauseMenu : MonoBehaviour
         if(InGameUIManager.instance.inventoryIsOpen){
             InGameUIManager.instance.inventoryUI.SetInventoryInteractable(true);
         }
+        if(InGameUIManager.instance.gearSwapIsOpen){
+            InGameUIManager.instance.gearSwapUI.SetSwapUIInteractable(true);
+        }
         if(InputManager.instance.isInDialogue){
             // Select the next button
             DialogueManager.instance.nextButton.interactable = true;
@@ -50,6 +53,9 @@ public class PauseMenu : MonoBehaviour
         if(InGameUIManager.instance.inventoryIsOpen){
             InGameUIManager.instance.inventoryUI.SetInventoryInteractable(false);
         }
+        if(InGameUIManager.instance.gearSwapIsOpen){
+            InGameUIManager.instance.gearSwapUI.SetSwapUIInteractable(false);
+        }
         if(InputManager.instance.isInDialogue){
             DialogueManager.instance.nextButton.interactable = false;
         }
@@ -66,18 +72,18 @@ public class PauseMenu : MonoBehaviour
 /*
     UI TODO:
     ========
-    - compare item UI
     - shop UI
+    - UI interact alerts
 
     - UI item values
     - lots of "TODO"s everywhere in different UI scripts
 
-    - default inventory values (if you have nothng in a slot)
+    - default inventory values (if you have nothing in a slot)
 
     - once saving exists: UI alert about how recently you saved in the "are you sure you want to quit" popup
 
-
     - game -> pause -> main menu -> play -> can't move anymore (trying to access dead animator???)
+        -> was this fixed???
 */
 
 

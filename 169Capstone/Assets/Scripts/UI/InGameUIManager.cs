@@ -26,6 +26,10 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private GameObject inventoryUIPanel;
     public bool inventoryIsOpen {get; private set;}
 
+    public GearSwapUI gearSwapUI;
+    [SerializeField] private GameObject gearSwapUIPanel;
+    public bool gearSwapIsOpen {get; private set;}
+
     [SerializeField] private TMP_Text permanentCurrencyValue;
     [SerializeField] private TMP_Text tempCurrencyValue;
 
@@ -86,6 +90,19 @@ public class InGameUIManager : MonoBehaviour
 
         if(set){
             inventoryUI.OnInventoryOpen();
+        }
+    }
+
+    // Called when the player goes to pick up a new item
+    public void SetGearSwapUIActive(bool set)
+    {
+        inGameUIGearIconPanel.SetActive(!set);
+        darkBackgroundPanel.SetActive(set);
+        gearSwapUIPanel.SetActive(set);
+        gearSwapIsOpen = set;
+
+        if(set){
+            gearSwapUI.OnGearSwapUIOpen();
         }
     }
 
