@@ -42,7 +42,6 @@ public class GearSwapUI : MonoBehaviour
 
     public void SetSwapUIInteractable(bool set)
     {
-        newItemPanel.GetComponent<Button>().interactable = set;
         replaceItemButton.interactable = set;
         keepCurrentItemButton.interactable = set;
         gearSwapInventoryUI.SetInventoryInteractable(set);

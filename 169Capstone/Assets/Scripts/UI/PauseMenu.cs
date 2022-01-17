@@ -72,8 +72,6 @@ public class PauseMenu : MonoBehaviour
 /*
     UI TODO:
     ========
-    - compare item UI -> don't select new option cancel button thing
-
     - shop UI
     - UI interact alerts
 
