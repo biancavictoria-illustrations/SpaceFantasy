@@ -7,18 +7,21 @@ public class GroundPathing : MonoBehaviour
 {
     private Transform player;
     private GameManager gameManager;
-    public Transform self;
+    private SpriteRenderer sprite;
     public NavMeshAgent agent;
     [HideInInspector] public float provokedRadius;
     [HideInInspector] public float attackRadius;
     [HideInInspector] public float speed = 1;
-    [HideInInspector] public bool attacking = false;
+    [HideInInspector]public bool attacking = false;
 
     //private bool chase = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        sprite = GetComponentInChildren<SpriteRenderer>();
+        if(sprite)
+            sprite.transform.localScale = new Vector3(Random.value > 0.5f ? 1 : -1, sprite.transform.localScale.y, sprite.transform.localScale.z);
         agent.isStopped = true;
         //player = GameObject.FindWithTag("Player").GetComponent<Transform>();
         //agent.speed = speed;
@@ -34,17 +37,17 @@ public class GroundPathing : MonoBehaviour
         }
         if(gameManager == null)
         {
-            gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+            gameManager = GameManager.instance;
         }
         
-        float distance = Vector3.Distance(player.position, self.position);
+        float distance = Vector3.Distance(player.position, transform.position);
 
         if(distance < attackRadius || gameManager.inShopMode)
         {
             //Debug.Log("Stop Moving");
             agent.isStopped = true;
         }
-        else if(distance < provokedRadius && !attacking && !gameManager.inShopMode)
+        else if(distance < provokedRadius && !attacking)
         {
             //Debug.Log("Start Moving");
             agent.isStopped = false;
@@ -60,6 +63,7 @@ public class GroundPathing : MonoBehaviour
             agent.SetDestination(player.position);
             //agent.CalculatePath(player.position, agent.path);
             //agent.destination = player.position;
+            sprite.transform.localScale = new Vector3(-Mathf.Sign(Vector3.Dot(agent.velocity, Camera.main.transform.right)), sprite.transform.localScale.y, sprite.transform.localScale.z);
         }
         
     }
@@ -72,7 +76,7 @@ public class GroundPathing : MonoBehaviour
 
     public bool InAttackRange()
     {
-        float distance = Vector3.Distance(player.position, self.position);
+        float distance = Vector3.Distance(player.position, transform.position);
         return distance <= attackRadius;
     }
 }

@@ -5,14 +5,16 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     private EnemyStats stats;
+    private bool windUpRunning = false;
     private EntityHealth health;
+    private float currentHitPoints = 0;
     public EnemyLogic logic;
     [HideInInspector] public GroundPathing path;
     [HideInInspector] public EntityAttack baseAttack;
     [HideInInspector] public bool canAttack = true;
     private GameManager gameManager;
     public GameObject timerPrefab;
-    public bool coroutineRunning = false;
+    [HideInInspector] public bool coroutineRunning = false;
     [SerializeField] protected Animator animator;
     // Start is called before the first frame update
     void Start()
@@ -22,6 +24,9 @@ public class Enemy : MonoBehaviour
         baseAttack = gameObject.GetComponent<EntityAttack>();
         health = gameObject.GetComponent<EntityHealth>();
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        if(stats)
+            stats.initializeStats();
 
         //path.speed = stats.getMoveSpeed();
         //Debug.Log("Pathing speed = " + path.speed.ToString());
@@ -41,6 +46,16 @@ public class Enemy : MonoBehaviour
         {
             canAttack = false;
         }
+        else
+        {
+            canAttack = true;
+        }
+
+        if(windUpRunning && currentHitPoints > health.currentHitpoints)
+        {
+            animator.SetBool("WindUpInterrupted", true);
+            SetCooldown();
+        }
     }
 
     public IEnumerator CallDamage()
@@ -50,7 +65,7 @@ public class Enemy : MonoBehaviour
         baseAttack.damageDealt = true;
     }
 
-    private bool DealDamage()
+    public bool DealDamage()
     {
         RaycastHit hit;
         if(Physics.SphereCast(transform.position, 0.25f, transform.forward, out hit, logic.attackRange))
@@ -61,5 +76,35 @@ public class Enemy : MonoBehaviour
         {
             return false;
         }
+    }
+
+    public void SetCooldown()
+    {
+        animator.SetBool("InCoolDown", true);
+        StartCoroutine(RunCoolDownTimer());
+    }
+
+    private IEnumerator RunCoolDownTimer()
+    {
+        Timer timer = Instantiate(timerPrefab).GetComponent<Timer>();
+        timer.StartTimer(logic.coolDown);
+        yield return new WaitUntil(() => timer.timeRemaining <= 0);
+        Destroy(timer);
+        animator.SetBool("InCoolDown", false);
+        animator.SetBool("WindUpInterrupted", false);
+        path.attacking = false;
+        coroutineRunning = false;
+
+    }
+
+    public void EnableWindUpRunning()
+    {
+        windUpRunning = true;
+        currentHitPoints = health.currentHitpoints;
+    }
+
+    public void DisableWindUpRunning()
+    {
+        windUpRunning = false;
     }
 }
