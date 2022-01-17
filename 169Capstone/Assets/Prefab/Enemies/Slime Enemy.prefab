@@ -32,7 +32,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4941471536871962134}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.04111, y: 1.146, z: 6.35241}
+  m_LocalPosition: {x: 7.04111, y: 0, z: 6.35241}
   m_LocalScale: {x: 1.4985, y: 1.4985, z: 1.4985}
   m_Children:
   - {fileID: 4941471538446797967}
@@ -52,7 +52,7 @@ CapsuleCollider:
   m_Radius: 0.6
   m_Height: 1.2
   m_Direction: 1
-  m_Center: {x: 0, y: -0.4, z: 0}
+  m_Center: {x: 0, y: 0.6, z: 0}
 --- !u!195 &4941471536871962130
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -62,7 +62,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 4941471536871962134}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.6
+  m_Radius: 1
   m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
@@ -72,7 +72,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 1.2
-  m_BaseOffset: 1
+  m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!114 &4941471536871962129
@@ -87,7 +87,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58168f70ec84c4f8a951f2239a1317dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  self: {fileID: 4941471536871962135}
   agent: {fileID: 4941471536871962130}
   provokedRadius: 0
   attackRadius: 0
@@ -103,7 +102,7 @@ Animator:
   m_GameObject: {fileID: 4941471536871962134}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c2d3ee07a2e944d5c8573991b767c9fc, type: 2}
+  m_Controller: {fileID: 9100000, guid: 3232c78206c008e44ae155ab8a8ce82a, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -203,7 +202,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4941471538446797966}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7288823397765098888}
@@ -249,7 +248,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -3972691880002762918, guid: 68edbabc3906c0246887a428c2210d76,
+  m_Sprite: {fileID: -8419229545697445721, guid: 712a8c2eb236a104eaa6c6d4dc6f970a,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
