@@ -34,4 +34,15 @@ public class Robert : Enemy
         //path.coro
         //StartCoroutine(baseAttack.Attack(Instantiate(timerPrefab).GetComponent<Timer>(), false, logic.windUp, logic.duration, logic.windDown, logic.coolDown));
     }
+
+    private IEnumerator RobertLogic2()
+    {
+        animator.SetBool("IsMoving", true);
+        //Debug.Log("chasing");
+        yield return new WaitUntil(() => path.InAttackRange() && !path.attacking);
+        //Debug.Log("Attacking");
+        animator.SetBool("IsMoving", false);
+        path.attacking = true;
+        animator.SetTrigger("StartAttacking");
+    }
 }
