@@ -18,6 +18,8 @@ public class LineTable : ScriptableObject
     [SerializeField] private List<float> RareLineEnhancementRates;
     [SerializeField] private List<float> EpicLineEnhancementRates;
     [SerializeField] private List<float> LegendaryLineEnhancementRates;
+    public List<string> PrimaryWeaponLine;
+    public List<string> ItemType;
 
     private void Start()
     {
