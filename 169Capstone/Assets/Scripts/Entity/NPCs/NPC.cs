@@ -50,6 +50,9 @@ public class NPC : MonoBehaviour
         // If the collision was caused by the player
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
             ActiveNPC = this;
+            if(newDialogueAlert.activeInHierarchy){
+                AlertTextUI.instance.EnableInteractAlert();
+            }
         }
     }
 
@@ -59,6 +62,7 @@ public class NPC : MonoBehaviour
         // If the player is no longer near this NPC
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
             ActiveNPC = null;
+            AlertTextUI.instance.DisableAlert();
         }
     }
 
@@ -66,6 +70,7 @@ public class NPC : MonoBehaviour
     public void SetNPCInteractable(bool set)
     {
         newDialogueAlert.SetActive(set);
+        AlertTextUI.instance.DisableAlert();
     }
 
     // When you finish dialogue, call this to deactivate the NPC
