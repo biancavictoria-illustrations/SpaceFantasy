@@ -24,12 +24,6 @@ public class EnemyStats : EntityStats
         attackSpeedMultiplier = 1;
         moveSpeedMultiplier = 1;
         defenseMultiplier = 1;
-        dodgeChanceMultiplier = 1;
-        critChanceMultiplier = 1;
-        critDamageMultiplier = 1;
-        stunChanceMultiplier = 1;
-        burnChanceMultiplier = 1;
-        slowChanceMultiplier = 1;
         statusResistChanceMultiplier = 1;
     }
 }

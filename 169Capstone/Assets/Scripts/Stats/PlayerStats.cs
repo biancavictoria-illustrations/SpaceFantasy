@@ -97,24 +97,22 @@ public class PlayerStats : EntityStats
 
         #region Cooldown Reduction
             private float cooldownReductionBase;
-            private float cooldownReductionMultiplier;
             private float cooldownReductionFlatBonus;
 
             public virtual float getCooldownReduction()
             {
-                return cooldownReductionBase * cooldownReductionMultiplier + cooldownReductionFlatBonus 
+                return cooldownReductionBase + cooldownReductionFlatBonus 
                         + (wisdom * cooldownReductionPerWisdomPoint);
             }
         #endregion
 
         #region Shop Price Reduction
             private float shopPriceReductionBase;
-            private float shopPriceReductionMultiplier;
             private float shopPriceReductionFlatBonus;
 
             public virtual float getShopPriceReduction()
             {
-                return shopPriceReductionBase * shopPriceReductionMultiplier + shopPriceReductionFlatBonus 
+                return shopPriceReductionBase + shopPriceReductionFlatBonus 
                         + (charisma * shopPriceReductionPerCharismaPoint);
             }
         #endregion
@@ -159,13 +157,13 @@ public class PlayerStats : EntityStats
 
         public override float getDodgeChance()
         {
-            return dodgeChanceBase * dodgeChanceMultiplier + dodgeChanceFlatBonus
+            return dodgeChanceBase + dodgeChanceFlatBonus
                     + (dexterity * dodgeBonusPerDexterityPoint);
         }
 
         public override float getCritChance()
         {
-            return critChanceBase * critChanceMultiplier + critChanceFlatBonus
+            return critChanceBase + critChanceFlatBonus
                     + (intelligence * critChanceBonusPerIntelligencePoint);
         }
 

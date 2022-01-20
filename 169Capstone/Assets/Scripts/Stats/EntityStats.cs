@@ -51,23 +51,21 @@ public abstract class EntityStats : MonoBehaviour
     
     #region Dodge Chance
         protected float dodgeChanceBase;
-        protected float dodgeChanceMultiplier;
         protected float dodgeChanceFlatBonus;
 
         public virtual float getDodgeChance()
         {
-            return dodgeChanceBase * dodgeChanceMultiplier + dodgeChanceFlatBonus;
+            return dodgeChanceBase + dodgeChanceFlatBonus;
         }
     #endregion
 
     #region Crit Chance
         protected float critChanceBase;
-        protected float critChanceMultiplier;
         protected float critChanceFlatBonus;
 
         public virtual float getCritChance()
         {
-            return critChanceBase * critChanceMultiplier + critChanceFlatBonus;
+            return critChanceBase + critChanceFlatBonus;
         }
     #endregion
 
@@ -84,34 +82,31 @@ public abstract class EntityStats : MonoBehaviour
 
     #region Stun Chance
         protected float stunChanceBase;
-        protected float stunChanceMultiplier;
         protected float stunChanceFlatBonus;
 
         public virtual float getStunChance()
         {
-            return stunChanceBase * stunChanceMultiplier + stunChanceFlatBonus;
+            return stunChanceBase + stunChanceFlatBonus;
         }
     #endregion
 
     #region Burn Chance
         protected float burnChanceBase;
-        protected float burnChanceMultiplier;
         protected float burnChanceFlatBonus;
 
         public virtual float getBurnChance()
         {
-            return burnChanceBase * burnChanceMultiplier + burnChanceFlatBonus;
+            return burnChanceBase + burnChanceFlatBonus;
         }
     #endregion
     
     #region Slow Chance
         protected float slowChanceBase;
-        protected float slowChanceMultiplier;
         protected float slowChanceFlatBonus;
 
         public virtual float getSlowChance()
         {
-            return slowChanceBase * slowChanceMultiplier + slowChanceFlatBonus;
+            return slowChanceBase + slowChanceFlatBonus;
         }
     #endregion
     
