@@ -20,6 +20,7 @@ public class SceneTransitionDoor : MonoBehaviour
         // If the collision was caused by the player
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
             ActiveDoor = this;
+            AlertTextUI.instance.EnableProceedDoorAlert();
         }
     }
 
@@ -28,6 +29,7 @@ public class SceneTransitionDoor : MonoBehaviour
         // If the collision was caused by the player
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
             ActiveDoor = null;
+            AlertTextUI.instance.DisableAlert();
         }
     }
 }
