@@ -28,14 +28,15 @@ public class Enemy : MonoBehaviour
         if(stats)
             stats.initializeStats();
 
-        //path.speed = stats.getMoveSpeed();
+        path.speed = stats.getMoveSpeed();
         //Debug.Log("Pathing speed = " + path.speed.ToString());
-        path.speed = 5;
+        //path.speed = 5;
         path.provokedRadius = logic.provokedRange;
         path.attackRadius = logic.attackRange;
 
         // need to set up enemy health in here
         health.maxHitpoints = stats.getMaxHitPoints();
+        //Debug.Log("Hitpoints = " + health.maxHitpoints.ToString());
         health.currentHitpoints = stats.getMaxHitPoints();
 
     }
