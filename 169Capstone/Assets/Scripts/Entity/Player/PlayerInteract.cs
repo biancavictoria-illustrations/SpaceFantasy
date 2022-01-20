@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// DON'T USE THIS
+
+
 public class PlayerInteract : MonoBehaviour
 {
     // SET TEST CASES FOR DIALOGUE SYSTEM
