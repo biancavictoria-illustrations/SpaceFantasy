@@ -6,40 +6,20 @@ public class AnimationStateController : MonoBehaviour
 {
     public Animator animator;
 
-    // Start is called before the first frame update
-    void Start()
+    public void ToggleAttackAnimation(bool set)
     {
-        
+        animator.SetBool("IsAttacking", set);
+        if(set)
+        {
+            Debug.Log(animator.GetLayerIndex("Slashing"));
+            animator.SetBool("IsAttacking", true);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetButtonDown("Fire1"))
-        {
-            //animator.SetBool("IsAttacking", true);
-            //Debug.Log(animator.GetLayerIndex("Slashing"));
-            gameObject.GetComponent<Animator>().Rebind();
-            animator.SetLayerWeight(1, 1);
-            
-
-        }
-        if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
-        {
-            animator.SetBool("IsRunning", true);
-        }
-        else
-        {
-            animator.SetBool("IsRunning", false);
-        }
-        
-    }
-
-    public void TurnOffAttack()
+    public void EndOfAttack()
     {
         Debug.Log("Done attacking");
-        //animator.SetBool("IsAttacking", false);
-        animator.SetLayerWeight(1, 0);
+        animator.SetBool("IsAttacking", false);
     }
 
 }

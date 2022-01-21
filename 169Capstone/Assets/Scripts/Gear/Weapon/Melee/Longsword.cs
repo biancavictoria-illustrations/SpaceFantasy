@@ -21,6 +21,7 @@ public class Longsword : MonoBehaviour
     private bool currentlyAttacking = false;
 
     private Player player;
+    private AnimationStateController playerAnim;
     private EntityAttack baseAttack;
     [SerializeField] private GameObject timerPrefab;
 
@@ -28,6 +29,7 @@ public class Longsword : MonoBehaviour
     void Start()
     {
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        playerAnim = player.GetComponentInChildren<AnimationStateController>();
         baseAttack = player.GetComponent<EntityAttack>();
     }
 
@@ -49,6 +51,7 @@ public class Longsword : MonoBehaviour
         {
             range = meleeRange + (rangeModifier * heldEffectCounter * meleeRange);
             StartCoroutine(baseAttack.Attack(Instantiate(timerPrefab).GetComponent<Timer>(), false, windUp[heldEffectCounter] * player.currentAttackSpeed, heldDuration * player.currentAttackSpeed));
+            playerAnim.ToggleAttackAnimation(true);
             yield return new WaitUntil(() => baseAttack.Completed);
 
             heldEffectCounter++;
