@@ -2,24 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour
 {
     private EnemyStats stats;
     private bool windUpRunning = false;
     private EntityHealth health;
     private float currentHitPoints = 0;
     public EnemyLogic logic;
-    [HideInInspector] public GroundPathing path;
+    [HideInInspector] public Pathing path;
     [HideInInspector] public EntityAttack baseAttack;
     [HideInInspector] public bool canAttack = true;
     private GameManager gameManager;
     public GameObject timerPrefab;
     [HideInInspector] public bool coroutineRunning = false;
     [SerializeField] protected Animator animator;
+
+    protected abstract IEnumerator EnemyLogic(); 
+
     // Start is called before the first frame update
     void Start()
     {
-        path = gameObject.GetComponent<GroundPathing>();
+        path = gameObject.GetComponent<Pathing>();
         stats = gameObject.GetComponent<EnemyStats>();
         baseAttack = gameObject.GetComponent<EntityAttack>();
         health = gameObject.GetComponent<EntityHealth>();
@@ -29,8 +32,6 @@ public class Enemy : MonoBehaviour
             stats.initializeStats();
 
         path.speed = stats.getMoveSpeed();
-        //Debug.Log("Pathing speed = " + path.speed.ToString());
-        //path.speed = 5;
         path.provokedRadius = logic.provokedRange;
         path.attackRadius = logic.attackRange;
 
@@ -43,13 +44,12 @@ public class Enemy : MonoBehaviour
 
     public void Update()
     {
-        if(gameManager.inShopMode)
+        canAttack = !gameManager.inShopMode;
+
+        if((path.Provoked() || path.InAttackRange()) && !coroutineRunning && canAttack) // Update for damage later
         {
-            canAttack = false;
-        }
-        else
-        {
-            canAttack = true;
+            coroutineRunning = true;
+            StartCoroutine(EnemyLogic());
         }
 
         if(windUpRunning && currentHitPoints > health.currentHitpoints)
@@ -59,43 +59,19 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public IEnumerator CallDamage()
-    {
-        yield return new WaitUntil(() => baseAttack.hit);
-        baseAttack.enemyDeath = DealDamage();
-        baseAttack.damageDealt = true;
-    }
-
-    public bool DealDamage()
-    {
-        RaycastHit hit;
-        if(Physics.SphereCast(transform.position, 0.25f, transform.forward, out hit, logic.attackRange))
-        {
-            return hit.collider.tag == "Player" ? hit.collider.GetComponent<EntityHealth>().Damage(logic.damage) : false;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
     public void SetCooldown()
     {
         animator.SetBool("InCoolDown", true);
+        path.attacking = false;
         StartCoroutine(RunCoolDownTimer());
     }
 
     private IEnumerator RunCoolDownTimer()
     {
-        Timer timer = Instantiate(timerPrefab).GetComponent<Timer>();
-        timer.StartTimer(logic.coolDown);
-        yield return new WaitUntil(() => timer.timeRemaining <= 0);
-        Destroy(timer);
+        yield return new WaitForSeconds(logic.coolDown);
         animator.SetBool("InCoolDown", false);
         animator.SetBool("WindUpInterrupted", false);
-        path.attacking = false;
         coroutineRunning = false;
-
     }
 
     public void EnableWindUpRunning()

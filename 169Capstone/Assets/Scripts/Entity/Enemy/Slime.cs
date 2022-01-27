@@ -4,54 +4,34 @@ using UnityEngine;
 
 public class Slime : Enemy
 {
-    //private bool coroutineRunning = false;
-
-    // Update is called once per frame
-    void Update()
+    protected override IEnumerator EnemyLogic()
     {
-        if(path.Provoked() && !coroutineRunning && canAttack) // Update for damage later
-        {
-            //Debug.Log("in here");
-            coroutineRunning = true;
-            StartCoroutine(SlimeLogic2());
-            //StartCoroutine(CallDamage());
-        }
+        animator.SetBool("IsMoving", true);
+        yield return new WaitUntil(() => !path.Provoked() && !path.attacking);
+        
+        animator.SetBool("IsMoving", false);
 
-        if(path.Provoked())
+        if(path.InAttackRange())
         {
-            //Debug.Log(transform.position);
+            path.attacking = true;
+            animator.SetTrigger("StartAttacking");
+        }
+        else
+        {
+            SetCooldown();
         }
     }
 
-    private IEnumerator SlimeLogic() //special
+    public bool DealDamage()
     {
-        animator.SetBool("IsMoving", true);
-        //Debug.Log("chasing");
-        yield return new WaitUntil(() => path.InAttackRange() && !path.attacking);
-        //Debug.Log("Attacking");
-        path.attacking = true;
-        animator.SetTrigger("StartAttacking");
-        StartCoroutine(baseAttack.Attack(Instantiate(timerPrefab).GetComponent<Timer>(), false, logic.windUp, logic.duration, logic.windDown, logic.coolDown));
-        yield return new WaitUntil(() => baseAttack.Completed);
-        path.attacking = false;
-        coroutineRunning = false;
-        animator.SetBool("IsMoving", false);
-    }
-
-    private IEnumerator SlimeLogic2() //special
-    {
-        animator.SetBool("IsMoving", true);
-        //Debug.Log("chasing");
-        yield return new WaitUntil(() => path.InAttackRange() && !path.attacking);
-        //Debug.Log("Attacking");
-        animator.SetBool("IsMoving", false);
-        path.attacking = true;
-        animator.SetTrigger("StartAttacking");
-        //StartCoroutine(baseAttack.Attack(Instantiate(timerPrefab).GetComponent<Timer>(), false, logic.windUp, logic.duration, logic.windDown, logic.coolDown));
-        //yield return new WaitUntil(() => baseAttack.Completed);
-        //animator.SetBool("InCoolDown", true);
-        //path.attacking = false;
-        //coroutineRunning = false;
-        //animator.SetBool("IsMoving", false);
+        RaycastHit hit;
+        if(Physics.SphereCast(transform.position, 0.25f, transform.forward, out hit, logic.attackRange))
+        {
+            return hit.collider.tag == "Player" ? hit.collider.GetComponent<EntityHealth>().Damage(logic.damage) : false;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class Billboard : MonoBehaviour
 {
+    public Transform parent;
     public Transform spriteHolder;
     public new SpriteRenderer renderer;
 
     private Vector3 towardsCamera;
+    private Vector3 towardsCameraNoY;
+    private Vector3 tiltOffsetVector;
 
     void Start()
     {
@@ -16,11 +19,10 @@ public class Billboard : MonoBehaviour
         
         towardsCamera = -Camera.main.transform.forward;
 
-        Vector3 towardsCameraNoY = new Vector3(towardsCamera.x, 0, towardsCamera.z).normalized;
-        
         //Adjust the transform to correct for the amount the sprite was tilted
+        towardsCameraNoY = new Vector3(towardsCamera.x, 0, towardsCamera.z).normalized;
         float tiltAmount = renderer.sprite.bounds.size.y * Mathf.Cos(Vector3.Angle(towardsCameraNoY, towardsCamera)) / 2;
-        spriteHolder.position += towardsCameraNoY * tiltAmount;
+        tiltOffsetVector = towardsCameraNoY * tiltAmount;
     }
 
     void Update()
@@ -29,6 +31,7 @@ public class Billboard : MonoBehaviour
         {
             //Face the sprite towards the camera
             spriteHolder.forward = towardsCamera;
+            spriteHolder.position = parent.position + tiltOffsetVector;
         }
     }
 }
