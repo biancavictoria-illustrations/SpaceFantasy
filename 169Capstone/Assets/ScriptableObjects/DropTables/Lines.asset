@@ -12,20 +12,84 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1ce611e6589c6e428c46c89db241c6b, type: 3}
   m_Name: Lines
   m_EditorClassIdentifier: 
-  ItemRarityTier: []
-  CommonSecondaryLineNumberRates: []
-  UncommonSecondaryLineNumberRates: []
-  RareSecondaryLineNumberRates: []
-  EpicSecondaryLineNumberRates: []
-  LegendarySecondaryLineNumberRates: []
-  CommonLineEnhancementRates: []
-  UncommonLineEnhancementRates: []
-  RareLineEnhancementRates: []
-  EpicLineEnhancementRates: []
-  LegendaryLineEnhancementRates: []
+  ItemRarityTier:
+  - Common
+  - Uncommon
+  - Rare
+  - Epic
+  - Legendary
+  CommonSecondaryLineNumberRates:
+  - 0.5
+  - 0.9
+  - 1
+  UncommonSecondaryLineNumberRates:
+  - 0.25
+  - 0.5
+  - 1
+  RareSecondaryLineNumberRates:
+  - 0
+  - 0.25
+  - 0.8
+  - 1
+  EpicSecondaryLineNumberRates:
+  - 0
+  - 0
+  - 0.4
+  - 1
+  LegendarySecondaryLineNumberRates:
+  - 0
+  - 0
+  - 0.3
+  - 1
+  CommonLineEnhancementRates:
+  - 0.25
+  - 0.75
+  - 1
+  UncommonLineEnhancementRates:
+  - 0
+  - 0.25
+  - 0.5
+  - 1
+  RareLineEnhancementRates:
+  - 0
+  - 0
+  - 0.1
+  - 0.3
+  - 0.5
+  - 1
+  EpicLineEnhancementRates:
+  - 0
+  - 0
+  - 0
+  - 0.05
+  - 0.2
+  - 0.3
+  - 0.5
+  - 1
+  LegendaryLineEnhancementRates:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0.1
+  - 0.3
+  - 0.5
+  - 0.8
+  - 1
   PrimaryWeaponLine:
   - STR
   - DEX
   ItemType:
   - Berserker's Zweihander
   - Bow And Arrows
+  LinePool:
+  - Critical Chance
+  - Critical Damage
+  - Attack Speed
+  - Defense
+  - Movement Speed
+  - Effect Chance
+  - Effect Resist
+  - Dodge Chance
+  - HP Increase
