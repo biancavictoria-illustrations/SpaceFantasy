@@ -43,6 +43,11 @@ public class EntityHealth : MonoBehaviour
                 return;
             }
         }
+        //Testing Drop
+        /*else
+        {
+            drop.GetDrop(1,transform);
+        }*/
 
         SetMaxHealthUI();
         SetCurrentHealthUI();
@@ -51,6 +56,7 @@ public class EntityHealth : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
     }
 
     public bool Damage(float damage)
@@ -115,6 +121,7 @@ public class EntityHealth : MonoBehaviour
         }
         else
         {
+            drop.GetDrop(GameManager.instance.bossesKilled, transform);
             Destroy(gameObject);
             //Debug.Log(drop.GetDrop(ObjectManager.bossesKilled));
         }

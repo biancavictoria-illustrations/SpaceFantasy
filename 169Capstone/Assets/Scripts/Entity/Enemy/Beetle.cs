@@ -4,21 +4,8 @@ using UnityEngine;
 
 public class Beetle : Enemy
 {
-    //private bool coroutineRunning = false;
 
-    // Update is called once per frame
-    void Update()
-    {
-        if(path.Provoked() && !coroutineRunning) // Update for damage later
-        {
-            //Debug.Log("in here");
-            coroutineRunning = true;
-            StartCoroutine(BossLogic());
-            StartCoroutine(CallDamage());
-        }
-    }
-
-    private IEnumerator BossLogic() //special
+    protected override IEnumerator EnemyLogic() //special
     {
         //Debug.Log("chasing");
         yield return new WaitUntil(() => path.InAttackRange() && !path.attacking);

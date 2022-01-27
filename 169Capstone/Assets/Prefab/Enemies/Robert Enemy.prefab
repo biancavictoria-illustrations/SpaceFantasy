@@ -96,6 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ae9fa22e4d70c84ea810f992878b530, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parent: {fileID: 3387626245004855701}
   spriteHolder: {fileID: 484659576010785999}
   renderer: {fileID: 0}
 --- !u!1 &3387626245004855708
@@ -109,7 +110,7 @@ GameObject:
   - component: {fileID: 3387626245004855701}
   - component: {fileID: 1265944298379641953}
   - component: {fileID: 3387626245004855709}
-  - component: {fileID: 3387626245004855699}
+  - component: {fileID: 4145410985995142662}
   - component: {fileID: 5026778883894273296}
   - component: {fileID: 4277332586466233799}
   - component: {fileID: 3387626245004855697}
@@ -159,7 +160,7 @@ NavMeshAgent:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3387626245004855708}
   m_Enabled: 1
-  m_AgentTypeID: 0
+  m_AgentTypeID: 1479372276
   m_Radius: 1
   m_Speed: 3.5
   m_Acceleration: 8
@@ -173,7 +174,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &3387626245004855699
+--- !u!114 &4145410985995142662
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -182,7 +183,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3387626245004855708}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58168f70ec84c4f8a951f2239a1317dd, type: 3}
+  m_Script: {fileID: 11500000, guid: cab25cc0d2c2aff4e8634851408d2135, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 3387626245004855709}
@@ -229,6 +230,7 @@ MonoBehaviour:
     type: 3}
   coroutineRunning: 0
   animator: {fileID: 5026778883894273296}
+  projectilePrefab: {fileID: 0}
 --- !u!114 &3387626245004855697
 MonoBehaviour:
   m_ObjectHideFlags: 0
