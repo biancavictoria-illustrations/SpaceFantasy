@@ -85,7 +85,6 @@ public class InputManager : MonoBehaviour
             // TODO: if you don't have anything equipped in that slot it doesn't open the UI, you just equip the item
             ToggleCompareItemUI(true);
         }
-        // TODO: How do you close it if you're not taking the new item???
     }
 
     public void ToggleCompareItemUI(bool set)

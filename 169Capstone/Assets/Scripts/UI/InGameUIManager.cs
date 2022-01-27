@@ -30,6 +30,11 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private GameObject gearSwapUIPanel;
     public bool gearSwapIsOpen {get; private set;}
 
+    public ShopUI brynShopUI;
+    // public ShopUI stellanShopUI;
+    // public ShopUI doctorShopUI;
+    // public ShopUI weaponsShopUI;
+
     [SerializeField] private TMP_Text permanentCurrencyValue;
     [SerializeField] private TMP_Text tempCurrencyValue;
 
@@ -164,5 +169,24 @@ public class InGameUIManager : MonoBehaviour
     public void SetHealthPotionValue(int numPotions)
     {
         healthPotionValue.text = "" + numPotions;
+    }
+
+    public void OpenNPCShop(SpeakerData shopkeeper)
+    {
+        if(shopkeeper.SpeakerID() == SpeakerID.Bryn){
+            brynShopUI.OpenShopUI();
+        }
+        // else if(shopkeeper.SpeakerID() == SpeakerID.Stellan){
+            
+        // }
+        // else if(shopkeeper.SpeakerID() == SpeakerID.Doctor){
+            
+        // }
+        // else if(shopkeeper.SpeakerID() == SpeakerID.Andy){
+
+        // }
+        else{
+            Debug.LogError("Failed to open shop for NPC " + shopkeeper.SpeakerID());
+        }
     }
 }

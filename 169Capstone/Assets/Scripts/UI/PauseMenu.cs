@@ -32,6 +32,9 @@ public class PauseMenu : MonoBehaviour
             DialogueManager.instance.nextButton.interactable = true;
             DialogueManager.instance.nextButton.Select();
         }
+        if(InputManager.instance.shopIsOpen){
+            // TODO: Set UI interactable
+        }
     }
 
     private void ResetPauseUI()
@@ -59,6 +62,9 @@ public class PauseMenu : MonoBehaviour
         if(InputManager.instance.isInDialogue){
             DialogueManager.instance.nextButton.interactable = false;
         }
+        if(InputManager.instance.shopIsOpen){
+            // TODO: Set UI NOT interactable
+        }
     }
 
     public void LoadMenu()
@@ -72,13 +78,19 @@ public class PauseMenu : MonoBehaviour
 /*
     UI TODO:
     ========
+    - there's lots of weird stuff w/ the compare UI in the shop UI, might need a variant for that specifically...
+        -> things are hooked up to stuff like the InGameUIManager in weird places, might cause problems
+
     - shop UI
-    - UI interact alerts
+
+    - remove interact alert once you START talking to an NPC!!!
+    - set it up so that you can open the SHOP even tho you can't talk to an NPC anymore after first interaction on a run
 
     - UI item values
     - lots of "TODO"s everywhere in different UI scripts
 
     - default inventory values (if you have nothing in a slot)
+        -> also for shop items that you already purchased so that slot is empty
 
     - once saving exists: UI alert about how recently you saved in the "are you sure you want to quit" popup
 

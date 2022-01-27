@@ -16,6 +16,8 @@ public class NPC : MonoBehaviour
 
     [HideInInspector] public List<int> hasNumRunDialogueList = new List<int>();   // Times at which this NPC comments on how many runs you've done, in order
 
+    public bool isShopkeeper;
+
 
     // TODO: Set speakerData when initializing the NPC in randomly generated shop rooms (no more than one of each NPC on a floor)
     // -> so all that stuff probably shouldn't happen in start but instead a function called when that happens

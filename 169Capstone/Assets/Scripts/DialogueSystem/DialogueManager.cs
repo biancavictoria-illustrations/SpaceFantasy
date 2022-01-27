@@ -263,6 +263,10 @@ public class DialogueManager : MonoBehaviour
         InputManager.instance.isInDialogue = false;
         InGameUIManager.instance.SetGameUIActive(true);
         NPC.ActiveNPC.TalkedToNPC();
+
+        if(NPC.ActiveNPC.isShopkeeper){
+            InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.speakerData);
+        }
     }
 }
 
