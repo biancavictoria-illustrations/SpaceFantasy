@@ -77,6 +77,9 @@ public class DropItem : MonoBehaviour
             case "Berserker's Zweihander":
                 mesh.sharedMesh = Resources.Load<Mesh>("Longsword");
                 break;
+            case "Bow And Arrows":
+                mesh.sharedMesh = Resources.Load<Mesh>("Bow");
+                break;
             default:
                 mesh.sharedMesh = Resources.Load<Mesh>(itemName);
                 break;
