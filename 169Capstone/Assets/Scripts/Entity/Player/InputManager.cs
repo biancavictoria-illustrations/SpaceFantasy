@@ -87,7 +87,7 @@ public class InputManager : MonoBehaviour
         // TODO: Deal with what happens if you're in range of an item AND a door...
         else if(!compareItemIsOpen){
             // TODO: if you don't have anything equipped in that slot it doesn't open the UI, you just equip the item
-            ToggleCompareItemUI(true);
+            // ToggleCompareItemUI(true);
         }
     }
 

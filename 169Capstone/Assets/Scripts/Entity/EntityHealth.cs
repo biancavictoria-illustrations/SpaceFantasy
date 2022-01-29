@@ -49,6 +49,11 @@ public class EntityHealth : MonoBehaviour
             drop.GetDrop(1,transform);
         }*/
 
+        SetStartingHealthUI();
+    }
+
+    public void SetStartingHealthUI()
+    {
         SetMaxHealthUI();
         SetCurrentHealthUI();
     }

@@ -19,27 +19,31 @@ public abstract class Enemy : MonoBehaviour
 
     protected abstract IEnumerator EnemyLogic(); 
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        path = gameObject.GetComponent<Pathing>();
         stats = gameObject.GetComponent<EnemyStats>();
-        baseAttack = gameObject.GetComponent<EntityAttack>();
         health = gameObject.GetComponent<EntityHealth>();
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
         if(stats)
             stats.initializeStats();
-
-        path.speed = stats.getMoveSpeed();
-        path.provokedRadius = logic.provokedRange;
-        path.attackRadius = logic.attackRange;
 
         // need to set up enemy health in here
         health.maxHitpoints = stats.getMaxHitPoints();
         //Debug.Log("Hitpoints = " + health.maxHitpoints.ToString());
         health.currentHitpoints = stats.getMaxHitPoints();
+    }
 
+    // Start is called before the first frame update
+    void Start()
+    {
+        path = gameObject.GetComponent<Pathing>();
+        
+        baseAttack = gameObject.GetComponent<EntityAttack>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        path.speed = stats.getMoveSpeed();
+        path.provokedRadius = logic.provokedRange;
+        path.attackRadius = logic.attackRange;
     }
 
     public void Update()
