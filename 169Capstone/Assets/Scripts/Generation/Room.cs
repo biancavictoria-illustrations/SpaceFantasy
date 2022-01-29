@@ -5,6 +5,7 @@ using UnityEngine;
 public class Room : MonoBehaviour
 {
     [SerializeField] private List<EntityHealth> startingEnemies;
+    [SerializeField] private List<Transform> roomExits;
     private HashSet<EntityHealth> enemies;
 
     void Awake()
