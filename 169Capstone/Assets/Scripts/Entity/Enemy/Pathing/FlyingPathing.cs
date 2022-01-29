@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class FlyingPathing : Pathing
 {
+    private const float nearAttackRange = 7;
+
     private bool canPath = true;
     private Vector3 destination;
 
@@ -13,6 +15,7 @@ public class FlyingPathing : Pathing
 
         if(!canPath || InAttackRange() || gameManager.inShopMode)
         {
+            Debug.Log("Entered Attack Range");
             agent.isStopped = true;
             destination = Vector3.zero;
         }
@@ -20,8 +23,7 @@ public class FlyingPathing : Pathing
         {
             agent.isStopped = false;
         }
-
-        if(agent.remainingDistance > 2 * provokedRadius)
+        else if(distance > 2 * provokedRadius)
         {
             agent.ResetPath();
             agent.isStopped = true;
@@ -37,25 +39,29 @@ public class FlyingPathing : Pathing
                 bool successfulDest = false;
                 do
                 {
-                    float angle = Vector3.Angle(Vector3.forward, transform.position - player.position) + Random.Range(-0.25f, 0.25f) * Mathf.PI;
-                    float magnitude = attackRadius - Random.Range(1, 4);
+                    //Get the vector pointing from the player toward this enemy, and adjust the angle a bit
+                    Vector2 fromPlayer = new Vector2(transform.position.x - player.position.x, transform.position.z - player.position.z);
+                    float angle = Mathf.Atan2(fromPlayer.y, fromPlayer.x) + Random.Range(-Mathf.PI/4, Mathf.PI/4);
 
+                    //Set the distance to be generally within the attack range
+                    float magnitude = Random.Range(nearAttackRange + 1, attackRadius - 1);
+
+                    //Set the destination to a point that is a combination of the above angle and magnitude relative to the player
                     Vector3 offset = new Vector3(Mathf.Cos(angle), 0,  Mathf.Sin(angle)) * magnitude;
                     destination = player.position + offset;
                     successfulDest = agent.SetDestination(destination);
                     ++numTries;
-                    Debug.Log(offset);
                 }
-                while(!successfulDest && numTries < 20);
+                while(!successfulDest && numTries < 20); //Try to find a valid point 20 times before giving up
 
-                if(!successfulDest)
+                if(!successfulDest) //If we couldn't find a valid point in 20 attempts, wait 0.5 seconds before trying again
                 {
                     StartCoroutine(DisablePathing(0.5f));
                     destination = Vector3.zero;
                 }
             }
 
-            if(agent.remainingDistance < 0.5f)
+            if(agent.remainingDistance < 0.5f) //If we haven't entered the valid attack range by the time we reach our destination, try again
             {
                 destination = Vector3.zero;
                 Debug.Log("Choose new destination");
@@ -80,24 +86,22 @@ public class FlyingPathing : Pathing
             return false;
 
         //If too close or too far away return false
-        if(distance > attackRadius || distance < 3)
+        if(distance > attackRadius || distance < nearAttackRange)
             return false;
-
-        Debug.Log("Is in range");
 
         //If enemy doesn't have line of sight return false
         if(Physics.Raycast(transform.position + Vector3.up * 2, player.position - transform.position, distance, LayerMask.GetMask("Environment")))
             return false;
-
-        Debug.Log("Has LOS");
 
         return true;
     }
 
     private IEnumerator DisablePathing(float seconds)
     {
+        Debug.Log("Couldn't find valid destination, disabling pathing");
         canPath = false;
         yield return new WaitForSeconds(seconds);
         canPath = true;
+        Debug.Log("Re-enabling pathing");
     }
 }
