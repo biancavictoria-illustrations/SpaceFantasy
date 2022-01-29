@@ -73,6 +73,10 @@ public class InputManager : MonoBehaviour
         else if(NPC.ActiveNPC && !NPC.ActiveNPC.HaveTalkedToNPC()){
             DialogueManager.instance.OnNPCInteracted();
         }
+        // If nearby NPC is a shopkeeper and you HAVE talked to them already, just open the shop
+        else if(NPC.ActiveNPC && NPC.ActiveNPC.isShopkeeper){
+            InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.speakerData);
+        }
 
         // If you're in range of a door, walk through it
         else if(SceneTransitionDoor.ActiveDoor){

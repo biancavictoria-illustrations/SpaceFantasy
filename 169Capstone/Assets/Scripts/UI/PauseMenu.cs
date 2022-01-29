@@ -33,7 +33,7 @@ public class PauseMenu : MonoBehaviour
             DialogueManager.instance.nextButton.Select();
         }
         if(InputManager.instance.shopIsOpen){
-            // TODO: Set UI interactable
+            SetOpenShopUIInteractable(true);
         }
     }
 
@@ -63,7 +63,26 @@ public class PauseMenu : MonoBehaviour
             DialogueManager.instance.nextButton.interactable = false;
         }
         if(InputManager.instance.shopIsOpen){
-            // TODO: Set UI NOT interactable
+            SetOpenShopUIInteractable(false);
+        }
+    }
+
+    private void SetOpenShopUIInteractable(bool set)
+    {
+        if(NPC.ActiveNPC.speakerData.SpeakerID() == SpeakerID.Bryn){
+            InGameUIManager.instance.brynShopUI.SetShopUIInteractable(set);
+        }
+        // else if(NPC.ActiveNPC.speakerData.SpeakerID() == SpeakerID.Stellan){
+            
+        // }
+        // else if(NPC.ActiveNPC.speakerData.SpeakerID() == SpeakerID.Doctor){
+            
+        // }
+        // else if(NPC.ActiveNPC.speakerData.SpeakerID() == SpeakerID.Andy){
+            
+        // }
+        else{
+            Debug.LogError("Failed to access shop data for NPC " + NPC.ActiveNPC.speakerData.SpeakerID());
         }
     }
 
@@ -80,13 +99,9 @@ public class PauseMenu : MonoBehaviour
     ========
     - there's lots of weird stuff w/ the compare UI in the shop UI, might need a variant for that specifically...
         -> things are hooked up to stuff like the InGameUIManager in weird places, might cause problems
+        -> update: seems okay...?
 
-    - shop UI
-
-    - remove interact alert once you START talking to an NPC!!!
-    - set it up so that you can open the SHOP even tho you can't talk to an NPC anymore after first interaction on a run
-
-    - UI item values
+    - UI item values everywhere
     - lots of "TODO"s everywhere in different UI scripts
 
     - default inventory values (if you have nothing in a slot)

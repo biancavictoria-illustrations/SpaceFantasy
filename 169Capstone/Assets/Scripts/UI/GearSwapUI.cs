@@ -24,7 +24,7 @@ public class GearSwapUI : MonoBehaviour
             Debug.LogError("No item panels found in gear swap inventory UI!");
         }
         gearSwapInventoryUI.OnInventoryOpen();
-        gearSwapInventoryUI.CardToggle(gearSwapInventoryUI.itemPanels[0]);
+        gearSwapInventoryUI.CardToggle(gearSwapInventoryUI.itemPanels[0]);  // TODO: Even this default isn't working again...?
     }
 
     public void CloseGearSwapUI()

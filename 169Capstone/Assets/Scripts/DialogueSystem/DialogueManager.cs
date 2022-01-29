@@ -252,8 +252,14 @@ public class DialogueManager : MonoBehaviour
     // Called automatically when the player clicks the interact button in range of an NPC with something to say
     public void OnNPCInteracted()
     {
+        // Stop allowing movement input
         InputManager.instance.isInDialogue = true;
+
+        // Disable UI elements
         InGameUIManager.instance.SetGameUIActive(false);
+        AlertTextUI.instance.DisableAlert();
+
+        // Start the dialogue
         dialogueRunner.StartDialogue(NPC.ActiveNPC.yarnStartNode);
     }
 

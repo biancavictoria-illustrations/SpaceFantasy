@@ -43,7 +43,7 @@ public class NPC : MonoBehaviour
         yarnStartNode = speakerData.SpeakerID() + "Start";
 
         // If you haven't interacted with this NPC on this run yet, set interactable to true; otherwise, false
-        SetNPCInteractable(!HaveTalkedToNPC());
+        SetNPCInteractable(!HaveTalkedToNPC()); // TODO: This might nto be setting any to interactable ever... fix that!
     }
 
     // When player gets within range, they can start dialogue
@@ -54,6 +54,9 @@ public class NPC : MonoBehaviour
             ActiveNPC = this;
             if(newDialogueAlert.activeInHierarchy){
                 AlertTextUI.instance.EnableInteractAlert();
+            }
+            else{
+                AlertTextUI.instance.EnableShopAlert();
             }
         }
     }
@@ -68,11 +71,10 @@ public class NPC : MonoBehaviour
         }
     }
 
-    // Toggles the newDialogueAlert on/off
+    // For now, just toggles the newDialogueAlert on/off
     public void SetNPCInteractable(bool set)
     {
         newDialogueAlert.SetActive(set);
-        AlertTextUI.instance.DisableAlert();
     }
 
     // When you finish dialogue, call this to deactivate the NPC

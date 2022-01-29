@@ -173,6 +173,7 @@ public class InGameUIManager : MonoBehaviour
 
     public void OpenNPCShop(SpeakerData shopkeeper)
     {
+        AlertTextUI.instance.DisableAlert();
         if(shopkeeper.SpeakerID() == SpeakerID.Bryn){
             brynShopUI.OpenShopUI();
         }
