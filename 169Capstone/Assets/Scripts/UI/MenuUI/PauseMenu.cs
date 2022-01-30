@@ -97,8 +97,6 @@ public class PauseMenu : MonoBehaviour
 /*
     UI TODO:
     ========
-    - gear shop: you can't use the mouse? only other input devices???
-
     - stats aren't being set correctly in the inventory
 
     - there's lots of weird stuff w/ the compare UI in the shop UI, might need a variant for that specifically...
