@@ -84,11 +84,12 @@ public class InputManager : MonoBehaviour
         }
 
         // TODO: Check if you're in range of an item (could do this the same way as ActiveNPCs?)
-        // TODO: Deal with what happens if you're in range of an item AND a door...
-        else if(!compareItemIsOpen){
-            // TODO: if you don't have anything equipped in that slot it doesn't open the UI, you just equip the item
+        // else if(in range of item){
+            // TODO: if you don't have anything equipped in that slot it doesn't open the UI, you just equip the item (otherwise, open the UI)
             // ToggleCompareItemUI(true);
-        }
+        // }
+        
+        // TODO: Chase will make sure that if items drop within trigger radius of each other (OR DOORS, OR INTERACTABLE NPCs) they'll bounce to open space instead
     }
 
     public void ToggleCompareItemUI(bool set)

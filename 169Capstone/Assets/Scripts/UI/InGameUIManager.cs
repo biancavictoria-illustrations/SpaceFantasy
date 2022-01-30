@@ -15,7 +15,6 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private Image inGameAccessoryIMG;
     [SerializeField] private Image inGameHelmetIMG;
     [SerializeField] private Image inGameBootsIMG;
-    [SerializeField] private Image inGamePotionIMG;
 
     [SerializeField] private GameObject darkBackgroundPanel;
 
@@ -31,9 +30,9 @@ public class InGameUIManager : MonoBehaviour
     public bool gearSwapIsOpen {get; private set;}
 
     public ShopUI brynShopUI;
-    // public ShopUI stellanShopUI;
-    // public ShopUI doctorShopUI;
-    // public ShopUI weaponsShopUI;
+    public ShopUI stellanShopUI;
+    public ShopUI doctorShopUI;
+    public ShopUI weaponsShopUI;
 
     [SerializeField] private TMP_Text permanentCurrencyValue;
     [SerializeField] private TMP_Text tempCurrencyValue;
@@ -45,12 +44,9 @@ public class InGameUIManager : MonoBehaviour
 
     [SerializeField] private TMP_Text healthPotionValue;
 
-    public int minTextSize;
-
 
     void Awake()
     {
-        // Make this a singleton
         if( instance ){
             Destroy(gameObject);
         }
@@ -59,26 +55,15 @@ public class InGameUIManager : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        if(!PlayerPrefs.HasKey(PlayerPrefKeys.minTextSize.ToString())){
-            SetMinTextSize(12);
-        }
-        else{
-            SetMinTextSize(PlayerPrefs.GetInt(PlayerPrefKeys.minTextSize.ToString()));
-        }
-    }
-
-    public void SetMinTextSize(int size)
-    {
-        minTextSize = size;
-        // Set it *everywhere*
-    }
-
     // Called when you enter dialogue or other similar things
     public void SetGameUIActive(bool set)
     {
         inGameUIPanel.SetActive(set);
+    }
+
+    public void ToggleInGameGearIconPanel(bool set)
+    {
+        inGameUIGearIconPanel.SetActive(set);
     }
 
     // Called when player input opens or closes the inventory
@@ -114,6 +99,7 @@ public class InGameUIManager : MonoBehaviour
     public void SetNewRunDefaultValues()
     {
         // TODO: Make sure all inventory slots are set to nothing/default
+        // MOVE THIS TO INVENTORY AND CALL IT WHEN YOU DIE? just clear all the values so you have max health + no items when you go to the hub
 
         // Could have different default values set, or variable default values
         SetTempCurrencyValue(0);
@@ -129,10 +115,10 @@ public class InGameUIManager : MonoBehaviour
     }
 
     // Called when you lose an item and the slot is clear
-    // Particularly used for the other potion slot
     public void ClearItemUI(InventoryItemSlot itemSlot)
     {
-        // Set all values to default, maybe change the background color of the panel
+        // TODO: Set all values to default, maybe change the background color of the panel
+        // ALSO set the expanded UI toggle thing to NOT interactable
     }
 
     public void SetPermanentCurrencyValue(int money)
@@ -177,15 +163,15 @@ public class InGameUIManager : MonoBehaviour
         if(shopkeeper.SpeakerID() == SpeakerID.Bryn){
             brynShopUI.OpenShopUI();
         }
-        // else if(shopkeeper.SpeakerID() == SpeakerID.Stellan){
-            
-        // }
-        // else if(shopkeeper.SpeakerID() == SpeakerID.Doctor){
-            
-        // }
-        // else if(shopkeeper.SpeakerID() == SpeakerID.Andy){
-
-        // }
+        else if(shopkeeper.SpeakerID() == SpeakerID.Stellan){
+            stellanShopUI.OpenShopUI();
+        }
+        else if(shopkeeper.SpeakerID() == SpeakerID.Doctor){
+            doctorShopUI.OpenShopUI();
+        }
+        else if(shopkeeper.SpeakerID() == SpeakerID.Andy){
+            weaponsShopUI.OpenShopUI();
+        }
         else{
             Debug.LogError("Failed to open shop for NPC " + shopkeeper.SpeakerID());
         }

@@ -185,7 +185,7 @@ public class DialogueManager : MonoBehaviour
 
     public bool DialogueManagerHasSpeaker(SpeakerData data)
     {
-        if(speakers.ContainsKey(data.SpeakerName())){
+        if(speakers.ContainsKey(data.SpeakerID().ToString())){
             return true;
         }
         return false;
@@ -197,7 +197,7 @@ public class DialogueManager : MonoBehaviour
             Debug.LogError("Attempting to add " + data.SpeakerName() + " to the speaker database, but it already exists!");
             return;
         }
-        speakers.Add(data.SpeakerName(), data);
+        speakers.Add(data.SpeakerID().ToString(), data);
     }
 
     // Called in yarn scripts to set UI speaker info

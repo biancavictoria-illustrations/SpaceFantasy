@@ -15,7 +15,6 @@ public enum ItemRarity
 
 public class InventoryUIItemPanel : MonoBehaviour
 {
-    // Should be one of each
     [SerializeField] private InventoryItemSlot itemSlot;
     [HideInInspector] public ItemRarity rarity;
 

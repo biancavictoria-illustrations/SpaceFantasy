@@ -72,15 +72,15 @@ public class PauseMenu : MonoBehaviour
         if(NPC.ActiveNPC.speakerData.SpeakerID() == SpeakerID.Bryn){
             InGameUIManager.instance.brynShopUI.SetShopUIInteractable(set);
         }
-        // else if(NPC.ActiveNPC.speakerData.SpeakerID() == SpeakerID.Stellan){
-            
-        // }
-        // else if(NPC.ActiveNPC.speakerData.SpeakerID() == SpeakerID.Doctor){
-            
-        // }
-        // else if(NPC.ActiveNPC.speakerData.SpeakerID() == SpeakerID.Andy){
-            
-        // }
+        else if(NPC.ActiveNPC.speakerData.SpeakerID() == SpeakerID.Stellan){
+            InGameUIManager.instance.stellanShopUI.SetShopUIInteractable(set);
+        }
+        else if(NPC.ActiveNPC.speakerData.SpeakerID() == SpeakerID.Doctor){
+            InGameUIManager.instance.doctorShopUI.SetShopUIInteractable(set);
+        }
+        else if(NPC.ActiveNPC.speakerData.SpeakerID() == SpeakerID.Andy){
+            InGameUIManager.instance.weaponsShopUI.SetShopUIInteractable(set);
+        }
         else{
             Debug.LogError("Failed to access shop data for NPC " + NPC.ActiveNPC.speakerData.SpeakerID());
         }
@@ -97,15 +97,9 @@ public class PauseMenu : MonoBehaviour
 /*
     UI TODO:
     ========
-    - use inheritance with shop UIs
-        -> general ShopUI
-        -> ShopUIGear for Bryn and [Andy]
-        -> ShopUIDoctor
-        -> ShopUIStellan
-        maybe?
-        also would be cool to then use inheritance for the shop UI panels as well... maybe?
+    - gear shop: you can't use the mouse? only other input devices???
 
-    - fix compare UI buttons???
+    - stats aren't being set correctly in the inventory
 
     - there's lots of weird stuff w/ the compare UI in the shop UI, might need a variant for that specifically...
         -> things are hooked up to stuff like the InGameUIManager in weird places, might cause problems
