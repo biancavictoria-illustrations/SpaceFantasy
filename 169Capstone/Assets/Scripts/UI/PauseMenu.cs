@@ -97,6 +97,16 @@ public class PauseMenu : MonoBehaviour
 /*
     UI TODO:
     ========
+    - use inheritance with shop UIs
+        -> general ShopUI
+        -> ShopUIGear for Bryn and [Andy]
+        -> ShopUIDoctor
+        -> ShopUIStellan
+        maybe?
+        also would be cool to then use inheritance for the shop UI panels as well... maybe?
+
+    - fix compare UI buttons???
+
     - there's lots of weird stuff w/ the compare UI in the shop UI, might need a variant for that specifically...
         -> things are hooked up to stuff like the InGameUIManager in weird places, might cause problems
         -> update: seems okay...?

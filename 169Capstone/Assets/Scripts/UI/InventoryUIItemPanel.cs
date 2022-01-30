@@ -4,18 +4,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-// TODO: set these to whatever we're actually calling them in game
-public enum InventoryItemSlot
-{
-    Helmet,
-    Accessory,
-    Boots,
-    Weapon,
-    Potion,
-
-    enumSize
-}
-
 public enum ItemRarity
 {
     Common,
