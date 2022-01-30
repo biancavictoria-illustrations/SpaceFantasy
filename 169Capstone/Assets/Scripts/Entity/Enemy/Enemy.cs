@@ -4,15 +4,14 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
 {
-    private EnemyStats stats;
-    private bool windUpRunning = false;
-    private EntityHealth health;
-    private float currentHitPoints = 0;
+    protected EnemyStats stats;
+    protected bool windUpRunning = false;
+    protected EntityHealth health;
+    protected float currentHitPoints = 0;
     public EnemyLogic logic;
     [HideInInspector] public Pathing path;
     [HideInInspector] public EntityAttack baseAttack;
     [HideInInspector] public bool canAttack = true;
-    private GameManager gameManager;
     public GameObject timerPrefab;
     [HideInInspector] public bool coroutineRunning = false;
     [SerializeField] protected Animator animator;
@@ -21,8 +20,8 @@ public abstract class Enemy : MonoBehaviour
 
     void Awake()
     {
-        stats = gameObject.GetComponent<EnemyStats>();
-        health = gameObject.GetComponent<EntityHealth>();
+        stats = GetComponent<EnemyStats>();
+        health = GetComponent<EntityHealth>();
 
         if(stats)
             stats.initializeStats();
@@ -34,12 +33,11 @@ public abstract class Enemy : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
-        path = gameObject.GetComponent<Pathing>();
+        path = GetComponent<Pathing>();
         
-        baseAttack = gameObject.GetComponent<EntityAttack>();
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        baseAttack = GetComponent<EntityAttack>();
 
         path.speed = stats.getMoveSpeed();
         path.provokedRadius = logic.provokedRange;
@@ -48,7 +46,7 @@ public abstract class Enemy : MonoBehaviour
 
     public void Update()
     {
-        canAttack = !gameManager.inShopMode;
+        canAttack = !GameManager.instance.inShopMode;
 
         if((path.Provoked() || path.InAttackRange()) && !coroutineRunning && canAttack) // Update for damage later
         {
