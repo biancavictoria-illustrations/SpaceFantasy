@@ -28,8 +28,6 @@ public class Player : MonoBehaviour
 
     //public bool test = true;
 
-    [SerializeField] private EntityAttack attack;
-
     [SerializeField] private SpeakerData speakerData;
 
     // Start is called before the first frame update

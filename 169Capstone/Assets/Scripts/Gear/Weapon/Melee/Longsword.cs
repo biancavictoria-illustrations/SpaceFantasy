@@ -22,7 +22,6 @@ public class Longsword : MonoBehaviour
 
     private Player player;
     private AnimationStateController playerAnim;
-    private EntityAttack baseAttack;
     [SerializeField] private GameObject timerPrefab;
 
     // Start is called before the first frame update
@@ -30,65 +29,27 @@ public class Longsword : MonoBehaviour
     {
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
         playerAnim = player.GetComponentInChildren<AnimationStateController>();
-        baseAttack = player.GetComponent<EntityAttack>();
+        StartCoroutine(WatchForAttack());
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(InputManager.instance.isAttacking && !currentlyAttacking)
-        {
-            currentlyAttacking = true;
-            StartCoroutine(PrimaryAttack());
-            StartCoroutine(CallDamage());
-        }
+        playerAnim.animator.SetBool("IsAttacking", InputManager.instance.isAttacking);
     }
 
-    private IEnumerator PrimaryAttack()
+    public bool DealDamage()
     {
-        //Debug.Log("Called");
-        while(heldEffectCounter < maxHeldEffect)
-        {
-            range = meleeRange + (rangeModifier * heldEffectCounter * meleeRange);
-            StartCoroutine(baseAttack.Attack(Instantiate(timerPrefab).GetComponent<Timer>(), false, windUp[heldEffectCounter] * player.currentAttackSpeed, heldDuration * player.currentAttackSpeed));
-            playerAnim.ToggleAttackAnimation(true);
-            yield return new WaitUntil(() => baseAttack.Completed);
-
-            heldEffectCounter++;
-
-            if(!InputManager.instance.isAttacking)
-            {
-                break;
-            }
-        }
-
-        StartCoroutine(baseAttack.WindDown(Instantiate(timerPrefab).GetComponent<Timer>(), windDown * player.currentAttackSpeed));
-        yield return new WaitUntil(() => baseAttack.Completed);
-
-        heldEffectCounter = 0;
-        currentlyAttacking = false;
-    }
-
-    private IEnumerator CallDamage()
-    {
-        yield return new WaitUntil(() => baseAttack.hit);
-        baseAttack.enemyDeath = DealDamage();
-        if(baseAttack.enemyDeath)
-        {
-            SecondaryAbility();
-        }
-        baseAttack.damageDealt = true;
-    }
-
-    private bool DealDamage()
-    {
+        Debug.DrawRay(player.transform.position + Vector3.up, player.transform.forward * 100, default, 1);
         RaycastHit hit;
-        if(Physics.SphereCast(player.GetComponent<Transform>().position, 3, player.GetComponent<Transform>().forward, out hit, range))
+        if(Physics.SphereCast(player.transform.position + Vector3.up, 3, player.transform.forward, out hit, range, LayerMask.GetMask("Enemy")))
         {
-            return hit.collider.tag == "Enemy" ? hit.collider.GetComponent<EntityHealth>().Damage(damageModifier[heldEffectCounter] * player.currentStr) : false;
+            Debug.Log("Damage");
+            return hit.collider.GetComponent<EntityHealth>().Damage(damageModifier[heldEffectCounter] * player.currentStr);
         }
         else
         {
+            Debug.Log("No Damage");
             return false;
         }
 
@@ -112,5 +73,18 @@ public class Longsword : MonoBehaviour
         player.currentAttackSpeed -= bonus;
         bonusStackCounter--;
         Destroy(timer.gameObject);
+    }
+
+    private IEnumerator WatchForAttack()
+    {
+        while(true)
+        {
+            yield return null;
+            if(playerAnim.attackActive)
+            {
+                playerAnim.attackActive = false;
+                DealDamage();
+            }
+        }
     }
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AnimationStateController : MonoBehaviour
 {
+    public bool attackActive;
+
     public Animator animator;
 
     public void ToggleAttackAnimation(bool set)
@@ -22,5 +24,9 @@ public class AnimationStateController : MonoBehaviour
         animator.SetBool("IsAttacking", false);
     }
 
+    public void ActivateAttack()
+    {
+        attackActive = true;
+    }
 }
 

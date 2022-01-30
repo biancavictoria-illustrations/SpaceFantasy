@@ -126,7 +126,6 @@ GameObject:
   - component: {fileID: 7016545410322380718}
   - component: {fileID: 4294933676052933463}
   - component: {fileID: 3199020426167894426}
-  - component: {fileID: 3199020426167894425}
   - component: {fileID: 3199020426167894424}
   - component: {fileID: 3199020426167894423}
   - component: {fileID: 1602048180999287726}
@@ -148,7 +147,7 @@ Transform:
   m_GameObject: {fileID: 7643758985477745940}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.59, y: 0, z: -17.18}
-  m_LocalScale: {x: 2.8, y: 2.8, z: 2.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2546701154199705118}
   - {fileID: 7379179739272091356}
@@ -166,13 +165,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 1.8
-  m_Radius: 0.34
+  m_Height: 5
+  m_Radius: 1
   m_SlopeLimit: 45
   m_StepOffset: 1
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.9, z: 0}
+  m_Center: {x: 0, y: 2.5, z: 0}
 --- !u!114 &3199020426167894426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,23 +184,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d5192e299cbed24a97da4925d9e2be3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3199020426167894425
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7643758985477745940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97c7a8512389e42c6a3e19840c10cce2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interupted: 0
-  hit: 0
-  enemyDeath: 0
-  Completed: 0
-  damageDealt: 0
 --- !u!114 &3199020426167894424
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,7 +228,6 @@ MonoBehaviour:
   currentWis: 0
   currentCha: 0
   currentAttackSpeed: 0
-  attack: {fileID: 3199020426167894425}
   speakerData: {fileID: 11400000, guid: f7e80a822e4c651448523b1fbf8fec7a, type: 2}
 --- !u!114 &1602048180999287726
 MonoBehaviour:
@@ -333,32 +314,32 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 9fdabb6fa63759246996d7024bc18373,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.1092
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9fdabb6fa63759246996d7024bc18373,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.1092
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9fdabb6fa63759246996d7024bc18373,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.1092
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9fdabb6fa63759246996d7024bc18373,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.0032314
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9fdabb6fa63759246996d7024bc18373,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.011
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9fdabb6fa63759246996d7024bc18373,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.0016444
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9fdabb6fa63759246996d7024bc18373,
         type: 3}
@@ -368,17 +349,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 9fdabb6fa63759246996d7024bc18373,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9fdabb6fa63759246996d7024bc18373,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9fdabb6fa63759246996d7024bc18373,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9fdabb6fa63759246996d7024bc18373,
         type: 3}

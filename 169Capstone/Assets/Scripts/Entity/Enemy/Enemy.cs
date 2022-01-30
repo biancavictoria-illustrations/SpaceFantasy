@@ -10,7 +10,6 @@ public abstract class Enemy : MonoBehaviour
     protected float currentHitPoints = 0;
     public EnemyLogic logic;
     [HideInInspector] public Pathing path;
-    [HideInInspector] public EntityAttack baseAttack;
     [HideInInspector] public bool canAttack = true;
     public GameObject timerPrefab;
     [HideInInspector] public bool coroutineRunning = false;
@@ -23,7 +22,6 @@ public abstract class Enemy : MonoBehaviour
     {
         path = GetComponent<Pathing>();
         stats = GetComponent<EnemyStats>();
-        baseAttack = GetComponent<EntityAttack>();
         health = GetComponent<EntityHealth>();
 
         if(stats)
