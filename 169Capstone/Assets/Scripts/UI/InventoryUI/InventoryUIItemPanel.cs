@@ -21,25 +21,25 @@ public class InventoryUIItemPanel : MonoBehaviour
     public FlexibleGridLayout textGrid;
     public HorizontalLayoutGroup horizontalLayoutGroup;
 
-    public void SetItemPanelValues(GameObject item)
+    public void SetItemPanelValues(EquipmentBase item)
     {
         if(item == null){
             SetDefaultItemPanelValues();
             return;
         }
 
-        // TODO: Set based on item values
+        EquipmentData data = item.equipmentData;
 
-        // itemName.text = iName;
-        // rarity = iRarity;
+        itemName.text = data.ItemName();
+        rarity = item.rarity;
 
-        // itemTypeRarity.text = iRarity.ToString() + " " + itemSlot.ToString();
+        itemTypeRarity.text = rarity.ToString() + " " + data.ItemSlot().ToString();
 
-        // shortDescription = shortDesc;
-        // expandedDescription = expandedDesc;
-        // itemDescription.text = shortDesc;
-        
-        // itemIcon.sprite = icon;
+        shortDescription = data.ShortDescription();
+        expandedDescription = data.LongDescription();
+        itemDescription.text = shortDescription;
+
+        itemIcon.sprite = data.Icon();
         
         GetComponent<Toggle>().interactable = true;
     }

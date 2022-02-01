@@ -2,33 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// TODO: set these to whatever we're actually calling them in game
-public enum InventoryItemSlot
-{
-    Weapon,
-    Helmet,
-    Accessory,
-    Boots,  // Legwear?
 
-    enumSize
-}
-
-public enum ItemRarity
-{
-    Common,
-    Uncommon,
-    Rare,
-    Epic,
-    Legendary,
-    none
-}
 
 public class PlayerInventory : MonoBehaviour
 {
     public static PlayerInventory instance;
 
-    // gear dictionary contains keys of the enum item slot value and values of the actual item
-    public Dictionary<InventoryItemSlot,GameObject> gear = new Dictionary<InventoryItemSlot, GameObject>();
+    // Gear dictionary contains keys of the enum item slot value and values of the actual item
+    public Dictionary<InventoryItemSlot, EquipmentBase> gear {get; private set;}
 
     public int healthPotionQuantity {get; private set;}
 
@@ -43,6 +24,8 @@ public class PlayerInventory : MonoBehaviour
         else{
             instance = this;
         }
+
+        gear = new Dictionary<InventoryItemSlot, EquipmentBase>();
     }
 
     public void UseHealthPotion()
@@ -72,7 +55,7 @@ public class PlayerInventory : MonoBehaviour
         InGameUIManager.instance.SetHealthPotionValue(healthPotionQuantity);
     }
 
-    public void EquipItem(InventoryItemSlot slot, GameObject item)
+    public void EquipItem(InventoryItemSlot slot, EquipmentBase item)
     {
         gear[slot] = item;
         InGameUIManager.instance.SetGearItemUI(slot, item);

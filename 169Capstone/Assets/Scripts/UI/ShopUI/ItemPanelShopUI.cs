@@ -26,14 +26,12 @@ public class ItemPanelShopUI : MonoBehaviour
 
     public virtual void PurchaseItem()
     {
-        // TODO: UI feedback about being too broke to buy an item
-        // Don't do this yet cuz inconvenient for testing
         // if(PlayerInventory.instance.tempCurrency - currentCostValue < 0){
-        //     return;
+            // TODO: UI feedback about being too broke to buy an item (don't do this yet cuz inconvenient for testing)
+        //     return;      // If we return here, does it still do the child version of the function? that's bad
         // }
 
         PlayerInventory.instance.SetTempCurrency(PlayerInventory.instance.tempCurrency - currentCostValue);
-        Debug.Log("purchased item!");
     }
 
     protected virtual int CalculateCurrentCost()    // virtual bc need to implement variants for children prob

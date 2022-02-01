@@ -84,7 +84,7 @@ public class InGameUIManager : MonoBehaviour
     }
 
     // Called when the player goes to pick up a new item
-    public void SetGearSwapUIActive(bool set, GameObject item)
+    public void SetGearSwapUIActive(bool set, EquipmentBase item)
     {
         if(set && item == null){
             Debug.LogError("Tried to open gear swap UI but no new item was found!");
@@ -100,7 +100,7 @@ public class InGameUIManager : MonoBehaviour
         }
     }
 
-    public void SetGearItemUI(InventoryItemSlot itemSlot, GameObject item) // Pass in an item?
+    public void SetGearItemUI(InventoryItemSlot itemSlot, EquipmentBase item)
     {
         // TODO: Get item data and set values (at least icon)
         

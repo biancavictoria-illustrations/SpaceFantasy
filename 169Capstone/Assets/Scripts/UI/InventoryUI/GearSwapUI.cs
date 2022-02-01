@@ -9,23 +9,37 @@ public class GearSwapUI : MonoBehaviour
     public Button replaceItemButton;
     public Button keepCurrentItemButton;
 
-    private GameObject newItem;
+    private EquipmentBase newItem;
     [SerializeField] private InventoryUIItemPanel newItemPanel;
 
-    public void OnGearSwapUIOpen(GameObject item)
+    public void OnGearSwapUIOpen(EquipmentBase item)
     {
         gearSwapInventoryUI.SetAllInventoryValues();
 
         newItem = item;
         newItemPanel.SetItemPanelValues(item);
         
-        // TODO: in gearSwapInventoryUI, toggle on the item of type == new item type so that it starts open
-        // for now, defaults to the top one being open
         if(gearSwapInventoryUI.itemPanels.Count == 0){
             Debug.LogError("No item panels found in gear swap inventory UI!");
         }
         gearSwapInventoryUI.OnInventoryOpen();
-        gearSwapInventoryUI.CardToggle(gearSwapInventoryUI.itemPanels[0]);  // TODO: Even this default isn't working again...?
+        ExpandItemOfSameType();
+    }
+
+    private void ExpandItemOfSameType()
+    {
+        InventoryItemSlot slot = newItem.equipmentData.ItemSlot();
+
+        if(!PlayerInventory.instance.gear[slot]){
+            Debug.Log("No item of slot type " + slot.ToString() + " equipped; not expanding item panel.");
+            return;
+        }
+
+        foreach(InventoryUIItemPanel panel in gearSwapInventoryUI.itemPanels){
+            if(panel.GetItemSlot() == slot){
+                gearSwapInventoryUI.CardToggle(panel);
+            }
+        }
     }
 
     public void CloseGearSwapUI()
@@ -36,9 +50,7 @@ public class GearSwapUI : MonoBehaviour
 
     public void OnNewItemSelect()
     {
-        // TODO: Update inventory so that you now have the new item equipped
-        // PlayerInventory.instance.EquipItem(ITEM TYPE, newItem);
-
+        PlayerInventory.instance.EquipItem(newItem.equipmentData.ItemSlot(), newItem);
         CloseGearSwapUI();
     }
 

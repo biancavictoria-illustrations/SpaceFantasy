@@ -83,20 +83,21 @@ public class InputManager : MonoBehaviour
             SceneTransitionDoor.ActiveDoor.ChangeScene();
         }
 
-        // TODO: Check if you're in range of an item (could do this the same way as ActiveNPCs?)
-        // else if(in range of item){            
-            // if(PlayerInventory.instance.gear[ITEM TYPE] == null){
-            //      PlayerInventory.instance.Equip(item);
-            // }
-            // else{
-            //     ToggleCompareItemUI(true, item);
-            // }
-        // }
-        
-        // TODO: Chase will make sure that if items drop within trigger radius of each other (OR DOORS, OR INTERACTABLE NPCs) they'll bounce to open space instead
+        // Check if you're in range of a dropped item
+        else if(EquipmentBase.ActiveGearDrop){
+            EquipmentBase item = EquipmentBase.ActiveGearDrop;
+
+            // If the player doesn't have anything equipped in that slot, equip it
+            if( !PlayerInventory.instance.gear[item.equipmentData.ItemSlot()] ){
+                PlayerInventory.instance.EquipItem(item.equipmentData.ItemSlot(), item);
+            }
+            else{   // Otherwise, open compare UI
+                ToggleCompareItemUI(true, item);
+            }
+        }
     }
 
-    public void ToggleCompareItemUI(bool set, GameObject item)
+    public void ToggleCompareItemUI(bool set, EquipmentBase item)
     {
         compareItemIsOpen = set;
         InGameUIManager.instance.SetGearSwapUIActive(set, item);

@@ -11,19 +11,21 @@ public class ItemPanelGearShop : ItemPanelShopUI
     [SerializeField] private TMP_Text itemSlotRarity;
     [SerializeField] private TMP_Text enhancementCount;
 
-    public GameObject item {get; private set;}
+    public EquipmentBase item {get; private set;}
 
     [SerializeField] private ShopUIGear shopUI;
     
 
-    public void SetGearItemValues(GameObject item)
+    public void SetGearItemValues(EquipmentBase item)
     {
-        // SetBaseShopItemValues(iBaseCost, iName, iDesc);
+        EquipmentData data = item.equipmentData;
 
-        // itemIcon.sprite = iIcon;
-        // itemSlot = iSlot;
-        // itemSlotRarity.text = iRarity.ToString() + "/" + itemSlot.ToString();
-        // enhancementCount.text = "Enhancement Count - " + iEnhancements;
+        SetBaseShopItemValues(item.baseCost, data.ItemName(), data.ShortDescription());
+
+        itemIcon.sprite = data.Icon();
+        itemSlot = data.ItemSlot();
+        itemSlotRarity.text = item.rarity.ToString() + "/" + itemSlot.ToString();
+        enhancementCount.text = "Enhancement Count - " + item.enhancementCount;
     }
 
     public void OnItemClicked()

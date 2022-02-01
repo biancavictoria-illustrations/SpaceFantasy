@@ -50,10 +50,9 @@ public class InventoryUI : MonoBehaviour
 
     void Start()
     {
-        stats = FindObjectsOfType<PlayerStats>()[0];    // TODO: Make sure stats are initialized in Awake!!!
+        stats = FindObjectsOfType<PlayerStats>()[0];
     }
 
-    // TODO: Needs to be updated when you make purchases too
     public void SetAllInventoryValues()
     {
         SetInventoryItemValues();
@@ -190,7 +189,9 @@ public class InventoryUI : MonoBehaviour
             Debug.LogError("No item panels found!");
         }
 
-        SetAllInventoryValues();    // TODO: Can this be called when the values are updated, rather than every time you open it?
+        SetAllInventoryValues();
+        // TODO: Can this be called when the values are updated, rather than every time you open it?
+        // Might cause problems also with gear shops...
 
         // Select the top panel
         itemPanels[0].GetComponent<Toggle>().Select();

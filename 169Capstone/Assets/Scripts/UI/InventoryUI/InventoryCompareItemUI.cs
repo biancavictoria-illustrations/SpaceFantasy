@@ -20,21 +20,19 @@ public class InventoryCompareItemUI : MonoBehaviour
 
 
     // TODO: When the player checks an item on the ground, call this
-    public void SetInventoryCompareItemUIActive()  // TODO: Take in an item
+    public void SetInventoryCompareItemUIActive(EquipmentBase item)
     {
         inventoryCompareItemPanel.SetActive(true);
+
         // Set values
         SetOtherItemValues();
-        // SetEquippedItemValues();    // TODO: Pass in the other item's item type
-
-        // Pause game
+        SetEquippedItemValues(item.equipmentData.ItemSlot());
     }
 
     public void CloseInventoryUI()
     {
         // Clear
         inventoryCompareItemPanel.SetActive(false);
-        // Unpause game
     }
 
     // TODO: Take in an item and fill in the values

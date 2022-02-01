@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BowAndArrows : MonoBehaviour
+public class BowAndArrows : EquipmentBase
 {
     private string title = "Bow And Arrows";
     private float minDamageModifier = 0.25f;
