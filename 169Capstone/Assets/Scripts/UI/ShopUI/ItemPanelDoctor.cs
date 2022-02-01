@@ -13,17 +13,6 @@ public enum UpgradeShopCategory
     size
 }
 
-public enum PlayerFacingStatName
-{
-    STR,
-    DEX,
-    INT,
-    WIS,
-    CHA,
-    CON,
-    size
-}
-
 public class ItemPanelDoctor : ItemPanelShopUI
 {
     private int currentStatValue;   // Or potion quantity, or healing efficacy
@@ -36,7 +25,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
     private PlayerStats stats;
 
 
-    // Should be called just first time you visit this shop per run
+    // TODO: Make sure, should be called JUST first time you visit this shop per run
     public void GenerateNewDoctorUpgradeValues(int upgradeBaseCost)
     {
         stats = FindObjectsOfType<PlayerStats>()[0];
@@ -61,17 +50,16 @@ public class ItemPanelDoctor : ItemPanelShopUI
                 statName = r == 0 ? PlayerFacingStatName.CHA : PlayerFacingStatName.CON;
                 upgradeName = statName == PlayerFacingStatName.CHA ? "CHA FLAVOR NAME" : "CON FLAVOR NAME";
             }
-            GetCurrentStatValue();
         }
         else if(category == UpgradeShopCategory.HealthPotion){
             upgradeName = "Health Potion";
-            currentStatValue = PlayerInventory.instance.healthPotionQuantity;
         }
         else{   // If healing efficacy
             upgradeName = "Potion Efficacy";
-            // TODO: Get current healing efficacy value
-            currentStatValue = 25;
+            
         }
+
+        GetCurrentStatValue();
 
         // === Set the Initial Values ===
         SetBaseShopItemValues(upgradeBaseCost, upgradeName, GenerateDescription());
@@ -100,7 +88,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
             return;
         }
         else if(category == UpgradeShopCategory.PotionEfficacy){
-            // TODO: Access your actual stat
+            currentStatValue = stats.getHealingEfficacy();
             return;
         }
 
@@ -141,7 +129,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
 
     private void IncrementHealingEfficacy()
     {
-        currentStatValue += 25;
+        currentStatValue += healingBonusValue;
         descriptionText.text = GenerateDescription();
         UpdateCostUI();
     }
@@ -155,32 +143,32 @@ public class ItemPanelDoctor : ItemPanelShopUI
             IncrementStatValue();
         }
         else if(category == UpgradeShopCategory.PotionEfficacy){
-            // TODO: Update your actual stat
+            stats.SetHealingEfficacyFlatBonus(currentStatValue + healingBonusValue);
             IncrementHealingEfficacy();
         }
         else{
             if(statName == PlayerFacingStatName.STR){
-                // TODO: Increase STR by 1
+                stats.IncrementStrength();
                 IncrementStatValue();
             }
             else if(statName == PlayerFacingStatName.DEX){
-                // TODO: Increase DEX by 1
+                stats.IncrementDexterity();
                 IncrementStatValue();
             }
             else if(statName == PlayerFacingStatName.INT){
-                // TODO: Increase INT by 1
+                stats.IncrementIntelligence();
                 IncrementStatValue();
             }
             else if(statName == PlayerFacingStatName.WIS){
-                // TODO: Increase WIS by 1
+                stats.IncrementWisdom();
                 IncrementStatValue();
             }
             else if(statName == PlayerFacingStatName.CHA){
-                // TODO: Increase CHA by 1
+                stats.IncrementCharisma();
                 IncrementStatValue();
             }
             else{
-                // TODO: Increase CON by 1
+                stats.IncrementConstitution();
                 IncrementStatValue();
             }
 
@@ -197,7 +185,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
         itemCardButton.interactable = false;
     }
 
-    // Update prices and descriptions if necessary but don't generate new stats
+    // Update prices and descriptions if necessary but don't generate new stats for purchase
     public void UpdateValues()
     {
         GetCurrentStatValue();

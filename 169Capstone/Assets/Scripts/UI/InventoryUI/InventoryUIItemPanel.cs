@@ -4,15 +4,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-public enum ItemRarity
-{
-    Common,
-    Uncommon,
-    Rare,
-    Epic,
-    Legendary
-}
-
 public class InventoryUIItemPanel : MonoBehaviour
 {
     [SerializeField] private InventoryItemSlot itemSlot;
@@ -23,27 +14,55 @@ public class InventoryUIItemPanel : MonoBehaviour
     public TMP_Text itemTypeRarity;
     public TMP_Text itemDescription;
 
-    // [TextArea(5,10)]
     private string shortDescription = "";    // Single line
-    // [TextArea(5,10)]
-    private string expandedDescription = "\n\n +X% Stat 1\n+X% Stat 2\n\nModifier Name\nModifier description text goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."; // Detailed additions
+    private string expandedDescription = ""; // Detailed additions
 
     public GameObject descriptionPanel;
     public FlexibleGridLayout textGrid;
     public HorizontalLayoutGroup horizontalLayoutGroup;
 
-    public void SetItemPanelValues(string iName, ItemRarity iRarity, string shortDesc, string expandedDesc, Sprite icon)
+    public void SetItemPanelValues(GameObject item)
     {
-        itemName.text = iName;
-        rarity = iRarity;
+        if(item == null){
+            SetDefaultItemPanelValues();
+            return;
+        }
 
-        itemTypeRarity.text = "(" + iRarity.ToString() + " " + itemSlot.ToString() + ")";
+        // TODO: Set based on item values
 
-        shortDescription = shortDesc;
-        expandedDescription = expandedDesc;
-        itemDescription.text = shortDesc;
+        // itemName.text = iName;
+        // rarity = iRarity;
+
+        // itemTypeRarity.text = iRarity.ToString() + " " + itemSlot.ToString();
+
+        // shortDescription = shortDesc;
+        // expandedDescription = expandedDesc;
+        // itemDescription.text = shortDesc;
         
-        itemIcon.sprite = icon;
+        // itemIcon.sprite = icon;
+        
+        GetComponent<Toggle>().interactable = true;
+    }
+
+    private void SetDefaultItemPanelValues()
+    {
+        itemName.text = "";
+        rarity = ItemRarity.none;
+
+        itemTypeRarity.text = itemSlot.ToString();
+
+        shortDescription = "EMPTY";
+        expandedDescription = "";
+        itemDescription.text = shortDescription;
+
+        // TODO: itemIcon.sprite = DEFAULT ICON;
+
+        GetComponent<Toggle>().interactable = false;
+    }
+
+    public InventoryItemSlot GetItemSlot()
+    {
+        return itemSlot;
     }
 
     public void SetExpandedDescription(bool set)

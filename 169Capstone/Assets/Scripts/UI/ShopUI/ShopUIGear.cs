@@ -28,7 +28,7 @@ public class ShopUIGear : ShopUI
 
     private void SetShopUIValues()
     {
-        // TODO
+        // TODO: From the list of items this shop carries, set all item values
     }
 
     public void ToggleShopInventoryOn()
@@ -49,7 +49,7 @@ public class ShopUIGear : ShopUI
         compareCancelButton.Select();
 
         if(activeCompareItem){
-            shopCompareUI.OnGearSwapUIOpen();     // TODO: Set the values for the item to compare to in shopCompareUI.OnGearSwapUIOpen();
+            shopCompareUI.OnGearSwapUIOpen(activeCompareItem.item);
             purchaseButtonText.text = "Purchase " + "(" + activeCompareItem.currentCostValue + ")";
         }
         else{

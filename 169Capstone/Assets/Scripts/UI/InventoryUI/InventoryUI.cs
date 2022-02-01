@@ -50,12 +50,10 @@ public class InventoryUI : MonoBehaviour
 
     void Start()
     {
-        stats = FindObjectsOfType<PlayerStats>()[0];
-
-        // TODO: Call this somewhere else (start of game + beginning of each run, whenever values are updated)
-        // SetAllInventoryValues();
+        stats = FindObjectsOfType<PlayerStats>()[0];    // TODO: Make sure stats are initialized in Awake!!!
     }
 
+    // TODO: Needs to be updated when you make purchases too
     public void SetAllInventoryValues()
     {
         SetInventoryItemValues();
@@ -63,12 +61,14 @@ public class InventoryUI : MonoBehaviour
         SetOtherStatText();
     }
 
-    public void SetInventoryItemValues()
+    private void SetInventoryItemValues()
     {
-
+        foreach(InventoryUIItemPanel panel in itemPanels){
+            panel.SetItemPanelValues(PlayerInventory.instance.gear[panel.GetItemSlot()]);
+        }
     }
 
-    public void SetStatValues()
+    private void SetStatValues()
     {
         statSTR.text = stats.Strength() + "";
         statDEX.text = stats.Dexterity() + "";
@@ -78,7 +78,7 @@ public class InventoryUI : MonoBehaviour
         statCHA.text = stats.Charisma() + "";
     }
 
-    public void SetOtherStatText()
+    private void SetOtherStatText()
     {
         attackSpeed.text = "Attack Speed: " + stats.getAttackSpeed();
         moveSpeed.text = "Move Speed: " + stats.getMoveSpeed();
@@ -189,6 +189,8 @@ public class InventoryUI : MonoBehaviour
         if(itemPanels.Count == 0){
             Debug.LogError("No item panels found!");
         }
+
+        SetAllInventoryValues();    // TODO: Can this be called when the values are updated, rather than every time you open it?
 
         // Select the top panel
         itemPanels[0].GetComponent<Toggle>().Select();

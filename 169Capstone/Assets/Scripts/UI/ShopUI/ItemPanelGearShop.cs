@@ -11,20 +11,19 @@ public class ItemPanelGearShop : ItemPanelShopUI
     [SerializeField] private TMP_Text itemSlotRarity;
     [SerializeField] private TMP_Text enhancementCount;
 
-    private GameObject item;
+    public GameObject item {get; private set;}
 
     [SerializeField] private ShopUIGear shopUI;
     
 
-    // just pass in the item instead and set all the values accordingly
-    public void SetGearItemValues(int iBaseCost, string iName, string iDesc, Sprite iIcon, InventoryItemSlot iSlot, ItemRarity iRarity, string iEnhancements)
+    public void SetGearItemValues(GameObject item)
     {
-        SetBaseShopItemValues(iBaseCost, iName, iDesc);
+        // SetBaseShopItemValues(iBaseCost, iName, iDesc);
 
-        itemIcon.sprite = iIcon;
-        itemSlot = iSlot;
-        itemSlotRarity.text = iRarity.ToString() + "/" + itemSlot.ToString();
-        enhancementCount.text = "Enhancement Count - " + iEnhancements;
+        // itemIcon.sprite = iIcon;
+        // itemSlot = iSlot;
+        // itemSlotRarity.text = iRarity.ToString() + "/" + itemSlot.ToString();
+        // enhancementCount.text = "Enhancement Count - " + iEnhancements;
     }
 
     public void OnItemClicked()
@@ -37,9 +36,8 @@ public class ItemPanelGearShop : ItemPanelShopUI
     {
         base.PurchaseItem();
 
-        // TODO: Add item to inventory and stuff
+        PlayerInventory.instance.EquipItem(itemSlot, item);
 
-        // TODO: purchased item shows "sold" and is NO LONGER AVAILABLE
         descriptionText.text = "<b><color=red>SOLD";
         itemCardButton.interactable = false;
     }

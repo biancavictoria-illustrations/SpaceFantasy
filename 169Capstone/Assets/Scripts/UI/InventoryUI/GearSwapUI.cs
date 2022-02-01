@@ -9,14 +9,15 @@ public class GearSwapUI : MonoBehaviour
     public Button replaceItemButton;
     public Button keepCurrentItemButton;
 
+    private GameObject newItem;
     [SerializeField] private InventoryUIItemPanel newItemPanel;
 
-    // TODO: Passes in the item to compare to
-    public void OnGearSwapUIOpen()
+    public void OnGearSwapUIOpen(GameObject item)
     {
-        // gearSwapInventoryUI.SetAllInventoryValues();
+        gearSwapInventoryUI.SetAllInventoryValues();
 
-        // TODO: Set newItemPanel values according to the item passed in
+        newItem = item;
+        newItemPanel.SetItemPanelValues(item);
         
         // TODO: in gearSwapInventoryUI, toggle on the item of type == new item type so that it starts open
         // for now, defaults to the top one being open
@@ -30,12 +31,13 @@ public class GearSwapUI : MonoBehaviour
     public void CloseGearSwapUI()
     {
         gearSwapInventoryUI.OnInventoryClose();
-        InputManager.instance.ToggleCompareItemUI(false);    // Close the menu
+        InputManager.instance.ToggleCompareItemUI(false, null);    // Close the menu
     }
 
     public void OnNewItemSelect()
     {
         // TODO: Update inventory so that you now have the new item equipped
+        // PlayerInventory.instance.EquipItem(ITEM TYPE, newItem);
 
         CloseGearSwapUI();
     }

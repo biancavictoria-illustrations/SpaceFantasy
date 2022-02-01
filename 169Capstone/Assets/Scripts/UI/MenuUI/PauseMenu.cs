@@ -97,17 +97,7 @@ public class PauseMenu : MonoBehaviour
 /*
     UI TODO:
     ========
-    - stats aren't being set correctly in the inventory
-
-    - there's lots of weird stuff w/ the compare UI in the shop UI, might need a variant for that specifically...
-        -> things are hooked up to stuff like the InGameUIManager in weird places, might cause problems
-        -> update: seems okay...?
-
-    - UI item values everywhere
     - lots of "TODO"s everywhere in different UI scripts
-
-    - default inventory values (if you have nothing in a slot)
-        -> also for shop items that you already purchased so that slot is empty
 
     - once saving exists: UI alert about how recently you saved in the "are you sure you want to quit" popup
 

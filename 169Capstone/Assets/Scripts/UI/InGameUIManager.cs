@@ -84,41 +84,33 @@ public class InGameUIManager : MonoBehaviour
     }
 
     // Called when the player goes to pick up a new item
-    public void SetGearSwapUIActive(bool set)
+    public void SetGearSwapUIActive(bool set, GameObject item)
     {
+        if(set && item == null){
+            Debug.LogError("Tried to open gear swap UI but no new item was found!");
+        }
+
         inGameUIGearIconPanel.SetActive(!set);
         darkBackgroundPanel.SetActive(set);
         gearSwapUIPanel.SetActive(set);
         gearSwapIsOpen = set;
 
         if(set){
-            gearSwapUI.OnGearSwapUIOpen();
+            gearSwapUI.OnGearSwapUIOpen(item);
         }
     }
 
-    public void SetNewRunDefaultValues()
+    public void SetGearItemUI(InventoryItemSlot itemSlot, GameObject item) // Pass in an item?
     {
-        // TODO: Make sure all inventory slots are set to nothing/default
-        // MOVE THIS TO INVENTORY AND CALL IT WHEN YOU DIE? just clear all the values so you have max health + no items when you go to the hub
-
-        // Could have different default values set, or variable default values
-        SetTempCurrencyValue(0);
-        SetCurrentHealthValue(maxHealthValue);
-        SetHealthPotionValue(0);
+        // TODO: Get item data and set values (at least icon)
+        
+        // Can we set InventoryUI values here (and in ClearItemUI) or no because it's not active?
+        // Might want to change that structure in order to be able to access those values, if it's possible
     }
 
-    public void SetGearItemUI() // Pass in an item?
-    {
-        // TODO: Get item data and set values
-
-        // InventoryUI.instance.weaponPanel.SetItemPanelValues(); // Pass in the values from the item
-    }
-
-    // Called when you lose an item and the slot is clear
     public void ClearItemUI(InventoryItemSlot itemSlot)
     {
-        // TODO: Set all values to default, maybe change the background color of the panel
-        // ALSO set the expanded UI toggle thing to NOT interactable
+        // TODO: Set icon to default
     }
 
     public void SetPermanentCurrencyValue(int money)
