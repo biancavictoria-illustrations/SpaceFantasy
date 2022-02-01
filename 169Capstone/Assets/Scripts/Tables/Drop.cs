@@ -3,81 +3,104 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableObjects/DropObject")]
+[CreateAssetMenu(menuName = "Gear/DropObject")]
 public class Drop : ScriptableObject
 {
-    public List<DropTable> DropTables;
-    public LineTable Lines;
-    [SerializeField] private GearManagerObject gearManager;
-    [SerializeField] private TitleManagerObject titleManager;
-    [SerializeField] private GameObject emptyDropItem;
+    [SerializeField] private List<DropTable> dropTables;
+    [SerializeField] private LineTable lines;
+
+    [SerializeField] private GameObject dropItemPrefab;
+
 
     public void GetDrop(int tier, Transform pos)
     {
-        DropTable dropTable = DropTables[tier];
+        // Select the drop table that coordinates with the current tier
+        DropTable dropTable = dropTables[tier];
+
+        // Generate a random number
         System.Random r = new System.Random();
+
         //float chance = (float)r.NextDouble();
         float chance = 0.89f; // for testing purposes
-        int index = dropTable.DropChance.IndexOf(dropTable.DropChance.First(x => chance <= x));
-        string itemType = dropTable.ItemType[index];
-        //Debug.Log(itemType);
-        //Debug.Log(chance);
-        string rarity = dropTable.ItemRarityTier[index];
-        //Debug.Log(rarity);
-        string item;
-        List<string> secondaryLines;
 
-        if(itemType == "Weapon")
+        // Determine item type and rarity
+        int index = dropTable.DropChance().IndexOf(dropTable.DropChance().First(x => chance <= x));
+        InventoryItemSlot itemType = dropTable.ItemType()[index];
+        ItemRarity rarity = dropTable.ItemRarityTier()[index];
+        
+        EquipmentData item;        
+        List<ItemLine> secondaryLines;
+        Debug.Log("Dropping " + itemType.ToString());
+
+        // If the item is a weapon
+        if(itemType == InventoryItemSlot.Weapon)
         {
-            Debug.Log("Dropping Item");
             //GameObject test = Instantiate(emptyDropItem);
             //test.transform.position = pos.position;
-            GameObject dropItemObject = Instantiate(emptyDropItem);
+
+            // Create item to drop in physical space from prefab
+            GameObject dropItemObject = Instantiate(dropItemPrefab);
             dropItemObject.transform.position = pos.position;
-            DropItem dropItem = dropItemObject.GetComponent<DropItem>(); 
-            item = titleManager.weapons[r.Next(0, titleManager.weapons.Length)];
-            dropItem.itemName = item;
-            dropItem.itemType = itemType;
-            Debug.Log(item);
-            int i = Lines.ItemType.IndexOf(item);
-            string primaryLine = Lines.PrimaryWeaponLine[i];
+            GeneratedEquipment dropItem = dropItemObject.GetComponent<GeneratedEquipment>(); 
+
+            // Find the EquipmentData and set it
+            item = GameManager.instance.GearManager().Weapons()[r.Next(0, GameManager.instance.GearManager().Weapons().Count)];
+            dropItem.SetEquipmentData(item);
+            Debug.Log("Setting drop item to ItemID: " + item.ItemID());
+
+            int i = lines.ItemType().IndexOf(item.ItemSlot());
+            ItemLine primaryLine = lines.PrimaryWeaponLine()[i];
             float primaryLineTierScaling = 0.1f * tier;
-            i = Lines.ItemRarityTier.IndexOf(rarity);
+
+            i = lines.ItemRarityTier().IndexOf(rarity);
+
             chance = (float)r.NextDouble();
-            Lines.Setup();
-            int secondaryLineNum = Lines.SecondaryLineNumberRates[i].IndexOf(Lines.SecondaryLineNumberRates[i].First(x => chance <= x));
+            
+            lines.Setup();  // TODO: This seems like it shouldn't go here, maybe it should go in LineTable Start()? so that we're not doing it over and over?
+
+            int secondaryLineNum = lines.SecondaryLineNumberRates()[i].IndexOf(lines.SecondaryLineNumberRates()[i].First(x => chance <= x));
             chance = (float)r.NextDouble();
-            int secondaryLineEnhancementsNum = Lines.LineEnhancementRates[i].IndexOf(Lines.LineEnhancementRates[i].First(x => chance <= x));
+            int secondaryLineEnhancementsNum = lines.LineEnhancementRates()[i].IndexOf(lines.LineEnhancementRates()[i].First(x => chance <= x));    // Is this used anywhere?
             secondaryLines = GenerateSecondaryLines(secondaryLineNum);
+
+            // Set the data in the dropItem
             dropItem.SetModifiers(primaryLine, primaryLineTierScaling, secondaryLines, tier);
+
+            // Drop the item now that the data is generated!
             dropItem.Drop();
         }
-        /*else if(itemType == "Accessory")
-        {
-            item = titleManager.accessories[r.Next(0, titleManager.accessories.Length)];
+        else if(itemType == InventoryItemSlot.Accessory){
+            // item = GameManager.instance.GearManager().Accessories()[r.Next(0, GameManager.instance.GearManager().Accessories().Count)];
         }
-        else if(itemType == "Head")
-        {
-            item = titleManager.head[r.Next(0, titleManager.head.Length)];
+        else if(itemType == InventoryItemSlot.Helmet){
+            // item = GameManager.instance.GearManager().Head()[r.Next(0, GameManager.instance.GearManager().Head().Count)];
         }
-        else
-        {
-            item = titleManager.legs[r.Next(0, titleManager.legs.Length)];
-        }*/
-        
-        //return $"{dropTable.ItemRarityTier[index]} {dropTable.ItemType[index]}";
+        else{
+            // item = GameManager.instance.GearManager().Legs()[r.Next(0, GameManager.instance.GearManager().Legs().Count)];
+        }
+
+        // return $"{dropTable.ItemRarityTier[index]} {dropTable.ItemType[index]}";
     }
 
-    private List<string> GenerateSecondaryLines(int size)
+    private List<ItemLine> GenerateSecondaryLines(int size)
     {
-        List<string> secondaryLines = new List<string>();
+        List<ItemLine> secondaryLines = new List<ItemLine>();
         System.Random r = new System.Random();
 
-        for(int i = 0; i < size; i++)
-        {
-            secondaryLines.Add(Lines.LinePool[r.Next(0, Lines.LinePool.Count)]);
+        for(int i = 0; i < size; i++){
+            secondaryLines.Add(lines.LinePool()[r.Next(0, lines.LinePool().Count)]);
         }
 
         return secondaryLines;
+    }
+
+    public List<DropTable> DropTables()
+    {
+        return dropTables;
+    }
+
+    public LineTable Lines()
+    {
+        return lines;
     }
 }

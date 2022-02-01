@@ -68,8 +68,8 @@ public class Player : MonoBehaviour
     {
         if(gear[0] == null)
         {
-            //Debug.Log("No Weapon");
-            gear[0] = GameManager.instance.GetGearObject(weapon, "Weapon");
+            Debug.Log("No Weapon");
+            // gear[0] = GameManager.instance.GetGearObject(weapon, "Weapon");
         }
         /*if (Input.GetButtonDown("Fire1"))
         {

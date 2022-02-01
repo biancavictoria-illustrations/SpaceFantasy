@@ -47,7 +47,7 @@ public class InventoryUIItemPanel : MonoBehaviour
     private void SetDefaultItemPanelValues()
     {
         itemName.text = "";
-        rarity = ItemRarity.none;
+        rarity = ItemRarity.enumSize;
 
         itemTypeRarity.text = itemSlot.ToString();
 

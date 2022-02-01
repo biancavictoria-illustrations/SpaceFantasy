@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableObjects/ShopKeeperInventoryObject")]
+[CreateAssetMenu(menuName = "Gear/ShopKeeperInventoryObject")]
 public class ShopKeeperInventory : ScriptableObject
 {
     [SerializeField] private string slot1;

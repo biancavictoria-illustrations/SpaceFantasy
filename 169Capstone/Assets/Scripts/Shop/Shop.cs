@@ -7,7 +7,7 @@ public class Shop : MonoBehaviour
     [SerializeField] private ShopKeeperInventory shopKeeper;
     private List<string> inventoryList;
 
-    public HashSet<EquipmentBase> inventory {get; private set;}
+    public HashSet<EquipmentData> inventory {get; private set;}
 
 
     void Start()
@@ -20,7 +20,7 @@ public class Shop : MonoBehaviour
         int tier = ObjectManager.bossesKilled;
 
         inventoryList = new List<string>();
-        inventory = new HashSet<EquipmentBase>();
+        inventory = new HashSet<EquipmentData>();
 
         inventoryList.Add(shopKeeper.Slot1());
         inventoryList.Add(shopKeeper.Slot2());
@@ -32,26 +32,28 @@ public class Shop : MonoBehaviour
         {
             if(inventoryList[i].Contains("[tier x]"))
             {
-                // inventoryList[i] = inventoryList[i].Replace("[tier x]", rarity[tier]);
-
                 // Generate a new item with rarity = tier #, then add it to the inventory HashSet
-                inventory.Add( GenerateItem((ItemRarity)tier) );
+                inventory.Add( PickItemFromPool((ItemRarity)tier) );
             }
             else if(inventoryList[i].Contains("[tier x+1]"))
             {
-                // inventoryList[i] = inventoryList[i].Replace("[tier x+1]", rarity[tier + 1]);
-
-                inventory.Add( GenerateItem((ItemRarity)(tier+1)) );
+                inventory.Add( PickItemFromPool((ItemRarity)(tier+1)) );
             }
         }
     }
 
-    private EquipmentBase GenerateItem(ItemRarity rarity)
+    // Pass in anything required and generate just the data, not the full item objects
+    private EquipmentData PickItemFromPool(ItemRarity rarity)
     {
-        // TODO: Randomly selects 5 items from the ShopKeeperInventory pool (no repeats, presumably?)
+        // TODO: Randomly selects 5 items from the ShopKeeperInventory pool (no repeats, presumably?) (and generates necessary data)
         // temp: just picks the first one
         EquipmentData data = shopKeeper.Items()[0];
+        return data;        
+    }
 
+    // TODO: Pass in anything else required; also this shouldn't be in shop, this should be generalized and also usable by drops
+    public EquipmentBase GenerateItemOnPurchase(ItemRarity rarity, EquipmentData data)
+    {
         // Generate a new instance of this item
         EquipmentBase item = new EquipmentBase();
         item.GenerateItemValues(data, rarity);

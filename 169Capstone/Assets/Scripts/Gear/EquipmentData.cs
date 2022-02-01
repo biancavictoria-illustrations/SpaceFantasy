@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// TODO: set these to whatever we're actually calling them in game
+// TODO: set these to whatever we're actually calling them in game (player-facing names)
 public enum InventoryItemSlot
 {
     Weapon,
@@ -20,13 +20,15 @@ public enum ItemRarity
     Rare,
     Epic,
     Legendary,
-    none
+
+    enumSize    // Also "none"
 }
 
-[CreateAssetMenu(menuName = "ScriptableObjects/EquipmentData")]
+[CreateAssetMenu(menuName = "Gear/EquipmentData")]
 public class EquipmentData : ScriptableObject
 {
-    [SerializeField] private string itemName;
+    [SerializeField] private string itemName;   // Player facing name
+    [SerializeField] private ItemID itemID;     // Internal ID
 
     [SerializeField] private InventoryItemSlot itemSlot;
 
@@ -40,6 +42,11 @@ public class EquipmentData : ScriptableObject
     public string ItemName()
     {
         return itemName;
+    }
+
+    public ItemID ItemID()
+    {
+        return itemID;
     }
 
     public InventoryItemSlot ItemSlot()
@@ -61,4 +68,35 @@ public class EquipmentData : ScriptableObject
     {
         return icon;
     }
+}
+
+
+// Every item has its own unique ID (name)
+public enum ItemID
+{
+    // Weapons
+    BerserkersZweihander,
+    BowAndArrows,
+    NanoKnuckles,
+    Rapier,
+    RayGun,
+
+    // Helmets
+    HelmOfTheRam,
+    HoloGlasses,
+
+    // Accessories
+    WristRocket,
+    RingOfSnowstorms,
+    MurphysClaw,
+    QuantumKunai,
+
+    // Boots
+    WingedBoots,
+    QuantumLeggings,
+    PropulsionHeels,
+    TrousersOfFortitude,
+
+    // Default
+    enumSize
 }

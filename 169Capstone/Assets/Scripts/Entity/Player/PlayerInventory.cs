@@ -14,7 +14,7 @@ public class PlayerInventory : MonoBehaviour
     public int healthPotionQuantity {get; private set;}
 
     public int tempCurrency {get; private set;}
-    public int permanentCurrency {get; private set;}
+    public int permanentCurrency {get; private set;}    // TODO: NOT set to not destroy on load so this might be a problem here
 
     void Awake()
     {
