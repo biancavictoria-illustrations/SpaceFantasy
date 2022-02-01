@@ -97,6 +97,8 @@ public class PauseMenu : MonoBehaviour
 /*
     UI TODO:
     ========
+    - make Item inherit from EquipmentBase
+    
     - lots of "TODO"s everywhere in different UI scripts
 
     - once saving exists: UI alert about how recently you saved in the "are you sure you want to quit" popup
@@ -112,4 +114,8 @@ public class PauseMenu : MonoBehaviour
     Future Polish TODO:
     ===================
     - the rightmost part of the item cards isn't interactable??? just the part around the rarity/type
+
+    - when setting UI interactable after pausing, specifically reselect the button you were on before pausing
+
+    - text size settings
 */

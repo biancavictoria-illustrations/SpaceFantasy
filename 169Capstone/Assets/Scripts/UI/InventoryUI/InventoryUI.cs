@@ -189,9 +189,9 @@ public class InventoryUI : MonoBehaviour
             Debug.LogError("No item panels found!");
         }
 
-        SetAllInventoryValues();
         // TODO: Can this be called when the values are updated, rather than every time you open it?
-        // Might cause problems also with gear shops...
+        // Doing it here might cause problems with gear shops because it won't update when you buy something with it open?
+        SetAllInventoryValues();
 
         // Select the top panel
         itemPanels[0].GetComponent<Toggle>().Select();
@@ -213,8 +213,6 @@ public class InventoryUI : MonoBehaviour
 
         if(set){
             // Select the top panel
-            // If it matters we can change this so that it specifically reselects the one you were on before, but that seems like a pain
-            // and Idk how necessary it is
             itemPanels[0].GetComponent<Toggle>().Select();
         }
     }

@@ -5,35 +5,56 @@ using UnityEngine;
 public class Shop : MonoBehaviour
 {
     [SerializeField] private ShopKeeperInventory shopKeeper;
-    public List<string> inventory;
+    private List<string> inventoryList;
+
+    public HashSet<EquipmentBase> inventory {get; private set;}
+
 
     void Start()
     {
-        Generate();
+        GenerateShopInventory();
     }
 
-    private void Generate()
+    private void GenerateShopInventory()
     {
         int tier = ObjectManager.bossesKilled;
-        inventory = new List<string>();
-        string[] rarity = { "Common", "Uncommon", "Rare", "Epic", "Legendary" };
 
-        inventory.Add(shopKeeper.slot1);
-        inventory.Add(shopKeeper.slot2);
-        inventory.Add(shopKeeper.slot3);
-        inventory.Add(shopKeeper.slot4);
-        inventory.Add(shopKeeper.slot5);
+        inventoryList = new List<string>();
+        inventory = new HashSet<EquipmentBase>();
 
-        for(int i = 0; i < inventory.Count; i++)
+        inventoryList.Add(shopKeeper.Slot1());
+        inventoryList.Add(shopKeeper.Slot2());
+        inventoryList.Add(shopKeeper.Slot3());
+        inventoryList.Add(shopKeeper.Slot4());
+        inventoryList.Add(shopKeeper.Slot5());
+
+        for(int i = 0; i < inventoryList.Count; i++)
         {
-            if(inventory[i].Contains("[tier x]"))
+            if(inventoryList[i].Contains("[tier x]"))
             {
-                inventory[i] = inventory[i].Replace("[tier x]", rarity[tier]);
+                // inventoryList[i] = inventoryList[i].Replace("[tier x]", rarity[tier]);
+
+                // Generate a new item with rarity = tier #, then add it to the inventory HashSet
+                inventory.Add( GenerateItem((ItemRarity)tier) );
             }
-            else if(inventory[i].Contains("[tier x+1]"))
+            else if(inventoryList[i].Contains("[tier x+1]"))
             {
-                inventory[i] = inventory[i].Replace("[tier x+1]", rarity[tier + 1]);
+                // inventoryList[i] = inventoryList[i].Replace("[tier x+1]", rarity[tier + 1]);
+
+                inventory.Add( GenerateItem((ItemRarity)(tier+1)) );
             }
         }
+    }
+
+    private EquipmentBase GenerateItem(ItemRarity rarity)
+    {
+        // TODO: Randomly selects 5 items from the ShopKeeperInventory pool (no repeats, presumably?)
+        // temp: just picks the first one
+        EquipmentData data = shopKeeper.Items()[0];
+
+        // Generate a new instance of this item
+        EquipmentBase item = new EquipmentBase();
+        item.GenerateItemValues(data, rarity);
+        return item;
     }
 }

@@ -19,7 +19,6 @@ public class ShopUIDoctor : ShopUI
             panel.GenerateNewDoctorUpgradeValues(upgradeBaseCost);
         }
 
-        // TODO: Consider changing this cuz this is pretty rough
         // Ideally give NPCs a bool "have talked to this run" type thing to make it easier to check quickly
         // if(!NPC.ActiveNPC.HaveTalkedToNPC()){
         //     foreach(ItemPanelDoctor panel in itemPanels){

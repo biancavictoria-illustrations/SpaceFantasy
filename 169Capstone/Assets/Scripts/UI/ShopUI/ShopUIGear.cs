@@ -13,10 +13,13 @@ public class ShopUIGear : ShopUI
     [SerializeField] private Button compareCancelButton;
     [SerializeField] private TMP_Text purchaseButtonText;
 
+    [SerializeField] private Shop shopInventory;
+
 
     public override void OpenShopUI()
     {
         base.OpenShopUI();
+
         SetShopUIValues();
     }
   
@@ -28,7 +31,18 @@ public class ShopUIGear : ShopUI
 
     private void SetShopUIValues()
     {
-        // TODO: From the list of items this shop carries, set all item values
+        // From the list of items this shop currently carries, set all item values
+        int i = 0;
+        foreach(EquipmentBase item in shopInventory.inventory){
+            ( (ItemPanelGearShop)(itemPanels[i]) ).SetGearItemValues(item);
+    
+            i++;
+
+            if(i >= itemPanels.Count){
+                Debug.LogError("More than five shop items found!");
+            }
+        }
+
     }
 
     public void ToggleShopInventoryOn()
