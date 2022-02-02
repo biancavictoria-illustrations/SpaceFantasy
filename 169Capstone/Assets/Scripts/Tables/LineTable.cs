@@ -40,13 +40,6 @@ public class LineTable : ScriptableObject
     [SerializeField] private List<InventoryItemSlot> itemType;
     [SerializeField] private List<ItemLine> linePool;
 
-
-    // TODO: Can we do this? And then remove Setup() from the Drop script in GetDrop()
-    // void Start()
-    // {
-    //     Setup();
-    // }
-
     public void Setup()
     {
         secondaryLineNumberRates.Add(CommonSecondaryLineNumberRates);

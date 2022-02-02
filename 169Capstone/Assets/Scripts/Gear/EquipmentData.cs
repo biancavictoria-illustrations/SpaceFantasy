@@ -31,6 +31,7 @@ public class EquipmentData : ScriptableObject
     [SerializeField] private ItemID itemID;     // Internal ID
 
     [SerializeField] private InventoryItemSlot itemSlot;
+    [SerializeField] private int baseCost = 10;     // TODO: Set default for if no value is specified
 
     [SerializeField] private string shortDescription;
     [TextArea(15,20)]
@@ -52,6 +53,11 @@ public class EquipmentData : ScriptableObject
     public InventoryItemSlot ItemSlot()
     {
         return itemSlot;
+    }
+
+    public int BaseCost()
+    {
+        return baseCost;
     }
 
     public string ShortDescription()

@@ -12,6 +12,7 @@ public class Drop : ScriptableObject
     [SerializeField] private GameObject dropItemPrefab;
 
 
+    // Called by the enemey health script when the enemy dies
     public void GetDrop(int tier, Transform pos)
     {
         // Select the drop table that coordinates with the current tier
@@ -41,12 +42,12 @@ public class Drop : ScriptableObject
             // Create item to drop in physical space from prefab
             GameObject dropItemObject = Instantiate(dropItemPrefab);
             dropItemObject.transform.position = pos.position;
-            GeneratedEquipment dropItem = dropItemObject.GetComponent<GeneratedEquipment>(); 
+            GeneratedEquipment generatedEquipment = dropItemObject.GetComponent<GeneratedEquipment>(); 
 
             // Find the EquipmentData and set it
             item = GameManager.instance.GearManager().Weapons()[r.Next(0, GameManager.instance.GearManager().Weapons().Count)];
-            dropItem.SetEquipmentData(item);
-            Debug.Log("Setting drop item to ItemID: " + item.ItemID());
+            generatedEquipment.SetEquipmentData(item, rarity);
+            Debug.Log("Setting drop item to Rarity/ItemID: " + rarity + "/" + item.ItemID());
 
             int i = lines.ItemType().IndexOf(item.ItemSlot());
             ItemLine primaryLine = lines.PrimaryWeaponLine()[i];
@@ -56,18 +57,18 @@ public class Drop : ScriptableObject
 
             chance = (float)r.NextDouble();
             
-            lines.Setup();  // TODO: This seems like it shouldn't go here, maybe it should go in LineTable Start()? so that we're not doing it over and over?
+            lines.Setup();
 
             int secondaryLineNum = lines.SecondaryLineNumberRates()[i].IndexOf(lines.SecondaryLineNumberRates()[i].First(x => chance <= x));
             chance = (float)r.NextDouble();
             int secondaryLineEnhancementsNum = lines.LineEnhancementRates()[i].IndexOf(lines.LineEnhancementRates()[i].First(x => chance <= x));    // Is this used anywhere?
             secondaryLines = GenerateSecondaryLines(secondaryLineNum);
 
-            // Set the data in the dropItem
-            dropItem.SetModifiers(primaryLine, primaryLineTierScaling, secondaryLines, tier);
+            // Set the data in the generatedEquipment
+            generatedEquipment.SetModifiers(primaryLine, primaryLineTierScaling, secondaryLines, tier);
 
             // Drop the item now that the data is generated!
-            dropItem.Drop();
+            generatedEquipment.Drop();
         }
         else if(itemType == InventoryItemSlot.Accessory){
             // item = GameManager.instance.GearManager().Accessories()[r.Next(0, GameManager.instance.GearManager().Accessories().Count)];

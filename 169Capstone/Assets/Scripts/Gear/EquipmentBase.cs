@@ -2,29 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Parent class of all types of items, including weapons
 public class EquipmentBase : MonoBehaviour
 {
-    // Data all equipment shares
     public EquipmentData equipmentData {get; private set;}
 
     // Generated when the item is created
     public ItemRarity rarity {get; private set;}
-    public int baseCost {get; private set;}
     public int enhancementCount {get; private set;}
+    public EquipmentStats stats;
 
     // Dropped gear you are in range of
     public static EquipmentBase ActiveGearDrop {get; private set;}
 
-
-    public void GenerateItemValues(EquipmentData data, ItemRarity itemRarity = ItemRarity.Common, int itemCost = 0, int enhancements = 0)
+    public void SetNewItemValues(EquipmentData _data, EquipmentStats _stats, ItemRarity _rarity, int _enhancements)
     {
-        equipmentData = data;
-
-        rarity = itemRarity;
-        baseCost = itemCost;
-        enhancementCount = enhancements;
-
-        // TODO: Generate the values if no values are provided
+        equipmentData = _data;
+        stats = _stats;
+        rarity = _rarity;
+        enhancementCount = _enhancements;
     }
 
     private void OnTriggerEnter(Collider other)

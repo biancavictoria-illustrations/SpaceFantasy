@@ -8,78 +8,93 @@ using UnityEngine;
     - Is not yet the ACTUAL item object -> that is instantiated if the player equips/purchases the item
 */
 
+public struct EquipmentStats
+{
+    public ItemLine primaryLine;
+    public float primaryModifier;
+    public float criticalChance;
+    public float criticalDamage;
+    public float attackSpeed;
+    public int defense;
+    public float movementSpeed;
+    public float effectChance;
+    public float effectResist;
+    public float dodgeChance;
+    public int hp;
+}
+
 public class GeneratedEquipment : MonoBehaviour
 {
     public EquipmentData equipmentData {get; private set;}
-
-    public ItemLine primaryLine {get; private set;}
-    public float primaryModifier {get; private set;}
-
-    public float criticalChance {get; private set;}
-    public float criticalDamage {get; private set;}
-    public float attackSpeed {get; private set;}
-    public int defense {get; private set;}
-    public float movementSpeed {get; private set;}
-    public float effectChance {get; private set;}
-    public float effectResist {get; private set;}
-    public float dodgeChance {get; private set;}
-    public int hp {get; private set;}
-
+    public ItemRarity rarity {get; private set;}
+    public EquipmentStats stats;
+    public int currentCost {get; private set;}
 
     void Start()
     {
         // Set default values
-        criticalChance = 0f;
-        criticalDamage = 0f;
-        attackSpeed = 0f;
-        defense = 0;
-        movementSpeed = 0f;
-        effectChance = 0f;
-        effectResist = 0f;
-        dodgeChance = 0f;
-        hp = 0;
+        currentCost = equipmentData.BaseCost();
+        stats.primaryLine = ItemLine.enumSize;
+        stats.primaryModifier = 0f;
+        stats.criticalChance = 0f;
+        stats.criticalChance = 0f;
+        stats.criticalDamage = 0f;
+        stats.attackSpeed = 0f;
+        stats.defense = 0;
+        stats.movementSpeed = 0f;
+        stats.effectChance = 0f;
+        stats.effectResist = 0f;
+        stats.dodgeChance = 0f;
+        stats.hp = 0;
     }
 
-    public void SetEquipmentData(EquipmentData data)
+    public void CalculateCurrentCost()
     {
-        equipmentData = data;
+        // TODO
+        currentCost = equipmentData.BaseCost();
+    }
+
+    public void SetEquipmentData(EquipmentData _data, ItemRarity _rarity)
+    {
+        equipmentData = _data;
+        rarity = _rarity;
     }
 
     public void SetModifiers(ItemLine _primaryLine, float _primaryModifier, List<ItemLine> secondaryLines, int tier)
     {
-        primaryLine = _primaryLine;
-        primaryModifier = _primaryModifier;
+        stats.primaryLine = _primaryLine;
+        stats.primaryModifier = _primaryModifier;
 
         foreach (ItemLine line in secondaryLines)
         {
             switch (line)
             {
                 case ItemLine.CritChance:
-                    criticalChance += 0.02f;
+                    stats.criticalChance += 0.02f;
                     break;
                 case ItemLine.CritDamage:
-                    criticalDamage += 0.05f;
+                    stats.criticalDamage += 0.05f;
                     break;
                 case ItemLine.AttackSpeed:
-                    attackSpeed += 0.02f;
+                    stats.attackSpeed += 0.02f;
                     break;
                 case ItemLine.Defense:
-                    defense++;
+                    stats.defense++;
                     break;
                 case ItemLine.MovementSpeed:
-                    movementSpeed += 0.1f;
+                    stats.movementSpeed += 0.1f;
                     break;
                 case ItemLine.EffectChance:
-                    effectChance += 0.03f;
+                    stats.effectChance += 0.03f;
                     break;
                 case ItemLine.EffectResist:
-                    effectResist += 0.02f;
+                    stats.effectResist += 0.02f;
                     break;
                 case ItemLine.DodgeChance:
-                    dodgeChance += 0.02f;
+                    stats.dodgeChance += 0.02f;
                     break;
                 case ItemLine.HPIncrease:
-                    hp += (2 * tier);
+                    stats.hp += (2 * tier);
                     break;
             }
         }
@@ -90,6 +105,7 @@ public class GeneratedEquipment : MonoBehaviour
         // Later
     }
 
+    // Called in the Drop script
     public void Drop()
     {
         //transform.position = pos;
@@ -117,6 +133,7 @@ public class GeneratedEquipment : MonoBehaviour
 
     public void EquipItem()
     {
-        // TODO: when player chooses to select this item, the actual item has to be instantiated with modifiers included
+        // TODO: When player chooses to equip this item, instantiate the actual item
+        
     }
 }
