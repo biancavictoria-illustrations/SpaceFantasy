@@ -2,12 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableObjects/LineTableObject")]
+public enum ItemLine
+{
+    CritChance,
+    CritDamage,
+    AttackSpeed,
+    Defense,
+    MovementSpeed,
+    EffectChance,
+    EffectResist,
+    DodgeChance,
+    HPIncrease,
+
+    enumSize
+}
+
+[CreateAssetMenu(menuName = "Gear/LineTableObject")]
 public class LineTable : ScriptableObject
 {
-    public List<string> ItemRarityTier;
-    public List<List<float>> SecondaryLineNumberRates = new List<List<float>>();
-    public List<List<float>> LineEnhancementRates = new List<List<float>>();
+    [SerializeField] private List<ItemRarity> itemRarityTier;
+
+    [SerializeField] private List<List<float>> secondaryLineNumberRates = new List<List<float>>();
+    [SerializeField] private List<List<float>> lineEnhancementRates = new List<List<float>>();
+
     [SerializeField] private List<float> CommonSecondaryLineNumberRates;
     [SerializeField] private List<float> UncommonSecondaryLineNumberRates;
     [SerializeField] private List<float> RareSecondaryLineNumberRates;
@@ -18,22 +35,53 @@ public class LineTable : ScriptableObject
     [SerializeField] private List<float> RareLineEnhancementRates;
     [SerializeField] private List<float> EpicLineEnhancementRates;
     [SerializeField] private List<float> LegendaryLineEnhancementRates;
-    public List<string> PrimaryWeaponLine;
-    public List<string> ItemType;
-    public List<string> LinePool;
+
+    [SerializeField] private List<ItemLine> primaryWeaponLine;
+    [SerializeField] private List<InventoryItemSlot> itemType;
+    [SerializeField] private List<ItemLine> linePool;
 
     public void Setup()
     {
-        SecondaryLineNumberRates.Add(CommonSecondaryLineNumberRates);
-        SecondaryLineNumberRates.Add(UncommonSecondaryLineNumberRates);
-        SecondaryLineNumberRates.Add(RareSecondaryLineNumberRates);
-        SecondaryLineNumberRates.Add(EpicSecondaryLineNumberRates);
-        SecondaryLineNumberRates.Add(LegendarySecondaryLineNumberRates);
+        secondaryLineNumberRates.Add(CommonSecondaryLineNumberRates);
+        secondaryLineNumberRates.Add(UncommonSecondaryLineNumberRates);
+        secondaryLineNumberRates.Add(RareSecondaryLineNumberRates);
+        secondaryLineNumberRates.Add(EpicSecondaryLineNumberRates);
+        secondaryLineNumberRates.Add(LegendarySecondaryLineNumberRates);
 
-        LineEnhancementRates.Add(CommonLineEnhancementRates);
-        LineEnhancementRates.Add(UncommonLineEnhancementRates);
-        LineEnhancementRates.Add(RareLineEnhancementRates);
-        LineEnhancementRates.Add(EpicLineEnhancementRates);
-        LineEnhancementRates.Add(LegendaryLineEnhancementRates);
+        lineEnhancementRates.Add(CommonLineEnhancementRates);
+        lineEnhancementRates.Add(UncommonLineEnhancementRates);
+        lineEnhancementRates.Add(RareLineEnhancementRates);
+        lineEnhancementRates.Add(EpicLineEnhancementRates);
+        lineEnhancementRates.Add(LegendaryLineEnhancementRates);
+    }
+
+    public List<ItemRarity> ItemRarityTier()
+    {
+        return itemRarityTier;
+    }
+
+    public List<List<float>> SecondaryLineNumberRates()
+    {
+        return secondaryLineNumberRates;
+    }
+
+    public List<List<float>> LineEnhancementRates()
+    {
+        return lineEnhancementRates;
+    }
+
+    public List<ItemLine> PrimaryWeaponLine()
+    {
+        return primaryWeaponLine;
+    }
+
+    public List<InventoryItemSlot> ItemType()
+    {
+        return itemType;
+    }
+
+    public List<ItemLine> LinePool()
+    {
+        return linePool;
     }
 }

@@ -38,6 +38,11 @@ public class AlertTextUI : MonoBehaviour
         SetAlertText(true,"F","INTERACT");
     }
 
+    public void EnableShopAlert()
+    {
+        SetAlertText(true,"F","SHOP");
+    }
+
     public void EnableProceedDoorAlert()
     {
         SetAlertText(true,"F","PROCEED");

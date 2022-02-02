@@ -8,9 +8,6 @@ public class SettingsMenu : MonoBehaviour
     public Slider masterVolume;
     public Slider musicVolume;
     public Slider sfxVolume;
-    
-    public Slider textSize;     // int slider from like 8 to 20 or something Idk whatever fits (I'm CONCERNED about messing with box sizes)
-    // If necessary instead we could just have "UI Size - Small, Med, or Large" and have three different versions...?
 
     // Screen resolution? Full screen or otherwise?
 
@@ -25,8 +22,6 @@ public class SettingsMenu : MonoBehaviour
         masterVolume.value = PlayerPrefs.GetFloat(PlayerPrefKeys.masterVolume.ToString());
         musicVolume.value = PlayerPrefs.GetFloat(PlayerPrefKeys.musicVolume.ToString());
         sfxVolume.value = PlayerPrefs.GetFloat(PlayerPrefKeys.sfxVolume.ToString());
-
-        textSize.value = PlayerPrefs.GetInt(PlayerPrefKeys.minTextSize.ToString());
     }
 
     public void ApplySettingsChange()

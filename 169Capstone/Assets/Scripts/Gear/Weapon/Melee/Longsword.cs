@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Longsword : MonoBehaviour
+public class Longsword : GeneratedEquipment
 {
-    private string title = "Berserker's Zweihander";
+    // private string title = "Berserker's Zweihander";
     private float[] damageModifier = new float[] { 0.75f, 1, 1.25f };
     private float meleeRange = 3;
     private float range;

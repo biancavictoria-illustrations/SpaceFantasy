@@ -51,9 +51,6 @@ public class InventoryUI : MonoBehaviour
     void Start()
     {
         stats = FindObjectsOfType<PlayerStats>()[0];
-
-        // TODO: Call this somewhere else (start of game + beginning of each run, whenever values are updated)
-        // SetAllInventoryValues();
     }
 
     public void SetAllInventoryValues()
@@ -63,12 +60,14 @@ public class InventoryUI : MonoBehaviour
         SetOtherStatText();
     }
 
-    public void SetInventoryItemValues()
+    private void SetInventoryItemValues()
     {
-
+        foreach(InventoryUIItemPanel panel in itemPanels){
+            panel.SetItemPanelValues(PlayerInventory.instance.gear[panel.GetItemSlot()]);
+        }
     }
 
-    public void SetStatValues()
+    private void SetStatValues()
     {
         statSTR.text = stats.Strength() + "";
         statDEX.text = stats.Dexterity() + "";
@@ -78,7 +77,7 @@ public class InventoryUI : MonoBehaviour
         statCHA.text = stats.Charisma() + "";
     }
 
-    public void SetOtherStatText()
+    private void SetOtherStatText()
     {
         attackSpeed.text = "Attack Speed: " + stats.getAttackSpeed();
         moveSpeed.text = "Move Speed: " + stats.getMoveSpeed();
@@ -190,6 +189,10 @@ public class InventoryUI : MonoBehaviour
             Debug.LogError("No item panels found!");
         }
 
+        // TODO: Can this be called when the values are updated, rather than every time you open it?
+        // Doing it here might cause problems with gear shops because it won't update when you buy something with it open?
+        SetAllInventoryValues();
+
         // Select the top panel
         itemPanels[0].GetComponent<Toggle>().Select();
     }
@@ -210,8 +213,6 @@ public class InventoryUI : MonoBehaviour
 
         if(set){
             // Select the top panel
-            // If it matters we can change this so that it specifically reselects the one you were on before, but that seems like a pain
-            // and Idk how necessary it is
             itemPanels[0].GetComponent<Toggle>().Select();
         }
     }

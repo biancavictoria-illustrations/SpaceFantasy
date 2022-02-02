@@ -10,20 +10,19 @@ public class GameManager : MonoBehaviour
 
     public int currentRunNumber {get; private set;}
 
-    public int permanentCurrency {get; private set;}
-    public int tempCurrency {get; private set;}
+    // public int permanentCurrency {get; private set;}
+    // public int tempCurrency {get; private set;}
 
-    private Dictionary<string, GameObject[]> gear = new Dictionary<string, GameObject[]>();
-    private Dictionary<string, string[]> titles = new Dictionary<string, string[]>();
     private InputManager inputManager;
     [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private GearManagerObject gearManager;
-    [SerializeField] private TitleManagerObject titleManager;
     [SerializeField] private Transform playerTransform;
+
+    [SerializeField] private GearManagerObject gearManager;
 
     [HideInInspector] public bool playerDeath = false;
     [HideInInspector] public int bossesKilled = 0;
     [HideInInspector] public bool inShopMode = false;
+
 
     void Awake()
     {
@@ -38,13 +37,10 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-
-        SetKeys();
-        
         currentRunNumber = 1;
 
-        SetPermanentCurrency(0);
-        SetTempCurrency(0);
+        // SetPermanentCurrency(0);
+        // SetTempCurrency(0);
         //Instantiate(playerPrefab, playerTransform.position, playerTransform.rotation);
     }
 
@@ -53,10 +49,6 @@ public class GameManager : MonoBehaviour
         if(inputManager == null)
         {
             inputManager = GameObject.FindWithTag("Player").GetComponent<InputManager>();
-        }
-        if(gear.Keys.Count == 0 || titles.Keys.Count == 0)
-        {
-            SetKeys();
         }
         if(playerDeath)
         {
@@ -78,22 +70,22 @@ public class GameManager : MonoBehaviour
         currentRunNumber++;
     }
 
-    public void EndRun()
-    {
-        SetTempCurrency(0);
-    }
+    // public void EndRun()
+    // {
+    //     SetTempCurrency(0);
+    // }
 
-    public void SetPermanentCurrency(int value)
-    {
-        permanentCurrency = value;
-        InGameUIManager.instance.SetPermanentCurrencyValue(permanentCurrency);
-    }
+    // public void SetPermanentCurrency(int value)
+    // {
+    //     permanentCurrency = value;
+    //     InGameUIManager.instance.SetPermanentCurrencyValue(permanentCurrency);
+    // }
 
-    public void SetTempCurrency(int value)
-    {
-        tempCurrency = value;
-        InGameUIManager.instance.SetTempCurrencyValue(tempCurrency);
-    }
+    // public void SetTempCurrency(int value)
+    // {
+    //     tempCurrency = value;
+    //     InGameUIManager.instance.SetTempCurrencyValue(tempCurrency);
+    // }
 
     public void ChangeScene()
     {
@@ -140,32 +132,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public GameObject GetGearObject(string title, string gearType)
+    public GearManagerObject GearManager()
     {
-        /*Debug.Log(gearType);
-
-        foreach(string key in titles.Keys)
-        {
-            Debug.Log(key);
-        }
-        foreach(string key in gear.Keys)
-        {
-            Debug.Log(key);
-        }*/
-        int index = System.Array.IndexOf(titles[gearType], title);
-        return Instantiate(gear[gearType][index]);
-    }
-
-    private void SetKeys()
-    {
-        gear.Add("Weapon", gearManager.weapons);
-        gear.Add("Accessory", gearManager.accessories);
-        gear.Add("Head", gearManager.head);
-        gear.Add("Leg", gearManager.legs);
-
-        titles.Add("Weapon", titleManager.weapons);
-        titles.Add("Accessory", titleManager.accessories);
-        titles.Add("Head", titleManager.head);
-        titles.Add("Leg", titleManager.legs);
+        return gearManager;
     }
 }

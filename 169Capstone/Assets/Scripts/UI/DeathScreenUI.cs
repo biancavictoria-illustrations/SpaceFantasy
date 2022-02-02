@@ -33,13 +33,13 @@ public class DeathScreenUI : MonoBehaviour
         deathMessage.text = "You died!";
     }
 
-    // TODO: Add all the reset stuff here too
+    // TODO: Add all the reset stuff here too (EndRun function necessary?)
     // Including possibly dialogue reset stuff & inventory stuff
     public void GoToMainHub()
     {
         Time.timeScale = 1f;
         ClosePlayerDeathUI();
-        GameManager.instance.EndRun();
+        // GameManager.instance.EndRun();
         SceneManager.LoadScene("Main Hub");
 
     }

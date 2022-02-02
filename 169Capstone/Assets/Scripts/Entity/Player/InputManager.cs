@@ -73,25 +73,34 @@ public class InputManager : MonoBehaviour
         else if(NPC.ActiveNPC && !NPC.ActiveNPC.HaveTalkedToNPC()){
             DialogueManager.instance.OnNPCInteracted();
         }
+        // If nearby NPC is a shopkeeper and you HAVE talked to them already, just open the shop
+        else if(NPC.ActiveNPC && NPC.ActiveNPC.isShopkeeper){
+            InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.speakerData);
+        }
 
         // If you're in range of a door, walk through it
         else if(SceneTransitionDoor.ActiveDoor){
             SceneTransitionDoor.ActiveDoor.ChangeScene();
         }
 
-        // TODO: Check if you're in range of an item (could do this the same way as ActiveNPCs?)
-        // TODO: Deal with what happens if you're in range of an item AND a door...
-        else if(!compareItemIsOpen){
-            // TODO: if you don't have anything equipped in that slot it doesn't open the UI, you just equip the item
-            ToggleCompareItemUI(true);
+        // Check if you're in range of a dropped item
+        else if(GeneratedEquipment.ActiveGearDrop){
+            GeneratedEquipment item = GeneratedEquipment.ActiveGearDrop;
+
+            // If the player doesn't have anything equipped in that slot, equip it
+            if( !PlayerInventory.instance.gear[item.equipmentData.ItemSlot()] ){
+                PlayerInventory.instance.EquipItem(item.equipmentData.ItemSlot(), item);
+            }
+            else{   // Otherwise, open compare UI
+                ToggleCompareItemUI(true, item);
+            }
         }
-        // TODO: How do you close it if you're not taking the new item???
     }
 
-    public void ToggleCompareItemUI(bool set)
+    public void ToggleCompareItemUI(bool set, GeneratedEquipment item)
     {
         compareItemIsOpen = set;
-        InGameUIManager.instance.SetGearSwapUIActive(set);
+        InGameUIManager.instance.SetGearSwapUIActive(set, item);
     }
 
     // If you're in dialogue, click anywhere to progress
