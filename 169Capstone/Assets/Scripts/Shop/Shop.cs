@@ -5,7 +5,7 @@ using UnityEngine;
 public class Shop : MonoBehaviour
 {
     [SerializeField] private ShopKeeperInventory shopKeeper;
-    private List<string> inventoryList;
+    private List<RarityAssignmentTier> inventoryList;
     private HashSet<int> indexes;
 
     public HashSet<GeneratedEquipment> inventory {get; private set;}
@@ -22,7 +22,7 @@ public class Shop : MonoBehaviour
 
         int tier = ObjectManager.bossesKilled;
 
-        inventoryList = new List<string>();
+        inventoryList = new List<RarityAssignmentTier>();
         inventory = new HashSet<GeneratedEquipment>();
 
         inventoryList.Add(shopKeeper.Slot1());
@@ -32,11 +32,11 @@ public class Shop : MonoBehaviour
         inventoryList.Add(shopKeeper.Slot5());
 
         for(int i = 0; i < inventoryList.Count; i++){
-            if(inventoryList[i].Contains("[tier x]")){
+            if(inventoryList[i] == RarityAssignmentTier.X){
                 // Generate a new item with rarity = tier #, then add it to the inventory HashSet
                 inventory.Add( GenerateItem((ItemRarity)tier) );
             }
-            else if(inventoryList[i].Contains("[tier x+1]")){
+            else if(inventoryList[i] == RarityAssignmentTier.X_1){
                 inventory.Add( GenerateItem((ItemRarity)(tier+1)) );
             }
         }
