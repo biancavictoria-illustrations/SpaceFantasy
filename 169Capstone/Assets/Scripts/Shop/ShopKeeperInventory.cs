@@ -12,6 +12,7 @@ public class ShopKeeperInventory : ScriptableObject
     [SerializeField] private string slot5;
 
     // All possible items this shopkeeper could carry, set in the inspector
+    // CONSDIER: This could be just their ItemIDs instead to make it lighter weight??? Idk
     [SerializeField] private List<EquipmentData> items = new List<EquipmentData>();
 
 

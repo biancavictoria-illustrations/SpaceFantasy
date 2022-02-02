@@ -9,7 +9,7 @@ public class PlayerInventory : MonoBehaviour
     public static PlayerInventory instance;
 
     // Gear dictionary contains keys of the enum item slot value and values of the actual item
-    public Dictionary<InventoryItemSlot, EquipmentBase> gear {get; private set;}
+    public Dictionary<InventoryItemSlot, GeneratedEquipment> gear {get; private set;}
 
     public int healthPotionQuantity {get; private set;}
 
@@ -25,7 +25,7 @@ public class PlayerInventory : MonoBehaviour
             instance = this;
         }
 
-        gear = new Dictionary<InventoryItemSlot, EquipmentBase>();
+        gear = new Dictionary<InventoryItemSlot, GeneratedEquipment>();
     }
 
     public void UseHealthPotion()
@@ -55,7 +55,7 @@ public class PlayerInventory : MonoBehaviour
         InGameUIManager.instance.SetHealthPotionValue(healthPotionQuantity);
     }
 
-    public void EquipItem(InventoryItemSlot slot, EquipmentBase item)
+    public void EquipItem(InventoryItemSlot slot, GeneratedEquipment item)
     {
         gear[slot] = item;
         InGameUIManager.instance.SetGearItemUI(slot, item);

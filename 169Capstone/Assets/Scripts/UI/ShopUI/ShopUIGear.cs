@@ -33,7 +33,7 @@ public class ShopUIGear : ShopUI
     {
         // From the list of items this shop currently carries, set all item values
         int i = 0;
-        foreach(EquipmentBase item in shopInventory.inventory){
+        foreach(GeneratedEquipment item in shopInventory.inventory){
             ( (ItemPanelGearShop)(itemPanels[i]) ).SetGearItemValues(item);
     
             i++;

@@ -11,16 +11,17 @@ public class ItemPanelGearShop : ItemPanelShopUI
     [SerializeField] private TMP_Text itemSlotRarity;
     [SerializeField] private TMP_Text enhancementCount;
 
-    public EquipmentBase item {get; private set;}
+    public GeneratedEquipment item {get; private set;}
 
     [SerializeField] private ShopUIGear shopUI;
     
 
-    public void SetGearItemValues(EquipmentBase item)
+    public void SetGearItemValues(GeneratedEquipment item)
     {
         EquipmentData data = item.equipmentData;
 
-        SetBaseShopItemValues(item.baseCost, data.ItemName(), data.ShortDescription());
+        item.CalculateCurrentCost();
+        SetBaseShopItemValues(item.currentCost, data.ItemName(), data.ShortDescription());
 
         itemIcon.sprite = data.Icon();
         itemSlot = data.ItemSlot();

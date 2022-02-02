@@ -6,8 +6,9 @@ public class Shop : MonoBehaviour
 {
     [SerializeField] private ShopKeeperInventory shopKeeper;
     private List<string> inventoryList;
+    private HashSet<int> indexes;
 
-    public HashSet<EquipmentData> inventory {get; private set;}
+    public HashSet<GeneratedEquipment> inventory {get; private set;}
 
 
     void Start()
@@ -15,12 +16,14 @@ public class Shop : MonoBehaviour
         GenerateShopInventory();
     }
 
-    private void GenerateShopInventory()
+    public void GenerateShopInventory()
     {
+        indexes = new HashSet<int>();
+
         int tier = ObjectManager.bossesKilled;
 
         inventoryList = new List<string>();
-        inventory = new HashSet<EquipmentData>();
+        inventory = new HashSet<GeneratedEquipment>();
 
         inventoryList.Add(shopKeeper.Slot1());
         inventoryList.Add(shopKeeper.Slot2());
@@ -28,35 +31,42 @@ public class Shop : MonoBehaviour
         inventoryList.Add(shopKeeper.Slot4());
         inventoryList.Add(shopKeeper.Slot5());
 
-        for(int i = 0; i < inventoryList.Count; i++)
-        {
-            if(inventoryList[i].Contains("[tier x]"))
-            {
+        for(int i = 0; i < inventoryList.Count; i++){
+            if(inventoryList[i].Contains("[tier x]")){
                 // Generate a new item with rarity = tier #, then add it to the inventory HashSet
-                inventory.Add( PickItemFromPool((ItemRarity)tier) );
+                inventory.Add( GenerateItem((ItemRarity)tier) );
             }
-            else if(inventoryList[i].Contains("[tier x+1]"))
-            {
-                inventory.Add( PickItemFromPool((ItemRarity)(tier+1)) );
+            else if(inventoryList[i].Contains("[tier x+1]")){
+                inventory.Add( GenerateItem((ItemRarity)(tier+1)) );
             }
         }
     }
 
-    // Pass in anything required and generate just the data, not the full item objects
-    private EquipmentData PickItemFromPool(ItemRarity rarity)
+    private GeneratedEquipment GenerateItem(ItemRarity rarity)
     {
-        // TODO: Randomly selects 5 items from the ShopKeeperInventory pool (no repeats, presumably?) (and generates necessary data)
-        // temp: just picks the first one
-        EquipmentData data = shopKeeper.Items()[0];
-        return data;        
+        // Generate a new (randomly selected) item with the determined rarity
+        GeneratedEquipment item = new GeneratedEquipment();
+        item.SetEquipmentData( PickItemFromPool(), rarity );
+
+        // TODO: Generate the item (see how it's done in the Drop script); for now, item will have default values besides it's EquipmentData and rarity
+
+        return item;
     }
 
-    // TODO: Pass in anything else required; also this shouldn't be in shop, this should be generalized and also usable by drops
-    public EquipmentBase GenerateItemOnPurchase(ItemRarity rarity, EquipmentData data)
+    private EquipmentData PickItemFromPool()
     {
-        // Generate a new instance of this item
-        EquipmentBase item = new EquipmentBase();
-        item.GenerateItemValues(data, rarity);
-        return item;
+        if(shopKeeper.Items().Count < 5){
+            Debug.LogError("Shop contains less than 5 possible items in ShopKeeperInventory Item pool!");
+            return shopKeeper.Items()[0];   // Default to returning just the first item, otherwise this will cause an infinite loop
+        }
+
+        // Randomly selects an item from the ShopKeeperInventory pool (no repeats)   
+        int i = Random.Range(0,shopKeeper.Items().Count);
+        while(indexes.Contains(i)){
+            i = Random.Range(0,shopKeeper.Items().Count);
+        }
+        indexes.Add(i);
+
+        return shopKeeper.Items()[i];      
     }
 }

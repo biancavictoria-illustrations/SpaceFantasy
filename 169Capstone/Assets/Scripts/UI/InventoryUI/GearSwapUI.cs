@@ -9,10 +9,10 @@ public class GearSwapUI : MonoBehaviour
     public Button replaceItemButton;
     public Button keepCurrentItemButton;
 
-    private EquipmentBase newItem;
+    private GeneratedEquipment newItem;
     [SerializeField] private InventoryUIItemPanel newItemPanel;
 
-    public void OnGearSwapUIOpen(EquipmentBase item)
+    public void OnGearSwapUIOpen(GeneratedEquipment item)
     {
         gearSwapInventoryUI.SetAllInventoryValues();
 

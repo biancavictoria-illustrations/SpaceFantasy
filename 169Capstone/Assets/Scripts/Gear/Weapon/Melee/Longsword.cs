@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Longsword : EquipmentBase
+public class Longsword : GeneratedEquipment
 {
     // private string title = "Berserker's Zweihander";
     private float[] damageModifier = new float[] { 0.75f, 1, 1.25f };

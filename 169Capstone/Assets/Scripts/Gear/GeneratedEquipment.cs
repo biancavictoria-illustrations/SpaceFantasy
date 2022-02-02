@@ -2,12 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
-    - Used for both DROPPING items when enemies die, as well as generating SHOP items
-    - Generates new item stats from certain requirements, given EquipmentData
-    - Is not yet the ACTUAL item object -> that is instantiated if the player equips/purchases the item
-*/
-
 public struct EquipmentStats
 {
     public ItemLine primaryLine;
@@ -23,17 +17,30 @@ public struct EquipmentStats
     public int hp;
 }
 
+/*
+    - Used for both DROPPING items when enemies die, as well as generating SHOP items
+    - Generates new item stats from certain requirements, given EquipmentData
+    - Parent class of all types of items, including weapons
+*/
 public class GeneratedEquipment : MonoBehaviour
 {
     public EquipmentData equipmentData {get; private set;}
+
+    // Generated when the item is created
     public ItemRarity rarity {get; private set;}
+    public int enhancementCount {get; private set;}
     public EquipmentStats stats;
-    public int currentCost {get; private set;}
+
+    public int currentCost {get; private set;}  // For shop items
+
+    // Dropped gear you are in range of
+    public static GeneratedEquipment ActiveGearDrop {get; private set;}
 
     void Start()
     {
+        CalculateCurrentCost();
+
         // Set default values
-        currentCost = equipmentData.BaseCost();
         stats.primaryLine = ItemLine.enumSize;
         stats.primaryModifier = 0f;
         stats.criticalChance = 0f;
@@ -102,7 +109,7 @@ public class GeneratedEquipment : MonoBehaviour
 
     public void AddEnhancements()
     {
-        // Later
+        // TODO
     }
 
     // Called in the Drop script
@@ -131,9 +138,21 @@ public class GeneratedEquipment : MonoBehaviour
         renderer.enabled = true;
     }
 
-    public void EquipItem()
+    private void OnTriggerEnter(Collider other)
     {
-        // TODO: When player chooses to equip this item, instantiate the actual item
-        
+        // If the collision was caused by the player
+        if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
+            ActiveGearDrop = this;
+            AlertTextUI.instance.EnableItemPickupAlert();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        // If the collision was caused by the player
+        if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
+            ActiveGearDrop = null;
+            AlertTextUI.instance.DisableAlert();
+        }
     }
 }

@@ -21,7 +21,7 @@ public class InventoryUIItemPanel : MonoBehaviour
     public FlexibleGridLayout textGrid;
     public HorizontalLayoutGroup horizontalLayoutGroup;
 
-    public void SetItemPanelValues(EquipmentBase item)
+    public void SetItemPanelValues(GeneratedEquipment item)
     {
         if(item == null){
             SetDefaultItemPanelValues();

@@ -29,7 +29,7 @@ public class Drop : ScriptableObject
         InventoryItemSlot itemType = dropTable.ItemType()[index];
         ItemRarity rarity = dropTable.ItemRarityTier()[index];
         
-        EquipmentData item;        
+        EquipmentData item;
         List<ItemLine> secondaryLines;
         Debug.Log("Dropping " + itemType.ToString());
 

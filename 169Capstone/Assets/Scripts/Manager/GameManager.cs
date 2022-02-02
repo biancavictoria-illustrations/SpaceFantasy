@@ -37,9 +37,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-
-        // SetKeys();
-        
         currentRunNumber = 1;
 
         // SetPermanentCurrency(0);
@@ -53,10 +50,6 @@ public class GameManager : MonoBehaviour
         {
             inputManager = GameObject.FindWithTag("Player").GetComponent<InputManager>();
         }
-        // if(gear.Keys.Count == 0 || titles.Keys.Count == 0)
-        // {
-        //     SetKeys();
-        // }
         if(playerDeath)
         {
             InGameUIManager.instance.deathScreen.OpenPlayerDeathUI();
@@ -143,33 +136,4 @@ public class GameManager : MonoBehaviour
     {
         return gearManager;
     }
-
-    // public GameObject GetGearObject(string title, string gearType)
-    // {
-    //     /*Debug.Log(gearType);
-
-    //     foreach(string key in titles.Keys)
-    //     {
-    //         Debug.Log(key);
-    //     }
-    //     foreach(string key in gear.Keys)
-    //     {
-    //         Debug.Log(key);
-    //     }*/
-    //     int index = System.Array.IndexOf(titles[gearType], title);
-    //     return Instantiate(gear[gearType][index]);
-    // }
-
-    // private void SetKeys()
-    // {
-    //     gear.Add("Weapon", gearManager.weapons);
-    //     gear.Add("Accessory", gearManager.accessories);
-    //     gear.Add("Head", gearManager.head);
-    //     gear.Add("Leg", gearManager.legs);
-
-    //     titles.Add("Weapon", titleManager.weapons);
-    //     titles.Add("Accessory", titleManager.accessories);
-    //     titles.Add("Head", titleManager.head);
-    //     titles.Add("Leg", titleManager.legs);
-    // }
 }

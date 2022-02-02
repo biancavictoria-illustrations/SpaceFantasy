@@ -97,7 +97,7 @@ public class PauseMenu : MonoBehaviour
 /*
     UI TODO:
     ========
-    - make Item inherit from EquipmentBase
+    - make Item inherit from GeneratedEquipment
     
     - lots of "TODO"s everywhere in different UI scripts
 

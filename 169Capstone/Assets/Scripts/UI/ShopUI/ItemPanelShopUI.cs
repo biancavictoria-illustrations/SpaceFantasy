@@ -34,6 +34,7 @@ public class ItemPanelShopUI : MonoBehaviour
         PlayerInventory.instance.SetTempCurrency(PlayerInventory.instance.tempCurrency - currentCostValue);
     }
 
+    // Hypothetically shouldn't be here? Items calculate their own cost value instead...? Doctor shop might need something like this tho
     protected virtual int CalculateCurrentCost()    // virtual bc need to implement variants for children prob
     {
         // TODO

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Contains all EquipmentData
+// Contains all EquipmentData in the game
 [CreateAssetMenu(menuName = "Gear/GearManagerObject")]
 public class GearManagerObject : ScriptableObject
 {

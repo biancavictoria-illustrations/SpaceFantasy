@@ -84,8 +84,8 @@ public class InputManager : MonoBehaviour
         }
 
         // Check if you're in range of a dropped item
-        else if(EquipmentBase.ActiveGearDrop){
-            EquipmentBase item = EquipmentBase.ActiveGearDrop;
+        else if(GeneratedEquipment.ActiveGearDrop){
+            GeneratedEquipment item = GeneratedEquipment.ActiveGearDrop;
 
             // If the player doesn't have anything equipped in that slot, equip it
             if( !PlayerInventory.instance.gear[item.equipmentData.ItemSlot()] ){
@@ -97,7 +97,7 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    public void ToggleCompareItemUI(bool set, EquipmentBase item)
+    public void ToggleCompareItemUI(bool set, GeneratedEquipment item)
     {
         compareItemIsOpen = set;
         InGameUIManager.instance.SetGearSwapUIActive(set, item);
