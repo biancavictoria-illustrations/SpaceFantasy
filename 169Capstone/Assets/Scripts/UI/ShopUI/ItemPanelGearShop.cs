@@ -16,8 +16,9 @@ public class ItemPanelGearShop : ItemPanelShopUI
     [SerializeField] private ShopUIGear shopUI;
     
 
-    public void SetGearItemValues(GeneratedEquipment item)
+    public void SetGearItemValues(GeneratedEquipment _item)
     {
+        item = _item;
         EquipmentData data = item.equipmentData;
 
         item.CalculateCurrentCost();

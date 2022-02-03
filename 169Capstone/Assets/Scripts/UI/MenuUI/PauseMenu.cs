@@ -97,6 +97,10 @@ public class PauseMenu : MonoBehaviour
 /*
     UI TODO:
     ========
+    - bugs:
+        - after you purchase item -> leave shop -> open shop -> the purchased item is not interactable BUT no longer says "sold" and instead sets the item values again
+        - 
+
     - make Item inherit from GeneratedEquipment
     
     - lots of "TODO"s everywhere in different UI scripts

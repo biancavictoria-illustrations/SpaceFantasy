@@ -35,14 +35,13 @@ public class ShopUIGear : ShopUI
         int i = 0;
         foreach(GeneratedEquipment item in shopInventory.inventory){
             ( (ItemPanelGearShop)(itemPanels[i]) ).SetGearItemValues(item);
-    
+
             i++;
 
-            if(i >= itemPanels.Count){
+            if(i > itemPanels.Count){
                 Debug.LogError("More than five shop items found!");
             }
         }
-
     }
 
     public void ToggleShopInventoryOn()
