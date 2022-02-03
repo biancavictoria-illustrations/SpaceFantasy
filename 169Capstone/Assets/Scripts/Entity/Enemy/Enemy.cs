@@ -35,8 +35,6 @@ public abstract class Enemy : MonoBehaviour
     protected virtual void Start()
     {
         path = GetComponent<Pathing>();
-        
-        baseAttack = GetComponent<EntityAttack>();
 
         path.speed = stats.getMoveSpeed();
         path.provokedRadius = logic.provokedRange;

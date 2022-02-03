@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 1602048180999287726}
   - component: {fileID: 1138510495868641593}
   - component: {fileID: 2835234960366114064}
+  - component: {fileID: 8791675868924311344}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -211,24 +212,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a7317d8163894e61a81c765f1fb0866, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gear:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  weapon: 
-  accessory: 
-  hand: 
-  legs: 
   stats: {fileID: 3199020426167894426}
   currentStr: 0
   currentDex: 0
-  currentConst: 0
+  currentCon: 0
   currentInt: 0
   currentWis: 0
   currentCha: 0
   currentAttackSpeed: 0
   speakerData: {fileID: 11400000, guid: f7e80a822e4c651448523b1fbf8fec7a, type: 2}
+  swordPrefab: {fileID: 6248090848900516327, guid: 8c94eb86f9d657443bd947bf7797dd11,
+    type: 3}
 --- !u!114 &1602048180999287726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -249,6 +243,7 @@ MonoBehaviour:
   useAccessory: 0
   useHead: 0
   useLegs: 0
+  cursorLookDirection: {x: 0, y: 0, z: 0}
 --- !u!114 &1138510495868641593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299,6 +294,18 @@ MonoBehaviour:
   smoothing: 0.1
   gravityAccel: -1.5
   jumpSpeed: 30
+--- !u!114 &8791675868924311344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7643758985477745940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcae2d03b94ca264cb45f50a66aaebaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7053382060877017399
 PrefabInstance:
   m_ObjectHideFlags: 0

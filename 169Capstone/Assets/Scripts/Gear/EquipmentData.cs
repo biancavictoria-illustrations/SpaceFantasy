@@ -30,6 +30,8 @@ public class EquipmentData : ScriptableObject
     [SerializeField] private string itemName;   // Player facing name
     [SerializeField] private ItemID itemID;     // Internal ID
 
+    [SerializeField] private GameObject itemPrefab;
+
     [SerializeField] private InventoryItemSlot itemSlot;
     [SerializeField] private int baseCost = 10;
 
@@ -48,6 +50,11 @@ public class EquipmentData : ScriptableObject
     public ItemID ItemID()
     {
         return itemID;
+    }
+
+    public GameObject ItemPrefab()
+    {
+        return itemPrefab;
     }
 
     public InventoryItemSlot ItemSlot()
