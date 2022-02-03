@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
 
     public int currentStr;
     public int currentDex;
-    public int currentConst;
+    public int currentCon;
     public int currentInt;
     public int currentWis;
     public int currentCha;
@@ -47,7 +47,7 @@ public class Player : MonoBehaviour
 
         currentStr = stats.Strength();
         currentDex = stats.Dexterity();
-        currentConst = stats.Constitution();
+        currentCon = stats.Constitution();
         currentInt = stats.Intelligence();
         currentWis = stats.Wisdom();
         currentCha = stats.Charisma();

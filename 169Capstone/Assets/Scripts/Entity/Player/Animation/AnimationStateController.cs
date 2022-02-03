@@ -18,12 +18,6 @@ public class AnimationStateController : MonoBehaviour
         }
     }
 
-    public void EndOfAttack()
-    {
-        Debug.Log("Done attacking");
-        animator.SetBool("IsAttacking", false);
-    }
-
     public void ActivateAttack()
     {
         attackActive = true;

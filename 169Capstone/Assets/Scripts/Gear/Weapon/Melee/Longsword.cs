@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Longsword : MonoBehaviour
 {
+    private const float meleeRange = 4;
+
     private string title = "Berserker's Zweihander";
     private float[] damageModifier = new float[] { 0.75f, 1, 1.25f };
-    private float meleeRange = 3;
-    private float range;
     [SerializeField] private float rangeModifier = 0.1f; 
     private int heldEffectCounter = 0;
     private int maxHeldEffect = 3;
@@ -22,6 +22,7 @@ public class Longsword : MonoBehaviour
 
     private Player player;
     private AnimationStateController playerAnim;
+    private InputManager input;
     [SerializeField] private GameObject timerPrefab;
 
     // Start is called before the first frame update
@@ -40,9 +41,9 @@ public class Longsword : MonoBehaviour
 
     public bool DealDamage()
     {
-        Debug.DrawRay(player.transform.position + Vector3.up, player.transform.forward * 100, default, 1);
+        Debug.DrawRay(player.transform.position + 2*Vector3.up, InputManager.instance.cursorLookDirection * meleeRange, Color.yellow, 1);
         RaycastHit hit;
-        if(Physics.SphereCast(player.transform.position + Vector3.up, 3, player.transform.forward, out hit, range, LayerMask.GetMask("Enemy")))
+        if(Physics.SphereCast(player.transform.position + 2*Vector3.up, 1, InputManager.instance.cursorLookDirection, out hit, meleeRange, LayerMask.GetMask("Enemy")))
         {
             Debug.Log("Damage");
             return hit.collider.GetComponent<EntityHealth>().Damage(damageModifier[heldEffectCounter] * player.currentStr);
