@@ -139,15 +139,6 @@ public class InputManager : MonoBehaviour
         // TODO: Use health potion
     }
 
-    public void OnUseOtherPotion(InputValue input)
-    {
-        if(!CanAcceptGameplayInput()){
-            return;
-        }
-
-        // TODO: Use your other potion, if you have one
-    }
-
     public void OnAccessoryAbility()
     {
         if(!CanAcceptGameplayInput())

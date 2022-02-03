@@ -95,13 +95,16 @@ public class PauseMenu : MonoBehaviour
 }
 
 /*
-    UI TODO:
-    ========
+    TODO:
+    =====
     - bugs:
         - after you purchase item -> leave shop -> open shop -> the purchased item is not interactable BUT no longer says "sold" and instead sets the item values again
+            -> doesn't add to YOUR inventory :(
         - 
 
     - make Item inherit from GeneratedEquipment
+    - EndRun function? game manager or elsewhere? (look @ game manager and the death screen UI)
+    - figure out where to save currency...
     
     - lots of "TODO"s everywhere in different UI scripts
 
