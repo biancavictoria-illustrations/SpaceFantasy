@@ -51,14 +51,12 @@ public class AudioManager : MonoBehaviour
         private FMOD.Studio.VCA sfxVCA;
     #endregion
 
-    #region Public Properties
-        [Header("Volume Levels")]
-        [Range(0, 1)] public float masterVolume = 1;
-        [Range(0, 1)] public float musicVolume = 1;
-        [Range(0, 1)] public float sfxVolume = 1;
-    #endregion
-
     #region Private Properties
+        [Header("Volume Levels")]
+        [SerializeField] [Range(0, 1)] private float masterVolume = 1;
+        [SerializeField] [Range(0, 1)] private float musicVolume = 1;
+        [SerializeField] [Range(0, 1)] private float sfxVolume = 1;
+
         //Combat Music Transition Properties
         private const float combatTransitionDuration = 1;
         private float combatTransitionProgress = 0;
@@ -83,6 +81,24 @@ public class AudioManager : MonoBehaviour
         sfxVCA.setVolume(sfxVolume);
 
         playMusic(MusicTrack.Level1, false);
+    }
+
+    public void SetMasterVolume(float value)
+    {
+        masterVolume = value;
+        masterVCA.setVolume(masterVolume);
+    }
+
+    public void SetMusicVolume(float value)
+    {
+        musicVolume = value;
+        musicVCA.setVolume(musicVolume);
+    }
+
+    public void SetSFXVolume(float value)
+    {
+        sfxVolume = value;
+        sfxVCA.setVolume(sfxVolume);
     }
 
     public void playMusic(MusicTrack track, bool isCombat)
