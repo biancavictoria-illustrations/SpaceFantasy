@@ -25,14 +25,12 @@ public class BowAndArrows : GeneratedEquipment
     private float bonusDamage = 0;
 
     private Player player;
-    private EntityAttack baseAttack;
     [SerializeField] private GameObject timerPrefab;
 
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        baseAttack = player.GetComponent<EntityAttack>();
     }
 
     // Update is called once per frame
@@ -42,7 +40,7 @@ public class BowAndArrows : GeneratedEquipment
         {
             currentlyAttacking = true;
             StartCoroutine(PrimaryAttack());
-            StartCoroutine(CallDamage());
+            // StartCoroutine(CallDamage());
         }
     }
 
@@ -74,21 +72,21 @@ public class BowAndArrows : GeneratedEquipment
         float duration = minDuration + (charge * heldCounter);
         currentCharge = charge;
 
-        StartCoroutine(baseAttack.Attack(Instantiate(timerPrefab).GetComponent<Timer>(), false, windUp * attackSpeed, duration * attackSpeed, windDown * attackSpeed));
+        // StartCoroutine(baseAttack.Attack(Instantiate(timerPrefab).GetComponent<Timer>(), false, windUp * attackSpeed, duration * attackSpeed, windDown * attackSpeed));
 
-        yield return new WaitUntil(() => baseAttack.Completed);
+        // yield return new WaitUntil(() => baseAttack.Completed);
         Debug.Log("Out of Attack loop");
         currentlyAttacking = false;
     }
 
-    private IEnumerator CallDamage()
-    {
-        /*baseAttack.damageDealt = true;
-        yield return null;*/
-        yield return new WaitUntil(() => baseAttack.hit);
-        baseAttack.enemyDeath = DealDamage();
-        baseAttack.damageDealt = true;
-    }
+    // private IEnumerator CallDamage()
+    // {
+    //     /*baseAttack.damageDealt = true;
+    //     yield return null;*/
+    //     yield return new WaitUntil(() => baseAttack.hit);
+    //     baseAttack.enemyDeath = DealDamage();
+    //     baseAttack.damageDealt = true;
+    // }
 
     private bool DealDamage()
     {
@@ -117,7 +115,7 @@ public class BowAndArrows : GeneratedEquipment
 
         if(!InputManager.instance.isAttacking)
         {
-            yield return new WaitUntil(() => baseAttack.Completed);
+            // yield return new WaitUntil(() => baseAttack.Completed);
         }
 
         bonusDamage = 0;
