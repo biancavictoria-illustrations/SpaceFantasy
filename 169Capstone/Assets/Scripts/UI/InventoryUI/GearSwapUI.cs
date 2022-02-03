@@ -14,7 +14,7 @@ public class GearSwapUI : MonoBehaviour
 
     public void OnGearSwapUIOpen(GeneratedEquipment item)
     {
-        gearSwapInventoryUI.SetAllInventoryValues();
+        gearSwapInventoryUI.SetInventoryItemValues();   // Only set item values, no stat values (is this even necessary? it might be called already)
 
         newItem = item;
         newItemPanel.SetItemPanelValues(item);
@@ -23,7 +23,11 @@ public class GearSwapUI : MonoBehaviour
             Debug.LogError("No item panels found in gear swap inventory UI!");
         }
         gearSwapInventoryUI.OnInventoryOpen();
-        ExpandItemOfSameType();
+
+        // If you have an item equipped in that slot, expand that one on open
+        if(PlayerInventory.instance.gear[item.equipmentData.ItemSlot()] != null){
+            ExpandItemOfSameType();
+        }
     }
 
     private void ExpandItemOfSameType()
