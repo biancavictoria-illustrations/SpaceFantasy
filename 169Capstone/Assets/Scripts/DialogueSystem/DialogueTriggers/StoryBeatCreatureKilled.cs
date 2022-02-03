@@ -2,16 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-// Unique IDs per enemy  --  MIGHT BE TEMP
-public enum EnemyID
-{
-    TimeLich,
-    Slime,
-    EnchantedCloak,
-    enumSize
-}
-
 [CreateAssetMenu(menuName = "Narrative/StoryBeatCreatureKilled")]
 public class StoryBeatCreatureKilled : StoryBeat
 {
@@ -29,7 +19,6 @@ public class StoryBeatCreatureKilled : StoryBeat
         }
         beatType = StoryBeatType.EnemyKilled;
 
-        // TODO: Update enemy.name to be whatever the name actually is stored as
         yarnHeadNode = beatType.ToString() + enemyID;
     }
 

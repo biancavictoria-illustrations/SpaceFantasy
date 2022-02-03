@@ -36,7 +36,6 @@ public class PlayerSettings : MonoBehaviour
 
     void Awake()
     {
-        // Make this a singleton -> confirm???
         if( instance ){
             Destroy(gameObject);
         }

@@ -43,7 +43,6 @@ public abstract class StoryBeat : ScriptableObject
     private Dictionary<StoryBeat,int> prereqStoryBeatDatabase = new Dictionary<StoryBeat,int>();    // OPTIONAL list of prereq story beats that have to have numberOfCompletions >= int X
     [SerializeField] private List<StoryBeat> prereqBeats = new List<StoryBeat>();   // Because dictionaries aren't serializable, we get the data this way and build it in start
     [SerializeField] private List<int> prereqCompletionNumbers = new List<int>();
-    // TODO: Maybe switch to a list of key value pairs??? that doesn't seem to be working
 
     public void CreatePrereqDatabase()
     {
