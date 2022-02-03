@@ -2,11 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableObjects/GearManagerObject")]
+// Contains all EquipmentData in the game
+[CreateAssetMenu(menuName = "Gear/GearManagerObject")]
 public class GearManagerObject : ScriptableObject
 {
-    public GameObject[] weapons;
-    public GameObject[] accessories;
-    public GameObject[] head;
-    public GameObject[] legs;
+    [SerializeField] private List<EquipmentData> weapons;
+    [SerializeField] private List<EquipmentData> accessories;
+    [SerializeField] private List<EquipmentData> head;
+    [SerializeField] private List<EquipmentData> legs;
+
+    public List<EquipmentData> Weapons()
+    {
+        return weapons;
+    }
+
+    public List<EquipmentData> Accessories()
+    {
+        return accessories;
+    }
+
+    public List<EquipmentData> Head()
+    {
+        return head;
+    }
+
+    public List<EquipmentData> Legs()
+    {
+        return legs;
+    }
 }

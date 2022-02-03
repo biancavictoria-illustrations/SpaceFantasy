@@ -15,7 +15,6 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private Image inGameAccessoryIMG;
     [SerializeField] private Image inGameHelmetIMG;
     [SerializeField] private Image inGameBootsIMG;
-    [SerializeField] private Image inGamePotionIMG;
 
     [SerializeField] private GameObject darkBackgroundPanel;
 
@@ -30,6 +29,11 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private GameObject gearSwapUIPanel;
     public bool gearSwapIsOpen {get; private set;}
 
+    public ShopUI brynShopUI;
+    public ShopUI stellanShopUI;
+    public ShopUI doctorShopUI;
+    public ShopUI weaponsShopUI;
+
     [SerializeField] private TMP_Text permanentCurrencyValue;
     [SerializeField] private TMP_Text tempCurrencyValue;
 
@@ -40,12 +44,9 @@ public class InGameUIManager : MonoBehaviour
 
     [SerializeField] private TMP_Text healthPotionValue;
 
-    public int minTextSize;
-
 
     void Awake()
     {
-        // Make this a singleton
         if( instance ){
             Destroy(gameObject);
         }
@@ -54,26 +55,15 @@ public class InGameUIManager : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        if(!PlayerPrefs.HasKey(PlayerPrefKeys.minTextSize.ToString())){
-            SetMinTextSize(12);
-        }
-        else{
-            SetMinTextSize(PlayerPrefs.GetInt(PlayerPrefKeys.minTextSize.ToString()));
-        }
-    }
-
-    public void SetMinTextSize(int size)
-    {
-        minTextSize = size;
-        // Set it *everywhere*
-    }
-
     // Called when you enter dialogue or other similar things
     public void SetGameUIActive(bool set)
     {
         inGameUIPanel.SetActive(set);
+    }
+
+    public void ToggleInGameGearIconPanel(bool set)
+    {
+        inGameUIGearIconPanel.SetActive(set);
     }
 
     // Called when player input opens or closes the inventory
@@ -94,40 +84,33 @@ public class InGameUIManager : MonoBehaviour
     }
 
     // Called when the player goes to pick up a new item
-    public void SetGearSwapUIActive(bool set)
+    public void SetGearSwapUIActive(bool set, GeneratedEquipment item)
     {
+        if(set && item == null){
+            Debug.LogError("Tried to open gear swap UI but no new item was found!");
+        }
+
         inGameUIGearIconPanel.SetActive(!set);
         darkBackgroundPanel.SetActive(set);
         gearSwapUIPanel.SetActive(set);
         gearSwapIsOpen = set;
 
         if(set){
-            gearSwapUI.OnGearSwapUIOpen();
+            gearSwapUI.OnGearSwapUIOpen(item);
         }
     }
 
-    public void SetNewRunDefaultValues()
+    public void SetGearItemUI(InventoryItemSlot itemSlot, GeneratedEquipment item)
     {
-        // TODO: Make sure all inventory slots are set to nothing/default
-
-        // Could have different default values set, or variable default values
-        SetTempCurrencyValue(0);
-        SetCurrentHealthValue(maxHealthValue);
-        SetHealthPotionValue(0);
+        // TODO: Get item data and set values (at least icon)
+        
+        // Can we set InventoryUI values here (and in ClearItemUI) or no because it's not active?
+        // Might want to change that structure in order to be able to access those values, if it's possible
     }
 
-    public void SetGearItemUI() // Pass in an item?
-    {
-        // TODO: Get item data and set values
-
-        // InventoryUI.instance.weaponPanel.SetItemPanelValues(); // Pass in the values from the item
-    }
-
-    // Called when you lose an item and the slot is clear
-    // Particularly used for the other potion slot
     public void ClearItemUI(InventoryItemSlot itemSlot)
     {
-        // Set all values to default, maybe change the background color of the panel
+        // TODO: Set icon to default
     }
 
     public void SetPermanentCurrencyValue(int money)
@@ -164,5 +147,25 @@ public class InGameUIManager : MonoBehaviour
     public void SetHealthPotionValue(int numPotions)
     {
         healthPotionValue.text = "" + numPotions;
+    }
+
+    public void OpenNPCShop(SpeakerData shopkeeper)
+    {
+        AlertTextUI.instance.DisableAlert();
+        if(shopkeeper.SpeakerID() == SpeakerID.Bryn){
+            brynShopUI.OpenShopUI();
+        }
+        else if(shopkeeper.SpeakerID() == SpeakerID.Stellan){
+            stellanShopUI.OpenShopUI();
+        }
+        else if(shopkeeper.SpeakerID() == SpeakerID.Doctor){
+            doctorShopUI.OpenShopUI();
+        }
+        else if(shopkeeper.SpeakerID() == SpeakerID.Andy){
+            weaponsShopUI.OpenShopUI();
+        }
+        else{
+            Debug.LogError("Failed to open shop for NPC " + shopkeeper.SpeakerID());
+        }
     }
 }
