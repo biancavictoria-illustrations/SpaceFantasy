@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BowAndArrows : MonoBehaviour
+public class BowAndArrows : GeneratedEquipment
 {
-    private string title = "Bow And Arrows";
+    // private string title = "Bow And Arrows";
     private float minDamageModifier = 0.25f;
     private float maxDamageModifier = 1;
     //private float damageIncrement = 0.25f;

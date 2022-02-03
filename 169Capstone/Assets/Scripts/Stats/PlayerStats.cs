@@ -2,6 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum PlayerFacingStatName
+{
+    STR,
+    DEX,
+    INT,
+    WIS,
+    CHA,
+    CON,
+    size
+}
+
 public class PlayerStats : EntityStats
 {
 
@@ -129,6 +140,16 @@ public class PlayerStats : EntityStats
             }
         #endregion
 
+        #region Healing Efficacy
+            private int healingEfficacyBase;
+            private int healingEfficacyFlatBonus;
+
+            public virtual int getHealingEfficacy()
+            {
+                return healingEfficacyBase + healingEfficacyFlatBonus;
+            }
+        #endregion
+
     #endregion
 
     #region Stat Calculators
@@ -195,7 +216,7 @@ public class PlayerStats : EntityStats
 
     #endregion
 
-    public void Start()
+    void Awake()
     {
         initializeStats();
     }
@@ -241,5 +262,40 @@ public class PlayerStats : EntityStats
         }
 
         return value;
+    }
+
+    public void IncrementStrength()
+    {
+        strength++;
+    }
+
+    public void IncrementDexterity()
+    {
+        dexterity++;
+    }
+
+    public void IncrementIntelligence()
+    {
+        intelligence++;
+    }
+
+    public void IncrementWisdom()
+    {
+        wisdom++;
+    }
+
+    public void IncrementCharisma()
+    {
+        charisma++;
+    }
+
+    public void IncrementConstitution()
+    {
+        constitution++;
+    }
+
+    public void SetHealingEfficacyFlatBonus(int value)
+    {
+        healingEfficacyFlatBonus = value;
     }
 }

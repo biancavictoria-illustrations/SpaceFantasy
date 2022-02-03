@@ -2,11 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableObjects/DropTableObject")]
+[CreateAssetMenu(menuName = "Gear/DropTableObject")]
 public class DropTable : ScriptableObject
 {
-    public List<string> ItemType;
-    public List<string> ItemRarityTier;
-    public List<float> DropChance;
+    [SerializeField] private List<InventoryItemSlot> itemType;
+    [SerializeField] private List<ItemRarity> itemRarityTier;
+
+    [SerializeField] private List<float> dropChance;
     [SerializeField] private int bossesRequired;
+    
+
+    public List<InventoryItemSlot> ItemType()
+    {
+        return itemType;
+    }
+
+    public List<ItemRarity> ItemRarityTier()
+    {
+        return itemRarityTier;
+    }
+
+    public List<float> DropChance()
+    {
+        return dropChance;
+    }
 }

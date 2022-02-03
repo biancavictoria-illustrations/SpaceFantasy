@@ -4,7 +4,17 @@ using UnityEngine;
 
 public class Robert : Enemy
 {
+    public Transform player;
     public GameObject projectilePrefab;
+    public Transform projectileSpawnPoint;
+
+    protected override void Start()
+    {
+        base.Start();
+
+        if(player == null)
+            player = GameObject.FindWithTag("Player").GetComponent<Transform>();
+    }
 
     protected override IEnumerator EnemyLogic() //special
     {
@@ -18,6 +28,14 @@ public class Robert : Enemy
 
     public void ShootProjectile()
     {
+        GameObject projectileObject = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.FromToRotation(transform.position, player.position));
+        Projectile projectileScript = projectileObject.GetComponent<Projectile>();
+        if(!projectileScript)
+        {
+            Destroy(projectileObject);
+            Debug.LogError("Projectile prefab " + projectilePrefab + " did not contain a Projectile script.");
+        }
 
+        projectileScript.Initialize(LayerMask.NameToLayer("Player"), logic.damage, player.position + Vector3.up*2 - projectileSpawnPoint.position);
     }
 }

@@ -4,47 +4,49 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
 {
-    private EnemyStats stats;
-    private bool windUpRunning = false;
-    private EntityHealth health;
-    private float currentHitPoints = 0;
+    protected EnemyStats stats;
+    protected bool windUpRunning = false;
+    protected EntityHealth health;
+    protected float currentHitPoints = 0;
     public EnemyLogic logic;
     [HideInInspector] public Pathing path;
     [HideInInspector] public EntityAttack baseAttack;
     [HideInInspector] public bool canAttack = true;
-    private GameManager gameManager;
     public GameObject timerPrefab;
     [HideInInspector] public bool coroutineRunning = false;
     [SerializeField] protected Animator animator;
 
     protected abstract IEnumerator EnemyLogic(); 
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        path = gameObject.GetComponent<Pathing>();
-        stats = gameObject.GetComponent<EnemyStats>();
-        baseAttack = gameObject.GetComponent<EntityAttack>();
-        health = gameObject.GetComponent<EntityHealth>();
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        stats = GetComponent<EnemyStats>();
+        health = GetComponent<EntityHealth>();
 
         if(stats)
             stats.initializeStats();
-
-        path.speed = stats.getMoveSpeed();
-        path.provokedRadius = logic.provokedRange;
-        path.attackRadius = logic.attackRange;
 
         // need to set up enemy health in here
         health.maxHitpoints = stats.getMaxHitPoints();
         //Debug.Log("Hitpoints = " + health.maxHitpoints.ToString());
         health.currentHitpoints = stats.getMaxHitPoints();
+    }
 
+    // Start is called before the first frame update
+    protected virtual void Start()
+    {
+        path = GetComponent<Pathing>();
+        
+        baseAttack = GetComponent<EntityAttack>();
+
+        path.speed = stats.getMoveSpeed();
+        path.provokedRadius = logic.provokedRange;
+        path.attackRadius = logic.attackRange;
     }
 
     public void Update()
     {
-        canAttack = !gameManager.inShopMode;
+        canAttack = !GameManager.instance.inShopMode;
 
         if((path.Provoked() || path.InAttackRange()) && !coroutineRunning && canAttack) // Update for damage later
         {

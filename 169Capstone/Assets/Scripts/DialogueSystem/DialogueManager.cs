@@ -185,7 +185,7 @@ public class DialogueManager : MonoBehaviour
 
     public bool DialogueManagerHasSpeaker(SpeakerData data)
     {
-        if(speakers.ContainsKey(data.SpeakerName())){
+        if(speakers.ContainsKey(data.SpeakerID().ToString())){
             return true;
         }
         return false;
@@ -197,7 +197,7 @@ public class DialogueManager : MonoBehaviour
             Debug.LogError("Attempting to add " + data.SpeakerName() + " to the speaker database, but it already exists!");
             return;
         }
-        speakers.Add(data.SpeakerName(), data);
+        speakers.Add(data.SpeakerID().ToString(), data);
     }
 
     // Called in yarn scripts to set UI speaker info
@@ -252,8 +252,14 @@ public class DialogueManager : MonoBehaviour
     // Called automatically when the player clicks the interact button in range of an NPC with something to say
     public void OnNPCInteracted()
     {
+        // Stop allowing movement input
         InputManager.instance.isInDialogue = true;
+
+        // Disable UI elements
         InGameUIManager.instance.SetGameUIActive(false);
+        AlertTextUI.instance.DisableAlert();
+
+        // Start the dialogue
         dialogueRunner.StartDialogue(NPC.ActiveNPC.yarnStartNode);
     }
 
@@ -263,6 +269,10 @@ public class DialogueManager : MonoBehaviour
         InputManager.instance.isInDialogue = false;
         InGameUIManager.instance.SetGameUIActive(true);
         NPC.ActiveNPC.TalkedToNPC();
+
+        if(NPC.ActiveNPC.isShopkeeper){
+            InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.speakerData);
+        }
     }
 }
 
