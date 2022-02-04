@@ -26,6 +26,12 @@ public class PlayerInventory : MonoBehaviour
         }
 
         gear = new Dictionary<InventoryItemSlot, GeneratedEquipment>();
+        // Set default values for all slots
+    }
+
+    void Start()
+    {
+        ClearInventory();   // TODO: Move this somewhere else!!! Might cause problems moving between rooms/loading save data?
     }
 
     public void UseHealthPotion()

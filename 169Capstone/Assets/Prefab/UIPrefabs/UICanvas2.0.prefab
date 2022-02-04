@@ -14414,7 +14414,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0.000061035156, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -15757,8 +15757,8 @@ RectTransform:
   m_Father: {fileID: 5826243716126014460}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0.000061035156, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -15985,7 +15985,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0.000061035156, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -17344,10 +17344,21 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5942313350201849811}
+        m_MethodName: SetMusicVolumeToUIValue
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3097215623958749498
 GameObject:
   m_ObjectHideFlags: 0
@@ -17447,6 +17458,7 @@ MonoBehaviour:
   descriptionPanel: {fileID: 28638441963659592}
   textGrid: {fileID: 3635688438211600223}
   horizontalLayoutGroup: {fileID: 4250818770543639618}
+  toggle: {fileID: 0}
 --- !u!114 &4250818770543639618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18375,7 +18387,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 180, y: -149.54083}
+  m_AnchoredPosition: {x: 180, y: -162.93365}
   m_SizeDelta: {x: 130.344, y: 46.81436}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &441389445548205495
@@ -18771,7 +18783,7 @@ GameObject:
   - component: {fileID: 2700462248510480353}
   - component: {fileID: 5680616728521510621}
   m_Layer: 5
-  m_Name: 4Music Volume
+  m_Name: Music Volume
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18794,8 +18806,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 335, y: -113.64585}
-  m_SizeDelta: {x: 670, y: 104.29723}
+  m_AnchoredPosition: {x: 335, y: -124.360115}
+  m_SizeDelta: {x: 670, y: 111.44008}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2700462248510480353
 CanvasRenderer:
@@ -18993,6 +19005,7 @@ MonoBehaviour:
   descriptionPanel: {fileID: 8802999308685433416}
   textGrid: {fileID: 3413107457786075450}
   horizontalLayoutGroup: {fileID: 7866425756065066876}
+  toggle: {fileID: 0}
 --- !u!114 &7866425756065066876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20139,6 +20152,7 @@ MonoBehaviour:
   descriptionPanel: {fileID: 5706649508400502384}
   textGrid: {fileID: 164337869777673059}
   horizontalLayoutGroup: {fileID: 7072587696141494442}
+  toggle: {fileID: 0}
 --- !u!114 &7072587696141494442
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20780,6 +20794,7 @@ MonoBehaviour:
   descriptionPanel: {fileID: 2783623555967208939}
   textGrid: {fileID: 3678684101161820647}
   horizontalLayoutGroup: {fileID: 5821971112824157093}
+  toggle: {fileID: 785943253587700219}
 --- !u!114 &5821971112824157093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21291,6 +21306,7 @@ MonoBehaviour:
   descriptionPanel: {fileID: 4503238387998657167}
   textGrid: {fileID: 4503238388374320265}
   horizontalLayoutGroup: {fileID: 4503238386284735611}
+  toggle: {fileID: 7310010613735515431}
 --- !u!114 &4503238386284735611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23353,6 +23369,7 @@ MonoBehaviour:
   descriptionPanel: {fileID: 442318668911060726}
   textGrid: {fileID: 89319937820680955}
   horizontalLayoutGroup: {fileID: 3014737048972839574}
+  toggle: {fileID: 7966099300177632158}
 --- !u!114 &3014737048972839574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23551,7 +23568,7 @@ GameObject:
   - component: {fileID: 8276420501794522909}
   - component: {fileID: 942393982199893805}
   m_Layer: 5
-  m_Name: 1MasterVolume
+  m_Name: MasterVolume
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23574,8 +23591,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 335, y: -52.148617}
-  m_SizeDelta: {x: 670, y: 104.29723}
+  m_AnchoredPosition: {x: 335, y: -55.72004}
+  m_SizeDelta: {x: 670, y: 111.44008}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8276420501794522909
 CanvasRenderer:
@@ -24071,10 +24088,21 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5942313350201849811}
+        m_MethodName: SetMasterVolumeToUIValue
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5502841540183021724
 GameObject:
   m_ObjectHideFlags: 0
@@ -24315,7 +24343,7 @@ MonoBehaviour:
   fitType: 4
   rows: 3
   columns: 1
-  cellSize: {x: 670, y: 104.29723}
+  cellSize: {x: 669.99994, y: 111.44008}
   spacing: {x: 0, y: -42.8}
   fitX: 1
   fitY: 1
@@ -24419,6 +24447,7 @@ MonoBehaviour:
   descriptionPanel: {fileID: 7997416876419947609}
   textGrid: {fileID: 1865256853014034602}
   horizontalLayoutGroup: {fileID: 1548273376777617401}
+  toggle: {fileID: 0}
 --- !u!114 &1548273376777617401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26122,6 +26151,7 @@ MonoBehaviour:
   descriptionPanel: {fileID: 5994141684879376097}
   textGrid: {fileID: 5994141685322121447}
   horizontalLayoutGroup: {fileID: 5994141685379962901}
+  toggle: {fileID: 586471266974880073}
 --- !u!114 &5994141685379962901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26848,7 +26878,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0.000061035156, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -28067,7 +28097,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 180, y: -29.908142}
+  m_AnchoredPosition: {x: 180, y: -32.58673}
   m_SizeDelta: {x: 130.344, y: 46.81436}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6472245718896789973
@@ -28745,7 +28775,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 180, y: -209.35718}
+  m_AnchoredPosition: {x: 180, y: -228.10712}
   m_SizeDelta: {x: 130.344, y: 46.81436}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6472245719290089108
@@ -29666,7 +29696,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 180, y: -89.7245}
+  m_AnchoredPosition: {x: 180, y: -97.76019}
   m_SizeDelta: {x: 130.344, y: 46.81436}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6472245719435186992
@@ -30476,6 +30506,7 @@ MonoBehaviour:
   descriptionPanel: {fileID: 9105373863349954260}
   textGrid: {fileID: 5348930066223240557}
   horizontalLayoutGroup: {fileID: 6570903510072476424}
+  toggle: {fileID: 0}
 --- !u!114 &6570903510072476424
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31271,6 +31302,7 @@ MonoBehaviour:
   descriptionPanel: {fileID: 6159430704642347809}
   textGrid: {fileID: 2875677163610039289}
   horizontalLayoutGroup: {fileID: 5366459043740319974}
+  toggle: {fileID: 0}
 --- !u!114 &5366459043740319974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31573,6 +31605,7 @@ MonoBehaviour:
   descriptionPanel: {fileID: 4289868052599943389}
   textGrid: {fileID: 1438977543995880813}
   horizontalLayoutGroup: {fileID: 3948981315846845065}
+  toggle: {fileID: 6840507215544113262}
 --- !u!114 &3948981315846845065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32337,6 +32370,7 @@ MonoBehaviour:
   descriptionPanel: {fileID: 6918467233930794884}
   textGrid: {fileID: 6918467234104600962}
   horizontalLayoutGroup: {fileID: 6918467234430480752}
+  toggle: {fileID: 4255828887277516844}
 --- !u!114 &6918467234430480752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33927,6 +33961,7 @@ MonoBehaviour:
   descriptionPanel: {fileID: 4214142040978995917}
   textGrid: {fileID: 2916414187512127650}
   horizontalLayoutGroup: {fileID: 1369078103043750808}
+  toggle: {fileID: 3599976642066749945}
 --- !u!114 &1369078103043750808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36274,6 +36309,7 @@ MonoBehaviour:
   descriptionPanel: {fileID: 7935313458968871334}
   textGrid: {fileID: 7935313458534514592}
   horizontalLayoutGroup: {fileID: 7935313459414099794}
+  toggle: {fileID: 3824414888263757326}
 --- !u!114 &7935313459414099794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37323,8 +37359,8 @@ RectTransform:
   m_Father: {fileID: 6724951636020243758}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0.000061035156, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -38051,10 +38087,21 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5942313350201849811}
+        m_MethodName: SetSFXVolumeToUIValue
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &8613399764722447130
 GameObject:
   m_ObjectHideFlags: 0
@@ -39031,8 +39078,8 @@ RectTransform:
   m_Father: {fileID: 3031998175764749797}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0.000061035156, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -40411,7 +40458,7 @@ GameObject:
   - component: {fileID: 3256871131519963328}
   - component: {fileID: 3339904415528837312}
   m_Layer: 5
-  m_Name: 7SFX Volume
+  m_Name: SFX Volume
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40434,8 +40481,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 335, y: -175.14308}
-  m_SizeDelta: {x: 670, y: 104.29723}
+  m_AnchoredPosition: {x: 335, y: -193.00018}
+  m_SizeDelta: {x: 670, y: 111.44008}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3256871131519963328
 CanvasRenderer:

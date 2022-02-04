@@ -21,6 +21,8 @@ public class InventoryUIItemPanel : MonoBehaviour
     public FlexibleGridLayout textGrid;
     public HorizontalLayoutGroup horizontalLayoutGroup;
 
+    [SerializeField] private Toggle toggle;
+
     public void SetItemPanelValues(GeneratedEquipment item)
     {
         if(item == null){
@@ -41,7 +43,10 @@ public class InventoryUIItemPanel : MonoBehaviour
 
         itemIcon.sprite = data.Icon();
         
-        GetComponent<Toggle>().interactable = true;
+        // Check bc compare item panel doesn't have a toggle
+        if(toggle){
+            toggle.interactable = true;
+        }
     }
 
     private void SetDefaultItemPanelValues()
@@ -57,7 +62,9 @@ public class InventoryUIItemPanel : MonoBehaviour
 
         // TODO: itemIcon.sprite = DEFAULT ICON;
 
-        GetComponent<Toggle>().interactable = false;
+        if(toggle){
+            toggle.interactable = false;
+        }
     }
 
     public InventoryItemSlot GetItemSlot()

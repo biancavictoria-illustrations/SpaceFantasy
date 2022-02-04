@@ -24,7 +24,7 @@ public class Movement : MonoBehaviour
     
     void Start()
     {
-        InputActionAsset controls = gameObject.GetComponent<PlayerInput>().actions;
+        InputActionAsset controls = GetComponent<PlayerInput>().actions;
 
         // Add STOPPING moving when you're no longer holding the button
         controls.FindAction("MoveLeft").canceled += x => OnMoveLeftCanceled();
@@ -234,7 +234,16 @@ public class Movement : MonoBehaviour
             
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
             float angle = Mathf.SmoothDampAngle(model.eulerAngles.y, targetAngle, ref smoothingVelocity, smoothing);
-            model.rotation = Quaternion.Euler(0, angle, 0);
+
+            if(InputManager.instance.isAttacking)
+            {
+                model.rotation = Quaternion.FromToRotation(Vector3.forward, InputManager.instance.cursorLookDirection);
+                direction /= 2;
+            }
+            else
+            {
+                model.rotation = Quaternion.Euler(0, angle, 0);
+            }
         }
         else
         {

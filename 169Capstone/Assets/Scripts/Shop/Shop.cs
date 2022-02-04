@@ -8,7 +8,7 @@ public class Shop : MonoBehaviour
     private List<RarityAssignmentTier> inventoryList;
     private HashSet<int> indexes;
 
-    public HashSet<GeneratedEquipment> inventory {get; private set;}
+    public List<GeneratedEquipment> inventory {get; private set;}
 
 
     void Start()
@@ -23,7 +23,7 @@ public class Shop : MonoBehaviour
         int tier = ObjectManager.bossesKilled;
 
         inventoryList = new List<RarityAssignmentTier>();
-        inventory = new HashSet<GeneratedEquipment>();
+        inventory = new List<GeneratedEquipment>();
 
         inventoryList.Add(shopKeeper.Slot1());
         inventoryList.Add(shopKeeper.Slot2());

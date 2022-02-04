@@ -50,9 +50,17 @@ public class InventoryUI : MonoBehaviour
 
     void Start()
     {
-        stats = FindObjectsOfType<PlayerStats>()[0];
+        FindPlayerStats();
     }
 
+    private void FindPlayerStats()
+    {
+        if(!stats){
+            stats = FindObjectsOfType<PlayerStats>()[0];
+        }
+    }
+
+    // Only use this if you have stats displayed too (normal inventory, not shop/compare)
     public void SetAllInventoryValues()
     {
         SetInventoryItemValues();
@@ -60,7 +68,7 @@ public class InventoryUI : MonoBehaviour
         SetOtherStatText();
     }
 
-    private void SetInventoryItemValues()
+    public void SetInventoryItemValues()
     {
         foreach(InventoryUIItemPanel panel in itemPanels){
             panel.SetItemPanelValues(PlayerInventory.instance.gear[panel.GetItemSlot()]);
@@ -69,6 +77,13 @@ public class InventoryUI : MonoBehaviour
 
     private void SetStatValues()
     {
+        if(!statSTR){
+            Debug.LogWarning("Trying to set stat UI values but they don't exist. (OK if no stat panel to fill!)");
+            return;
+        }
+        
+        FindPlayerStats();
+
         statSTR.text = stats.Strength() + "";
         statDEX.text = stats.Dexterity() + "";
         statCON.text = stats.Constitution() + "";
@@ -79,6 +94,12 @@ public class InventoryUI : MonoBehaviour
 
     private void SetOtherStatText()
     {
+        if(!attackSpeed){
+            return;
+        }
+
+        FindPlayerStats();
+
         attackSpeed.text = "Attack Speed: " + stats.getAttackSpeed();
         moveSpeed.text = "Move Speed: " + stats.getMoveSpeed();
         defense.text = "Defense: " + stats.getDefense();
