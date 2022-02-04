@@ -7,7 +7,7 @@ public class NPC : MonoBehaviour
 {
     public static NPC ActiveNPC {get; private set;}
 
-    public SpeakerData speakerData;
+    [SerializeField] private SpeakerData speakerData;
 
     [HideInInspector] public YarnProgram yarnDialogue;      // Set on Start from the info in speakerData
     [HideInInspector] public string yarnStartNode;
@@ -16,12 +16,7 @@ public class NPC : MonoBehaviour
 
     [HideInInspector] public List<int> hasNumRunDialogueList = new List<int>();   // Times at which this NPC comments on how many runs you've done, in order
 
-    public bool isShopkeeper;
-
-
-    // TODO: Set speakerData when initializing the NPC in randomly generated shop rooms (no more than one of each NPC on a floor)
-    // -> so all that stuff probably shouldn't happen in start but instead a function called when that happens
-    // (Otherwise, make sure it's set in the inspector)
+    public bool haveTalkedToThisRun {get; private set;}
 
     void Start()
     {
@@ -42,8 +37,7 @@ public class NPC : MonoBehaviour
         // Start/head node for a speaker's yarn file is always their unique speakerID + "Start"
         yarnStartNode = speakerData.SpeakerID() + "Start";
 
-        // If you haven't interacted with this NPC on this run yet, set interactable to true; otherwise, false
-        SetNPCInteractable(!HaveTalkedToNPC()); // TODO: This might nto be setting any to interactable ever... fix that!
+        SetHaveTalkedToNPCThisRun(HaveTalkedToNPC());
     }
 
     // When player gets within range, they can start dialogue
@@ -52,7 +46,7 @@ public class NPC : MonoBehaviour
         // If the collision was caused by the player
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
             ActiveNPC = this;
-            if(newDialogueAlert.activeInHierarchy){
+            if(haveTalkedToThisRun){
                 AlertTextUI.instance.EnableInteractAlert();
             }
             else{
@@ -72,15 +66,20 @@ public class NPC : MonoBehaviour
     }
 
     // For now, just toggles the newDialogueAlert on/off
-    public void SetNPCInteractable(bool set)
+    public void SetHaveTalkedToNPCThisRun(bool set)
     {
-        newDialogueAlert.SetActive(set);
+        haveTalkedToThisRun = set;
+
+        // Check if it exists cuz presumably time lich won't have one so we don't need to set it
+        if(newDialogueAlert){
+            newDialogueAlert.SetActive(!set);
+        }
     }
 
     // When you finish dialogue, call this to deactivate the NPC
     public void TalkedToNPC()
     {
-        SetNPCInteractable(false);
+        SetHaveTalkedToNPCThisRun(true);
 
         SpeakerID speaker = speakerData.SpeakerID();
         if( speaker == SpeakerID.Bryn ){
@@ -111,7 +110,7 @@ public class NPC : MonoBehaviour
     }
 
     // Ask the story manager if we've talked to this NPC yet
-    public bool HaveTalkedToNPC()
+    private bool HaveTalkedToNPC()
     {
         SpeakerID speaker = speakerData.SpeakerID();
         if( speaker == SpeakerID.Bryn ){
@@ -134,5 +133,10 @@ public class NPC : MonoBehaviour
         }
         Debug.LogError("Tried to check if you have talked to an NPC who does not exist! SpeakerID: " + speaker);
         return false;
+    }
+
+    public SpeakerData SpeakerData()
+    {
+        return speakerData;
     }
 }

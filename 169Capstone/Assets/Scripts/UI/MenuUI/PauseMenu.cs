@@ -69,20 +69,20 @@ public class PauseMenu : MonoBehaviour
 
     private void SetOpenShopUIInteractable(bool set)
     {
-        if(NPC.ActiveNPC.speakerData.SpeakerID() == SpeakerID.Bryn){
+        if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Bryn){
             InGameUIManager.instance.brynShopUI.SetShopUIInteractable(set);
         }
-        else if(NPC.ActiveNPC.speakerData.SpeakerID() == SpeakerID.Stellan){
+        else if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Stellan){
             InGameUIManager.instance.stellanShopUI.SetShopUIInteractable(set);
         }
-        else if(NPC.ActiveNPC.speakerData.SpeakerID() == SpeakerID.Doctor){
+        else if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Doctor){
             InGameUIManager.instance.doctorShopUI.SetShopUIInteractable(set);
         }
-        else if(NPC.ActiveNPC.speakerData.SpeakerID() == SpeakerID.Andy){
+        else if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Andy){
             InGameUIManager.instance.weaponsShopUI.SetShopUIInteractable(set);
         }
         else{
-            Debug.LogError("Failed to access shop data for NPC " + NPC.ActiveNPC.speakerData.SpeakerID());
+            Debug.LogError("Failed to access shop data for NPC " + NPC.ActiveNPC.SpeakerData().SpeakerID());
         }
     }
 

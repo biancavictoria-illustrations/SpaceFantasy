@@ -87,12 +87,12 @@ public class InputManager : MonoBehaviour
         }
 
         // If nearby NPC is active and not already talking and has something to say
-        else if(NPC.ActiveNPC && !NPC.ActiveNPC.HaveTalkedToNPC()){
+        else if(NPC.ActiveNPC && !NPC.ActiveNPC.haveTalkedToThisRun){
             DialogueManager.instance.OnNPCInteracted();
         }
         // If nearby NPC is a shopkeeper and you HAVE talked to them already, just open the shop
-        else if(NPC.ActiveNPC && NPC.ActiveNPC.isShopkeeper){
-            InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.speakerData);
+        else if(NPC.ActiveNPC && NPC.ActiveNPC.SpeakerData().IsShopkeeper()){
+            InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.SpeakerData());
         }
 
         // If you're in range of a door, walk through it
@@ -153,7 +153,7 @@ public class InputManager : MonoBehaviour
             return;
         }
 
-        // TODO: Use health potion
+        PlayerInventory.instance.UseHealthPotion();
     }
 
     public void OnAccessoryAbility()

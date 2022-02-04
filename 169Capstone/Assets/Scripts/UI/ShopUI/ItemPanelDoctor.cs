@@ -25,7 +25,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
     private PlayerStats stats;
 
 
-    // TODO: Make sure, should be called JUST first time you visit this shop per run
+    // Called JUST first time you visit this shop per run
     public void GenerateNewDoctorUpgradeValues(int upgradeBaseCost)
     {
         stats = FindObjectsOfType<PlayerStats>()[0];
@@ -124,14 +124,14 @@ public class ItemPanelDoctor : ItemPanelShopUI
     {
         currentStatValue++;
         descriptionText.text = GenerateDescription();
-        UpdateCostUI();
+        UpdateCurrentCost();
     }
 
     private void IncrementHealingEfficacy()
     {
         currentStatValue += healingBonusValue;
         descriptionText.text = GenerateDescription();
-        UpdateCostUI();
+        UpdateCurrentCost();
     }
 
     public override void PurchaseItem()
@@ -190,6 +190,11 @@ public class ItemPanelDoctor : ItemPanelShopUI
     {
         GetCurrentStatValue();
         descriptionText.text = GenerateDescription();
-        UpdateCostUI();
+        UpdateCurrentCost();    // Updates cost value as well as UI
+    }
+
+    protected override void CalculateCurrentCost()
+    {
+        // TODO
     }
 }

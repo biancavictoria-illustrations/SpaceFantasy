@@ -26,12 +26,12 @@ public class PlayerInventory : MonoBehaviour
         }
 
         gear = new Dictionary<InventoryItemSlot, GeneratedEquipment>();
-        // Set default values for all slots
     }
 
     void Start()
     {
-        ClearInventory();   // TODO: Move this somewhere else!!! Might cause problems moving between rooms/loading save data?
+        // Set default values for all slots
+        ClearRunInventory();   // TODO: Move this somewhere else!!! Might cause problems moving between rooms/loading save data?
     }
 
     public void UseHealthPotion()
@@ -41,9 +41,9 @@ public class PlayerInventory : MonoBehaviour
             return;
         }
 
-        // TODO: Move this to Player script probably so that we're not getting so many components
-        float healedHitPoints = GetComponent<EntityHealth>().maxHitpoints * (0.01f * GetComponent<PlayerStats>().getHealingEfficacy());
-        GetComponent<EntityHealth>().Heal(healedHitPoints);
+        // TODO: this doesn't work bc PlayerInventory is on game manager now, not player (need a way to tell the player to update its health)
+        // float healedHitPoints = GetComponent<EntityHealth>().maxHitpoints * (0.01f * GetComponent<PlayerStats>().getHealingEfficacy());
+        // GetComponent<EntityHealth>().Heal(healedHitPoints);
 
         healthPotionQuantity--;
         InGameUIManager.instance.SetHealthPotionValue(healthPotionQuantity);
@@ -74,7 +74,7 @@ public class PlayerInventory : MonoBehaviour
     }
 
     // Called when you die (putting this here means we need to put resetting your health somewhere else)
-    public void ClearInventory()
+    public void ClearRunInventory()
     {
         UnequipItem(InventoryItemSlot.Weapon);
         UnequipItem(InventoryItemSlot.Helmet);

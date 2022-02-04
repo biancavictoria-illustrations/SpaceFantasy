@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class ItemPanelShopUI : MonoBehaviour
 {
     protected int baseCost;
-    [HideInInspector] public int currentCostValue;
+    [HideInInspector] public int currentCostValue {get; protected set;}
     
     [SerializeField] protected TMP_Text costText;
     [SerializeField] protected TMP_Text itemName;
@@ -19,7 +19,7 @@ public class ItemPanelShopUI : MonoBehaviour
     protected void SetBaseShopItemValues(int iBaseCost, string iName, string iDesc)
     {
         baseCost = iBaseCost;
-        UpdateCostUI();        
+        UpdateCurrentCost();        
         itemName.text = iName;
         descriptionText.text = iDesc;
     }
@@ -34,19 +34,15 @@ public class ItemPanelShopUI : MonoBehaviour
         PlayerInventory.instance.SetTempCurrency(PlayerInventory.instance.tempCurrency - currentCostValue);
     }
 
-    // Hypothetically shouldn't be here? Items calculate their own cost value instead...? Doctor shop might need something like this tho
-    protected virtual int CalculateCurrentCost()    // virtual bc need to implement variants for children prob
+    protected virtual void CalculateCurrentCost()
     {
-        // TODO
-
-        currentCostValue = baseCost;    // TEMP
-
-        return currentCostValue;
+        // Implemented uniquely in children
     }
 
-    public void UpdateCostUI()
+    // Updates both cost value and UI
+    public void UpdateCurrentCost()
     {
-        currentCostValue = CalculateCurrentCost();
+        CalculateCurrentCost();
         costText.text = "$" + currentCostValue;     // TODO: Change $ to better symbol, or just put the icon on the cards
     }
 }
