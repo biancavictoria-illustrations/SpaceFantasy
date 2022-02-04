@@ -33,6 +33,7 @@ public class ItemPanelGearShop : ItemPanelShopUI
     public void OnItemClicked()
     {
         shopUI.activeCompareItem = this;
+        hoverAlerts.EnableAlert(panelPos, false);
         shopUI.ToggleShopCompareOn();
     }
 

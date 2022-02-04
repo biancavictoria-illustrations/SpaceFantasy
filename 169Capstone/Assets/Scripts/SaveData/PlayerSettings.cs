@@ -42,7 +42,10 @@ public class PlayerSettings : MonoBehaviour
         else{
             instance = this;
         }
-        
+    }
+
+    void Start()
+    {
         SetupSettings();
     }
 

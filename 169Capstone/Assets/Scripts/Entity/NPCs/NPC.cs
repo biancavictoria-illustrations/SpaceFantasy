@@ -46,7 +46,7 @@ public class NPC : MonoBehaviour
         // If the collision was caused by the player
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
             ActiveNPC = this;
-            if(haveTalkedToThisRun){
+            if(!haveTalkedToThisRun){
                 AlertTextUI.instance.EnableInteractAlert();
             }
             else{

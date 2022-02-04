@@ -11,6 +11,7 @@ public class PauseMenu : MonoBehaviour
 
     public GameObject pauseMenuPanel;
     public GameObject settingsMenuPanel;
+    public GameObject controlsMenuPanel;
     public GameObject areYouSurePanel;
 
     public Button continueButton;
@@ -40,6 +41,7 @@ public class PauseMenu : MonoBehaviour
     private void ResetPauseUI()
     {
         settingsMenuPanel.SetActive(false);
+        controlsMenuPanel.SetActive(false);
         areYouSurePanel.SetActive(false);
         pauseMenuPanel.SetActive(true);
         

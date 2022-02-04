@@ -4,6 +4,14 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
+public enum ItemPanelPos{
+    upperLeft,
+    upperMid,
+    upperRight,
+    lowerLeft,
+    lowerRight
+}
+
 public class ItemPanelShopUI : MonoBehaviour
 {
     protected int baseCost;
@@ -15,6 +23,8 @@ public class ItemPanelShopUI : MonoBehaviour
 
     [SerializeField] protected Button itemCardButton;
 
+    [SerializeField] protected ItemPanelPos panelPos;   // Set in the inspector
+    public ShopHoverAlerts hoverAlerts;
     
     protected void SetBaseShopItemValues(int iBaseCost, string iName, string iDesc)
     {
@@ -44,5 +54,19 @@ public class ItemPanelShopUI : MonoBehaviour
     {
         CalculateCurrentCost();
         costText.text = "$" + currentCostValue;     // TODO: Change $ to better symbol, or just put the icon on the cards
+    }
+
+    public void OnMouseOver()
+    {
+        if(itemCardButton.interactable){
+            hoverAlerts.EnableAlert(panelPos, true);
+        }
+    }
+
+    public void OnMouseExit()
+    {
+        if(itemCardButton.interactable){
+            hoverAlerts.EnableAlert(panelPos, false);
+        }
     }
 }
