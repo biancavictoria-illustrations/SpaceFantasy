@@ -21,17 +21,23 @@ public class Billboard : MonoBehaviour
 
         //Adjust the transform to correct for the amount the sprite was tilted
         towardsCameraNoY = new Vector3(towardsCamera.x, 0, towardsCamera.z).normalized;
-        float tiltAmount = renderer.sprite.bounds.size.y * Mathf.Cos(Vector3.Angle(towardsCameraNoY, towardsCamera)) / 2;
-        tiltOffsetVector = towardsCameraNoY * tiltAmount;
+
+        if(renderer)
+        {
+            float tiltAmount = renderer.sprite.bounds.size.y * Mathf.Cos(Vector3.Angle(towardsCameraNoY, towardsCamera)) / 2;
+            tiltOffsetVector = towardsCameraNoY * tiltAmount;
+        }
     }
 
     void Update()
     {
-        if(spriteHolder && renderer)
+        if(spriteHolder)
         {
             //Face the sprite towards the camera
             spriteHolder.forward = towardsCamera;
-            spriteHolder.position = parent.position + tiltOffsetVector;
+
+            if(renderer)
+                spriteHolder.position = parent.position + tiltOffsetVector;
         }
     }
 }
