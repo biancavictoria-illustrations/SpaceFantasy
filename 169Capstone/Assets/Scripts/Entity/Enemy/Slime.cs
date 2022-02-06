@@ -25,9 +25,9 @@ public class Slime : Enemy
     public bool DealDamage()
     {
         RaycastHit hit;
-        if(Physics.SphereCast(transform.position, 0.25f, transform.forward, out hit, logic.attackRange))
+        if(Physics.SphereCast(transform.position, 0.25f, transform.forward, out hit, nextAttack.attackRange))
         {
-            return hit.collider.tag == "Player" ? hit.collider.GetComponent<EntityHealth>().Damage(logic.damage) : false;
+            return hit.collider.tag == "Player" ? hit.collider.GetComponent<EntityHealth>().Damage(logic.baseDamage * nextAttack.damageMultiplier) : false;
         }
         else
         {

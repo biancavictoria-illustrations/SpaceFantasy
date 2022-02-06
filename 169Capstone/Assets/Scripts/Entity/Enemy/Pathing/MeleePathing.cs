@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GroundPathing : Pathing
+public class MeleePathing : Pathing
 {
     protected override void HandleMovement()
     {

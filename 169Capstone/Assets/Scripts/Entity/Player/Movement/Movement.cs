@@ -13,6 +13,7 @@ public class Movement : MonoBehaviour
     public float gravityAccel = -10f;
     public float jumpSpeed = 10;
     
+    private Vector3 externalVelocity;
     private float smoothingVelocity;
     private float horizontalMove;
     private float verticalMove;
@@ -69,6 +70,11 @@ public class Movement : MonoBehaviour
             return;
         }
         HandleMovement();
+    }
+
+    public void ApplyExternalVelocity(Vector3 velocity)
+    {
+        externalVelocity = velocity;
     }
 
     public void OnMoveLeft(InputValue input)
@@ -207,9 +213,23 @@ public class Movement : MonoBehaviour
 
     private void HandleMovement()
     {
+
         Vector3 direction = new Vector3(-verticalMove, 0, horizontalMove).normalized;
 
-        if(direction.magnitude >= 0.1f)
+        if(externalVelocity.magnitude > 0f)
+        {
+            direction = Vector3.zero;
+            if(externalVelocity.magnitude >= 0.1f)
+            {
+                player.Move(externalVelocity * Time.fixedDeltaTime);
+                externalVelocity *= 0.8f;
+            }
+            else
+            {
+                externalVelocity = Vector3.zero;
+            }
+        }
+        else if(direction.magnitude >= 0.1f)
         {
             float rad = 45 * Mathf.Deg2Rad;
             if(verticalMove > 0)

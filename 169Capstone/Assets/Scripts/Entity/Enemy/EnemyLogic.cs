@@ -6,10 +6,6 @@ using UnityEngine;
 public class EnemyLogic : ScriptableObject
 {
     public float provokedRange;
-    public float attackRange;
-    public float damage;
-    public float windUp;
-    public float duration;
-    public float windDown;
-    public float coolDown;
+    public float baseDamage;
+    public List<AttackLogic> attacks;
 }
