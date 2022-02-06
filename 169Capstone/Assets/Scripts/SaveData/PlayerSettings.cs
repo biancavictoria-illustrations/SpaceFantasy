@@ -11,15 +11,7 @@ public enum PlayerPrefKeys
 
     minTextSize,
 
-    attack,
-    interact,
-    useHealthPotion,
-    toggleInventory,
-    moveUp,
-    moveDown,
-    moveLeft,
-    moveRight,
-    jumpKey
+    enumSize
 }
 
 public class PlayerSettings : MonoBehaviour
@@ -109,11 +101,11 @@ public class PlayerSettings : MonoBehaviour
             AudioManager.Instance.SetSFXVolume(sfxVolumeValue);
         }
 
-        if(!PlayerPrefs.HasKey(PlayerPrefKeys.minTextSize.ToString())){
-            SaveNewMinTextSize(defaultTextSize);
-        }
-        else{
-            minTextSizeValue = PlayerPrefs.GetInt(PlayerPrefKeys.minTextSize.ToString());
-        }
+        // if(!PlayerPrefs.HasKey(PlayerPrefKeys.minTextSize.ToString())){
+        //     SaveNewMinTextSize(defaultTextSize);
+        // }
+        // else{
+        //     minTextSizeValue = PlayerPrefs.GetInt(PlayerPrefKeys.minTextSize.ToString());
+        // }
     }
 }
