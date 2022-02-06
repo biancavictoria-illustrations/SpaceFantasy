@@ -37,6 +37,8 @@ public class ControlsMenu : MonoBehaviour
     [SerializeField] private Button cancelButton;
     [SerializeField] private Button resetButton;
 
+    [SerializeField] private PauseMenu pauseMenu;
+
     // Keybinding buttons
     [SerializeField] private ControlRebindButton moveUp;
     [SerializeField] private ControlRebindButton moveDown;
@@ -138,11 +140,17 @@ public class ControlsMenu : MonoBehaviour
 
         // If an invalid binding is found (such as a duplicate), wait for new input instead
         // TODO: Alternatively, could catch duplicates and instead swap them (putting nothing "-" in the new one)?
-        // this doesn't consistently catch duplicates
         if(bindingIndex < 0){
-            // TODO: Give UI feedback that this is invalid!!!
-
             Debug.LogWarning("Invalid binding found. Binding index: " + bindingIndex);
+            CleanUpAction();
+            StartRebinding(key);
+            return;
+        }
+        // Once we have a valid binding index, check for duplicates
+        if(IsDuplicateBinding(key, action, bindingIndex)){
+            // TODO: Give UI feedback that it's a duplicate!
+
+            action.RemoveBindingOverride(bindingIndex);
             CleanUpAction();
             StartRebinding(key);
             return;
@@ -153,6 +161,21 @@ public class ControlsMenu : MonoBehaviour
         CleanUpAction();
         controls.Enable();
         SetBottomButtonsInteractable(true);
+    }
+
+    private bool IsDuplicateBinding(ControlKeys key, InputAction action, int bindingIndex)
+    {  
+        InputBinding newBinding = action.bindings[bindingIndex];
+        foreach( InputBinding binding in action.actionMap.bindings ){
+            if(binding.action == newBinding.action){
+                continue;
+            }
+            if(binding.effectivePath == newBinding.effectivePath){
+                Debug.Log("Duplicate binding found: " + newBinding.effectivePath);
+                return true;
+            }
+        }
+        return false;
     }
 
     // TODO: Switch to ICONS instead of text (text if no icon found presumably)
@@ -184,16 +207,18 @@ public class ControlsMenu : MonoBehaviour
 
     public void ApplyControlsChange()
     {
-        Debug.Log("Applying controls changes...");
-        saveLoadControls.StoreControlOverrides();
-        
+        saveLoadControls.StoreControlOverrides();        
         AlertTextUI.instance.UpdateAlertText();
+
+        SetControlPanelActive(false);
     }
 
+    // TODO: Fix this, it doesn't work
     public void CancelControlsChange()
     {
-        Debug.Log("No controls changes applied.");
         SetControlsToSavedValues();
+
+        SetControlPanelActive(false);
     }
 
     public void SetControlsToSavedValues()
@@ -213,6 +238,16 @@ public class ControlsMenu : MonoBehaviour
         UpdateAllButtonText();
         // could make it so that this is permanent and have a "are you sure?" popup, and then add the line below to set it
         // PlayerPrefs.DeleteKey("ControlOverrides");
+    }
+
+    private void SetControlPanelActive(bool set)
+    {
+        pauseMenu.controlsMenuPanel.SetActive(set);
+        pauseMenu.pauseMenuPanel.SetActive(!set);
+
+        if(!set){
+            pauseMenu.continueButton.Select();
+        }
     }
 
     private ControlRebindButton GetButtonFromKey(ControlKeys key)
@@ -259,8 +294,7 @@ public class ControlsMenu : MonoBehaviour
 
 
 /*
-    - If you try to set a duplicate -> that doesn't work -> set something else -> cancel, it saves it for some reason
-        > doesn't consistently catch duplicates
+    - sometimes cancel just still doesn't work normally (most of the time?)
 
-    - sometimes cancel just still doesn't work normally
+    - doesn't consistently switch between keyboard and controller
 */
