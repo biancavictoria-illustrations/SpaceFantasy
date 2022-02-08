@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,10 +34,11 @@ public class ControlsMenu : MonoBehaviour
     [SerializeField] private SaveLoadControls saveLoadControls;
 
     [SerializeField] private Button applyButton;
-    [SerializeField] private Button cancelButton;
     [SerializeField] private Button resetButton;
 
     [SerializeField] private PauseMenu pauseMenu;
+
+    public static bool inputDeviceChanged = false;
 
     // Keybinding buttons
     [SerializeField] private ControlRebindButton moveUp;
@@ -58,7 +59,7 @@ public class ControlsMenu : MonoBehaviour
     [SerializeField] private ControlRebindButton pause;
 
 
-    public void Start()
+    void Start()
     {
         buttons.Add(moveUp);
         buttons.Add(moveDown);
@@ -88,10 +89,17 @@ public class ControlsMenu : MonoBehaviour
         AlertTextUI.instance.UpdateAlertText();
     }
 
+    void Update()
+    {
+        if(inputDeviceChanged){
+            UpdateAllButtonText();
+            inputDeviceChanged = false;
+        }
+    }
+
     public void SetBottomButtonsInteractable(bool set)
     {
         applyButton.interactable = set;
-        cancelButton.interactable = set;
         resetButton.interactable = set;
     }
 
@@ -193,11 +201,8 @@ public class ControlsMenu : MonoBehaviour
 
         GetButtonFromKey(key).buttonText.text = InputControlPath.ToHumanReadableString(action.bindings[bindingIndex].effectivePath,
             InputControlPath.HumanReadableStringOptions.OmitDevice);
-
-        // TODO: do we have to deal with setting different device data or do the schemes handle that?
     }
 
-    // TODO: Call this if you switch input device
     private void UpdateAllButtonText()
     {
         foreach(ControlRebindButton b in buttons){
@@ -209,14 +214,6 @@ public class ControlsMenu : MonoBehaviour
     {
         saveLoadControls.StoreControlOverrides();        
         AlertTextUI.instance.UpdateAlertText();
-
-        SetControlPanelActive(false);
-    }
-
-    // TODO: Fix this, it doesn't work
-    public void CancelControlsChange()
-    {
-        SetControlsToSavedValues();
 
         SetControlPanelActive(false);
     }
@@ -240,12 +237,15 @@ public class ControlsMenu : MonoBehaviour
         // PlayerPrefs.DeleteKey("ControlOverrides");
     }
 
-    private void SetControlPanelActive(bool set)
+    public void SetControlPanelActive(bool set)
     {
         pauseMenu.controlsMenuPanel.SetActive(set);
         pauseMenu.pauseMenuPanel.SetActive(!set);
 
-        if(!set){
+        if(set){
+            applyButton.Select();
+        }
+        else{
             pauseMenu.continueButton.Select();
         }
     }
@@ -294,7 +294,6 @@ public class ControlsMenu : MonoBehaviour
 
 
 /*
-    - sometimes cancel just still doesn't work normally (most of the time?)
-
-    - doesn't consistently switch between keyboard and controller
+    - if we're going to access SPECIFIC device, use  UserDeviceManager.currentControlDevice
+    - otherwise, use  InputManager.instance.latestInputIsController
 */

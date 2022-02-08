@@ -12,6 +12,8 @@ public class AlertTextUI : MonoBehaviour
     [SerializeField] private TMP_Text controlButton;
     [SerializeField] private TMP_Text alertText;
 
+    public static bool inputDeviceChanged = false;
+
     private string interactControl; // TODO: Will likely become an icon later...?
     [SerializeField] private InputActionReference interactAction;
 
@@ -22,6 +24,14 @@ public class AlertTextUI : MonoBehaviour
         }
         else{
             instance = this;
+        }
+    }
+
+    void Update()
+    {
+        if(inputDeviceChanged){
+            UpdateAlertText();
+            inputDeviceChanged = false;
         }
     }
 
