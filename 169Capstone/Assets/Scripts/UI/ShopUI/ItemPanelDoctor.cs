@@ -82,6 +82,10 @@ public class ItemPanelDoctor : ItemPanelShopUI
 
     private void GetCurrentStatValue()
     {
+        if(!stats){
+            stats = FindObjectsOfType<PlayerStats>()[0];
+        }
+
         // If healing related thing
         if(category == UpgradeShopCategory.HealthPotion){
             currentStatValue = PlayerInventory.instance.healthPotionQuantity;

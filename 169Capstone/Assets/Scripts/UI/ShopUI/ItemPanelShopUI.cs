@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+ using UnityEngine.Events;
+ using UnityEngine.EventSystems;
 
 public enum ItemPanelPos{
     upperLeft,
@@ -12,7 +14,7 @@ public enum ItemPanelPos{
     lowerRight
 }
 
-public class ItemPanelShopUI : MonoBehaviour
+public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, IPointerEnterHandler, IPointerExitHandler
 {
     protected int baseCost;
     [HideInInspector] public int currentCostValue {get; protected set;}
@@ -56,17 +58,40 @@ public class ItemPanelShopUI : MonoBehaviour
         costText.text = "$" + currentCostValue;     // TODO: Change $ to better symbol, or just put the icon on the cards
     }
 
-    public void OnMouseOver()
+    private void SetHoverAlertsActive(bool set)
     {
         if(itemCardButton.interactable){
-            hoverAlerts.EnableAlert(panelPos, true);
+            hoverAlerts.EnableAlert(panelPos, set);
         }
     }
 
-    public void OnMouseExit()
+    public void OnPointerEnter(PointerEventData eventData)
     {
-        if(itemCardButton.interactable){
-            hoverAlerts.EnableAlert(panelPos, false);
-        }
+        SetHoverAlertsActive(true);
     }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        SetHoverAlertsActive(false);
+    }
+
+    public void OnSelect(BaseEventData eventData)
+    {
+        SetHoverAlertsActive(true);
+    }
+
+    public void OnDeselect(BaseEventData eventData)
+    {
+        SetHoverAlertsActive(false);
+    }
+
+    // public void OnMouseOver()
+    // {
+    //     SetHoverAlertsActive(true);
+    // }
+
+    // public void OnMouseExit()
+    // {
+    //     SetHoverAlertsActive(false);
+    // }
 }
