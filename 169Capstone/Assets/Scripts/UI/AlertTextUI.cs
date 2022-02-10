@@ -12,6 +12,8 @@ public class AlertTextUI : MonoBehaviour
     [SerializeField] private TMP_Text controlButton;
     [SerializeField] private TMP_Text alertText;
 
+    public bool alertTextIsActive = false;
+
     public static bool inputDeviceChanged = false;
 
     private string interactControl; // TODO: Will likely become an icon later...?
@@ -38,36 +40,47 @@ public class AlertTextUI : MonoBehaviour
     // TODO: "button" might become an image instead of a string
     private void SetAlertText(bool set, string button="", string newAlert="")
     {
-        alert.SetActive(set);
+        ToggleAlertText(set);
 
         controlButton.text = button;
         alertText.text = newAlert;
+    }
+
+    // For temporarily toggling in pause menu and other screens like that (if necessary)
+    public void ToggleAlertText(bool set)
+    {
+        alert.SetActive(set);
     }
 
     // Called when you leave a trigger
     public void DisableAlert()
     {
         SetAlertText(false);
+        alertTextIsActive = false;
     }
 
     public void EnableInteractAlert()
     {
         SetAlertText(true, interactControl, "INTERACT");
+        alertTextIsActive = true;
     }
 
     public void EnableShopAlert()
     {
         SetAlertText(true, interactControl, "SHOP");
+        alertTextIsActive = true;
     }
 
     public void EnableProceedDoorAlert()
     {
         SetAlertText(true, interactControl, "PROCEED");
+        alertTextIsActive = true;
     }
 
     public void EnableItemPickupAlert()
     {
         SetAlertText(true, interactControl, "EXAMINE");
+        alertTextIsActive = true;
     }
 
     public void UpdateAlertText()

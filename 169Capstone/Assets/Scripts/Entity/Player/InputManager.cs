@@ -164,8 +164,13 @@ public class InputManager : MonoBehaviour
         if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen){
             return;
         }
+        
         InGameUIManager.instance.SetInventoryUIActive(!InGameUIManager.instance.inventoryIsOpen);
         inventoryIsOpen = !inventoryIsOpen;
+
+        if(AlertTextUI.instance.alertTextIsActive){
+            AlertTextUI.instance.ToggleAlertText(!inventoryIsOpen);
+        }
     }
 
     public void OnUseHealthPotion(InputValue input)

@@ -24,15 +24,20 @@ public class ItemPanelDoctor : ItemPanelShopUI
 
     private PlayerStats stats;
 
+    private int upgradeBaseCost;
+    private const float costPowerValue = 1.25f;
+    private const float timeFactor = 0.0606f;
+
 
     // Called JUST first time you visit this shop per run
-    public void GenerateNewDoctorUpgradeValues(int upgradeBaseCost)
+    public void GenerateNewDoctorUpgradeValues(int _baseCost)
     {
         stats = FindObjectsOfType<PlayerStats>()[0];
-        GenerateNewPanelValues(upgradeBaseCost);
+        upgradeBaseCost = _baseCost;
+        GenerateNewPanelValues();
     }
 
-    private void GenerateNewPanelValues(int upgradeBaseCost)
+    private void GenerateNewPanelValues()
     {
         // === Generate Card Version/Name ===
         string upgradeName = "";
@@ -197,8 +202,20 @@ public class ItemPanelDoctor : ItemPanelShopUI
         UpdateCurrentCost();    // Updates cost value as well as UI
     }
 
+    // TODO: Update according to Salil's actual equation
     protected override void CalculateCurrentCost()
     {
-        // TODO
+        float cost = upgradeBaseCost;      // Set base cost
+
+        // Set coeff to (time factor * time in min) * stage factor
+        int playerFactor = 1;
+        float timeInMin = 0;        // TODO: Set to time in min
+        float stageFactor = 1f;     // TODO: Set to stage factor
+        float coeff = (playerFactor + timeInMin * timeFactor) * stageFactor;
+
+        // Raise coeff to the power of the costPowerValue
+        coeff = Mathf.Pow(coeff,costPowerValue);
+
+        currentCostValue = (int)Mathf.Floor(cost);       // Get int using Floor to round
     }
 }

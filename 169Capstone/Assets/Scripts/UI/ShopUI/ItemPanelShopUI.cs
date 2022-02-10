@@ -84,14 +84,4 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
     {
         SetHoverAlertsActive(false);
     }
-
-    // public void OnMouseOver()
-    // {
-    //     SetHoverAlertsActive(true);
-    // }
-
-    // public void OnMouseExit()
-    // {
-    //     SetHoverAlertsActive(false);
-    // }
 }
