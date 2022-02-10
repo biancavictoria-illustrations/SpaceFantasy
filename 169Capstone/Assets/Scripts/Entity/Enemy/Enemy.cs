@@ -4,16 +4,20 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
 {
+    public EnemyLogic logic;
+    public GameObject timerPrefab;
+
+    [HideInInspector] public Pathing path;
+    [HideInInspector] public bool canAttack = true;
+    [HideInInspector] public bool coroutineRunning = false;
+
+    [SerializeField] protected Animator animator;
+
     protected EnemyStats stats;
     protected bool windUpRunning = false;
     protected EntityHealth health;
     protected float currentHitPoints = 0;
-    public EnemyLogic logic;
-    [HideInInspector] public Pathing path;
-    [HideInInspector] public bool canAttack = true;
-    public GameObject timerPrefab;
-    [HideInInspector] public bool coroutineRunning = false;
-    [SerializeField] protected Animator animator;
+    protected AttackLogic nextAttack;
 
     protected abstract IEnumerator EnemyLogic(); 
 
@@ -25,9 +29,7 @@ public abstract class Enemy : MonoBehaviour
         if(stats)
             stats.initializeStats();
 
-        // need to set up enemy health in here
         health.maxHitpoints = stats.getMaxHitPoints();
-        //Debug.Log("Hitpoints = " + health.maxHitpoints.ToString());
         health.currentHitpoints = stats.getMaxHitPoints();
     }
 
@@ -38,14 +40,16 @@ public abstract class Enemy : MonoBehaviour
 
         path.speed = stats.getMoveSpeed();
         path.provokedRadius = logic.provokedRange;
-        path.attackRadius = logic.attackRange;
+
+        nextAttack = logic.attacks[Random.Range(0, logic.attacks.Count)];
+        path.attackRadius = nextAttack.attackRange;
     }
 
-    public void Update()
+    void Update()
     {
         canAttack = !GameManager.instance.inShopMode;
 
-        if((path.Provoked() || path.InAttackRange()) && !coroutineRunning && canAttack) // Update for damage later
+        if(!coroutineRunning && canAttack && (path.Provoked() || path.InAttackRange())) // Update for damage later
         {
             coroutineRunning = true;
             StartCoroutine(EnemyLogic());
@@ -58,18 +62,19 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    public void SetCooldown()
+    public virtual void SetCooldown()
     {
         animator.SetBool("InCoolDown", true);
         path.attacking = false;
         StartCoroutine(RunCoolDownTimer());
     }
 
-    private IEnumerator RunCoolDownTimer()
+    protected virtual IEnumerator RunCoolDownTimer()
     {
-        yield return new WaitForSeconds(logic.coolDown);
+        yield return new WaitForSeconds(nextAttack.coolDown);
         animator.SetBool("InCoolDown", false);
         animator.SetBool("WindUpInterrupted", false);
+        nextAttack = logic.attacks[Random.Range(0, logic.attacks.Count)];
         coroutineRunning = false;
     }
 

@@ -23,6 +23,24 @@ public class EntityHealth : MonoBehaviour
         private OnDeathEvent onDeath;
     #endregion
 
+    #region OnHit
+        public class OnHitEvent : UnityEvent<EntityHealth, float> {}
+
+        public OnHitEvent OnHit
+        {
+            get 
+            { 
+                if(onHit == null) 
+                    onHit = new OnHitEvent(); 
+                
+                return onHit;
+            }
+
+            set { onHit = value; }
+        }
+        private OnHitEvent onHit;
+    #endregion
+
     public float maxHitpoints;
     public float currentHitpoints;
 
@@ -67,6 +85,7 @@ public class EntityHealth : MonoBehaviour
     public bool Damage(float damage)
     {
         currentHitpoints -= damage;
+        OnHit.Invoke(this, damage);
         Debug.Log("Hitpoints");
         Debug.Log(currentHitpoints);
         
