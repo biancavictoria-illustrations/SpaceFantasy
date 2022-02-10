@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FlyingPathing : Pathing
+public class RangedPathing : Pathing
 {
-    private const float nearAttackRange = 7;
+    public float nearAttackRange = 7;
+    public bool needsLOS = true;
 
     private bool canPath = true;
     private Vector3 destination;
@@ -69,7 +70,8 @@ public class FlyingPathing : Pathing
         }
         
         //Flip the sprite to face the player
-        sprite.transform.localScale = new Vector3(-Mathf.Sign(Vector3.Dot(player.position - transform.position, Camera.main.transform.right)), sprite.transform.localScale.y, sprite.transform.localScale.z);
+        if(sprite)
+            sprite.transform.localScale = new Vector3(-Mathf.Sign(Vector3.Dot(player.position - transform.position, Camera.main.transform.right)), sprite.transform.localScale.y, sprite.transform.localScale.z);
     }
 
     public override bool Provoked()
@@ -90,7 +92,7 @@ public class FlyingPathing : Pathing
             return false;
 
         //If enemy doesn't have line of sight return false
-        if(Physics.Raycast(transform.position + Vector3.up * 2, player.position - transform.position, distance, LayerMask.GetMask("Environment")))
+        if(needsLOS && Physics.Raycast(transform.position + Vector3.up * 2, player.position - transform.position, distance, LayerMask.GetMask("Environment")))
             return false;
 
         return true;

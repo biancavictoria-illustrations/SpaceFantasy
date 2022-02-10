@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GroundPathing : Pathing
+public class MeleePathing : Pathing
 {
     protected override void HandleMovement()
     {
@@ -29,7 +29,8 @@ public class GroundPathing : Pathing
             agent.SetDestination(player.position);
 
             //Flip the sprite to face the direction it's moving
-            sprite.transform.localScale = new Vector3(-Mathf.Sign(Vector3.Dot(agent.velocity, Camera.main.transform.right)), sprite.transform.localScale.y, sprite.transform.localScale.z);
+            if(sprite)
+                sprite.transform.localScale = new Vector3(-Mathf.Sign(Vector3.Dot(agent.velocity, Camera.main.transform.right)), sprite.transform.localScale.y, sprite.transform.localScale.z);
         }
     }
 
