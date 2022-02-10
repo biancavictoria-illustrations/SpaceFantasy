@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
+using UnityEngine.EventSystems;
+using UnityEngine.Events;
+
+
 
 public class InputManager : MonoBehaviour
 {
@@ -15,6 +20,9 @@ public class InputManager : MonoBehaviour
     [HideInInspector] public bool useAccessory = false;
     [HideInInspector] public bool useHead = false;
     [HideInInspector] public bool useLegs = false;
+
+    public bool latestInputIsController {get; private set;}
+
     [HideInInspector] public Vector3 cursorLookDirection;
 
     private Player player;
@@ -28,6 +36,7 @@ public class InputManager : MonoBehaviour
         else{
             instance = this;
         }
+        latestInputIsController = false;
     }
 
     void Start()
@@ -48,6 +57,18 @@ public class InputManager : MonoBehaviour
             Vector2 cursorLookDirection2D = (mousePos - playerPositionOnScreen).normalized;                      //Get the vector from the player position to the cursor position 
             Vector3 lookDirectionRelativeToCamera = Camera.main.transform.right * cursorLookDirection2D.x + Camera.main.transform.up * cursorLookDirection2D.y; //Create the look vector in 3D space relative to the camera
             cursorLookDirection = Quaternion.FromToRotation(-Camera.main.transform.forward, Vector3.up) * lookDirectionRelativeToCamera;                        //Rotate the look vector to be in terms of world space
+        }
+    }
+
+    public void UpdateLatestInputDevice()
+    {
+        if((int)UserDeviceManager.currentControlDevice == 0){
+            latestInputIsController = false;
+            Debug.Log("input device is now keyboard/mouse");
+        }
+        else{
+            latestInputIsController = true;
+            Debug.Log("input device is now a controller");
         }
     }
 
@@ -87,12 +108,12 @@ public class InputManager : MonoBehaviour
         }
 
         // If nearby NPC is active and not already talking and has something to say
-        else if(NPC.ActiveNPC && !NPC.ActiveNPC.HaveTalkedToNPC()){
+        else if(NPC.ActiveNPC && !NPC.ActiveNPC.haveTalkedToThisRun){
             DialogueManager.instance.OnNPCInteracted();
         }
         // If nearby NPC is a shopkeeper and you HAVE talked to them already, just open the shop
-        else if(NPC.ActiveNPC && NPC.ActiveNPC.isShopkeeper){
-            InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.speakerData);
+        else if(NPC.ActiveNPC && NPC.ActiveNPC.SpeakerData().IsShopkeeper()){
+            InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.SpeakerData());
         }
 
         // If you're in range of a door, walk through it
@@ -153,7 +174,7 @@ public class InputManager : MonoBehaviour
             return;
         }
 
-        // TODO: Use health potion
+        PlayerInventory.instance.UseHealthPotion();
     }
 
     public void OnAccessoryAbility()

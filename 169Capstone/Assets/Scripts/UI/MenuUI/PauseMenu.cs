@@ -11,6 +11,7 @@ public class PauseMenu : MonoBehaviour
 
     public GameObject pauseMenuPanel;
     public GameObject settingsMenuPanel;
+    public GameObject controlsMenuPanel;
     public GameObject areYouSurePanel;
 
     public Button continueButton;
@@ -40,6 +41,7 @@ public class PauseMenu : MonoBehaviour
     private void ResetPauseUI()
     {
         settingsMenuPanel.SetActive(false);
+        controlsMenuPanel.SetActive(false);
         areYouSurePanel.SetActive(false);
         pauseMenuPanel.SetActive(true);
         
@@ -69,20 +71,20 @@ public class PauseMenu : MonoBehaviour
 
     private void SetOpenShopUIInteractable(bool set)
     {
-        if(NPC.ActiveNPC.speakerData.SpeakerID() == SpeakerID.Bryn){
+        if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Bryn){
             InGameUIManager.instance.brynShopUI.SetShopUIInteractable(set);
         }
-        else if(NPC.ActiveNPC.speakerData.SpeakerID() == SpeakerID.Stellan){
+        else if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Stellan){
             InGameUIManager.instance.stellanShopUI.SetShopUIInteractable(set);
         }
-        else if(NPC.ActiveNPC.speakerData.SpeakerID() == SpeakerID.Doctor){
+        else if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Doctor){
             InGameUIManager.instance.doctorShopUI.SetShopUIInteractable(set);
         }
-        else if(NPC.ActiveNPC.speakerData.SpeakerID() == SpeakerID.Andy){
+        else if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Andy){
             InGameUIManager.instance.weaponsShopUI.SetShopUIInteractable(set);
         }
         else{
-            Debug.LogError("Failed to access shop data for NPC " + NPC.ActiveNPC.speakerData.SpeakerID());
+            Debug.LogError("Failed to access shop data for NPC " + NPC.ActiveNPC.SpeakerData().SpeakerID());
         }
     }
 
@@ -93,36 +95,3 @@ public class PauseMenu : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 }
-
-/*
-    TODO:
-    =====
-    - bugs:
-        - after you purchase item -> leave shop -> open shop -> the purchased item is not interactable BUT no longer says "sold" and instead sets the item values again
-            -> doesn't add to YOUR inventory :(
-        - 
-
-    - make Item inherit from GeneratedEquipment
-    - EndRun function? game manager or elsewhere? (look @ game manager and the death screen UI)
-    - figure out where to save currency...
-    
-    - lots of "TODO"s everywhere in different UI scripts
-
-    - once saving exists: UI alert about how recently you saved in the "are you sure you want to quit" popup
-
-    - game -> pause -> main menu -> play -> can't move anymore (trying to access dead animator???)
-        -> was this fixed???
-*/
-
-
-
-
-/*
-    Future Polish TODO:
-    ===================
-    - the rightmost part of the item cards isn't interactable??? just the part around the rarity/type
-
-    - when setting UI interactable after pausing, specifically reselect the button you were on before pausing
-
-    - text size settings
-*/

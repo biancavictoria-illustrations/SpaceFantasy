@@ -14,21 +14,16 @@ public class ShopUIDoctor : ShopUI
 
     private void SetShopUIValues()
     {
-        // TODO: Only call this the FIRST time you interact with him
-        foreach(ItemPanelDoctor panel in itemPanels){
-            panel.GenerateNewDoctorUpgradeValues(upgradeBaseCost);
+        // If you haven't yet talk to him this run, generate new values
+        if(!NPC.ActiveNPC.haveTalkedToThisRun){
+            foreach(ItemPanelDoctor panel in itemPanels){
+                panel.GenerateNewDoctorUpgradeValues(upgradeBaseCost);
+            }
         }
-
-        // Ideally give NPCs a bool "have talked to this run" type thing to make it easier to check quickly
-        // if(!NPC.ActiveNPC.HaveTalkedToNPC()){
-        //     foreach(ItemPanelDoctor panel in itemPanels){
-        //         panel.GenerateNewDoctorUpgradeValues(upgradeBaseCost);
-        //     }
-        // }
-        // else{       // If you HAVE talked to him before, update prices and descriptions if necessary but don't generate new stats
-        //     foreach(ItemPanelDoctor panel in itemPanels){
-        //         panel.UpdateValues();
-        //     }
-        // }
+        else{   // Otherwise (if you HAVE talked to him already), just update prices/descriptions if necessary
+            foreach(ItemPanelDoctor panel in itemPanels){
+                panel.UpdateValues();
+            }
+        }
     }
 }

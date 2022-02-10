@@ -8,17 +8,17 @@ public class EnemyStats : EntityStats
 
     public void initializeStats()
     {
-        maxHitPointsBase = stats.maxHitPoints;
-        attackSpeedBase = stats.attackSpeed;
-        moveSpeedBase = stats.moveSpeed;
-        defenseBase = stats.defense;
-        dodgeChanceBase = stats.dodgeChance;
-        critChanceBase = stats.critChance;
-        critDamageBase = stats.critDamage;
-        stunChanceBase = stats.stunChance;
-        burnChanceBase = stats.burnChance;
-        slowChanceBase = stats.slowChance;
-        statusResistChanceBase = stats.statusResistChance;
+        maxHitPointsBase = stats.MaxHitPoints();
+        attackSpeedBase = stats.AttackSpeed();
+        moveSpeedBase = stats.MoveSpeed();
+        defenseBase = stats.Defense();
+        dodgeChanceBase = stats.DodgeChance();
+        critChanceBase = stats.CritChance();
+        critDamageBase = stats.CritDamage();
+        stunChanceBase = stats.StunChance();
+        burnChanceBase = stats.BurnChance();
+        slowChanceBase = stats.SlowChance();
+        statusResistChanceBase = stats.StatusResistChance();
 
         maxHitPointsMultiplier = 1;
         attackSpeedMultiplier = 1;

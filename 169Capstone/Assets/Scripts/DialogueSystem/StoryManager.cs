@@ -108,11 +108,12 @@ public class StoryManager : MonoBehaviour
         }
     }
 
-    // Increment run num when you BEGIN a new run (when leaving the hub world)?
-    // TODO: Call this when you begin a new run (probably Game Manager)
-    public void StartNewRun()
+    // Called by Game Manager when you end a run
+    public void OnRunEndUpdateStory()
     {
-        // Also when you begin a new run, reset all talked to bools
+        // TODO: Increment story beat values
+
+        // When you end a run, reset all talked to bools
         talkedToBryn = false;
         talkedToStellan = false;
         talkedToAndy = false;
