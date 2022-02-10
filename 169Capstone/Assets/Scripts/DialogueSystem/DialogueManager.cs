@@ -66,7 +66,7 @@ public class DialogueManager : MonoBehaviour
             if( StoryManager.instance.activeStoryBeats.Count > 0 ){
                 // Cycle the options and add ones for which the active NPC has something to say
                 foreach(StoryBeat beat in StoryManager.instance.activeStoryBeats){
-                    if( StoryManager.instance.SpeakerIsInSpeakerList(beat, NPC.ActiveNPC.speakerData.SpeakerID()) ){
+                    if( StoryManager.instance.SpeakerIsInSpeakerList(beat, NPC.ActiveNPC.SpeakerData().SpeakerID()) ){
                         sortedStoryBeats.Add(beat);
                     }
                 }
@@ -93,7 +93,7 @@ public class DialogueManager : MonoBehaviour
             // Loop through genericDialogueList and check if the conditions are met for each trigger type, then add if necessary
             foreach( StoryBeat beat in StoryManager.instance.genericStoryBeats.Keys ){
                 // Confirm that the active NPC has something to say about this beat; if not, skip it and move on to the next option
-                if( !StoryManager.instance.SpeakerIsInSpeakerList(beat, NPC.ActiveNPC.speakerData.SpeakerID()) ){
+                if( !StoryManager.instance.SpeakerIsInSpeakerList(beat, NPC.ActiveNPC.SpeakerData().SpeakerID()) ){
                     continue;
                 }
 
@@ -145,11 +145,13 @@ public class DialogueManager : MonoBehaviour
                 }
             }
 
+            // TODO: This doesn't actually work bc every time NPC start runs it resets its num run dialogue list
+            // Is this necessary? It won't run again as long as it's marked complete, and it won't run to begin with unless the num run matches
             if( sortedStoryBeats.Max.GetBeatType() == StoryBeatType.NumRuns ){
                 NPC.ActiveNPC.hasNumRunDialogueList.Remove(currentNumRunRemoveValue);
             }
 
-            Debug.Log("PLAYING DIALOGUE INTERACTION for " + NPC.ActiveNPC.speakerData.SpeakerID() + ": " + sortedStoryBeats.Max.GetYarnHeadNode());
+            Debug.Log("PLAYING DIALOGUE INTERACTION for " + NPC.ActiveNPC.SpeakerData().SpeakerID() + ": " + sortedStoryBeats.Max.GetYarnHeadNode());
 
             // Return the highest priority beat
             return sortedStoryBeats.Max.GetYarnHeadNode();
@@ -236,10 +238,10 @@ public class DialogueManager : MonoBehaviour
         StoryBeatType beatType = StoryManager.instance.GetBeatTypeFromString(beatTypeString);
         StoryBeat beat = StoryManager.instance.FindBeatFromNodeName(nodeName, beatType);
 
-        Debug.Log("Removing " + beat.GetYarnHeadNode() + " from " + NPC.ActiveNPC.speakerData.SpeakerID());
+        Debug.Log("Removing " + beat.GetYarnHeadNode() + " from " + NPC.ActiveNPC.SpeakerData().SpeakerID());
 
         // Remove the speaker
-        StoryManager.instance.RemoveSpeakerFromBeat(beat, NPC.ActiveNPC.speakerData.SpeakerID());
+        StoryManager.instance.RemoveSpeakerFromBeat(beat, NPC.ActiveNPC.SpeakerData().SpeakerID());
     }
 
     // Called by the Dialogue Runner to notify us that a node finished running
@@ -270,8 +272,8 @@ public class DialogueManager : MonoBehaviour
         InGameUIManager.instance.SetGameUIActive(true);
         NPC.ActiveNPC.TalkedToNPC();
 
-        if(NPC.ActiveNPC.isShopkeeper){
-            InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.speakerData);
+        if(NPC.ActiveNPC.SpeakerData().IsShopkeeper()){
+            InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.SpeakerData());
         }
     }
 }

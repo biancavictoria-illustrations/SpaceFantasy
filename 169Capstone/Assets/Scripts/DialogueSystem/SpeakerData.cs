@@ -37,6 +37,8 @@ public class SpeakerData : ScriptableObject
     [SerializeField] private Sprite portraitNeutral;
     // Can add different emotions
 
+    [SerializeField] private bool isShopkeeper;
+
     public Sprite GetEmotionPortrait(string emotion)
     {
         switch(emotion)
@@ -65,5 +67,10 @@ public class SpeakerData : ScriptableObject
     public List<int> NumRunDialogueList()
     {
         return hasNumRunDialogueList;
+    }
+
+    public bool IsShopkeeper()
+    {
+        return isShopkeeper;
     }
 }

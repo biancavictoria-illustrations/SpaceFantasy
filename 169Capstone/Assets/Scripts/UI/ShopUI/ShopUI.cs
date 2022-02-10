@@ -14,11 +14,22 @@ public class ShopUI : MonoBehaviour
 
     [SerializeField] protected List<ItemPanelShopUI> itemPanels = new List<ItemPanelShopUI>();
 
+    [SerializeField] protected ShopHoverAlerts hoverAlerts;
+
+    void Start()
+    {
+        foreach(ItemPanelShopUI panel in itemPanels){
+            panel.hoverAlerts = hoverAlerts;
+        }
+    }
+
     public virtual void OpenShopUI()
     {
         InputManager.instance.shopIsOpen = true;
         shopInventoryPanel.SetActive(true);
         fadedBackground.SetActive(true);
+        hoverAlerts.DisableAllHoverAlerts();
+
         shopInventoryTopButton.Select();
     }
   
@@ -27,6 +38,7 @@ public class ShopUI : MonoBehaviour
         InputManager.instance.shopIsOpen = false;
         shopInventoryPanel.SetActive(false);
         fadedBackground.SetActive(false);
+        hoverAlerts.DisableAllHoverAlerts();
 
         AlertTextUI.instance.EnableShopAlert();
     }
