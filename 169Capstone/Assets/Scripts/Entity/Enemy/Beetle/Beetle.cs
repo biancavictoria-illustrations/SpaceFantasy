@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Beetle : Enemy
 {
-    private const float phase1SlamFrequency = 0.5f;
-    private const float phase2SlamFrequency = 0.25f;
+    private const float phase1SlamFrequency = 0.25f;
+    private const float phase2SlamFrequency = 0.125f;
     private const float slamDuration = 2.5f;
 
     [SerializeField] private EnemyLogic phase1logic;
@@ -79,8 +79,10 @@ public class Beetle : Enemy
 
     public override void SetCooldown()
     {
+        if(attackRoutine != null)
+            StopCoroutine(attackRoutine);
+
         base.SetCooldown();
-        StopCoroutine(attackRoutine);
     }
 
     protected override IEnumerator RunCoolDownTimer()
@@ -90,7 +92,12 @@ public class Beetle : Enemy
         animator.SetBool("WindUpInterrupted", false);
 
         path.enabled = false;
+        AttackLogic previousAttack = nextAttack;
+
         nextAttack = logic.attacks[Random.Range(0, logic.attacks.Count)];
+        if(previousAttack == nextAttack)
+            nextAttack = logic.attacks[Random.Range(0, logic.attacks.Count)]; //Reroll next attack to try to prevent duplicate attacks
+
         path = attackToPathType[nextAttack];
         path.attackRadius = nextAttack.attackRange;
         path.enabled = true;
@@ -103,18 +110,37 @@ public class Beetle : Enemy
         attackRoutine = StartCoroutine(ChargeRoutine());
     }
 
-    private void SlamAttack()
+    public void SlamAttack()
     {
         attackRoutine = StartCoroutine(SlamRoutine());
+    }
+
+    public void ShockwaveAttack()
+    {
+        float distance = Vector3.Distance(player.transform.position, transform.position);
+        if(distance < nextAttack.attackRange)
+        {
+            player.GetComponent<EntityHealth>().Damage(logic.baseDamage * nextAttack.damageMultiplier);
+            Movement movement = player.GetComponent<Movement>();
+            movement.ApplyExternalVelocity((player.transform.position - transform.position).normalized * Mathf.Lerp(20f, 40f, distance/nextAttack.attackRange));
+            float jumpSpeed = movement.jumpSpeed;
+            movement.jumpSpeed = 15f;
+            movement.Jump();
+            movement.jumpSpeed = jumpSpeed;
+        }
     }
 
     private IEnumerator ChargeRoutine()
     {
         path.enabled = false;
         path.agent.enabled = false;
+
         Vector3 direction = player.transform.position - transform.position;
         direction.y = 0;
+        float randomMagnitude = direction.magnitude / 2;
+        direction += new Vector3(Random.Range(-randomMagnitude, randomMagnitude), 0, Random.Range(-randomMagnitude, randomMagnitude));
         direction = direction.normalized;
+
         float speed = stats.getMoveSpeed() * 2;
         transform.rotation = Quaternion.LookRotation(direction);
 
@@ -144,7 +170,8 @@ public class Beetle : Enemy
         int count = 0;
         while(count < slamDuration/slamDebrisFrequency)
         {
-            Instantiate(debrisPrefab, transform.position, Quaternion.identity);
+            GameObject debris = Instantiate(debrisPrefab, transform.position, Quaternion.identity);
+            debris.GetComponent<FallingDebris>().damage = logic.baseDamage * nextAttack.damageMultiplier;
             ++count;
             yield return new WaitForSeconds(slamDebrisFrequency);
         }
@@ -155,13 +182,13 @@ public class Beetle : Enemy
         logic = phase2logic;
         isPhase2 = true;
 
-        attackToPathType = new Dictionary<AttackLogic, Pathing>();
+        attackToPathType.Clear();
         attackToPathType.Add(logic.attacks[0], rangedPath);
         attackToPathType.Add(logic.attacks[1], meleePath);
         attackToPathType.Add(logic.attacks[2], rangedPath);
         attackToPathType.Add(logic.attacks[3], rangedPath);
         
-        attackToAnimationTrigger = new Dictionary<AttackLogic, string>();
+        attackToAnimationTrigger.Clear();
         attackToAnimationTrigger.Add(logic.attacks[0], "isCharge");
         attackToAnimationTrigger.Add(logic.attacks[1], "isShockwave");
         attackToAnimationTrigger.Add(logic.attacks[2], "isSlam");

@@ -193,10 +193,15 @@ public class Movement : MonoBehaviour
 
         if(isGrounded)
         {
-            fallingVelocity = jumpSpeed * Time.fixedDeltaTime;
-            isGrounded = false;
-            isJumping = true;
+            Jump();
         }
+    }
+
+    public void Jump()
+    {
+        fallingVelocity = jumpSpeed * Time.fixedDeltaTime;
+        isGrounded = false;
+        isJumping = true;
     }
 
     public void OnJumpCanceled()
