@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class Beetle : Enemy
 {
+    private const float phase1SlamFrequency = 0.5f;
+    private const float phase2SlamFrequency = 0.25f;
+    private const float slamDuration = 2.5f;
+
     [SerializeField] private EnemyLogic phase1logic;
     [SerializeField] private EnemyLogic phase2logic;
+    [SerializeField] private GameObject debrisPrefab;
 
     private Player player;
+    private Coroutine attackRoutine;
     private MeleePathing meleePath;
     private RangedPathing rangedPath;
     private Dictionary<AttackLogic, Pathing> attackToPathType;
     private Dictionary<AttackLogic, string> attackToAnimationTrigger;
     private bool isPhase2;
+    private float slamDebrisFrequency { get { return isPhase2 ? phase2SlamFrequency : phase1SlamFrequency; } }
 
     protected override void Start()
     {
@@ -70,6 +77,12 @@ public class Beetle : Enemy
         }
     }
 
+    public override void SetCooldown()
+    {
+        base.SetCooldown();
+        StopCoroutine(attackRoutine);
+    }
+
     protected override IEnumerator RunCoolDownTimer()
     {
         yield return new WaitForSeconds(nextAttack.coolDown);
@@ -87,7 +100,12 @@ public class Beetle : Enemy
 
     private void ChargeAttack()
     {
-        StartCoroutine(ChargeRoutine());
+        attackRoutine = StartCoroutine(ChargeRoutine());
+    }
+
+    private void SlamAttack()
+    {
+        attackRoutine = StartCoroutine(SlamRoutine());
     }
 
     private IEnumerator ChargeRoutine()
@@ -119,6 +137,17 @@ public class Beetle : Enemy
         path.enabled = true;
         animator.SetBool("isCharge", false);
         SetCooldown();
+    }
+
+    private IEnumerator SlamRoutine()
+    {
+        int count = 0;
+        while(count < slamDuration/slamDebrisFrequency)
+        {
+            Instantiate(debrisPrefab, transform.position, Quaternion.identity);
+            ++count;
+            yield return new WaitForSeconds(slamDebrisFrequency);
+        }
     }
 
     private void MoveToPhase2()

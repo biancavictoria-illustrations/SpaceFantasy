@@ -62,7 +62,7 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    public void SetCooldown()
+    public virtual void SetCooldown()
     {
         animator.SetBool("InCoolDown", true);
         path.attacking = false;

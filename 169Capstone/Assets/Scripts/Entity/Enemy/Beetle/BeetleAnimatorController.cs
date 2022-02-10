@@ -21,6 +21,22 @@ public class BeetleAnimatorController : MonoBehaviour
 
     public void PerformAttack(AttackType attack)
     {
+        switch(attack)
+        {
+            case AttackType.Charge:
+                break;
 
+            case AttackType.Slam:
+                break;
+
+            case AttackType.Shockwave:
+                break;
+
+            case AttackType.ArcaneMissiles:
+                break;
+
+            default:
+                break;
+        }
     }
 }
