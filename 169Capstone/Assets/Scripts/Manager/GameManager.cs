@@ -10,9 +10,6 @@ public class GameManager : MonoBehaviour
 
     public int currentRunNumber {get; private set;}
 
-    // public int permanentCurrency {get; private set;}
-    // public int tempCurrency {get; private set;}
-
     private InputManager inputManager;
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform playerTransform;
@@ -38,9 +35,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         currentRunNumber = 1;
-
-        // SetPermanentCurrency(0);
-        // SetTempCurrency(0);
+        
         //Instantiate(playerPrefab, playerTransform.position, playerTransform.rotation);
     }
 
@@ -65,27 +60,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void StartNewRun()
+    // Add any other reset stuff here too (called when player goes from death screen -> main hub)
+    public void EndRun()
     {
+        // Unequip all items, clear temp currency, clear potions
+        PlayerInventory.instance.ClearRunInventory();
+
+        // Set all NPC talked to variables to false and increment story beats
+        StoryManager.instance.OnRunEndUpdateStory();
+        
+        // Increment run # -> once in main hub, run # always = # of your NEXT run (not previous)
         currentRunNumber++;
     }
-
-    // public void EndRun()
-    // {
-    //     SetTempCurrency(0);
-    // }
-
-    // public void SetPermanentCurrency(int value)
-    // {
-    //     permanentCurrency = value;
-    //     InGameUIManager.instance.SetPermanentCurrencyValue(permanentCurrency);
-    // }
-
-    // public void SetTempCurrency(int value)
-    // {
-    //     tempCurrency = value;
-    //     InGameUIManager.instance.SetTempCurrencyValue(tempCurrency);
-    // }
 
     public void ChangeScene()
     {
@@ -115,8 +101,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadGame()
     {
-        if (File.Exists(Application.persistentDataPath + "/gamesave.save"))
-        {
+        if (File.Exists(Application.persistentDataPath + "/gamesave.save")){
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(Application.persistentDataPath + "/gamesave.save", FileMode.Open);
             Save save = (Save)bf.Deserialize(file);
@@ -126,8 +111,7 @@ public class GameManager : MonoBehaviour
 
             Debug.Log("Game Loaded");
         }
-        else
-        {
+        else{
             Debug.Log("No game saved!");
         }
     }

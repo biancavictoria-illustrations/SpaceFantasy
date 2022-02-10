@@ -21,7 +21,7 @@ public class ItemPanelGearShop : ItemPanelShopUI
         item = _item;
         EquipmentData data = item.equipmentData;
 
-        item.CalculateCurrentCost();
+        CalculateCurrentCost();
         SetBaseShopItemValues(item.currentCost, data.ItemName(), data.ShortDescription());
 
         itemIcon.sprite = data.Icon();
@@ -33,6 +33,7 @@ public class ItemPanelGearShop : ItemPanelShopUI
     public void OnItemClicked()
     {
         shopUI.activeCompareItem = this;
+        hoverAlerts.EnableAlert(panelPos, false);
         shopUI.ToggleShopCompareOn();
     }
 
@@ -44,5 +45,11 @@ public class ItemPanelGearShop : ItemPanelShopUI
 
         descriptionText.text = "<b><color=red>SOLD";
         itemCardButton.interactable = false;
+    }
+
+    protected override void CalculateCurrentCost()
+    {
+        item.CalculateCurrentCost();
+        currentCostValue = item.currentCost;
     }
 }

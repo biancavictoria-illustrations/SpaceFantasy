@@ -3,11 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+ using UnityEngine.Events;
+ using UnityEngine.EventSystems;
 
-public class ItemPanelShopUI : MonoBehaviour
+public enum ItemPanelPos{
+    upperLeft,
+    upperMid,
+    upperRight,
+    lowerLeft,
+    lowerRight
+}
+
+public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, IPointerEnterHandler, IPointerExitHandler
 {
     protected int baseCost;
-    [HideInInspector] public int currentCostValue;
+    [HideInInspector] public int currentCostValue {get; protected set;}
     
     [SerializeField] protected TMP_Text costText;
     [SerializeField] protected TMP_Text itemName;
@@ -15,11 +25,13 @@ public class ItemPanelShopUI : MonoBehaviour
 
     [SerializeField] protected Button itemCardButton;
 
+    [SerializeField] protected ItemPanelPos panelPos;   // Set in the inspector
+    public ShopHoverAlerts hoverAlerts;
     
     protected void SetBaseShopItemValues(int iBaseCost, string iName, string iDesc)
     {
         baseCost = iBaseCost;
-        UpdateCostUI();        
+        UpdateCurrentCost();        
         itemName.text = iName;
         descriptionText.text = iDesc;
     }
@@ -34,19 +46,52 @@ public class ItemPanelShopUI : MonoBehaviour
         PlayerInventory.instance.SetTempCurrency(PlayerInventory.instance.tempCurrency - currentCostValue);
     }
 
-    // Hypothetically shouldn't be here? Items calculate their own cost value instead...? Doctor shop might need something like this tho
-    protected virtual int CalculateCurrentCost()    // virtual bc need to implement variants for children prob
+    protected virtual void CalculateCurrentCost()
     {
-        // TODO
-
-        currentCostValue = baseCost;    // TEMP
-
-        return currentCostValue;
+        // Implemented uniquely in children
     }
 
-    public void UpdateCostUI()
+    // Updates both cost value and UI
+    public void UpdateCurrentCost()
     {
-        currentCostValue = CalculateCurrentCost();
+        CalculateCurrentCost();
         costText.text = "$" + currentCostValue;     // TODO: Change $ to better symbol, or just put the icon on the cards
     }
+
+    private void SetHoverAlertsActive(bool set)
+    {
+        if(itemCardButton.interactable){
+            hoverAlerts.EnableAlert(panelPos, set);
+        }
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        SetHoverAlertsActive(true);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        SetHoverAlertsActive(false);
+    }
+
+    public void OnSelect(BaseEventData eventData)
+    {
+        SetHoverAlertsActive(true);
+    }
+
+    public void OnDeselect(BaseEventData eventData)
+    {
+        SetHoverAlertsActive(false);
+    }
+
+    // public void OnMouseOver()
+    // {
+    //     SetHoverAlertsActive(true);
+    // }
+
+    // public void OnMouseExit()
+    // {
+    //     SetHoverAlertsActive(false);
+    // }
 }
