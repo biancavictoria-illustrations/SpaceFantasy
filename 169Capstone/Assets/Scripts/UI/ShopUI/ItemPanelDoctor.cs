@@ -157,27 +157,27 @@ public class ItemPanelDoctor : ItemPanelShopUI
         }
         else{
             if(statName == PlayerFacingStatName.STR){
-                stats.IncrementStrength();
+                stats.SetStrength( stats.Strength() + 1 );
                 IncrementStatValue();
             }
             else if(statName == PlayerFacingStatName.DEX){
-                stats.IncrementDexterity();
+                stats.SetDexterity( stats.Dexterity() + 1 );
                 IncrementStatValue();
             }
             else if(statName == PlayerFacingStatName.INT){
-                stats.IncrementIntelligence();
+                stats.SetIntelligence( stats.Intelligence() + 1 );
                 IncrementStatValue();
             }
             else if(statName == PlayerFacingStatName.WIS){
-                stats.IncrementWisdom();
+                stats.SetWisdom( stats.Wisdom() + 1 );
                 IncrementStatValue();
             }
             else if(statName == PlayerFacingStatName.CHA){
-                stats.IncrementCharisma();
+                stats.SetCharisma( stats.Charisma() + 1 );
                 IncrementStatValue();
             }
             else{
-                stats.IncrementConstitution();
+                stats.SetConstitution( stats.Constitution() + 1 );
                 IncrementStatValue();
             }
 
