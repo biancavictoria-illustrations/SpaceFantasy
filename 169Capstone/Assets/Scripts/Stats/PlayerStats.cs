@@ -264,34 +264,34 @@ public class PlayerStats : EntityStats
         return value;
     }
 
-    public void IncrementStrength()
+    public void SetStrength(int value)
     {
-        strength++;
+        strength = value;
     }
 
-    public void IncrementDexterity()
+    public void SetDexterity(int value)
     {
-        dexterity++;
+        dexterity = value;
     }
 
-    public void IncrementIntelligence()
+    public void SetIntelligence(int value)
     {
-        intelligence++;
+        intelligence = value;
     }
 
-    public void IncrementWisdom()
+    public void SetWisdom(int value)
     {
-        wisdom++;
+        wisdom = value;
     }
 
-    public void IncrementCharisma()
+    public void SetCharisma(int value)
     {
-        charisma++;
+        charisma = value;
     }
 
-    public void IncrementConstitution()
+    public void SetConstitution(int value)
     {
-        constitution++;
+        constitution = value;
     }
 
     public void SetHealingEfficacyFlatBonus(int value)
