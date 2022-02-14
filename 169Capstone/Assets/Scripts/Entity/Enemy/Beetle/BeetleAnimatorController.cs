@@ -27,9 +27,11 @@ public class BeetleAnimatorController : MonoBehaviour
                 break;
 
             case AttackType.Slam:
+                beetle.SlamAttack();
                 break;
 
             case AttackType.Shockwave:
+                beetle.ShockwaveAttack();
                 break;
 
             case AttackType.ArcaneMissiles:

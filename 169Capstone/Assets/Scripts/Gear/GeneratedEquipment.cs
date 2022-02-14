@@ -36,6 +36,10 @@ public class GeneratedEquipment : MonoBehaviour
     // Dropped gear you are in range of
     public static GeneratedEquipment ActiveGearDrop {get; private set;}
 
+    private const float rarityMultiplierBase = 1.2f;
+    private const float costPowerValue = 1.25f;
+    private const float timeFactor = 0.0606f;
+
     void Start()
     {
         CalculateCurrentCost();
@@ -57,8 +61,22 @@ public class GeneratedEquipment : MonoBehaviour
 
     public void CalculateCurrentCost()
     {
-        // TODO
-        currentCost = equipmentData.BaseCost();
+        float cost = equipmentData.BaseCost();      // Set base cost
+
+        // Set the rarity multiplier (rarity multiplier base to a power of the ItemRarity value)
+        float rarityMultiplier = Mathf.Pow(rarityMultiplierBase, (int)rarity);
+
+        // Set coeff to (time factor * time in min) * stage factor
+        int playerFactor = 1;
+        float timeInMin = 0;        // TODO: Set to time in min
+        float stageFactor = 1f;     // TODO: Set to stage factor
+        float coeff = (playerFactor + timeInMin * timeFactor) * stageFactor;
+
+        // Raise coeff to the power of the costPowerValue
+        coeff = Mathf.Pow(coeff,costPowerValue);
+
+        cost = cost * coeff * rarityMultiplier;     // Multiply base cost by coeff and rarity multiplier
+        currentCost = (int)Mathf.Floor(cost);       // Get int using Floor to round
     }
 
     public void SetEquipmentData(EquipmentData _data, ItemRarity _rarity)
