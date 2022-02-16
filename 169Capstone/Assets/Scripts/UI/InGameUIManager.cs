@@ -127,7 +127,7 @@ public class InGameUIManager : MonoBehaviour
     {
         currentHPValue = currentHP;
 
-        healthText.text = currentHP + " / " + maxHealthValue;
+        healthText.text = Mathf.FloorToInt(currentHP) + " / " + maxHealthValue;
 
         healthSlider.value = currentHP;
 
