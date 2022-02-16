@@ -16,7 +16,7 @@ public class RangedPathing : Pathing
 
         if(!canPath || InAttackRange() || gameManager.inShopMode)
         {
-            Debug.Log("Entered Attack Range");
+            //Debug.Log("Entered Attack Range");
             agent.isStopped = true;
             destination = Vector3.zero;
         }
