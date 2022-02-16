@@ -16,6 +16,11 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private Image inGameHelmetIMG;
     [SerializeField] private Image inGameBootsIMG;
 
+    [SerializeField] private Sprite emptySlotWeaponIcon;
+    [SerializeField] private Sprite emptySlotAccessoryIcon;
+    [SerializeField] private Sprite emptySlotHelmetIcon;
+    [SerializeField] private Sprite emptySlotBootsIcon;
+
     [SerializeField] private GameObject darkBackgroundPanel;
 
     public DeathScreenUI deathScreen;
@@ -102,7 +107,23 @@ public class InGameUIManager : MonoBehaviour
 
     public void SetGearItemUI(InventoryItemSlot itemSlot, GeneratedEquipment item)
     {
-        // TODO: Get item data and set values (at least icon)
+        switch(itemSlot){
+            case InventoryItemSlot.Weapon:
+                inGameWeaponIMG.sprite = item.equipmentData.Icon();
+                break;
+            case InventoryItemSlot.Accessory:
+                inGameAccessoryIMG.sprite = item.equipmentData.Icon();
+                break;
+            case InventoryItemSlot.Helmet:
+                inGameHelmetIMG.sprite = item.equipmentData.Icon();
+                break;
+            case InventoryItemSlot.Boots:
+                inGameBootsIMG.sprite = item.equipmentData.Icon();
+                break;
+            default:
+                Debug.LogError("No item icon found for slot: " + itemSlot.ToString());
+                return;
+        }
         
         // Can we set InventoryUI values here (and in ClearItemUI) or no because it's not active?
         // Might want to change that structure in order to be able to access those values, if it's possible
@@ -110,7 +131,28 @@ public class InGameUIManager : MonoBehaviour
 
     public void ClearItemUI(InventoryItemSlot itemSlot)
     {
-        // TODO: Set icon to default
+        if(!emptySlotAccessoryIcon || !emptySlotBootsIcon || !emptySlotWeaponIcon || !emptySlotHelmetIcon){
+            Debug.LogWarning("Empty item icons have not been set");
+            return;
+        }
+
+        switch(itemSlot){
+            case InventoryItemSlot.Weapon:
+                inGameWeaponIMG.sprite = emptySlotWeaponIcon;
+                break;
+            case InventoryItemSlot.Accessory:
+                inGameAccessoryIMG.sprite = emptySlotAccessoryIcon;
+                break;
+            case InventoryItemSlot.Helmet:
+                inGameHelmetIMG.sprite = emptySlotHelmetIcon;
+                break;
+            case InventoryItemSlot.Boots:
+                inGameBootsIMG.sprite = emptySlotBootsIcon;
+                break;
+            default:
+                Debug.LogError("No item icon found for slot: " + itemSlot.ToString());
+                return;
+        }
     }
 
     public void SetPermanentCurrencyValue(int money)
@@ -127,13 +169,14 @@ public class InGameUIManager : MonoBehaviour
     {
         currentHPValue = currentHP;
 
-        healthText.text = Mathf.FloorToInt(currentHP) + " / " + maxHealthValue;
-
-        healthSlider.value = currentHP;
-
         if( currentHP > maxHealthValue ){
             Debug.LogError("Current HP set greater than max HP!");
+            currentHPValue = maxHealthValue;
         }
+
+        healthText.text = Mathf.FloorToInt(currentHPValue) + " / " + maxHealthValue;
+
+        healthSlider.value = currentHPValue;        
     }
 
     public void SetMaxHealthValue(float maxHP)

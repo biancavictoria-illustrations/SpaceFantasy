@@ -3,20 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class AlertTextUI : MonoBehaviour
 {
     public static AlertTextUI instance;
 
     [SerializeField] private GameObject alert;
-    [SerializeField] private TMP_Text controlButton;
+    [SerializeField] private Image controlButtonIcon;
+    [SerializeField] private TMP_Text controlButtonText;
     [SerializeField] private TMP_Text alertText;
 
     public bool alertTextIsActive = false;
 
     public static bool inputDeviceChanged = false;
 
-    private string interactControl; // TODO: Will likely become an icon later...?
+    private Sprite interactControlIcon;
+    private string interactControlString;
+    
     [SerializeField] private InputActionReference interactAction;
 
     void Awake()
@@ -37,13 +41,25 @@ public class AlertTextUI : MonoBehaviour
         }
     }
 
-    // TODO: "button" might become an image instead of a string
-    private void SetAlertText(bool set, string button="", string newAlert="")
+    private void SetAlertText(bool set, Sprite _icon=null, string _text="", string newAlertDescription="")
     {
         ToggleAlertText(set);
 
-        controlButton.text = button;
-        alertText.text = newAlert;
+        if(_icon){
+            controlButtonIcon.gameObject.SetActive(true);
+            controlButtonText.gameObject.SetActive(false);
+
+            controlButtonIcon.sprite = _icon;
+            controlButtonIcon.preserveAspect = true;
+        }
+        else{
+            controlButtonIcon.gameObject.SetActive(false);
+            controlButtonText.gameObject.SetActive(true);
+            
+            controlButtonText.text = _text;
+        }
+
+        alertText.text = newAlertDescription;
     }
 
     // For temporarily toggling in pause menu and other screens like that (if necessary)
@@ -61,38 +77,45 @@ public class AlertTextUI : MonoBehaviour
 
     public void EnableInteractAlert()
     {
-        SetAlertText(true, interactControl, "INTERACT");
+        SetAlertText(true, interactControlIcon, interactControlString, "INTERACT");
         alertTextIsActive = true;
     }
 
     public void EnableShopAlert()
     {
-        SetAlertText(true, interactControl, "SHOP");
+        SetAlertText(true, interactControlIcon, interactControlString, "SHOP");
         alertTextIsActive = true;
     }
 
     public void EnableProceedDoorAlert()
     {
-        SetAlertText(true, interactControl, "PROCEED");
+        SetAlertText(true, interactControlIcon, interactControlString, "PROCEED");
         alertTextIsActive = true;
     }
 
     public void EnableItemPickupAlert()
     {
-        SetAlertText(true, interactControl, "EXAMINE");
+        SetAlertText(true, interactControlIcon, interactControlString, "EXAMINE");
         alertTextIsActive = true;
     }
 
     public void UpdateAlertText()
     {
-        interactControl = GetActionIcon(interactAction);
-        controlButton.text = interactControl;   // Will need to change this if there's more than just this one...
+        interactControlString = GetActionString(interactAction);
+        interactControlIcon = GetActionIcon();
+
+        controlButtonText.text = interactControlString;   // Will need to change this if there's more than just this one...
     }
 
-    private string GetActionIcon(InputActionReference action)
+    private string GetActionString(InputActionReference action)
     {
         int bindingIndex = action.action.GetBindingIndexForControl(action.action.controls[0]);
-        return InputControlPath.ToHumanReadableString(action.action.bindings[bindingIndex].effectivePath,
-            InputControlPath.HumanReadableStringOptions.OmitDevice);
+        return InputControlPath.ToHumanReadableString(action.action.bindings[bindingIndex].effectivePath,InputControlPath.HumanReadableStringOptions.OmitDevice);
+    }
+
+    private Sprite GetActionIcon()
+    {
+        // TODO
+        return null;
     }
 }
