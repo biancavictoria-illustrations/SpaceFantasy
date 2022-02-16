@@ -28,7 +28,6 @@ public class FallingDebris : MonoBehaviour
             float angle = Random.Range(0, Mathf.PI * 2);
             float magnitude = Random.Range(5f, 30f);
             newPosition = spawnPosition + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * magnitude;
-            Debug.Log(newPosition);
             ++count;
         }
         while (count < 100 && !agent.CalculatePath(newPosition, path));

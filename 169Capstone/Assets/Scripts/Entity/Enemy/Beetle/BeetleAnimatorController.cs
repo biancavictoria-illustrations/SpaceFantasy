@@ -35,6 +35,7 @@ public class BeetleAnimatorController : MonoBehaviour
                 break;
 
             case AttackType.ArcaneMissiles:
+                beetle.ShootMissile();
                 break;
 
             default:
