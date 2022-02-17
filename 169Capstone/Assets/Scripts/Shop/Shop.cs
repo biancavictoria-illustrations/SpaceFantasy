@@ -45,6 +45,8 @@ public class Shop : MonoBehaviour
     private GeneratedEquipment GenerateItem(ItemRarity rarity)
     {
         // Generate a new (randomly selected) item with the determined rarity
+
+        // TODO: Don't use new here, need to instantiate it
         GeneratedEquipment item = new GeneratedEquipment();
         item.SetEquipmentData( PickItemFromPool(), rarity );
 
