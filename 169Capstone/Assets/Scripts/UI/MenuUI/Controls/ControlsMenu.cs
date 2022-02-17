@@ -45,8 +45,8 @@ public class ControlsMenu : MonoBehaviour
     // [SerializeField] private DeviceButtonSpritesObject spritesForSwitchProControls;
     // Anything else and we just use strings instead and hope for the best
 
-    public Dictionary<ControlKeys, Sprite> currentControlButtonSpritesForKeyboard {get; private set;}
-    public Dictionary<ControlKeys, Sprite> currentControlButtonSpritesForController {get; private set;}
+    public static Dictionary<ControlKeys, Sprite> currentControlButtonSpritesForKeyboard {get; private set;}
+    public static Dictionary<ControlKeys, Sprite> currentControlButtonSpritesForController {get; private set;}
 
     public static bool inputDeviceChanged = false;
 
