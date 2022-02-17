@@ -40,9 +40,9 @@ public class ControlsMenu : MonoBehaviour
 
     [SerializeField] private DeviceButtonSpritesObject spritesForKeyboardControls;
     [SerializeField] private DeviceButtonSpritesObject spritesForXboxControls;
-    [SerializeField] private DeviceButtonSpritesObject spritesForPlayStationControls;
-    [SerializeField] private DeviceButtonSpritesObject spritesForSwitchJoyconControls;
-    [SerializeField] private DeviceButtonSpritesObject spritesForSwitchProControls;
+    // [SerializeField] private DeviceButtonSpritesObject spritesForPlayStationControls;
+    // [SerializeField] private DeviceButtonSpritesObject spritesForSwitchJoyconControls;
+    // [SerializeField] private DeviceButtonSpritesObject spritesForSwitchProControls;
     // Anything else and we just use strings instead and hope for the best
 
     public Dictionary<ControlKeys, Sprite> currentControlButtonSpritesForKeyboard {get; private set;}
@@ -146,13 +146,27 @@ public class ControlsMenu : MonoBehaviour
         SetBottomButtonsInteractable(false);
 
         GetButtonFromKey(key).buttonText.text = "...";
+        // TODO: set temp visual for if it had icons
+
         InputAction action = GetAction(key);
 
-        rebindingOperation = action.PerformInteractiveRebinding()
-            .WithControlsExcluding("Mouse")
-            .OnMatchWaitForAnother(0.1f)
-            .OnComplete(operation => RebindComplete(key,action))
-            .Start();
+        // If latest input is controller, only rebind this for that control scheme
+        if( InputManager.instance.latestInputIsController ){
+            rebindingOperation = action.PerformInteractiveRebinding()
+                .WithBindingGroup("Gamepad")
+                .WithControlsExcluding("Mouse")
+                .OnMatchWaitForAnother(0.1f)
+                .OnComplete(operation => RebindComplete(key,action))
+                .Start();
+        }   // Else only rebind for keyboard scheme
+        else{
+            rebindingOperation = action.PerformInteractiveRebinding()
+                .WithBindingGroup("Keyboard")
+                .WithControlsExcluding("Mouse")
+                .OnMatchWaitForAnother(0.1f)
+                .OnComplete(operation => RebindComplete(key,action))
+                .Start();
+        }        
     }
 
     private void RebindComplete(ControlKeys key, InputAction action)
@@ -237,7 +251,7 @@ public class ControlsMenu : MonoBehaviour
         if( buttonSprite ){
             // If ther IS an icon, deactivate the text and set the sprite
             button.buttonText.gameObject.SetActive(false);
-            button.SetIconSprite(buttonSprite);            
+            button.SetIconSprite(buttonSprite);
         }
         else{
             // If not, set the image back to the default UI sprite, activate button text, and set the text to the name of the control

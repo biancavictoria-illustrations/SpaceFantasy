@@ -6,8 +6,6 @@ using UnityEngine.InputSystem.Users;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
-
-
 public class InputManager : MonoBehaviour
 {
     public static InputManager instance;
@@ -22,6 +20,7 @@ public class InputManager : MonoBehaviour
     [HideInInspector] public bool useLegs = false;
 
     public bool latestInputIsController {get; private set;}
+    public InputDevice currentDevice {get; private set;}
 
     [HideInInspector] public Vector3 cursorLookDirection;
 
@@ -37,6 +36,7 @@ public class InputManager : MonoBehaviour
             instance = this;
         }
         latestInputIsController = false;
+        currentDevice = InputDevice.KeyboardMouse;
     }
 
     void Start()
@@ -64,10 +64,15 @@ public class InputManager : MonoBehaviour
     {
         if((int)UserDeviceManager.currentControlDevice == 0){
             latestInputIsController = false;
+            currentDevice = InputDevice.KeyboardMouse;
             Debug.Log("input device is now keyboard/mouse");
         }
         else{
             latestInputIsController = true;
+
+            // InputDevice.
+            // UserDeviceManager.currentControlDevice
+
             Debug.Log("input device is now a controller");
         }
     }
