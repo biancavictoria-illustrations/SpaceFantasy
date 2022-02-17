@@ -32,6 +32,9 @@ public class Player : MonoBehaviour
         health = gameObject.GetComponent<EntityHealth>();
         health.maxHitpoints = 30;
         health.currentHitpoints = 30;
+
+        health.SetStartingHealthUI();
+
         //Debug.Log("here");
         //health.maxHitpoints = stats.getMaxHitPoints();
         //health.currentHitpoints = stats.getMaxHitPoints();
