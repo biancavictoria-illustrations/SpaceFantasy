@@ -42,10 +42,11 @@ public class Drop : ScriptableObject
             // Create item to drop in physical space from prefab
             GameObject dropItemObject = Instantiate(dropItemPrefab);
             dropItemObject.transform.position = pos.position;
-            GeneratedEquipment generatedEquipment = dropItemObject.GetComponent<GeneratedEquipment>(); 
+            GeneratedEquipment generatedEquipment = dropItemObject.GetComponent<GeneratedEquipment>();
 
             // Find the EquipmentData and set it
             item = GameManager.instance.GearManager().Weapons()[r.Next(0, GameManager.instance.GearManager().Weapons().Count)];
+
             generatedEquipment.SetEquipmentData(item, rarity);
             Debug.Log("Setting drop item to Rarity/ItemID: " + rarity + "/" + item.ItemID());
 

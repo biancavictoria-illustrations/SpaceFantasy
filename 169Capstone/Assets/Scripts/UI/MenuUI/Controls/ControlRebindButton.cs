@@ -20,10 +20,20 @@ public class ControlRebindButton : MonoBehaviour
     {
         icon.sprite = s;
         icon.preserveAspect = true;
+        icon.color = new Color(255,255,255,255);
     }
 
     public void SetIconToDefault()
     {
         icon.sprite = defaultIcon;
+    }
+
+    public void SetToCurrentlyRebinding()
+    {
+        buttonText.gameObject.SetActive(true);
+        buttonText.text = "...";
+
+        icon.sprite = defaultIcon;
+        icon.color = new Color(0,0,0,0);
     }
 }

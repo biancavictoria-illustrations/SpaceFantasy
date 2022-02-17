@@ -10,6 +10,7 @@ public enum InputDevice{
     // XboxController,
     // PlaystationController,
     // SwitchController,
+    // SwitchPro,
     
     // Anything else
     otherDevice

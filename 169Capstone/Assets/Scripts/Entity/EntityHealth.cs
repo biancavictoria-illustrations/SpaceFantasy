@@ -146,7 +146,7 @@ public class EntityHealth : MonoBehaviour
         else
         {
             //TODO give enemies the thing for the thing
-            //drop.GetDrop(GameManager.instance.bossesKilled, transform);
+            drop.GetDrop(GameManager.instance.bossesKilled, transform);
             Destroy(gameObject);
             //Debug.Log(drop.GetDrop(ObjectManager.bossesKilled));
         }
