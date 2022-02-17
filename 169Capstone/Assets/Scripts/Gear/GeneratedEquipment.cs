@@ -143,13 +143,13 @@ public class GeneratedEquipment : MonoBehaviour
                 Debug.LogError("Cannot drop item: item does not have an ItemID");
                 break;
             case ItemID.BerserkersZweihander:
-                mesh.sharedMesh = Resources.Load<Mesh>("Longsword");
+                mesh.sharedMesh = Resources.Load<Mesh>("Items/Longsword");
                 break;
             case ItemID.BowAndArrows:
-                mesh.sharedMesh = Resources.Load<Mesh>("Bow");
+                mesh.sharedMesh = Resources.Load<Mesh>("Items/Bow");
                 break;
             default:
-                mesh.sharedMesh = Resources.Load<Mesh>(equipmentData.ItemID().ToString());
+                mesh.sharedMesh = Resources.Load<Mesh>("Items/" + equipmentData.ItemID().ToString());
                 break;
         }
 
@@ -162,6 +162,8 @@ public class GeneratedEquipment : MonoBehaviour
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
             ActiveGearDrop = this;
             AlertTextUI.instance.EnableItemPickupAlert();
+
+            Debug.Log("ITEM ACTIVE");
         }
     }
 
@@ -171,6 +173,8 @@ public class GeneratedEquipment : MonoBehaviour
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
             ActiveGearDrop = null;
             AlertTextUI.instance.DisableAlert();
+
+            Debug.Log("ITEM INACTIVE (left radius)");
         }
     }
 }
