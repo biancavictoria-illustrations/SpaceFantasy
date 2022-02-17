@@ -107,6 +107,9 @@ public class InGameUIManager : MonoBehaviour
 
     public void SetGearItemUI(InventoryItemSlot itemSlot, GeneratedEquipment item)
     {
+        Debug.LogWarning("No item icons set! (TODO)");
+        return;
+
         switch(itemSlot){
             case InventoryItemSlot.Weapon:
                 inGameWeaponIMG.sprite = item.equipmentData.Icon();
