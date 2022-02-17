@@ -149,7 +149,11 @@ public class GeneratedEquipment : MonoBehaviour
                 mesh.sharedMesh = Resources.Load<Mesh>("Items/Bow");
                 break;
             default:
-                mesh.sharedMesh = Resources.Load<Mesh>("Items/" + equipmentData.ItemID().ToString());
+                // TODO: Once we have item data for like everything, just call it like this (and make sure itemID == file name of the mesh EXACTLY)
+                // mesh.sharedMesh = Resources.Load<Mesh>("Items/" + equipmentData.ItemID().ToString());
+
+                // TEMP just make everything a sword if it doesn't have a mesh yet
+                mesh.sharedMesh = Resources.Load<Mesh>("Items/Longsword");
                 break;
         }
 

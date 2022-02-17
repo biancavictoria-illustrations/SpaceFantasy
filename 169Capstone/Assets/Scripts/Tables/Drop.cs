@@ -33,53 +33,49 @@ public class Drop : ScriptableObject
         List<ItemLine> secondaryLines;
         Debug.Log("Dropping " + itemType.ToString());
 
-        // If the item is a weapon
+        // Create item to drop in physical space from prefab
+        GameObject dropItemObject = Instantiate(dropItemPrefab);
+        dropItemObject.transform.position = pos.position;
+        GeneratedEquipment generatedEquipment = dropItemObject.GetComponent<GeneratedEquipment>();
+
+        // Get the equipment data for the right type of equipment
         if(itemType == InventoryItemSlot.Weapon)
         {
-            //GameObject test = Instantiate(emptyDropItem);
-            //test.transform.position = pos.position;
-
-            // Create item to drop in physical space from prefab
-            GameObject dropItemObject = Instantiate(dropItemPrefab);
-            dropItemObject.transform.position = pos.position;
-            GeneratedEquipment generatedEquipment = dropItemObject.GetComponent<GeneratedEquipment>();
-
-            // Find the EquipmentData and set it
             item = GameManager.instance.GearManager().Weapons()[r.Next(0, GameManager.instance.GearManager().Weapons().Count)];
-
-            generatedEquipment.SetEquipmentData(item, rarity);
-            Debug.Log("Setting drop item to Rarity/ItemID: " + rarity + "/" + item.ItemID());
-
-            int i = lines.ItemType().IndexOf(item.ItemSlot());
-            ItemLine primaryLine = lines.PrimaryWeaponLine()[i];
-            float primaryLineTierScaling = 0.1f * tier;
-
-            i = lines.ItemRarityTier().IndexOf(rarity);
-
-            chance = (float)r.NextDouble();
-            
-            lines.Setup();
-
-            int secondaryLineNum = lines.SecondaryLineNumberRates()[i].IndexOf(lines.SecondaryLineNumberRates()[i].First(x => chance <= x));
-            chance = (float)r.NextDouble();
-            int secondaryLineEnhancementsNum = lines.LineEnhancementRates()[i].IndexOf(lines.LineEnhancementRates()[i].First(x => chance <= x));    // Is this used anywhere?
-            secondaryLines = GenerateSecondaryLines(secondaryLineNum);
-
-            // Set the data in the generatedEquipment
-            generatedEquipment.SetModifiers(primaryLine, primaryLineTierScaling, secondaryLines, tier);
-
-            // Drop the item now that the data is generated!
-            generatedEquipment.Drop();
         }
         else if(itemType == InventoryItemSlot.Accessory){
-            // item = GameManager.instance.GearManager().Accessories()[r.Next(0, GameManager.instance.GearManager().Accessories().Count)];
+            item = GameManager.instance.GearManager().Accessories()[r.Next(0, GameManager.instance.GearManager().Accessories().Count)];
         }
         else if(itemType == InventoryItemSlot.Helmet){
-            // item = GameManager.instance.GearManager().Head()[r.Next(0, GameManager.instance.GearManager().Head().Count)];
+            item = GameManager.instance.GearManager().Head()[r.Next(0, GameManager.instance.GearManager().Head().Count)];
         }
-        else{
-            // item = GameManager.instance.GearManager().Legs()[r.Next(0, GameManager.instance.GearManager().Legs().Count)];
+        else{   // If boots/legs
+            item = GameManager.instance.GearManager().Legs()[r.Next(0, GameManager.instance.GearManager().Legs().Count)];
         }
+
+        generatedEquipment.SetEquipmentData(item, rarity);
+        Debug.Log("Setting drop item to Rarity/ItemID: " + rarity + "/" + item.ItemID());
+
+        int i = lines.ItemType().IndexOf(item.ItemSlot());
+        ItemLine primaryLine = lines.PrimaryWeaponLine()[i];
+        float primaryLineTierScaling = 0.1f * tier;
+
+        i = lines.ItemRarityTier().IndexOf(rarity);
+
+        chance = (float)r.NextDouble();
+        
+        lines.Setup();
+
+        int secondaryLineNum = lines.SecondaryLineNumberRates()[i].IndexOf(lines.SecondaryLineNumberRates()[i].First(x => chance <= x));
+        chance = (float)r.NextDouble();
+        int secondaryLineEnhancementsNum = lines.LineEnhancementRates()[i].IndexOf(lines.LineEnhancementRates()[i].First(x => chance <= x));    // Is this used anywhere?
+        secondaryLines = GenerateSecondaryLines(secondaryLineNum);
+
+        // Set the data in the generatedEquipment
+        generatedEquipment.SetModifiers(primaryLine, primaryLineTierScaling, secondaryLines, tier);
+
+        // Drop the item now that the data is generated!
+        generatedEquipment.Drop();
 
         // return $"{dropTable.ItemRarityTier[index]} {dropTable.ItemType[index]}";
     }
