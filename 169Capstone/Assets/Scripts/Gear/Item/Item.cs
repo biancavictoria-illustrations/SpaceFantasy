@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Item : MonoBehaviour
+public class Item : GeneratedEquipment
 {
     public GameObject timerPrefab;
     public ItemObject itemObject;
