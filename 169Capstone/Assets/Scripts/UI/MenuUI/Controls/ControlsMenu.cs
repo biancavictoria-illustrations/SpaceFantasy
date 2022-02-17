@@ -38,6 +38,16 @@ public class ControlsMenu : MonoBehaviour
 
     [SerializeField] private PauseMenu pauseMenu;
 
+    [SerializeField] private DeviceButtonSpritesObject spritesForKeyboardControls;
+    [SerializeField] private DeviceButtonSpritesObject spritesForXboxControls;
+    [SerializeField] private DeviceButtonSpritesObject spritesForPlayStationControls;
+    [SerializeField] private DeviceButtonSpritesObject spritesForSwitchJoyconControls;
+    [SerializeField] private DeviceButtonSpritesObject spritesForSwitchProControls;
+    // Anything else and we just use strings instead and hope for the best
+
+    public Dictionary<ControlKeys, Sprite> currentControlButtonSpritesForKeyboard {get; private set;}
+    public Dictionary<ControlKeys, Sprite> currentControlButtonSpritesForController {get; private set;}
+
     public static bool inputDeviceChanged = false;
 
     // Keybinding buttons
@@ -61,6 +71,9 @@ public class ControlsMenu : MonoBehaviour
 
     void Start()
     {
+        currentControlButtonSpritesForKeyboard = new Dictionary<ControlKeys, Sprite>();
+        currentControlButtonSpritesForController = new Dictionary<ControlKeys, Sprite>();
+
         buttons.Add(moveUp);
         buttons.Add(moveDown);
         buttons.Add(moveLeft);
@@ -199,8 +212,40 @@ public class ControlsMenu : MonoBehaviour
             return;
         }
 
-        GetButtonFromKey(key).buttonText.text = InputControlPath.ToHumanReadableString(action.bindings[bindingIndex].effectivePath,
-            InputControlPath.HumanReadableStringOptions.OmitDevice);
+        // Get the button on the screen
+        ControlRebindButton button = GetButtonFromKey(key);
+
+        // Get the string representing this control button
+        string controlName = InputControlPath.ToHumanReadableString(action.bindings[bindingIndex].effectivePath, InputControlPath.HumanReadableStringOptions.OmitDevice);
+        
+        Sprite buttonSprite = null;
+
+        // Get the sprite if controller
+        if(InputManager.instance.latestInputIsController){
+            // Set the value in the dictionary to store this current control sprite so we don't have to find it from the scriptable object it next time
+            currentControlButtonSpritesForController[key] = spritesForXboxControls.GetSprite(controlName);
+            // TODO: Check specifically what device so that we can use the correct version
+
+            buttonSprite = currentControlButtonSpritesForController[key];
+        }
+        else{   // Get the sprite if keyboard
+            // Set the value in the dictionary to store this current control sprite so we don't have to find it from the scriptable object it next time
+            currentControlButtonSpritesForKeyboard[key] = spritesForKeyboardControls.GetSprite(controlName);
+            buttonSprite = currentControlButtonSpritesForKeyboard[key];
+        }
+
+        if( buttonSprite ){
+            // If ther IS an icon, deactivate the text and set the sprite
+            button.buttonText.gameObject.SetActive(false);
+            button.SetIconSprite(buttonSprite);            
+        }
+        else{
+            // If not, set the image back to the default UI sprite, activate button text, and set the text to the name of the control
+            button.buttonText.gameObject.SetActive(true);
+            button.SetIconToDefault();
+
+            button.buttonText.text = controlName;
+        }
     }
 
     private void UpdateAllButtonText()
