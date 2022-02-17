@@ -120,7 +120,6 @@ public class AlertTextUI : MonoBehaviour
     /*
         TODO: Make this update if you're CURRENTLY in the trigger's range
         - it was doing that before but now that it's icons instead of text it's not
-        - i THINK the dictionaries aren't being updated before this is called........?
     */
     private Sprite GetIconForAction(ControlKeys key)
     {
