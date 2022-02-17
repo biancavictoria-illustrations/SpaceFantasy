@@ -143,13 +143,17 @@ public class GeneratedEquipment : MonoBehaviour
                 Debug.LogError("Cannot drop item: item does not have an ItemID");
                 break;
             case ItemID.BerserkersZweihander:
-                mesh.sharedMesh = Resources.Load<Mesh>("Longsword");
+                mesh.sharedMesh = Resources.Load<Mesh>("Items/Longsword");
                 break;
             case ItemID.BowAndArrows:
-                mesh.sharedMesh = Resources.Load<Mesh>("Bow");
+                mesh.sharedMesh = Resources.Load<Mesh>("Items/Bow");
                 break;
             default:
-                mesh.sharedMesh = Resources.Load<Mesh>(equipmentData.ItemID().ToString());
+                // TODO: Once we have item data for like everything, just call it like this (and make sure itemID == file name of the mesh EXACTLY)
+                // mesh.sharedMesh = Resources.Load<Mesh>("Items/" + equipmentData.ItemID().ToString());
+
+                // TEMP just make everything a sword if it doesn't have a mesh yet
+                mesh.sharedMesh = Resources.Load<Mesh>("Items/Longsword");
                 break;
         }
 
@@ -162,6 +166,8 @@ public class GeneratedEquipment : MonoBehaviour
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
             ActiveGearDrop = this;
             AlertTextUI.instance.EnableItemPickupAlert();
+
+            Debug.Log("ITEM ACTIVE");
         }
     }
 
@@ -171,6 +177,8 @@ public class GeneratedEquipment : MonoBehaviour
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
             ActiveGearDrop = null;
             AlertTextUI.instance.DisableAlert();
+
+            Debug.Log("ITEM INACTIVE (left radius)");
         }
     }
 }

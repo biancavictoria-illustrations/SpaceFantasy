@@ -45,13 +45,11 @@ public class EntityHealth : MonoBehaviour
     public float currentHitpoints;
 
     [SerializeField] private Drop drop;
-    //[SerializeField] private ObjectManager objectManager;
 
     private EnemyHealthBar enemyHealthUI;
 
     void Start()
     {
-        //Debug.Log(maxHitpoints);
         OnDeath.AddListener(onEntityDeath);
         
         if(gameObject.tag != "Player"){
@@ -61,25 +59,16 @@ public class EntityHealth : MonoBehaviour
                 return;
             }
         }
-        //Testing Drop
-        /*else
-        {
-            drop.GetDrop(1,transform);
-        }*/
-
-        SetStartingHealthUI();
     }
 
     public void SetStartingHealthUI()
     {
+        if(gameObject.tag == "Player"){
+            Debug.Log("Max Health At Start: " + maxHitpoints + "\nCurrent Health At Start: " + currentHitpoints);
+        }
+
         SetMaxHealthUI();
         SetCurrentHealthUI();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public bool Damage(float damage)
@@ -146,7 +135,7 @@ public class EntityHealth : MonoBehaviour
         else
         {
             //TODO give enemies the thing for the thing
-            //drop.GetDrop(GameManager.instance.bossesKilled, transform);
+            drop.GetDrop(GameManager.instance.bossesKilled, transform);
             Destroy(gameObject);
             //Debug.Log(drop.GetDrop(ObjectManager.bossesKilled));
         }

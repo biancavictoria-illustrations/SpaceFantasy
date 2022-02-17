@@ -107,6 +107,9 @@ public class InGameUIManager : MonoBehaviour
 
     public void SetGearItemUI(InventoryItemSlot itemSlot, GeneratedEquipment item)
     {
+        Debug.LogWarning("No item icons set! (TODO)");
+        return;
+
         switch(itemSlot){
             case InventoryItemSlot.Weapon:
                 inGameWeaponIMG.sprite = item.equipmentData.Icon();
@@ -165,26 +168,30 @@ public class InGameUIManager : MonoBehaviour
         tempCurrencyValue.text = "" + money;
     }
 
-    public void SetCurrentHealthValue(float currentHP)
+    public void SetCurrentHealthValue(float _NewCurrentHP)
     {
-        currentHPValue = currentHP;
+        currentHPValue = _NewCurrentHP;
 
-        if( currentHP > maxHealthValue ){
+        if( _NewCurrentHP > maxHealthValue ){
             Debug.LogError("Current HP set greater than max HP!");
             currentHPValue = maxHealthValue;
         }
 
-        healthText.text = Mathf.FloorToInt(currentHPValue) + " / " + maxHealthValue;
+        healthText.text = Mathf.FloorToInt(currentHPValue) + " / " + Mathf.FloorToInt(maxHealthValue);
 
         healthSlider.value = currentHPValue;        
     }
 
-    public void SetMaxHealthValue(float maxHP)
+    public void SetMaxHealthValue(float _NewMaxHP)
     {
-        maxHealthValue = maxHP;
-        healthSlider.maxValue = maxHP;
+        maxHealthValue = _NewMaxHP;
+        healthSlider.maxValue = _NewMaxHP;
 
-        SetCurrentHealthValue(currentHPValue);
+        healthText.text = Mathf.FloorToInt(currentHPValue) + " / " + Mathf.FloorToInt(maxHealthValue);
+
+        if(currentHPValue != 0){
+            SetCurrentHealthValue(currentHPValue);
+        }
     }
 
     public void SetHealthPotionValue(int numPotions)

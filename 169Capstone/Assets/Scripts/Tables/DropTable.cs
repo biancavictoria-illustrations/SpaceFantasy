@@ -8,7 +8,9 @@ public class DropTable : ScriptableObject
     [SerializeField] private List<InventoryItemSlot> itemType;
     [SerializeField] private List<ItemRarity> itemRarityTier;
 
+    [Tooltip("% chance of item dropping, + all previous % entires. List of decimal values < 1, except the last value which must be 1 (cumulative total of all values).")]
     [SerializeField] private List<float> dropChance;
+
     [SerializeField] private int bossesRequired;
     
 

@@ -40,13 +40,12 @@ public class ControlsMenu : MonoBehaviour
 
     [SerializeField] private DeviceButtonSpritesObject spritesForKeyboardControls;
     [SerializeField] private DeviceButtonSpritesObject spritesForXboxControls;
-    [SerializeField] private DeviceButtonSpritesObject spritesForPlayStationControls;
-    [SerializeField] private DeviceButtonSpritesObject spritesForSwitchJoyconControls;
-    [SerializeField] private DeviceButtonSpritesObject spritesForSwitchProControls;
-    // Anything else and we just use strings instead and hope for the best
+    // [SerializeField] private DeviceButtonSpritesObject spritesForPlayStationControls;
+    // [SerializeField] private DeviceButtonSpritesObject spritesForSwitchJoyconControls;
+    // [SerializeField] private DeviceButtonSpritesObject spritesForSwitchProControls;
 
-    public Dictionary<ControlKeys, Sprite> currentControlButtonSpritesForKeyboard {get; private set;}
-    public Dictionary<ControlKeys, Sprite> currentControlButtonSpritesForController {get; private set;}
+    public static Dictionary<ControlKeys, Sprite> currentControlButtonSpritesForKeyboard {get; private set;}
+    public static Dictionary<ControlKeys, Sprite> currentControlButtonSpritesForController {get; private set;}
 
     public static bool inputDeviceChanged = false;
 
@@ -145,14 +144,27 @@ public class ControlsMenu : MonoBehaviour
         controls.Disable();
         SetBottomButtonsInteractable(false);
 
-        GetButtonFromKey(key).buttonText.text = "...";
+        GetButtonFromKey(key).SetToCurrentlyRebinding();
+
         InputAction action = GetAction(key);
 
-        rebindingOperation = action.PerformInteractiveRebinding()
-            .WithControlsExcluding("Mouse")
-            .OnMatchWaitForAnother(0.1f)
-            .OnComplete(operation => RebindComplete(key,action))
-            .Start();
+        // If latest input is controller, only rebind this for that control scheme
+        if( InputManager.instance.latestInputIsController ){
+            rebindingOperation = action.PerformInteractiveRebinding()
+                .WithBindingGroup("Gamepad")
+                .WithControlsExcluding("Mouse")
+                .OnMatchWaitForAnother(0.1f)
+                .OnComplete(operation => RebindComplete(key,action))
+                .Start();
+        }   // Else only rebind for keyboard scheme
+        else{
+            rebindingOperation = action.PerformInteractiveRebinding()
+                .WithBindingGroup("Keyboard")
+                .WithControlsExcluding("Mouse")
+                .OnMatchWaitForAnother(0.1f)
+                .OnComplete(operation => RebindComplete(key,action))
+                .Start();
+        }        
     }
 
     private void RebindComplete(ControlKeys key, InputAction action)
@@ -160,7 +172,6 @@ public class ControlsMenu : MonoBehaviour
         int bindingIndex = action.GetBindingIndexForControl(action.controls[0]);
 
         // If an invalid binding is found (such as a duplicate), wait for new input instead
-        // TODO: Alternatively, could catch duplicates and instead swap them (putting nothing "-" in the new one)?
         if(bindingIndex < 0){
             Debug.LogWarning("Invalid binding found. Binding index: " + bindingIndex);
             CleanUpAction();
@@ -199,7 +210,7 @@ public class ControlsMenu : MonoBehaviour
         return false;
     }
 
-    // TODO: Switch to ICONS instead of text (text if no icon found presumably)
+
     private void SetButtonIcon(ControlKeys key, InputAction action = null, int bindingIndex = -1)
     {
         if(action == null){
@@ -224,20 +235,17 @@ public class ControlsMenu : MonoBehaviour
         if(InputManager.instance.latestInputIsController){
             // Set the value in the dictionary to store this current control sprite so we don't have to find it from the scriptable object it next time
             currentControlButtonSpritesForController[key] = spritesForXboxControls.GetSprite(controlName);
-            // TODO: Check specifically what device so that we can use the correct version
-
             buttonSprite = currentControlButtonSpritesForController[key];
         }
         else{   // Get the sprite if keyboard
-            // Set the value in the dictionary to store this current control sprite so we don't have to find it from the scriptable object it next time
             currentControlButtonSpritesForKeyboard[key] = spritesForKeyboardControls.GetSprite(controlName);
             buttonSprite = currentControlButtonSpritesForKeyboard[key];
         }
 
         if( buttonSprite ){
-            // If ther IS an icon, deactivate the text and set the sprite
+            // If there IS an icon, deactivate the text and set the sprite
             button.buttonText.gameObject.SetActive(false);
-            button.SetIconSprite(buttonSprite);            
+            button.SetIconSprite(buttonSprite);
         }
         else{
             // If not, set the image back to the default UI sprite, activate button text, and set the text to the name of the control
@@ -279,6 +287,7 @@ public class ControlsMenu : MonoBehaviour
         }
         UpdateAllButtonText();
         // could make it so that this is permanent and have a "are you sure?" popup, and then add the line below to set it
+        // actually I think it already is permanent...?
         // PlayerPrefs.DeleteKey("ControlOverrides");
     }
 
@@ -336,9 +345,3 @@ public class ControlsMenu : MonoBehaviour
         }
     }
 }
-
-
-/*
-    - if we're going to access SPECIFIC device, use  UserDeviceManager.currentControlDevice
-    - otherwise, use  InputManager.instance.latestInputIsController
-*/
