@@ -58,7 +58,7 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
         costText.text = "$" + currentCostValue;     // TODO: Change $ to better symbol, or just put the icon on the cards
     }
 
-    private void SetHoverAlertsActive(bool set)
+    public void SetHoverAlertsActive(bool set)
     {
         if(itemCardButton.interactable){
             hoverAlerts.EnableAlert(panelPos, set);
