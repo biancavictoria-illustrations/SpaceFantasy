@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Gear/DropObject")]
-public class Drop : ScriptableObject
+public class EnemyDropGenerator : ScriptableObject
 {
     [SerializeField] private List<DropTable> dropTables;
     [SerializeField] private LineTable lines;
@@ -29,7 +29,7 @@ public class Drop : ScriptableObject
         InventoryItemSlot itemType = dropTable.ItemType()[index];
         ItemRarity rarity = dropTable.ItemRarityTier()[index];
         
-        EquipmentData item;
+        EquipmentBaseData item;
         List<ItemLine> secondaryLines;
         Debug.Log("Dropping " + itemType.ToString());
 
@@ -53,7 +53,7 @@ public class Drop : ScriptableObject
             item = GameManager.instance.GearManager().Legs()[r.Next(0, GameManager.instance.GearManager().Legs().Count)];
         }
 
-        generatedEquipment.SetEquipmentData(item, rarity);
+        generatedEquipment.SetEquipmentBaseData(item, rarity);
         Debug.Log("Setting drop item to Rarity/ItemID: " + rarity + "/" + item.ItemID());
 
         int i = lines.ItemType().IndexOf(item.ItemSlot());
@@ -75,7 +75,7 @@ public class Drop : ScriptableObject
         generatedEquipment.SetModifiers(primaryLine, primaryLineTierScaling, secondaryLines, tier);
 
         // Drop the item now that the data is generated!
-        generatedEquipment.Drop();
+        generatedEquipment.GetComponent<DropTrigger>().DropItemModelIn3DSpace();
 
         // return $"{dropTable.ItemRarityTier[index]} {dropTable.ItemType[index]}";
     }

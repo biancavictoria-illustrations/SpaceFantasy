@@ -71,7 +71,13 @@ public class InventoryUI : MonoBehaviour
     public void SetInventoryItemValues()
     {
         foreach(InventoryUIItemPanel panel in itemPanels){
-            panel.SetItemPanelValues(PlayerInventory.instance.gear[panel.GetItemSlot()]);
+            // If you have something equipped in that slot, set the data; if not, set default empty values
+            if( PlayerInventory.instance.gear[panel.GetItemSlot()] ){
+                panel.SetItemPanelValues(PlayerInventory.instance.gear[panel.GetItemSlot()].data);
+            }
+            else{
+                panel.SetDefaultItemPanelValues();
+            }
         }
     }
 
@@ -210,8 +216,6 @@ public class InventoryUI : MonoBehaviour
             Debug.LogError("No item panels found!");
         }
 
-        // TODO: Can this be called when the values are updated, rather than every time you open it?
-        // Doing it here might cause problems with gear shops because it won't update when you buy something with it open?
         SetAllInventoryValues();
 
         // Select the top panel

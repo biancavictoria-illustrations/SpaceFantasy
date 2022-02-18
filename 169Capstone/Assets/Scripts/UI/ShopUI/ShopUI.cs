@@ -31,6 +31,7 @@ public class ShopUI : MonoBehaviour
         hoverAlerts.DisableAllHoverAlerts();
 
         shopInventoryTopButton.Select();
+        Time.timeScale = 0f;
     }
   
     public virtual void CloseShopUI()
@@ -41,6 +42,7 @@ public class ShopUI : MonoBehaviour
         hoverAlerts.DisableAllHoverAlerts();
 
         AlertTextUI.instance.EnableShopAlert();
+        Time.timeScale = 1f;
     }
 
     public virtual void SetShopUIInteractable(bool set)

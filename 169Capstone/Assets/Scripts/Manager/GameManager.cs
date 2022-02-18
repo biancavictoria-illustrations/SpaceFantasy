@@ -18,7 +18,6 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public bool playerDeath = false;
     [HideInInspector] public int bossesKilled = 0;
-    [HideInInspector] public bool inShopMode = false;
 
 
     void Awake()
@@ -35,8 +34,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         currentRunNumber = 1;
-        
-        //Instantiate(playerPrefab, playerTransform.position, playerTransform.rotation);
     }
 
     private void Update()
@@ -49,14 +46,6 @@ public class GameManager : MonoBehaviour
         {
             InGameUIManager.instance.deathScreen.OpenPlayerDeathUI();
             playerDeath = false;
-        }
-        if(inputManager.shopIsOpen)
-        {
-            inShopMode = true;
-        }
-        else
-        {
-            inShopMode = false;
         }
     }
 
