@@ -120,7 +120,7 @@ public class GeneratedEquipment : MonoBehaviour
 
         // If the item is a weapon, add JUST THE MODEL to the player model's hand
         if( slot == InventoryItemSlot.Weapon ){
-            GameObject model = Instantiate( data.equipmentBaseData.ItemModelPrefab(), Player.instance.handPos );
+            GameObject model = Instantiate( data.equipmentBaseData.EquippedWeaponModelPrefab(), Player.instance.handPos );
             PlayerInventory.instance.weaponModel = model;
         }
 

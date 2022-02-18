@@ -39,6 +39,6 @@ public class DropTrigger : MonoBehaviour
     public void DropItemModelIn3DSpace()
     {
         // Instantiate the MODEL prefab as a child of THIS game object (the Drop Item Prefab)
-        Instantiate(GetComponent<GeneratedEquipment>().data.equipmentBaseData.ItemModelPrefab(), transform);
+        Instantiate(GetComponent<GeneratedEquipment>().data.equipmentBaseData.ItemDropModelPrefab(), transform);
     }
 }

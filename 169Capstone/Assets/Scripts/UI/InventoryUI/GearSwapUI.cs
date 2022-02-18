@@ -46,17 +46,16 @@ public class GearSwapUI : MonoBehaviour
         }
     }
 
-    // TODO: fix this
     public void CloseGearSwapUI()
     {
         // If this is a drop item, close the UI (if this is a shop, it's handled in the shop)
-        // if( DropTrigger.ActiveGearDrop && DropTrigger.ActiveGearDrop == newItem ){
+        // Don't actually think this is necessary here? but leaving it as a precaution to try not to screw up shops
+        if( InGameUIManager.instance.gearSwapIsOpen ){
             gearSwapInventoryUI.OnInventoryClose();
             InputManager.instance.ToggleCompareItemUI(false, null);
-        // }
+        }
     }
 
-    // This might just work for both shop and drops!
     public void OnNewItemSelect()
     {
         newItem.EquipGeneratedItem();

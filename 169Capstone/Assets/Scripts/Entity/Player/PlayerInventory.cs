@@ -75,6 +75,7 @@ public class PlayerInventory : MonoBehaviour
         if( gear[slot] ){
             GameObject dropItem = Instantiate(dropItemPrefab, Player.instance.transform.position, Quaternion.identity);
             dropItem.GetComponent<GeneratedEquipment>().SetAllEquipmentData(gear[slot].data);
+            dropItem.GetComponent<DropTrigger>().DropItemModelIn3DSpace();
             
             if(slot == InventoryItemSlot.Weapon){
                 RemoveEquippedWeaponModel();

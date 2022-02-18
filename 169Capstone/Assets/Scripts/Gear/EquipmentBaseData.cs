@@ -33,10 +33,13 @@ public class EquipmentBaseData : ScriptableObject
     [Tooltip("Internal ID")]
     [SerializeField] private ItemID itemID;
 
-    [Tooltip("Just the model")]
-    [SerializeField] private GameObject itemModelPrefab;
+    [Tooltip("Just the model, for dropping on the ground")]
+    [SerializeField] private GameObject itemDropModelPrefab;
 
-    [Tooltip("Actual prefab of the item created once EQUIPPED")]
+    [Tooltip("Just the model, sized and angled for attaching to the player. WEAPONS ONLY!")]
+    [SerializeField] private GameObject equippedWeaponModelPrefab;
+
+    [Tooltip("Actual prefab of the item (no model) created once EQUIPPED")]
     [SerializeField] private GameObject equippedItemPrefab;
 
     [SerializeField] private InventoryItemSlot itemSlot;
@@ -59,9 +62,18 @@ public class EquipmentBaseData : ScriptableObject
         return itemID;
     }
 
-    public GameObject ItemModelPrefab()
+    public GameObject ItemDropModelPrefab()
     {
-        return itemModelPrefab;
+        return itemDropModelPrefab;
+    }
+
+    public GameObject EquippedWeaponModelPrefab()
+    {
+        if(itemSlot != InventoryItemSlot.Weapon){
+            Debug.LogError("Cannot retrieve weapon model prefab for item type: " + itemSlot);
+            return null;
+        }
+        return equippedWeaponModelPrefab;
     }
 
     public GameObject EquippedItemPrefab()

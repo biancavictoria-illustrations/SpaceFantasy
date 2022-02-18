@@ -143,10 +143,7 @@ public class InputManager : MonoBehaviour
     public void ToggleCompareItemUI(bool set, GeneratedEquipment item)
     {
         compareItemIsOpen = set;
-
-        if(set){
-            InGameUIManager.instance.SetGearSwapUIActive(set, item);
-        }        
+        InGameUIManager.instance.SetGearSwapUIActive(set, item);        
     }
 
     // If you're in dialogue, click anywhere to progress

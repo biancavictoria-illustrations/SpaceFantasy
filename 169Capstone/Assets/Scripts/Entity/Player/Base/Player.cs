@@ -24,7 +24,9 @@ public class Player : MonoBehaviour
     //public bool test = true;
 
     [SerializeField] private SpeakerData speakerData;
-    [SerializeField] private GameObject swordPrefab;
+
+    // TEMP
+    public EnemyDropGenerator enemyDropGenerator;
 
     void Awake()
     {
@@ -41,11 +43,10 @@ public class Player : MonoBehaviour
     {
         health = gameObject.GetComponent<EntityHealth>();
         health.maxHitpoints = 30;
-        health.currentHitpoints = 30;
-
-        health.SetStartingHealthUI();
+        health.currentHitpoints = 30;        
         //health.maxHitpoints = stats.getMaxHitPoints();
         //health.currentHitpoints = stats.getMaxHitPoints();
+        health.SetStartingHealthUI();
 
         currentStr = stats.Strength();
         currentDex = stats.Dexterity();
@@ -60,10 +61,9 @@ public class Player : MonoBehaviour
             DialogueManager.instance.AddSpeaker(speakerData);
         }
 
-        Equipment gen = Instantiate(swordPrefab).GetComponent<Equipment>();
-        PlayerInventory.instance.EquipItem(InventoryItemSlot.Weapon, gen);
-
         StartCoroutine(DetectFall());
+
+        enemyDropGenerator.GetDrop(GameManager.instance.bossesKilled, transform);
     }
 
     public float CurrentAttackSpeed()

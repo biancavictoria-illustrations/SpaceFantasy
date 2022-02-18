@@ -43,8 +43,7 @@ public class ItemPanelGearShop : ItemPanelShopUI
     public override void PurchaseItem()
     {
         base.PurchaseItem();
-
-        // TODO (CHECK -> might be done already? in gear swap? but i don't think so)
+        
         item.EquipGeneratedItem();
 
         descriptionText.text = "<b><color=red>SOLD";    // TODO: Make this permanent (it's not at the moment)

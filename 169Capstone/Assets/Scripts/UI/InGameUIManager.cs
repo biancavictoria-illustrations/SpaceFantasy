@@ -92,12 +92,17 @@ public class InGameUIManager : MonoBehaviour
     public void SetGearSwapUIActive(bool set, GeneratedEquipment item)
     {
         inGameUIGearIconPanel.SetActive(!set);
-        darkBackgroundPanel.SetActive(set);
         gearSwapUIPanel.SetActive(set);
         gearSwapIsOpen = set;
 
         if(set){
             gearSwapUI.OnGearSwapUIOpen(item);
+            AlertTextUI.instance.DisableAlert();
+            Time.timeScale = 0f;
+        }
+        else{
+            AlertTextUI.instance.EnableItemPickupAlert();
+            Time.timeScale = 1f;
         }
     }
 
