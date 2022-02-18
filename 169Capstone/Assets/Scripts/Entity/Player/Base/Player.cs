@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static Player instance;
+
     [SerializeField] private PlayerStats stats;
     private EntityHealth health;
 
@@ -15,16 +17,24 @@ public class Player : MonoBehaviour
     public int currentCha;
 
     public float currentAttackSpeed;
-    //private float currentHitpoints;
+
+    [SerializeField] public Transform handPos;
 
     //public Timer timer;
-
-    //public ObjectManager objectManager;
-
     //public bool test = true;
 
     [SerializeField] private SpeakerData speakerData;
     [SerializeField] private GameObject swordPrefab;
+
+    void Awake()
+    {
+        if( instance ){
+            Destroy(gameObject);
+        }
+        else{
+            instance = this;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -34,12 +44,8 @@ public class Player : MonoBehaviour
         health.currentHitpoints = 30;
 
         health.SetStartingHealthUI();
-
-        //Debug.Log("here");
         //health.maxHitpoints = stats.getMaxHitPoints();
         //health.currentHitpoints = stats.getMaxHitPoints();
-
-        Debug.Log(health.maxHitpoints);
 
         currentStr = stats.Strength();
         currentDex = stats.Dexterity();
@@ -54,7 +60,7 @@ public class Player : MonoBehaviour
             DialogueManager.instance.AddSpeaker(speakerData);
         }
 
-        GeneratedEquipment gen = Instantiate(swordPrefab).GetComponent<GeneratedEquipment>();
+        Equipment gen = Instantiate(swordPrefab).GetComponent<Equipment>();
         PlayerInventory.instance.EquipItem(InventoryItemSlot.Weapon, gen);
 
         StartCoroutine(DetectFall());

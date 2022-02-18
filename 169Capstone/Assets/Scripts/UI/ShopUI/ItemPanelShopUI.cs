@@ -31,7 +31,7 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
     protected void SetBaseShopItemValues(int iBaseCost, string iName, string iDesc)
     {
         baseCost = iBaseCost;
-        UpdateCurrentCost();        
+        UpdateCurrentCost();
         itemName.text = iName;
         descriptionText.text = iDesc;
     }

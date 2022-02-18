@@ -8,6 +8,8 @@ public class Shop : MonoBehaviour
     private List<RarityAssignmentTier> inventoryList;
     private HashSet<int> indexes;
 
+    public GameObject shopItemPrefab;
+
     public List<GeneratedEquipment> inventory {get; private set;}
 
 
@@ -46,16 +48,43 @@ public class Shop : MonoBehaviour
     {
         // Generate a new (randomly selected) item with the determined rarity
 
-        // TODO: Don't use new here, need to instantiate it
-        GeneratedEquipment item = new GeneratedEquipment();
-        item.SetEquipmentData( PickItemFromPool(), rarity );
+        GameObject itemObject = Instantiate(shopItemPrefab);
+        GeneratedEquipment generatedEquipment = itemObject.GetComponent<GeneratedEquipment>();
+        generatedEquipment.SetEquipmentBaseData( PickItemFromPool(), rarity );
+
+        Debug.Log("Setting shop item to Rarity/ItemID: " + rarity + "/" + generatedEquipment.data.equipmentBaseData.ItemID());
 
         // TODO: Generate the item (see how it's done in the Drop script); for now, item will have default values besides it's EquipmentData and rarity
 
-        return item;
+        /*
+            Generating Drop Items:
+            ======================
+            int i = lines.ItemType().IndexOf(item.ItemSlot());
+            ItemLine primaryLine = lines.PrimaryWeaponLine()[i];
+            float primaryLineTierScaling = 0.1f * tier;
+
+            i = lines.ItemRarityTier().IndexOf(rarity);
+
+            chance = (float)r.NextDouble();
+            
+            lines.Setup();
+
+            int secondaryLineNum = lines.SecondaryLineNumberRates()[i].IndexOf(lines.SecondaryLineNumberRates()[i].First(x => chance <= x));
+            chance = (float)r.NextDouble();
+            int secondaryLineEnhancementsNum = lines.LineEnhancementRates()[i].IndexOf(lines.LineEnhancementRates()[i].First(x => chance <= x));    // Is this used anywhere?
+            secondaryLines = GenerateSecondaryLines(secondaryLineNum);
+
+            // Set the data in the generatedEquipment
+            generatedEquipment.SetModifiers(primaryLine, primaryLineTierScaling, secondaryLines, tier);
+
+            // Drop the item now that the data is generated!
+            generatedEquipment.Drop();
+        */
+
+        return generatedEquipment;
     }
 
-    private EquipmentData PickItemFromPool()
+    private EquipmentBaseData PickItemFromPool()
     {
         if(shopKeeper.Items().Count < 5){
             Debug.LogError("Shop contains less than 5 possible items in ShopKeeperInventory Item pool!");

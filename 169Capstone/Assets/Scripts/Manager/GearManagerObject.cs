@@ -2,31 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Contains all EquipmentData in the game
+// Contains all EquipmentBaseData in the game
 [CreateAssetMenu(menuName = "Gear/GearManagerObject")]
 public class GearManagerObject : ScriptableObject
 {
-    [SerializeField] private List<EquipmentData> weapons;
-    [SerializeField] private List<EquipmentData> accessories;
-    [SerializeField] private List<EquipmentData> head;
-    [SerializeField] private List<EquipmentData> legs;
+    [SerializeField] private List<EquipmentBaseData> weapons;
+    [SerializeField] private List<EquipmentBaseData> accessories;
+    [SerializeField] private List<EquipmentBaseData> head;
+    [SerializeField] private List<EquipmentBaseData> legs;
 
-    public List<EquipmentData> Weapons()
+    public List<EquipmentBaseData> Weapons()
     {
         return weapons;
     }
 
-    public List<EquipmentData> Accessories()
+    public List<EquipmentBaseData> Accessories()
     {
         return accessories;
     }
 
-    public List<EquipmentData> Head()
+    public List<EquipmentBaseData> Head()
     {
         return head;
     }
 
-    public List<EquipmentData> Legs()
+    public List<EquipmentBaseData> Legs()
     {
         return legs;
     }

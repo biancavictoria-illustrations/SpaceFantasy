@@ -71,7 +71,13 @@ public class InventoryUI : MonoBehaviour
     public void SetInventoryItemValues()
     {
         foreach(InventoryUIItemPanel panel in itemPanels){
-            panel.SetItemPanelValues(PlayerInventory.instance.gear[panel.GetItemSlot()]);
+            // If you have something equipped in that slot, set the data; if not, set default empty values
+            if( PlayerInventory.instance.gear[panel.GetItemSlot()] ){
+                panel.SetItemPanelValues(PlayerInventory.instance.gear[panel.GetItemSlot()].data);
+            }
+            else{
+                panel.SetDefaultItemPanelValues();
+            }
         }
     }
 

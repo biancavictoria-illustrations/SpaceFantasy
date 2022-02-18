@@ -91,10 +91,6 @@ public class InGameUIManager : MonoBehaviour
     // Called when the player goes to pick up a new item
     public void SetGearSwapUIActive(bool set, GeneratedEquipment item)
     {
-        if(set && item == null){
-            Debug.LogError("Tried to open gear swap UI but no new item was found!");
-        }
-
         inGameUIGearIconPanel.SetActive(!set);
         darkBackgroundPanel.SetActive(set);
         gearSwapUIPanel.SetActive(set);
@@ -105,23 +101,23 @@ public class InGameUIManager : MonoBehaviour
         }
     }
 
-    public void SetGearItemUI(InventoryItemSlot itemSlot, GeneratedEquipment item)
+    public void SetGearItemUI(InventoryItemSlot itemSlot, Sprite _icon)
     {
         Debug.LogWarning("No item icons set! (TODO)");
         return;
 
         switch(itemSlot){
             case InventoryItemSlot.Weapon:
-                inGameWeaponIMG.sprite = item.equipmentData.Icon();
+                inGameWeaponIMG.sprite = _icon;
                 break;
             case InventoryItemSlot.Accessory:
-                inGameAccessoryIMG.sprite = item.equipmentData.Icon();
+                inGameAccessoryIMG.sprite = _icon;
                 break;
             case InventoryItemSlot.Helmet:
-                inGameHelmetIMG.sprite = item.equipmentData.Icon();
+                inGameHelmetIMG.sprite = _icon;
                 break;
             case InventoryItemSlot.Boots:
-                inGameBootsIMG.sprite = item.equipmentData.Icon();
+                inGameBootsIMG.sprite = _icon;
                 break;
             default:
                 Debug.LogError("No item icon found for slot: " + itemSlot.ToString());

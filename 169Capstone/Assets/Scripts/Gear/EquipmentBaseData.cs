@@ -25,12 +25,19 @@ public enum ItemRarity
 }
 
 [CreateAssetMenu(menuName = "Gear/EquipmentData")]
-public class EquipmentData : ScriptableObject
+public class EquipmentBaseData : ScriptableObject
 {
-    [SerializeField] private string itemName;   // Player facing name
-    [SerializeField] private ItemID itemID;     // Internal ID
+    [Tooltip("Player facing item name")]
+    [SerializeField] private string itemName;
+    
+    [Tooltip("Internal ID")]
+    [SerializeField] private ItemID itemID;
 
-    [SerializeField] private GameObject itemPrefab;
+    [Tooltip("Just the model")]
+    [SerializeField] private GameObject itemModelPrefab;
+
+    [Tooltip("Actual prefab of the item created once EQUIPPED")]
+    [SerializeField] private GameObject equippedItemPrefab;
 
     [SerializeField] private InventoryItemSlot itemSlot;
     [SerializeField] private int baseCost = 10;
@@ -52,9 +59,14 @@ public class EquipmentData : ScriptableObject
         return itemID;
     }
 
-    public GameObject ItemPrefab()
+    public GameObject ItemModelPrefab()
     {
-        return itemPrefab;
+        return itemModelPrefab;
+    }
+
+    public GameObject EquippedItemPrefab()
+    {
+        return equippedItemPrefab;
     }
 
     public InventoryItemSlot ItemSlot()
