@@ -14,7 +14,7 @@ public class GearSwapUI : MonoBehaviour
 
     public void OnGearSwapUIOpen(GeneratedEquipment item)
     {
-        gearSwapInventoryUI.SetInventoryItemValues();   // Only set item values, no stat values (is this even necessary? it might be called already)
+        gearSwapInventoryUI.SetInventoryItemValues();   // Only set item values, no stat values
 
         newItem = item;
         newItemPanel.SetItemPanelValues(item.data);

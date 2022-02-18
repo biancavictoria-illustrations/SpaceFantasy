@@ -129,14 +129,7 @@ public class InputManager : MonoBehaviour
         // Check if you're in range of a dropped item
         else if(DropTrigger.ActiveGearDrop){
             GeneratedEquipment itemData = DropTrigger.ActiveGearDrop;
-
-            // If the player doesn't have anything equipped in that slot, equip it
-            // if( !PlayerInventory.instance.gear[itemData.data.equipmentBaseData.ItemSlot()] ){
-            //     itemData.EquipGeneratedItem();
-            // }
-            // else{   // Otherwise, open compare UI
-                ToggleCompareItemUI(true, itemData);
-            // }
+            ToggleCompareItemUI(true, itemData);
         }
     }
 

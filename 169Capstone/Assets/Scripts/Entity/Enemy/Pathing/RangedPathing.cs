@@ -14,7 +14,7 @@ public class RangedPathing : Pathing
     {
         float distance = Vector3.Distance(player.position, transform.position);
 
-        if(!canPath || InAttackRange() || gameManager.inShopMode)
+        if(!canPath || InAttackRange() || InputManager.instance.shopIsOpen)
         {
             //Debug.Log("Entered Attack Range");
             agent.isStopped = true;

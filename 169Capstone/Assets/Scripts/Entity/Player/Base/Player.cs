@@ -25,8 +25,9 @@ public class Player : MonoBehaviour
 
     [SerializeField] private SpeakerData speakerData;
 
-    // TEMP
-    public EnemyDropGenerator enemyDropGenerator;
+    // TEMP for testing purposes
+    public GameObject dropItemPrefab;
+    public EquipmentBaseData swordData;
 
     void Awake()
     {
@@ -63,7 +64,10 @@ public class Player : MonoBehaviour
 
         StartCoroutine(DetectFall());
 
-        enemyDropGenerator.GetDrop(GameManager.instance.bossesKilled, transform);
+        // TEMP drop the sword on start so the player has a working weapon (for testing purposes)
+        GameObject itemObject = Instantiate(dropItemPrefab, transform.position, Quaternion.identity);
+        itemObject.GetComponent<GeneratedEquipment>().SetEquipmentBaseData( swordData, ItemRarity.Common );
+        itemObject.GetComponent<DropTrigger>().DropItemModelIn3DSpace();
     }
 
     public float CurrentAttackSpeed()
