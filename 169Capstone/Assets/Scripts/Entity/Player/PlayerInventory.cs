@@ -71,18 +71,42 @@ public class PlayerInventory : MonoBehaviour
 
     public void EquipItem(InventoryItemSlot slot, Equipment item)
     {
+        AlertTextUI.instance.DisableAlert();
+
         // If necessary, drop the PREVIOUS item on the ground
-        if( gear[slot] ){
-            GameObject dropItem = Instantiate(dropItemPrefab, Player.instance.transform.position, Quaternion.identity);
-            dropItem.GetComponent<GeneratedEquipment>().SetAllEquipmentData(gear[slot].data);
-            dropItem.GetComponent<DropTrigger>().DropItemModelIn3DSpace();
-            
-            if(slot == InventoryItemSlot.Weapon){
-                RemoveEquippedWeaponModel();
-            }
+        UnequipItemSlot(slot);
+
+        // Set the slot to now be the NEW item
+        gear[slot] = item;
+        
+        // Update UI accordingly
+        InGameUIManager.instance.SetGearItemUI(slot, item.data.equipmentBaseData.Icon());
+    }
+
+    public void UnequipItemSlot(InventoryItemSlot slot)
+    {
+        // If nothing's equipped, return
+        if( !gear[slot] ){
+            return;
         }
-        gear[slot] = item;  // Set the slot to now be the NEW item
-        InGameUIManager.instance.SetGearItemUI(slot, item.data.equipmentBaseData.Icon());   // Update UI accordingly
+
+        // Instantiate the item to drop on the ground
+        GameObject dropItem = Instantiate(dropItemPrefab, Player.instance.transform.position, Quaternion.identity);
+
+        // Give it the data of your currently equipped item
+        dropItem.GetComponent<GeneratedEquipment>().SetAllEquipmentData(gear[slot].data);
+
+        // Drop it
+        dropItem.GetComponent<DropTrigger>().DropItemModelIn3DSpace();
+        
+        // If it's a weapon, also remove the model stuck to your hand
+        if(slot == InventoryItemSlot.Weapon){
+            RemoveEquippedWeaponModel();
+        }
+
+        // Set value to null in the dictionary and clear the UI
+        ClearItemSlot(slot);
+        AlertTextUI.instance.EnableItemPickupAlert();
     }
 
     private void RemoveEquippedWeaponModel()
@@ -90,7 +114,7 @@ public class PlayerInventory : MonoBehaviour
         Destroy(weaponModel);
     }
 
-    public void ClearItemSlot(InventoryItemSlot slot)
+    private void ClearItemSlot(InventoryItemSlot slot)
     {
         gear[slot] = null;
         InGameUIManager.instance.ClearItemUI(slot);
@@ -104,11 +128,22 @@ public class PlayerInventory : MonoBehaviour
         }
 
         // Delete each item object and clear the inventory slot
-        foreach( KeyValuePair<InventoryItemSlot,Equipment> item in gear ){
-            if(item.Value){
-                Destroy(item.Value);
-                ClearItemSlot(item.Key);
-            }
+        // (Can't loop because can't delete the things while iterating, stuff gets mad)
+        if(gear[InventoryItemSlot.Weapon]){
+            Destroy(gear[InventoryItemSlot.Weapon]);
+            ClearItemSlot(InventoryItemSlot.Weapon);
+        }
+        if(gear[InventoryItemSlot.Accessory]){
+            Destroy(gear[InventoryItemSlot.Accessory]);
+            ClearItemSlot(InventoryItemSlot.Accessory);
+        }
+        if(gear[InventoryItemSlot.Boots]){
+            Destroy(gear[InventoryItemSlot.Boots]);
+            ClearItemSlot(InventoryItemSlot.Boots);
+        }
+        if(gear[InventoryItemSlot.Helmet]){
+            Destroy(gear[InventoryItemSlot.Helmet]);
+            ClearItemSlot(InventoryItemSlot.Helmet);
         }
 
         SetTempCurrency(0);

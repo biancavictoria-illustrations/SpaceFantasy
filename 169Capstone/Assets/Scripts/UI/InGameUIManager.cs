@@ -35,7 +35,7 @@ public class InGameUIManager : MonoBehaviour
     public bool gearSwapIsOpen {get; private set;}
 
     public ShopUI brynShopUI;
-    public ShopUI stellanShopUI;
+    public ShopUIStellan stellanShopUI;
     public ShopUI doctorShopUI;
     public ShopUI weaponsShopUI;
 
@@ -86,9 +86,11 @@ public class InGameUIManager : MonoBehaviour
         if(set){
             inventoryUI.OnInventoryOpen();
             Time.timeScale = 0f;
+            AlertTextUI.instance.ToggleAlertText(false);
         }
         else{
             Time.timeScale = 1f;
+            AlertTextUI.instance.ToggleAlertText(true);
         }
     }
 
