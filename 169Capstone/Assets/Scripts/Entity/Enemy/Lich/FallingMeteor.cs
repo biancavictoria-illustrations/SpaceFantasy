@@ -5,10 +5,10 @@ using UnityEngine.AI;
 
 public class FallingMeteor : MonoBehaviour
 {
-    private const float startingHeight = 10;
+    private const float startingHeight = 20;
 
     public float damage = 8;
-    public float velocity = 10;
+    public float velocity = 20;
 
     private Rigidbody rb;
     private NavMeshAgent agent;
@@ -16,7 +16,7 @@ public class FallingMeteor : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        agent.baseOffset = startingHeight;
+        rb = GetComponent<Rigidbody>();
 
         Vector3 spawnPosition = transform.position;
         Vector3 newPosition;
@@ -25,21 +25,16 @@ public class FallingMeteor : MonoBehaviour
         do
         {
             float angle = Random.Range(0, Mathf.PI * 2);
-            float magnitude = Random.Range(0f, 10f);
+            float magnitude = Random.Range(0f, 15f);
             newPosition = spawnPosition + new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle)) * magnitude;
             ++count;
         }
         while (count < 100 && !agent.CalculatePath(newPosition, path));
         agent.Warp(newPosition);
+        agent.enabled = false;
 
-        rb = GetComponent<Rigidbody>();
-
-        velocity = 0;
-    }
-
-    void FixedUpdate()
-    {
-        agent.baseOffset -= velocity * Time.fixedDeltaTime;
+        transform.position += Vector3.up * startingHeight;
+        rb.velocity = new Vector3(0, -velocity, 0);
     }
 
     void OnTriggerEnter(Collider other)

@@ -21,11 +21,15 @@ public class Lich : Enemy
     private Player player;
     private Coroutine attackRoutine;
     private Dictionary<AttackLogic, string> attackToAnimationTrigger;
+    private HashSet<GameObject> livingEnemies;
     private bool isPhase2;
+    private bool canSummon = true;
     private float meteorFrequency { get { return isPhase2 ? phase2MeteorFrequency : phase1MeteorFrequency; } }
 
     protected override void Start()
     {
+        base.Start();
+
         player = FindObjectOfType<Player>();
 
         EntityHealth healthScript = GetComponent<EntityHealth>();
@@ -33,15 +37,12 @@ public class Lich : Enemy
 
         logic = phase1logic;
 
+        livingEnemies = new HashSet<GameObject>();
+
         attackToAnimationTrigger = new Dictionary<AttackLogic, string>();
         attackToAnimationTrigger.Add(logic.attacks[0], "isMagicMissile");
         attackToAnimationTrigger.Add(logic.attacks[1], "isMeteorShower");
         attackToAnimationTrigger.Add(logic.attacks[2], "isSummoning");
-
-        nextAttack = logic.attacks[Random.Range(0, logic.attacks.Count)];
-
-        path.enabled = true;
-        path.attackRadius = nextAttack.attackRange;
     }
 
     protected override IEnumerator EnemyLogic() //special
@@ -75,9 +76,11 @@ public class Lich : Enemy
         path.enabled = false;
         AttackLogic previousAttack = nextAttack;
 
-        nextAttack = logic.attacks[Random.Range(0, logic.attacks.Count)];
+        int attackCount = canSummon ? logic.attacks.Count : logic.attacks.Count-1;
+
+        nextAttack = logic.attacks[Random.Range(0, attackCount)];
         if(previousAttack == nextAttack)
-            nextAttack = logic.attacks[Random.Range(0, logic.attacks.Count)]; //Reroll next attack to try to prevent duplicate attacks
+            nextAttack = logic.attacks[Random.Range(0, attackCount)]; //Reroll next attack to try to prevent duplicate attacks
 
         path.attackRadius = nextAttack.attackRange;
         path.enabled = true;
@@ -100,6 +103,8 @@ public class Lich : Enemy
 
     public void SinisterSummons()
     {
+        canSummon = false;
+
         int numEnemies = isPhase2 ? 4 : 2;
         numEnemies += Random.Range(0, 2);
 
@@ -121,12 +126,16 @@ public class Lich : Enemy
             }
             while (count < 100 && !agent.CalculatePath(newPosition, path));
             agent.Warp(newPosition);
+
+            livingEnemies.Add(enemy);
+            enemy.GetComponent<EntityHealth>().OnDeath.AddListener( (EntityHealth healthScript) => { minionWasKilled(enemy); } );
         }
     }
 
     public void TimeDilation()
     {
-
+        SlowCircle slowScript = Instantiate(slowCirclePrefab, player.transform.position, Quaternion.identity).GetComponent<SlowCircle>();
+        slowScript.Initialize("Player", "Enemy", 0.5f, 10, radius: 8, fadeInDuration: 1);
     }
 
     private IEnumerator MeteorRoutine()
@@ -136,7 +145,7 @@ public class Lich : Enemy
         while(count < nextAttack.duration/meteorFrequency)
         {
             GameObject meteor = Instantiate(meteorPrefab, player.transform.position, Quaternion.identity);
-            meteor.GetComponent<FallingDebris>().damage = logic.baseDamage * nextAttack.damageMultiplier;
+            meteor.GetComponent<FallingMeteor>().damage = logic.baseDamage * nextAttack.damageMultiplier;
             ++count;
             yield return new WaitForSeconds(meteorFrequency);
         }
@@ -152,8 +161,15 @@ public class Lich : Enemy
         attackToAnimationTrigger.Clear();
         attackToAnimationTrigger.Add(logic.attacks[0], "isMagicMissile");
         attackToAnimationTrigger.Add(logic.attacks[1], "isMeteorShower");
-        attackToAnimationTrigger.Add(logic.attacks[2], "isSummoning");
-        attackToAnimationTrigger.Add(logic.attacks[3], "isTimeDilation");
+        attackToAnimationTrigger.Add(logic.attacks[2], "isTimeDilation");
+        attackToAnimationTrigger.Add(logic.attacks[3], "isSummoning");
+    }
+
+    private void minionWasKilled(GameObject enemy)
+    {
+        livingEnemies.Remove(enemy);
+        if(livingEnemies.Count == 0)
+            canSummon = true;
     }
 
     private void checkForHalfHealth(EntityHealth health, float damage)

@@ -17,7 +17,7 @@ public class FallingDebris : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        agent.baseOffset = startingHeight;
+        rb = GetComponent<Rigidbody>();
 
         Vector3 spawnPosition = transform.position;
         Vector3 newPosition;
@@ -32,16 +32,16 @@ public class FallingDebris : MonoBehaviour
         }
         while (count < 100 && !agent.CalculatePath(newPosition, path));
         agent.Warp(newPosition);
+        agent.enabled = false;
 
-        rb = GetComponent<Rigidbody>();
-
+        transform.position += Vector3.up * startingHeight;
         currentVelocity = 0;
     }
 
     void FixedUpdate()
     {
         currentVelocity += gravity * Time.fixedDeltaTime;
-        agent.baseOffset -= currentVelocity * Time.fixedDeltaTime;
+        rb.velocity = new Vector3(0, -currentVelocity, 0);
     }
 
     void OnTriggerEnter(Collider other)
