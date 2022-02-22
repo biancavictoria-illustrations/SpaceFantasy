@@ -221,6 +221,8 @@ MonoBehaviour:
   attackRadius: 0
   speed: 1
   attacking: 0
+  nearAttackRange: 7
+  needsLOS: 1
 --- !u!95 &5026778883894273296
 Animator:
   serializedVersion: 3
@@ -253,10 +255,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   logic: {fileID: 11400000, guid: 9c2607c4d5f3e694d8dadff447c97a81, type: 2}
-  path: {fileID: 0}
-  canAttack: 1
   timerPrefab: {fileID: 8884618211834378937, guid: 70b863b9231e14d20905af9d7a45d1ce,
     type: 3}
+  path: {fileID: 0}
+  canAttack: 1
   coroutineRunning: 0
   animator: {fileID: 5026778883894273296}
   player: {fileID: 0}
@@ -277,7 +279,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHitpoints: 0
   currentHitpoints: 0
-  drop: {fileID: 11400000, guid: f8177299486ba1944824b2e1d87947c1, type: 2}
+  enemyDropGenerator: {fileID: 11400000, guid: f8177299486ba1944824b2e1d87947c1, type: 2}
 --- !u!114 &3387626245004855698
 MonoBehaviour:
   m_ObjectHideFlags: 0

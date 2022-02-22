@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Item : GeneratedEquipment
+public class Item : Equipment
 {
     public GameObject timerPrefab;
     public ItemObject itemObject;

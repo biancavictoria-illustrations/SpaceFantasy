@@ -6,6 +6,7 @@ using TMPro;
 
 public class ShopUI : MonoBehaviour
 {
+    [Tooltip("The part that actually gets toggled on and off; a child of this object.")]
     public GameObject shopInventoryPanel;
     [SerializeField] private GameObject fadedBackground;
     
@@ -31,6 +32,9 @@ public class ShopUI : MonoBehaviour
         hoverAlerts.DisableAllHoverAlerts();
 
         shopInventoryTopButton.Select();
+        // shopInventoryTopButton.GetComponent<ItemPanelShopUI>().SetHoverAlertsActive(true);
+
+        Time.timeScale = 0f;
     }
   
     public virtual void CloseShopUI()
@@ -41,6 +45,7 @@ public class ShopUI : MonoBehaviour
         hoverAlerts.DisableAllHoverAlerts();
 
         AlertTextUI.instance.EnableShopAlert();
+        Time.timeScale = 1f;
     }
 
     public virtual void SetShopUIInteractable(bool set)
@@ -51,6 +56,7 @@ public class ShopUI : MonoBehaviour
         }
         if(set){
             shopInventoryTopButton.Select();
+        // shopInventoryTopButton.GetComponent<ItemPanelShopUI>().SetHoverAlertsActive(true);
         }
     }
 }

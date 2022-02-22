@@ -8,7 +8,7 @@ public class MeleePathing : Pathing
     {
         float distance = Vector3.Distance(player.position, transform.position);
 
-        if(InAttackRange() || gameManager.inShopMode || agent.remainingDistance > 2 * provokedRadius)
+        if(InAttackRange() || InputManager.instance.shopIsOpen || agent.remainingDistance > 2 * provokedRadius)
         {
             agent.isStopped = true;
         }

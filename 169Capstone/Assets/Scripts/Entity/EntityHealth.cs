@@ -44,7 +44,7 @@ public class EntityHealth : MonoBehaviour
     public float maxHitpoints;
     public float currentHitpoints;
 
-    [SerializeField] private Drop drop;
+    [SerializeField] private EnemyDropGenerator enemyDropGenerator;
 
     private EnemyHealthBar enemyHealthUI;
 
@@ -134,8 +134,7 @@ public class EntityHealth : MonoBehaviour
         }
         else
         {
-            //TODO give enemies the thing for the thing
-            drop.GetDrop(GameManager.instance.bossesKilled, transform);
+            enemyDropGenerator.GetDrop(GameManager.instance.bossesKilled, transform);
             Destroy(gameObject);
             //Debug.Log(drop.GetDrop(ObjectManager.bossesKilled));
         }

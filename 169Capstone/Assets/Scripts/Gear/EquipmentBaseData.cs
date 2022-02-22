@@ -25,12 +25,22 @@ public enum ItemRarity
 }
 
 [CreateAssetMenu(menuName = "Gear/EquipmentData")]
-public class EquipmentData : ScriptableObject
+public class EquipmentBaseData : ScriptableObject
 {
-    [SerializeField] private string itemName;   // Player facing name
-    [SerializeField] private ItemID itemID;     // Internal ID
+    [Tooltip("Player facing item name")]
+    [SerializeField] private string itemName;
+    
+    [Tooltip("Internal ID")]
+    [SerializeField] private ItemID itemID;
 
-    [SerializeField] private GameObject itemPrefab;
+    [Tooltip("Just the model, for dropping on the ground")]
+    [SerializeField] private GameObject itemDropModelPrefab;
+
+    [Tooltip("Just the model, sized and angled for attaching to the player. WEAPONS ONLY!")]
+    [SerializeField] private GameObject equippedWeaponModelPrefab;
+
+    [Tooltip("Actual prefab of the item (no model) created once EQUIPPED")]
+    [SerializeField] private GameObject equippedItemPrefab;
 
     [SerializeField] private InventoryItemSlot itemSlot;
     [SerializeField] private int baseCost = 10;
@@ -52,9 +62,23 @@ public class EquipmentData : ScriptableObject
         return itemID;
     }
 
-    public GameObject ItemPrefab()
+    public GameObject ItemDropModelPrefab()
     {
-        return itemPrefab;
+        return itemDropModelPrefab;
+    }
+
+    public GameObject EquippedWeaponModelPrefab()
+    {
+        if(itemSlot != InventoryItemSlot.Weapon){
+            Debug.LogError("Cannot retrieve weapon model prefab for item type: " + itemSlot);
+            return null;
+        }
+        return equippedWeaponModelPrefab;
+    }
+
+    public GameObject EquippedItemPrefab()
+    {
+        return equippedItemPrefab;
     }
 
     public InventoryItemSlot ItemSlot()

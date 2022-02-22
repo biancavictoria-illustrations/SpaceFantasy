@@ -23,14 +23,9 @@ public class InventoryUIItemPanel : MonoBehaviour
 
     [SerializeField] private Toggle toggle;
 
-    public void SetItemPanelValues(GeneratedEquipment item)
+    public void SetItemPanelValues(SpawnedEquipmentData item)
     {
-        if(item == null){
-            SetDefaultItemPanelValues();
-            return;
-        }
-
-        EquipmentData data = item.equipmentData;
+        EquipmentBaseData data = item.equipmentBaseData;
 
         itemName.text = data.ItemName();
         rarity = item.rarity;
@@ -41,7 +36,7 @@ public class InventoryUIItemPanel : MonoBehaviour
         expandedDescription = data.LongDescription();
         itemDescription.text = shortDescription;
 
-        itemIcon.sprite = data.Icon();
+        // TODO: itemIcon.sprite = data.Icon();
         
         // Check bc compare item panel doesn't have a toggle
         if(toggle){
@@ -49,7 +44,7 @@ public class InventoryUIItemPanel : MonoBehaviour
         }
     }
 
-    private void SetDefaultItemPanelValues()
+    public void SetDefaultItemPanelValues()
     {
         itemName.text = "";
         rarity = ItemRarity.enumSize;

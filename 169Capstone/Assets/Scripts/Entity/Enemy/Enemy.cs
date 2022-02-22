@@ -47,7 +47,7 @@ public abstract class Enemy : MonoBehaviour
 
     void Update()
     {
-        canAttack = !GameManager.instance.inShopMode;
+        canAttack = !InputManager.instance.shopIsOpen;
 
         if(!coroutineRunning && canAttack && (path.Provoked() || path.InAttackRange())) // Update for damage later
         {

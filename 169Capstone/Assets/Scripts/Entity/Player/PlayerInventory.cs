@@ -9,12 +9,17 @@ public class PlayerInventory : MonoBehaviour
     public static PlayerInventory instance;
 
     // Gear dictionary contains keys of the enum item slot value and values of the actual item
-    public Dictionary<InventoryItemSlot, GeneratedEquipment> gear {get; private set;}
+    public Dictionary<InventoryItemSlot, Equipment> gear {get; private set;}
+
+    [HideInInspector] public GameObject weaponModel;
+
+    [Tooltip("For when you unequip items from your inventory.")]
+    public GameObject dropItemPrefab;
 
     public int healthPotionQuantity {get; private set;}
 
     public int tempCurrency {get; private set;}
-    public int permanentCurrency {get; private set;}    // TODO: NOT set to not destroy on load so this might be a problem here
+    public int permanentCurrency {get; private set;}
 
     void Awake()
     {
@@ -25,13 +30,16 @@ public class PlayerInventory : MonoBehaviour
             instance = this;
         }
 
-        gear = new Dictionary<InventoryItemSlot, GeneratedEquipment>();
+        gear = new Dictionary<InventoryItemSlot, Equipment>();
     }
 
     void Start()
     {
         // Set default values for all slots
-        ClearRunInventory();   // TODO: Move this somewhere else!!! Might cause problems moving between rooms/loading save data?
+        gear[InventoryItemSlot.Weapon] = null;
+        gear[InventoryItemSlot.Accessory] = null;
+        gear[InventoryItemSlot.Helmet] = null;
+        gear[InventoryItemSlot.Boots] = null;
     }
 
     public void UseHealthPotion()
@@ -41,9 +49,9 @@ public class PlayerInventory : MonoBehaviour
             return;
         }
 
-        // TODO: this doesn't work bc PlayerInventory is on game manager now, not player (need a way to tell the player to update its health)
-        // float healedHitPoints = GetComponent<EntityHealth>().maxHitpoints * (0.01f * GetComponent<PlayerStats>().getHealingEfficacy());
-        // GetComponent<EntityHealth>().Heal(healedHitPoints);
+        EntityHealth playerHealth = Player.instance.GetComponent<EntityHealth>();
+        float healedHitPoints = playerHealth.maxHitpoints * (0.01f * Player.instance.GetComponent<PlayerStats>().getHealingEfficacy());
+        playerHealth.Heal(healedHitPoints);
 
         healthPotionQuantity--;
         InGameUIManager.instance.SetHealthPotionValue(healthPotionQuantity);
@@ -61,25 +69,82 @@ public class PlayerInventory : MonoBehaviour
         InGameUIManager.instance.SetHealthPotionValue(healthPotionQuantity);
     }
 
-    public void EquipItem(InventoryItemSlot slot, GeneratedEquipment item)
+    public void EquipItem(InventoryItemSlot slot, Equipment item)
     {
+        AlertTextUI.instance.DisableAlert();
+
+        // If necessary, drop the PREVIOUS item on the ground
+        UnequipItemSlot(slot);
+
+        // Set the slot to now be the NEW item
         gear[slot] = item;
-        InGameUIManager.instance.SetGearItemUI(slot, item);
+        
+        // Update UI accordingly
+        InGameUIManager.instance.SetGearItemUI(slot, item.data.equipmentBaseData.Icon());
     }
 
-    public void UnequipItem(InventoryItemSlot slot)
+    public void UnequipItemSlot(InventoryItemSlot slot)
+    {
+        // If nothing's equipped, return
+        if( !gear[slot] ){
+            return;
+        }
+
+        // Instantiate the item to drop on the ground
+        GameObject dropItem = Instantiate(dropItemPrefab, Player.instance.transform.position, Quaternion.identity);
+
+        // Give it the data of your currently equipped item
+        dropItem.GetComponent<GeneratedEquipment>().SetAllEquipmentData(gear[slot].data);
+
+        // Drop it
+        dropItem.GetComponent<DropTrigger>().DropItemModelIn3DSpace();
+        
+        // If it's a weapon, also remove the model stuck to your hand
+        if(slot == InventoryItemSlot.Weapon){
+            RemoveEquippedWeaponModel();
+        }
+
+        // Set value to null in the dictionary and clear the UI
+        ClearItemSlot(slot);
+        AlertTextUI.instance.EnableItemPickupAlert();
+    }
+
+    private void RemoveEquippedWeaponModel()
+    {
+        Destroy(weaponModel);
+    }
+
+    private void ClearItemSlot(InventoryItemSlot slot)
     {
         gear[slot] = null;
         InGameUIManager.instance.ClearItemUI(slot);
     }
 
-    // Called when you die (putting this here means we need to put resetting your health somewhere else)
+    // Called when you die
     public void ClearRunInventory()
     {
-        UnequipItem(InventoryItemSlot.Weapon);
-        UnequipItem(InventoryItemSlot.Helmet);
-        UnequipItem(InventoryItemSlot.Accessory);
-        UnequipItem(InventoryItemSlot.Boots);
+        if(weaponModel){
+            RemoveEquippedWeaponModel();
+        }
+
+        // Delete each item object and clear the inventory slot
+        // (Can't loop because can't delete the things while iterating, stuff gets mad)
+        if(gear[InventoryItemSlot.Weapon]){
+            Destroy(gear[InventoryItemSlot.Weapon]);
+            ClearItemSlot(InventoryItemSlot.Weapon);
+        }
+        if(gear[InventoryItemSlot.Accessory]){
+            Destroy(gear[InventoryItemSlot.Accessory]);
+            ClearItemSlot(InventoryItemSlot.Accessory);
+        }
+        if(gear[InventoryItemSlot.Boots]){
+            Destroy(gear[InventoryItemSlot.Boots]);
+            ClearItemSlot(InventoryItemSlot.Boots);
+        }
+        if(gear[InventoryItemSlot.Helmet]){
+            Destroy(gear[InventoryItemSlot.Helmet]);
+            ClearItemSlot(InventoryItemSlot.Helmet);
+        }
 
         SetTempCurrency(0);
         ClearHealthPotions();

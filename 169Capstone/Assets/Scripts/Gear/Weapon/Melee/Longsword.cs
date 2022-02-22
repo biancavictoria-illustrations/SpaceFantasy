@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Longsword : GeneratedEquipment
+public class Longsword : Equipment
 {
     private const float meleeRange = 4;
     // private string title = "Berserker's Zweihander";

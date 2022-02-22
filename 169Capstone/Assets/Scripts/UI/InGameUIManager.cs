@@ -35,7 +35,7 @@ public class InGameUIManager : MonoBehaviour
     public bool gearSwapIsOpen {get; private set;}
 
     public ShopUI brynShopUI;
-    public ShopUI stellanShopUI;
+    public ShopUIStellan stellanShopUI;
     public ShopUI doctorShopUI;
     public ShopUI weaponsShopUI;
 
@@ -85,43 +85,50 @@ public class InGameUIManager : MonoBehaviour
 
         if(set){
             inventoryUI.OnInventoryOpen();
+            Time.timeScale = 0f;
+            AlertTextUI.instance.ToggleAlertText(false);
+        }
+        else{
+            Time.timeScale = 1f;
+            AlertTextUI.instance.ToggleAlertText(true);
         }
     }
 
     // Called when the player goes to pick up a new item
     public void SetGearSwapUIActive(bool set, GeneratedEquipment item)
     {
-        if(set && item == null){
-            Debug.LogError("Tried to open gear swap UI but no new item was found!");
-        }
-
         inGameUIGearIconPanel.SetActive(!set);
-        darkBackgroundPanel.SetActive(set);
         gearSwapUIPanel.SetActive(set);
         gearSwapIsOpen = set;
 
         if(set){
             gearSwapUI.OnGearSwapUIOpen(item);
+            AlertTextUI.instance.DisableAlert();
+            Time.timeScale = 0f;
+        }
+        else{
+            AlertTextUI.instance.EnableItemPickupAlert();
+            Time.timeScale = 1f;
         }
     }
 
-    public void SetGearItemUI(InventoryItemSlot itemSlot, GeneratedEquipment item)
+    public void SetGearItemUI(InventoryItemSlot itemSlot, Sprite _icon)
     {
         Debug.LogWarning("No item icons set! (TODO)");
         return;
 
         switch(itemSlot){
             case InventoryItemSlot.Weapon:
-                inGameWeaponIMG.sprite = item.equipmentData.Icon();
+                inGameWeaponIMG.sprite = _icon;
                 break;
             case InventoryItemSlot.Accessory:
-                inGameAccessoryIMG.sprite = item.equipmentData.Icon();
+                inGameAccessoryIMG.sprite = _icon;
                 break;
             case InventoryItemSlot.Helmet:
-                inGameHelmetIMG.sprite = item.equipmentData.Icon();
+                inGameHelmetIMG.sprite = _icon;
                 break;
             case InventoryItemSlot.Boots:
-                inGameBootsIMG.sprite = item.equipmentData.Icon();
+                inGameBootsIMG.sprite = _icon;
                 break;
             default:
                 Debug.LogError("No item icon found for slot: " + itemSlot.ToString());

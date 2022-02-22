@@ -29,7 +29,7 @@ public class Beetle : Enemy
 
     protected override void Start()
     {
-        player = FindObjectOfType<Player>();
+        player = Player.instance;
 
         EntityHealth healthScript = GetComponent<EntityHealth>();
         healthScript.OnHit.AddListener(checkForHalfHealth);

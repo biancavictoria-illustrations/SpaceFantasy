@@ -43,7 +43,7 @@ public class InputManager : MonoBehaviour
     {
         InputActionAsset controls = GetComponent<PlayerInput>().actions;
 
-        player = FindObjectOfType<Player>();
+        player = Player.instance;
 
         // Add STOPPING when you're no longer holding the button
         controls.FindAction("AttackPrimary").canceled += x => OnAttackPrimaryCanceled();
@@ -127,23 +127,16 @@ public class InputManager : MonoBehaviour
         }
 
         // Check if you're in range of a dropped item
-        else if(GeneratedEquipment.ActiveGearDrop){
-            GeneratedEquipment item = GeneratedEquipment.ActiveGearDrop;
-
-            // If the player doesn't have anything equipped in that slot, equip it
-            if( !PlayerInventory.instance.gear[item.equipmentData.ItemSlot()] ){
-                PlayerInventory.instance.EquipItem(item.equipmentData.ItemSlot(), item);
-            }
-            else{   // Otherwise, open compare UI
-                ToggleCompareItemUI(true, item);
-            }
+        else if(DropTrigger.ActiveGearDrop){
+            GeneratedEquipment itemData = DropTrigger.ActiveGearDrop;
+            ToggleCompareItemUI(true, itemData);
         }
     }
 
     public void ToggleCompareItemUI(bool set, GeneratedEquipment item)
     {
         compareItemIsOpen = set;
-        InGameUIManager.instance.SetGearSwapUIActive(set, item);
+        InGameUIManager.instance.SetGearSwapUIActive(set, item);        
     }
 
     // If you're in dialogue, click anywhere to progress

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static Player instance;
+
     [SerializeField] private PlayerStats stats;
     private EntityHealth health;
 
@@ -15,31 +17,37 @@ public class Player : MonoBehaviour
     public int currentCha;
 
     public float currentAttackSpeed;
-    //private float currentHitpoints;
+
+    [SerializeField] public Transform handPos;
 
     //public Timer timer;
-
-    //public ObjectManager objectManager;
-
     //public bool test = true;
 
     [SerializeField] private SpeakerData speakerData;
-    [SerializeField] private GameObject swordPrefab;
+
+    // TEMP for testing purposes
+    public GameObject dropItemPrefab;
+    public EquipmentBaseData swordData;
+
+    void Awake()
+    {
+        if( instance ){
+            Destroy(gameObject);
+        }
+        else{
+            instance = this;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         health = gameObject.GetComponent<EntityHealth>();
         health.maxHitpoints = 30;
-        health.currentHitpoints = 30;
-
-        health.SetStartingHealthUI();
-
-        //Debug.Log("here");
+        health.currentHitpoints = 30;        
         //health.maxHitpoints = stats.getMaxHitPoints();
         //health.currentHitpoints = stats.getMaxHitPoints();
-
-        Debug.Log(health.maxHitpoints);
+        health.SetStartingHealthUI();
 
         currentStr = stats.Strength();
         currentDex = stats.Dexterity();
@@ -54,10 +62,12 @@ public class Player : MonoBehaviour
             DialogueManager.instance.AddSpeaker(speakerData);
         }
 
-        GeneratedEquipment gen = Instantiate(swordPrefab).GetComponent<GeneratedEquipment>();
-        PlayerInventory.instance.EquipItem(InventoryItemSlot.Weapon, gen);
-
         StartCoroutine(DetectFall());
+
+        // TEMP drop the sword on start so the player has a working weapon (for testing purposes)
+        GameObject itemObject = Instantiate(dropItemPrefab, transform.position, Quaternion.identity);
+        itemObject.GetComponent<GeneratedEquipment>().SetEquipmentBaseData( swordData, ItemRarity.Common );
+        itemObject.GetComponent<DropTrigger>().DropItemModelIn3DSpace();
     }
 
     public float CurrentAttackSpeed()
