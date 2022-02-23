@@ -2,28 +2,117 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+
+public enum StellanShopUpgradeType{
+    // Stat Increases
+    STRMin,
+    STRMax,
+    DEXMin,
+    DEXMax,
+    INTMin,
+    INTMax,
+    WISMin,
+    WISMax,
+    CONMin,
+    CONMax,
+    CHAMin,
+    CHAMax,
+
+    // Skills
+    skill,  // TEMP
+
+    enumSize
+}
 
 public class ShopUIStellan : MonoBehaviour
 {
+    [SerializeField] private Color canPurchaseTextColor;
+
+    [SerializeField] private Color cannotAffordTextColor;
+    [SerializeField] private Color cannotAffordIconColor;
+
+    [SerializeField] private Color maxUpgradesReachedIconColor;
+
     [Tooltip("The part that actually gets toggled on and off; a child of this object.")]
     public GameObject shopInventoryPanel;
 
-    [Tooltip("Selected first when the UI opens.")]
-    [SerializeField] private Button shopInventoryTopButton;
     [SerializeField] private Button leaveShopButton;
+    [SerializeField] private Button resetCurrencyButton;
 
-    [SerializeField] public List<UpgradePanelStellan> upgradePanels = new List<UpgradePanelStellan>();
+    [SerializeField] public List<UpgradePanel> upgradePanels = new List<UpgradePanel>();
 
-    // Start is called before the first frame update
+    [SerializeField] private TMP_Text focusPanelName;
+    [SerializeField] private TMP_Text focusSkillLevel;
+    [SerializeField] private TMP_Text focusPanelDesc;
+    [SerializeField] private TMP_Text focusPanelCost;
+    [SerializeField] private Image focusPanelIcon;
+    [SerializeField] private GameObject focusPanelToPurchaseMessage;
+
+    public PlayerStats playerStats {get; private set;}
+
+    public Sprite tempDefaultSpriteIcon;
+
+
     void Start()
     {
-        DisableAllHoverDescriptions();
+        playerStats = FindObjectOfType<PlayerStats>();
+
+        // TODO: Get the actual values
+        foreach(UpgradePanel panel in upgradePanels){
+            panel.SetShopUI(this);
+
+            panel.SetUpgradeValues(0, 500, "Ability Name", "Description text goes here.", null);
+        }
     }
 
-    private void DisableAllHoverDescriptions()
+    public Color GetCanPurchaseTextColor()
     {
-        foreach(UpgradePanelStellan panel in upgradePanels){
-            panel.SetDescriptionPopupActive(false);
+        return canPurchaseTextColor;
+    }
+
+    public Color GetCannotAffordTextColor()
+    {
+        return cannotAffordTextColor;
+    }
+
+    public Color GetCannotAffordIconColor()
+    {
+        return cannotAffordIconColor;
+    }
+
+    public Color GetMaxUpgradesReachedIconColor()
+    {
+        return maxUpgradesReachedIconColor;
+    }
+
+    public void SetFocusPanelValues(string _name, string _skillLevel, string _desc, string _cost, Sprite _icon)
+    {
+        focusPanelName.text = _name;
+        focusSkillLevel.text = _skillLevel;
+        focusPanelDesc.text = _desc;
+        focusPanelCost.text = _cost;
+        focusPanelIcon.color = new Color(255,255,255,255);
+        // focusPanelIcon.sprite = _icon;   // TODO: Uncomment once we have icons (for now, just make it visible again)
+
+        focusPanelToPurchaseMessage.SetActive(true);
+    }
+
+    public void ClearFocusPanel()
+    {
+        focusPanelName.text = "";
+        focusSkillLevel.text = "";
+        focusPanelDesc.text = "Hover over a skill to examine.";
+        focusPanelCost.text = "";
+        focusPanelIcon.color = new Color(255,255,255,0);
+        
+        focusPanelToPurchaseMessage.SetActive(false);
+    }
+
+    public void UpdateAllUpgradePanels()
+    {
+        foreach(UpgradePanel panel in upgradePanels){
+            panel.UpdateUIDisplayValues();
         }
     }
 
@@ -31,14 +120,9 @@ public class ShopUIStellan : MonoBehaviour
     {
         InputManager.instance.shopIsOpen = true;
         shopInventoryPanel.SetActive(true);
-        DisableAllHoverDescriptions();
+        ClearFocusPanel();
 
-        // TEMP
         leaveShopButton.Select();
-
-        // shopInventoryTopButton.Select();
-        // shopInventoryPanel.GetComponent<UpgradePanelStellan>().SetDescriptionPopupActive(true);
-
         Time.timeScale = 0f;
     }
   
@@ -46,24 +130,41 @@ public class ShopUIStellan : MonoBehaviour
     {
         InputManager.instance.shopIsOpen = false;
         shopInventoryPanel.SetActive(false);
-        DisableAllHoverDescriptions();
+        ClearFocusPanel();
 
         AlertTextUI.instance.EnableShopAlert();
         Time.timeScale = 1f;
     }
 
+    public void ResetButtonClicked()
+    {
+        // TODO: Reset actual stats/skills to default values
+
+        // TODO: Get the actual values
+        foreach(UpgradePanel panel in upgradePanels){
+            panel.SetUpgradeValues(0, 500, "Ability Name", "Description text goes here.", tempDefaultSpriteIcon);
+        }
+    }
+
     public void SetShopUIInteractable(bool set)
     {
         leaveShopButton.interactable = set;
-        foreach(UpgradePanelStellan panel in upgradePanels){
+        resetCurrencyButton.interactable = set;
+        foreach(UpgradePanel panel in upgradePanels){
             panel.GetComponent<Button>().interactable = set;
         }
         if(set){
-            // TEMP
             leaveShopButton.Select();
+        }
+    }
 
-            // shopInventoryTopButton.Select();
-            // shopInventoryPanel.GetComponent<UpgradePanelStellan>().SetDescriptionPopupActive(true);
+    public void SetPurchaseMessageButton( bool latestInputFromController )
+    {
+        if(latestInputFromController){
+            // Set to controller input button
+        }
+        else{
+            // Set to keyboard button
         }
     }
 }
