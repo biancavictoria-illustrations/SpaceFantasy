@@ -11,4 +11,9 @@ public class PropJumpBreak : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    public void BreakProp()
+    {
+        Destroy(gameObject);
+    }
 }
