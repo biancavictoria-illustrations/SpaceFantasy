@@ -51,8 +51,11 @@ public class ShopUIStellan : MonoBehaviour
 
     public PlayerStats playerStats {get; private set;}
 
-    public Sprite tempDefaultSpriteIcon;
+    [SerializeField] private TMP_Text purchaseText;
+    [SerializeField] private Image toPurchaseKeyIcon;
 
+    [SerializeField] private Sprite controllerSelectButton;
+    [SerializeField] private Sprite mouseSelectButton;
 
     void Start()
     {
@@ -62,7 +65,7 @@ public class ShopUIStellan : MonoBehaviour
         foreach(UpgradePanel panel in upgradePanels){
             panel.SetShopUI(this);
 
-            panel.SetUpgradeValues(0, 500, "Ability Name", "Description text goes here.", null);
+            panel.InitializeUpgradeValues(500, null);
         }
     }
 
@@ -96,6 +99,7 @@ public class ShopUIStellan : MonoBehaviour
         // focusPanelIcon.sprite = _icon;   // TODO: Uncomment once we have icons (for now, just make it visible again)
 
         focusPanelToPurchaseMessage.SetActive(true);
+        SetPurchaseMessageButton(InputManager.instance.latestInputIsController, _cost=="");
     }
 
     public void ClearFocusPanel()
@@ -138,11 +142,13 @@ public class ShopUIStellan : MonoBehaviour
 
     public void ResetButtonClicked()
     {
-        // TODO: Reset actual stats/skills to default values
+        // TODO: Reset ACTUAL skills to default values
 
-        // TODO: Get the actual values
+        playerStats.ResetAllStatGenerationValues();
+
+        // TODO: Now reflect those values in the UI
         foreach(UpgradePanel panel in upgradePanels){
-            panel.SetUpgradeValues(0, 500, "Ability Name", "Description text goes here.", tempDefaultSpriteIcon);
+            panel.InitializeUpgradeValues(500, null);
         }
     }
 
@@ -158,13 +164,25 @@ public class ShopUIStellan : MonoBehaviour
         }
     }
 
-    public void SetPurchaseMessageButton( bool latestInputFromController )
+    public void SetPurchaseMessageButton( bool latestInputFromController, bool maxUpgradesReached )
     {
+        if(maxUpgradesReached){
+            toPurchaseKeyIcon.gameObject.SetActive(false);
+            purchaseText.gameObject.SetActive(false);
+            return;
+        }
+
+        toPurchaseKeyIcon.gameObject.SetActive(true);
+        purchaseText.gameObject.SetActive(true);
+
         if(latestInputFromController){
             // Set to controller input button
+            toPurchaseKeyIcon.sprite = controllerSelectButton;
         }
         else{
-            // Set to keyboard button
+            // Set to keyboard/mouse button
+            toPurchaseKeyIcon.sprite = mouseSelectButton;
         }
+        toPurchaseKeyIcon.preserveAspect = true;
     }
 }
