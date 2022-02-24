@@ -130,20 +130,28 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     public void OnPointerEnter(PointerEventData eventData)
     {
         shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, description, costText.text, upgradeIcon.sprite);
+
+        Debug.Log("Button selected with mouse");
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         shopUI.ClearFocusPanel();
+
+        Debug.Log("Button unselected with mouse");
     }
 
     public void OnSelect(BaseEventData eventData)
     {
         shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, description, costText.text, upgradeIcon.sprite);
+
+        Debug.Log("Button selected with controller");
     }
 
     public void OnDeselect(BaseEventData eventData)
     {
         shopUI.ClearFocusPanel();
+
+        Debug.Log("Button unselected with controller");
     }
 }

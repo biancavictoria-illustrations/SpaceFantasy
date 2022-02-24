@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 5771645979683231666}
   - component: {fileID: 5389387684538361039}
   - component: {fileID: 3172116400479970118}
+  - component: {fileID: 4857153081154972519}
+  - component: {fileID: 390365142372000217}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -118,7 +120,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4848711720761883292}
+      - m_Target: {fileID: 390365142372000217}
         m_MethodName: PurchaseItem
         m_Mode: 1
         m_Arguments:
@@ -129,6 +131,35 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4857153081154972519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3561824810435049933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d6fc31776f4b944b9570f2e48e297b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &390365142372000217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3561824810435049933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 374bf7fb4d3aa3c4c889a1332eb7115c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  upgradeType: 12
+  costText: {fileID: 3580333001934923559}
+  skillLevelText: {fileID: 1954198057980406833}
+  upgradeIcon: {fileID: 5389387684538361039}
+  upgradeButton: {fileID: 3172116400479970118}
 --- !u!1 &6645964410069523404
 GameObject:
   m_ObjectHideFlags: 0
@@ -407,7 +438,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5372651319570527265}
   - component: {fileID: 4867819717879047668}
-  - component: {fileID: 4848711720761883292}
   m_Layer: 5
   m_Name: SkillUpgradePanel
   m_TagString: Untagged
@@ -462,20 +492,3 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
---- !u!114 &4848711720761883292
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8026062553797751241}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 374bf7fb4d3aa3c4c889a1332eb7115c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  upgradeType: 12
-  costText: {fileID: 1954198057980406833}
-  skillLevelText: {fileID: 1954198057980406833}
-  upgradeIcon: {fileID: 5389387684538361039}
-  upgradeButton: {fileID: 3172116400479970118}
