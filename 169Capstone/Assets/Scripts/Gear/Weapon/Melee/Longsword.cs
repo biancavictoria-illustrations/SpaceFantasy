@@ -42,10 +42,19 @@ public class Longsword : Equipment
     {
         Debug.DrawRay(player.transform.position + 2*Vector3.up, InputManager.instance.cursorLookDirection * meleeRange, Color.yellow, 1);
         RaycastHit hit;
-        if(Physics.SphereCast(player.transform.position + 2*Vector3.up, 1, InputManager.instance.cursorLookDirection, out hit, meleeRange, LayerMask.GetMask("Enemy")))
+        if(Physics.SphereCast(player.transform.position + 2*Vector3.up, 1, InputManager.instance.cursorLookDirection, out hit, meleeRange, LayerMask.GetMask("Enemy","Prop")))
         {
-            Debug.Log("Damage");
-            return hit.collider.GetComponent<EntityHealth>().Damage(damageModifier[heldEffectCounter] * player.currentStr);
+            if(hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            {
+                Debug.Log("Damage");
+                return hit.collider.GetComponent<EntityHealth>().Damage(damageModifier[heldEffectCounter] * player.currentStr);
+            }
+            else
+            {
+                hit.collider.GetComponent<PropJumpBreak>().BreakProp();
+                return true;
+            }
+            
         }
         else
         {
