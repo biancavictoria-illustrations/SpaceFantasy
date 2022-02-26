@@ -11,7 +11,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     public int currentUpgradeLevel {get; private set;}
     public int totalUpgradeLevels {get; private set;}
 
-    [SerializeField] private StellanShopUpgradeType upgradeType;    // Set in inspector or below
+    [SerializeField] private StellanShopUpgradeType upgradeType;
     public string upgradeName {get; private set;}
     public string description {get; private set;}
 
@@ -178,9 +178,8 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         if(currentUpgradeLevel == totalUpgradeLevels){
             SetMaxUpgradesReached(true);
         }
-        else{
-            UpdateUIDisplayValues();
-        }
+
+        shopUI.UpdateAllUpgradePanels();
     }
 
     private void SetMaxUpgradesReached(bool set)

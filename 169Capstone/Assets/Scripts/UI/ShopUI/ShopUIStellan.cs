@@ -61,10 +61,8 @@ public class ShopUIStellan : MonoBehaviour
     {
         playerStats = FindObjectOfType<PlayerStats>();
 
-        // TODO: Get the actual values
         foreach(UpgradePanel panel in upgradePanels){
             panel.SetShopUI(this);
-
             panel.InitializeUpgradeValues(500, null);
         }
     }
@@ -146,7 +144,7 @@ public class ShopUIStellan : MonoBehaviour
 
         playerStats.ResetAllStatGenerationValues();
 
-        // TODO: Now reflect those values in the UI
+        // Now reflect those values in the UI
         foreach(UpgradePanel panel in upgradePanels){
             panel.InitializeUpgradeValues(500, null);
         }

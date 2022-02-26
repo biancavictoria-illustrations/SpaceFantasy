@@ -20,9 +20,7 @@ public class EnemyDropGenerator : ScriptableObject
 
         // Generate a random number
         System.Random r = new System.Random();
-
-        //float chance = (float)r.NextDouble();
-        float chance = 0.89f; // for testing purposes
+        float chance = (float)r.NextDouble();
 
         // Determine item type and rarity
         int index = dropTable.DropChance().IndexOf(dropTable.DropChance().First(x => chance <= x));
