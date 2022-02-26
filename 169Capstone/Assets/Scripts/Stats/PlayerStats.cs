@@ -18,6 +18,9 @@ public class PlayerStats : EntityStats
 
     #region Primary Stats
 
+        private const int DEFAULT_MIN = 5;
+        private const int DEFAULT_MAX = 15;
+
         #region Strength
             private int strength;
             private int minStrength = 5;
@@ -297,5 +300,180 @@ public class PlayerStats : EntityStats
     public void SetHealingEfficacyFlatBonus(int value)
     {
         healingEfficacyFlatBonus = value;
+    }
+
+    public int GetStatGenerationValue(StellanShopUpgradeType upgradeType)
+    {
+        if((int)upgradeType > 11){
+            Debug.LogWarning("Cannot get stat generation value for upgrade type: " + upgradeType);
+            return -1;
+        }
+
+        switch(upgradeType){
+            case StellanShopUpgradeType.STRMin:
+                return minStrength;
+            case StellanShopUpgradeType.STRMax:
+                return maxStrength;
+            case StellanShopUpgradeType.DEXMin:
+                return minDexterity;
+            case StellanShopUpgradeType.DEXMax:
+                return maxDexterity;
+            case StellanShopUpgradeType.INTMin:
+                return minIntelligence;
+            case StellanShopUpgradeType.INTMax:
+                return maxIntelligence;
+            case StellanShopUpgradeType.WISMin:
+                return minWisdom;
+            case StellanShopUpgradeType.WISMax:
+                return maxWisdom;
+            case StellanShopUpgradeType.CONMin:
+                return minConstitution;
+            case StellanShopUpgradeType.CONMax:
+                return maxConstitution;
+            case StellanShopUpgradeType.CHAMin:
+                return minCharisma;
+            case StellanShopUpgradeType.CHAMax:
+                return maxCharisma;
+        }
+
+        Debug.LogError("Could not find stat generation value for upgrade type: " + upgradeType);
+        return -1;
+    }
+
+    public void ResetAllStatGenerationValues()
+    {
+        minStrength = DEFAULT_MIN;
+        minDexterity = DEFAULT_MIN;
+        minIntelligence = DEFAULT_MIN;
+        minWisdom = DEFAULT_MIN;
+        minConstitution = DEFAULT_MIN;
+        minCharisma = DEFAULT_MIN;
+
+        maxStrength = DEFAULT_MAX;
+        maxDexterity = DEFAULT_MAX;
+        maxIntelligence = DEFAULT_MAX;
+        maxWisdom = DEFAULT_MAX;
+        maxConstitution = DEFAULT_MAX;
+        maxCharisma = DEFAULT_MAX;
+    }
+
+    public void SetStrengthMin(int value)
+    {
+        if(value > maxStrength){
+            Debug.LogWarning("Unable to set min stat above max.");
+            return;
+        }
+
+        minStrength = value;
+    }
+
+    public void SetStrengthMax(int value)
+    {
+        if(value < minStrength){
+            Debug.LogWarning("Unable to set max stat below min.");
+            return;
+        }
+
+        maxStrength = value;
+    }
+
+    public void SetDexterityMin(int value)
+    {
+        if(value > maxDexterity){
+            Debug.LogWarning("Unable to set min stat above max.");
+            return;
+        }
+
+        minDexterity = value;
+    }
+
+    public void SetDexterityMax(int value)
+    {
+        if(value < minDexterity){
+            Debug.LogWarning("Unable to set max stat below min.");
+            return;
+        }
+
+        maxDexterity = value;
+    }
+
+    public void SetIntMin(int value)
+    {
+        if(value > maxIntelligence){
+            Debug.LogWarning("Unable to set min stat above max.");
+            return;
+        }
+
+        minIntelligence = value;
+    }
+
+    public void SetIntMax(int value)
+    {
+        if(value < minIntelligence){
+            Debug.LogWarning("Unable to set max stat below min.");
+            return;
+        }
+
+        maxIntelligence = value;
+    }
+
+    public void SetWisdomMin(int value)
+    {
+        if(value > maxWisdom){
+            Debug.LogWarning("Unable to set min stat above max.");
+            return;
+        }
+
+        minWisdom = value;
+    }
+
+    public void SetWisdomMax(int value)
+    {
+        if(value < minWisdom){
+            Debug.LogWarning("Unable to set max stat below min.");
+            return;
+        }
+
+        maxWisdom = value;
+    }
+
+    public void SetConMin(int value)
+    {
+        if(value > maxConstitution){
+            Debug.LogWarning("Unable to set min stat above max.");
+            return;
+        }
+
+        minConstitution = value;
+    }
+
+    public void SetConMax(int value)
+    {
+        if(value < minConstitution){
+            Debug.LogWarning("Unable to set max stat below min.");
+            return;
+        }
+
+        maxConstitution = value;
+    }
+
+    public void SetCharismaMin(int value)
+    {
+        if(value > maxCharisma){
+            Debug.LogWarning("Unable to set min stat above max.");
+            return;
+        }
+
+        minCharisma = value;
+    }
+
+    public void SetCharismaMax(int value)
+    {
+        if(value < minCharisma){
+            Debug.LogWarning("Unable to set max stat below min.");
+            return;
+        }
+
+        maxCharisma = value;
     }
 }

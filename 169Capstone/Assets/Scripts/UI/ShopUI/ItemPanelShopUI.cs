@@ -26,7 +26,7 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
     [SerializeField] protected Button itemCardButton;
 
     [SerializeField] protected ItemPanelPos panelPos;   // Set in the inspector
-    public ShopHoverAlerts hoverAlerts;
+    [HideInInspector] public ShopHoverAlerts hoverAlerts;
     
     protected void SetBaseShopItemValues(int iBaseCost, string iName, string iDesc)
     {
