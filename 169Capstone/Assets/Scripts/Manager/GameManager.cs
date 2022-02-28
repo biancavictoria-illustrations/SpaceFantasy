@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -29,6 +30,8 @@ public class GameManager : MonoBehaviour
             instance = this;
         }
         DontDestroyOnLoad(this.gameObject);
+
+        SceneManager.sceneLoaded += OnSceneLoad;
     }
 
     private void Start()
@@ -102,6 +105,13 @@ public class GameManager : MonoBehaviour
         }
         else{
             Debug.Log("No game saved!");
+        }
+    }
+
+    void OnSceneLoad(Scene scene, LoadSceneMode mode)
+    {
+        if(scene.name == "Main Hub"){
+            InGameUIManager.instance.ToggleRunUI(false);
         }
     }
 

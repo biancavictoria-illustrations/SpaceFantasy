@@ -42,6 +42,7 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private TMP_Text permanentCurrencyValue;
     [SerializeField] private TMP_Text tempCurrencyValue;
 
+    [SerializeField] private GameObject healthUIContainer;
     [SerializeField] private Slider healthSlider;
     [SerializeField] private TMP_Text healthText;
     private float maxHealthValue;
@@ -69,6 +70,13 @@ public class InGameUIManager : MonoBehaviour
     public void ToggleInGameGearIconPanel(bool set)
     {
         inGameUIGearIconPanel.SetActive(set);
+    }
+
+    public void ToggleRunUI(bool setRunUIActive)
+    {
+        ToggleInGameGearIconPanel(setRunUIActive);
+        tempCurrencyValue.gameObject.SetActive(setRunUIActive);
+        healthUIContainer.SetActive(setRunUIActive);
     }
 
     // Called when player input opens or closes the inventory
