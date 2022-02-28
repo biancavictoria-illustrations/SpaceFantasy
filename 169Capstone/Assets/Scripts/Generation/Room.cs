@@ -6,7 +6,7 @@ public class Room : MonoBehaviour
 {
     [SerializeField] private List<EntityHealth> startingEnemies;
     [SerializeField] private List<Transform> roomExits;
-    private HashSet<EntityHealth> enemies;
+    public HashSet<EntityHealth> enemies{get; private set;}
 
     void Awake()
     {
@@ -49,10 +49,13 @@ public class Room : MonoBehaviour
     private void updateEnemies(EntityHealth health)
     {
         enemies.Remove(health);
+        Debug.Log("Enemy Update");
     }
 
     public bool hasEnemies()
     {
         return enemies.Count > 0;
     }
+    
+    
 }
