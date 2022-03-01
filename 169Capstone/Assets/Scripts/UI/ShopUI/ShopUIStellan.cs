@@ -57,6 +57,10 @@ public class ShopUIStellan : MonoBehaviour
     [SerializeField] private Sprite controllerSelectButton;
     [SerializeField] private Sprite mouseSelectButton;
 
+    [HideInInspector] public UpgradePanel activeUpgradeInFocus;
+
+    public bool giveCurrencyForTesting = false; // TEMP
+
     void Start()
     {
         playerStats = FindObjectOfType<PlayerStats>();
@@ -64,6 +68,14 @@ public class ShopUIStellan : MonoBehaviour
         foreach(UpgradePanel panel in upgradePanels){
             panel.SetShopUI(this);
             panel.InitializeUpgradeValues(500, null);
+        }
+    }
+
+    void Update()
+    {
+        if(giveCurrencyForTesting){
+            giveCurrencyForTesting = false;
+            PlayerInventory.instance.SetPermanentCurrency( PlayerInventory.instance.permanentCurrency + 1000 );
         }
     }
 
@@ -124,6 +136,8 @@ public class ShopUIStellan : MonoBehaviour
         shopInventoryPanel.SetActive(true);
         ClearFocusPanel();
 
+        UpdateAllUpgradePanels();
+
         leaveShopButton.Select();
         Time.timeScale = 0f;
     }
@@ -143,6 +157,8 @@ public class ShopUIStellan : MonoBehaviour
         // TODO: Reset ACTUAL skills to default values
 
         playerStats.ResetAllStatGenerationValues();
+        
+        PlayerInventory.instance.ResetPermanentCurrency();
 
         // Now reflect those values in the UI
         foreach(UpgradePanel panel in upgradePanels){

@@ -13,6 +13,7 @@ public class BossRoomClose : MonoBehaviour
     void Start()
     {
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
@@ -23,6 +24,9 @@ public class BossRoomClose : MonoBehaviour
            foreach(EntityHealth e in room.enemies)
            {
                e.OnDeath.AddListener(RoomOpen);
+               if( e.isBossEnemy ){
+                   InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(true, e.enemyID);
+               }
            }
 
            oldColor = sceneLight.color;

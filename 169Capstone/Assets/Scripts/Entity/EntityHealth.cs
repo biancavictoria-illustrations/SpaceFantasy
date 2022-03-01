@@ -47,18 +47,20 @@ public class EntityHealth : MonoBehaviour
     [SerializeField] private EnemyDropGenerator enemyDropGenerator;
 
     private EnemyHealthBar enemyHealthUI;
-    private bool isBossEnemy = false;
+    public bool isBossEnemy {get; private set;}
+    public EnemyID enemyID {get; private set;}
 
     void Start()
     {
         OnDeath.AddListener(onEntityDeath);
+        isBossEnemy = false;
+        enemyID = EnemyID.enumSize;
         
         if(gameObject.tag != "Player"){
-            EnemyID enemyID = GetComponent<EnemyStats>().enemyID;
+            enemyID = GetComponent<EnemyStats>().enemyID;
             // If a boss enemy (update int if we add more bosses)
             if( (int)enemyID < 3 ){
                 isBossEnemy = true;
-                InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(true, enemyID);
             }
             // If normal enemy
             else{
@@ -156,9 +158,14 @@ public class EntityHealth : MonoBehaviour
                 InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(false);
             }
 
-            enemyDropGenerator.GetDrop(GameManager.instance.bossesKilled, transform);
+            if(enemyDropGenerator){
+                enemyDropGenerator.GetDrop(GameManager.instance.bossesKilled, transform);
+            }
+            else{
+                Debug.LogWarning("No enemy drop generator found for enemy: " + enemyID);
+            }
+            
             Destroy(gameObject);
-            //Debug.Log(drop.GetDrop(ObjectManager.bossesKilled));
         }
         
     }
