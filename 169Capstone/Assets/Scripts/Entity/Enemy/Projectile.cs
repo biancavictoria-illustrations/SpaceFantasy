@@ -4,10 +4,18 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public float speed;
+    public float speed
+    {
+        set { _speed = value; rb.velocity = rb.velocity.normalized * _speed; }
 
+        get { return _speed; }
+    }
+
+    public int enemyLayer;
+
+    [SerializeField] private float _speed;
     private float damage;
-    private int enemyLayer;
+    private Rigidbody rb;
 
     public void Initialize(string enemyLayer, float damage, Vector3 direction, float? speed = null)
     {
@@ -16,18 +24,19 @@ public class Projectile : MonoBehaviour
 
     public void Initialize(int enemyLayer, float damage, Vector3 direction, float? speed = null)
     {
-        this.enemyLayer = enemyLayer;
-        this.damage = damage;
-
-        if(speed != null)
-            this.speed = speed.Value;
-        
-        Rigidbody rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
         if(rb == null)
         {
             Destroy(gameObject);
             Debug.LogError("Projectile prefab " + gameObject + " did not contain a Rigidbody.");
+            return;
         }
+
+        this.enemyLayer = enemyLayer;
+        this.damage = damage;
+
+        if(speed != null)
+            this._speed = speed.Value;
 
         SpriteRenderer renderer = GetComponentInChildren<SpriteRenderer>();
         if(renderer)
@@ -35,7 +44,7 @@ public class Projectile : MonoBehaviour
             Vector2 lookDirection = Camera.main.WorldToScreenPoint(transform.position + direction) - Camera.main.WorldToScreenPoint(transform.position);
             renderer.transform.rotation = Quaternion.LookRotation(Vector3.forward, new Vector3(lookDirection.y, lookDirection.x, 0).normalized);
         }
-        rb.velocity = direction.normalized * this.speed;
+        rb.velocity = direction.normalized * this._speed;
     }
 
     void OnTriggerEnter(Collider other)
