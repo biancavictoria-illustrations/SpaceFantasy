@@ -45,10 +45,15 @@ public class EntityHealth : MonoBehaviour
     public float currentHitpoints;
 
     [SerializeField] private EnemyDropGenerator enemyDropGenerator;
+    [SerializeField] private GameObject coinPrefab;
+    [SerializeField] private GameObject starShardPrefab;
 
     private EnemyHealthBar enemyHealthUI;
     public bool isBossEnemy {get; private set;}
     public EnemyID enemyID {get; private set;}
+
+    private const int TEMPCOINDROPAMOUNT = 5;
+    private const float TEMPSTARSHARDDROPCHANCE = 0.25f;
 
     void Start()
     {
@@ -165,6 +170,14 @@ public class EntityHealth : MonoBehaviour
                 Debug.LogWarning("No enemy drop generator found for enemy: " + enemyID);
             }
             
+            for(int i = 0; i < TEMPCOINDROPAMOUNT; ++i)
+            {
+                Instantiate(coinPrefab, transform.position, Quaternion.identity);
+            }
+
+            if(Random.value <= TEMPSTARSHARDDROPCHANCE)
+                Instantiate(starShardPrefab, transform.position, Quaternion.identity);
+
             Destroy(gameObject);
         }
         
