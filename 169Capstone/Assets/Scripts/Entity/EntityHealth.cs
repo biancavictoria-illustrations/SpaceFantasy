@@ -45,8 +45,13 @@ public class EntityHealth : MonoBehaviour
     public float currentHitpoints;
 
     [SerializeField] private EnemyDropGenerator enemyDropGenerator;
+    [SerializeField] private GameObject coinPrefab;
+    [SerializeField] private GameObject starShardPrefab;
 
     private EnemyHealthBar enemyHealthUI;
+
+    private const int TEMPCOINDROPAMOUNT = 5;
+    private const float TEMPSTARSHARDDROPCHANCE = 0.25f;
 
     void Start()
     {
@@ -135,6 +140,15 @@ public class EntityHealth : MonoBehaviour
         else
         {
             enemyDropGenerator.GetDrop(GameManager.instance.bossesKilled, transform);
+
+            for(int i = 0; i < TEMPCOINDROPAMOUNT; ++i)
+            {
+                Instantiate(coinPrefab, transform.position, Quaternion.identity);
+            }
+
+            if(Random.value <= TEMPSTARSHARDDROPCHANCE)
+                Instantiate(starShardPrefab, transform.position, Quaternion.identity);
+
             Destroy(gameObject);
             //Debug.Log(drop.GetDrop(ObjectManager.bossesKilled));
         }
