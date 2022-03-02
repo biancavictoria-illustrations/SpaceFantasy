@@ -31,6 +31,8 @@ public class PlayerInventory : MonoBehaviour
         }
 
         gear = new Dictionary<InventoryItemSlot, Equipment>();
+        tempCurrency = 0;
+        permanentCurrency = 0;
     }
 
     void Start()

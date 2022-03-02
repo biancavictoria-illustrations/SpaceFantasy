@@ -63,6 +63,12 @@ public class InGameUIManager : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        SetTempCurrencyValue(PlayerInventory.instance.tempCurrency);
+        SetPermanentCurrencyValue(PlayerInventory.instance.permanentCurrency);
+    }
+
     // Called when you enter dialogue or other similar things
     public void SetGameUIActive(bool set)
     {
