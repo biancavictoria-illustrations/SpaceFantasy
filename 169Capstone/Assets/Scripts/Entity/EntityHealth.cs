@@ -47,17 +47,31 @@ public class EntityHealth : MonoBehaviour
     [SerializeField] private EnemyDropGenerator enemyDropGenerator;
 
     private EnemyHealthBar enemyHealthUI;
+    public bool isBossEnemy {get; private set;}
+    public EnemyID enemyID {get; private set;}
 
     void Start()
     {
         OnDeath.AddListener(onEntityDeath);
+        isBossEnemy = false;
+        enemyID = EnemyID.enumSize;
         
         if(gameObject.tag != "Player"){
-            enemyHealthUI = gameObject.GetComponentInChildren<EnemyHealthBar>();
-            if(enemyHealthUI == null){
-                Debug.LogError("No enemy health UI found for unit!");
-                return;
+            enemyID = GetComponent<EnemyStats>().enemyID;
+            // If a boss enemy (update int if we add more bosses)
+            if( (int)enemyID < 3 ){
+                isBossEnemy = true;
             }
+            // If normal enemy
+            else{
+                enemyHealthUI = gameObject.GetComponentInChildren<EnemyHealthBar>();
+                if(enemyHealthUI == null){
+                    Debug.LogError("No enemy health UI found for normal enemy unit!");
+                    return;
+                }
+            }
+            SetMaxHealthUI();
+            SetCurrentHealthUI();
         }
     }
 
@@ -106,8 +120,11 @@ public class EntityHealth : MonoBehaviour
         if(gameObject.tag == "Player"){
             InGameUIManager.instance.SetCurrentHealthValue(currentHitpoints);   
         }
-        else{
+        else if(!isBossEnemy){
             enemyHealthUI.SetCurrentHealth(currentHitpoints);
+        }
+        else{
+            InGameUIManager.instance.bossHealthBar.SetCurrentHealth(currentHitpoints);
         }
     }
 
@@ -116,8 +133,11 @@ public class EntityHealth : MonoBehaviour
         if(gameObject.tag == "Player"){
             InGameUIManager.instance.SetMaxHealthValue(maxHitpoints);
         }
-        else{
+        else if(!isBossEnemy){
             enemyHealthUI.SetMaxHealth(maxHitpoints);
+        }
+        else{
+            InGameUIManager.instance.bossHealthBar.SetMaxHealth(maxHitpoints);
         }
     }
 
@@ -134,9 +154,18 @@ public class EntityHealth : MonoBehaviour
         }
         else
         {
-            enemyDropGenerator.GetDrop(GameManager.instance.bossesKilled, transform);
+            if(isBossEnemy){
+                InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(false);
+            }
+
+            if(enemyDropGenerator){
+                enemyDropGenerator.GetDrop(GameManager.instance.bossesKilled, transform);
+            }
+            else{
+                Debug.LogWarning("No enemy drop generator found for enemy: " + enemyID);
+            }
+            
             Destroy(gameObject);
-            //Debug.Log(drop.GetDrop(ObjectManager.bossesKilled));
         }
         
     }
