@@ -476,4 +476,14 @@ public class PlayerStats : EntityStats
 
         maxCharisma = value;
     }
+
+    public int GetDefaultCoreStatMin()
+    {
+        return DEFAULT_MIN;
+    }
+
+    public int GetDefaultCoreStatMax()
+    {
+        return DEFAULT_MAX;
+    }
 }

@@ -7,7 +7,10 @@ using UnityEngine.EventSystems;
 
 public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    public int upgradeCost {get; private set;}
+    public int currentCost {get; private set;}
+    public int upgradeBaseCost {get; private set;}
+    public int costIncreasePerLevel {get; private set;}
+
     public int currentUpgradeLevel {get; private set;}
     public int totalUpgradeLevels {get; private set;}
 
@@ -18,6 +21,16 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
     private const string TOO_BROKE_ALERT = "\n\n<i>Not enough Star Shards.</i>";
     private const string STAT_MIN_MAX_ALERT = "\n\n<i>Cannot increase stat minimum above stat maximum.</i>";
+    
+    private const int MIN_STAT_MAX = 15;
+    private const int MAX_STAT_MAX = 20;
+
+    private const int MIN_STAT_NUM_TIMES_PURCHASABLE = 10;
+    private const int MAX_STAT_NUM_TIMES_PURCHASABLE = 5;
+    
+    private const int STAT_BASE_COST = 5;
+    private const float STAT_MIN_COST_INCREASE = 2.5f;
+    private const int STAT_MAX_COST_INCREASE = 5;
 
     [SerializeField] private TMP_Text costText;
     [SerializeField] private TMP_Text skillLevelText;
@@ -36,6 +49,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         soldOut = false;
         statMinEqualsMax = false;
         cannotAffordUpgrade = false;
+        currentCost = 0;
     }
 
     public void SetShopUI(ShopUIStellan _shop)
@@ -55,6 +69,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
         // If stat upgrade
         if( (int)upgradeType < 12 ){
+            SetStatCurrentCost();
             skillLevelText.text = "" + currentUpgradeLevel;            
             // Update description
             if(soldOut){
@@ -66,6 +81,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         }
         // If skill
         else{
+            SetSkillCurrentCost();
             skillLevelText.text = currentUpgradeLevel + "/" + totalUpgradeLevels;
             currentDescription = baseDescription;
         }
@@ -92,7 +108,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
         // If there's still more to purchase, set cost value + set color values based on if we can afford it or not
         if(!soldOut && !statMinEqualsMax){
-            costText.text = "$" + upgradeCost;  // TODO: swap out $
+            costText.text = "$" + currentCost;  // TODO: swap out $
             SetValuesBasedOnAffordStatus();
         }
 
@@ -129,7 +145,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
     public void CheckPurchaseConditions()
     {
-        cannotAffordUpgrade = upgradeCost > PlayerInventory.instance.permanentCurrency;        
+        cannotAffordUpgrade = currentCost > PlayerInventory.instance.permanentCurrency;        
         StatMinEqualsStatMax();
     }
 
@@ -137,53 +153,62 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     {
         // If stat
         if((int)upgradeType <= 11){
-            baseDescription = "Increase your <b>" + upgradeName + "</b> from <b>" + currentUpgradeLevel + "</b> to <color=green>" + (currentUpgradeLevel+1) + "</color>.";
+            baseDescription = "Increase <b>" + upgradeName + "</b> from <b>" + currentUpgradeLevel + "</b> to <color=green>" + (currentUpgradeLevel+1) + "</color>.";
         }
-        // If skill
+        // If update-able skill
         else{
-            baseDescription = "Skill description goes here.";
+            switch(upgradeType){
+                case StellanShopUpgradeType.ArmorPlating:
+                    float defense = shopUI.playerStats.getDefense();
+                    baseDescription = "Increase base <b>Defense</b> from <b>" + defense + "</b> to <color=green>" + (defense + 2) + "</color>.";
+                    return;
+                case StellanShopUpgradeType.ExtensiveTraining:
+                    float attackSpeed = shopUI.playerStats.getAttackSpeed() * 100;
+                    baseDescription = "Increase base <b>Attack Speed</b> from <b>" + attackSpeed + "%</b> to <color=green>" + (attackSpeed + 2) + "%</color>.";
+                    return;
+                case StellanShopUpgradeType.PrecisionDrive:
+                    float critDamage = shopUI.playerStats.getCritDamage() * 100;
+                    float newCritDamage = 0;
+                    switch(currentUpgradeLevel){
+                        case 0:
+                            newCritDamage = 10;
+                            break;
+                        case 1:
+                            newCritDamage = 25;
+                            break;
+                        case 2:
+                            newCritDamage = 50;
+                            break;
+                    }
+                    baseDescription = "Increase base <b>Critical Hit Damage</b> from <b>+" + critDamage + "%</b> to <color=green>+" + newCritDamage + "%</color>.";
+                    return;
+            }
         }
-    }
-
-    private void InitializeStatUpgradeValues()
-    {
-        // TODO: Get the other stuff
-        currentUpgradeLevel = shopUI.playerStats.GetStatGenerationValue(upgradeType);
-        upgradeName = GetStatNameFromType();
-    }
-
-    private void InitializeSkillUpgradeValues()
-    {
-        // TODO: Get data
-        currentUpgradeLevel = 0;
-        upgradeName = "Ability Name";
     }
 
     // Optionally can pass in an upgrade type to change the type of this panel
-    public void InitializeUpgradeValues( int _cost, Sprite _icon, StellanShopUpgradeType _type = StellanShopUpgradeType.enumSize )
+    public void InitializeUpgradeValues( Sprite _icon, StellanShopUpgradeType _type = StellanShopUpgradeType.enumSize )
     {
-        upgradeCost = _cost;
         upgradeIcon.sprite = _icon;
 
         if(_type != StellanShopUpgradeType.enumSize){
             upgradeType = _type;
         }
 
-        // If stat upgrade
-        if( (int)upgradeType < 12 ){
-            totalUpgradeLevels = 20;
-            InitializeStatUpgradeValues();
+        SetValuesByType();        
+        if( (int)upgradeType < 12 ){    // If stat upgrade
+            currentUpgradeLevel = shopUI.playerStats.GetStatGenerationValue(upgradeType);
+            upgradeBaseCost = STAT_BASE_COST;
+            SetStatCurrentCost();
         }
         else{   // If skill
-            totalUpgradeLevels = 5;
-            InitializeSkillUpgradeValues();
-        }
-        UpdateBaseDescriptionValues();
-        
-        SetMaxUpgradesReached( currentUpgradeLevel == totalUpgradeLevels );
-        
-        CheckPurchaseConditions();
-        UpdateUIBasedOnTopPriorityCondition();
+            // TODO: Get data
+            currentUpgradeLevel = 0;    // TEMP
+            SetSkillCurrentCost();
+        }        
+
+        UpdateBaseDescriptionValues();        
+        SetMaxUpgradesReached( currentUpgradeLevel == totalUpgradeLevels ); // Calls UpdateUIDisplayValues in here
     }
 
     public void PurchaseItem()
@@ -201,7 +226,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
             // return;
         }
 
-        PlayerInventory.instance.SpendPermanentCurrency(upgradeCost);
+        PlayerInventory.instance.SpendPermanentCurrency(currentCost);
         currentUpgradeLevel++;
 
         // If stat upgrade
@@ -261,36 +286,123 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         shopUI.ClearFocusPanel();
     }
 
-    private string GetStatNameFromType()
+    private void SetValuesByType()
     {
         switch(upgradeType){
             case StellanShopUpgradeType.STRMin:
-                return "Strength Minimum";
+                upgradeName = "Strength Minimum";
+                totalUpgradeLevels = MIN_STAT_MAX;
+                costIncreasePerLevel = -1;
+                return;
             case StellanShopUpgradeType.STRMax:
-                return "Strength Maximum";
+                upgradeName = "Strength Maximum";
+                totalUpgradeLevels = MAX_STAT_MAX;
+                costIncreasePerLevel = STAT_MAX_COST_INCREASE;
+                return;
             case StellanShopUpgradeType.DEXMin:
-                return "Dexterity Minimum";
+                upgradeName = "Dexterity Minimum";
+                totalUpgradeLevels = MIN_STAT_MAX;
+                costIncreasePerLevel = -1;
+                return;
             case StellanShopUpgradeType.DEXMax:
-                return "Dexterity Maximum";
+                upgradeName = "Dexterity Maximum";
+                totalUpgradeLevels = MAX_STAT_MAX;
+                costIncreasePerLevel = STAT_MAX_COST_INCREASE;
+                return;
             case StellanShopUpgradeType.INTMin:
-                return "Intelligence Minimum";
+                upgradeName = "Intelligence Minimum";
+                totalUpgradeLevels = MIN_STAT_MAX;
+                costIncreasePerLevel = -1;
+                return;
             case StellanShopUpgradeType.INTMax:
-                return "Intelligence Maximum";
+                upgradeName = "Intelligence Maximum";
+                totalUpgradeLevels = MAX_STAT_MAX;
+                costIncreasePerLevel = STAT_MAX_COST_INCREASE;
+                return;
             case StellanShopUpgradeType.WISMin:
-                return "Wisdom Minimum";
+                upgradeName = "Wisdom Minimum";
+                totalUpgradeLevels = MIN_STAT_MAX;
+                costIncreasePerLevel = -1;
+                return;
             case StellanShopUpgradeType.WISMax:
-                return "Wisdom Maximum";
+                upgradeName = "Wisdom Maximum";
+                totalUpgradeLevels = MAX_STAT_MAX;
+                costIncreasePerLevel = STAT_MAX_COST_INCREASE;
+                return;
             case StellanShopUpgradeType.CONMin:
-                return "Constitution Minimum";
+                upgradeName = "Constitution Minimum";
+                totalUpgradeLevels = MIN_STAT_MAX;
+                costIncreasePerLevel = -1;
+                return;
             case StellanShopUpgradeType.CONMax:
-                return "Constitution Maximum";
+                upgradeName = "Constitution Maximum";
+                totalUpgradeLevels = MAX_STAT_MAX;
+                costIncreasePerLevel = STAT_MAX_COST_INCREASE;
+                return;
             case StellanShopUpgradeType.CHAMin:
-                return "Charisma Minimum";
+                upgradeName = "Charisma Minimum";
+                totalUpgradeLevels = MIN_STAT_MAX;
+                costIncreasePerLevel = -1;
+                return;
             case StellanShopUpgradeType.CHAMax:
-                return "Charisma Maximum";
+                upgradeName = "Charisma Maximum";
+                totalUpgradeLevels = MAX_STAT_MAX;
+                costIncreasePerLevel = STAT_MAX_COST_INCREASE;
+                return;
+            case StellanShopUpgradeType.ArmorPlating:
+                upgradeName = "Armor Plating";
+                upgradeBaseCost = 10;
+                costIncreasePerLevel = 5;
+                totalUpgradeLevels = 5;
+                UpdateBaseDescriptionValues();
+                return;
+            case StellanShopUpgradeType.ExtensiveTraining:
+                upgradeName = "Extensive Training";
+                upgradeBaseCost = 10;
+                costIncreasePerLevel = 5;
+                totalUpgradeLevels = 5;
+                UpdateBaseDescriptionValues();
+                return;
+            case StellanShopUpgradeType.Natural20:
+                upgradeName = "Natural 20";
+                upgradeBaseCost = 20;
+                costIncreasePerLevel = 0;
+                totalUpgradeLevels = 1;
+                baseDescription = "Increase base Critical Hit Chance to <color=green>5%</color>.";
+                return;
+            case StellanShopUpgradeType.PrecisionDrive:
+                upgradeName = "Precision Drive";
+                upgradeBaseCost = 10;
+                costIncreasePerLevel = 10;
+                totalUpgradeLevels = 3;
+                UpdateBaseDescriptionValues();
+                return;
+            case StellanShopUpgradeType.TimeLichKillerThing:
+                upgradeName = "Deus Ex Machina";
+                upgradeBaseCost = 100;
+                costIncreasePerLevel = 0;
+                totalUpgradeLevels = 1;
+                baseDescription = "The missing piece of the puzzle.";
+                return;
         }
-        Debug.LogWarning("No string found for upgrade type: " + upgradeType);
-        return "";
+        Debug.LogWarning("No data found for upgrade type: " + upgradeType);
+    }
+
+    private void SetSkillCurrentCost()
+    {
+        currentCost = upgradeBaseCost + (currentUpgradeLevel * costIncreasePerLevel);
+    }
+
+    private void SetStatCurrentCost()
+    {
+        // If Stat MIN
+        if( (int)upgradeType < 6 ){
+            currentCost = upgradeBaseCost + Mathf.FloorToInt((MIN_STAT_NUM_TIMES_PURCHASABLE - (totalUpgradeLevels - currentUpgradeLevel)) * STAT_MIN_COST_INCREASE);
+        }
+        // If Stat MAX
+        else{
+            currentCost = upgradeBaseCost + ((MAX_STAT_NUM_TIMES_PURCHASABLE - (totalUpgradeLevels - currentUpgradeLevel)) * costIncreasePerLevel);
+        }        
     }
 
     public void UpgradeAssociatedStatValue()

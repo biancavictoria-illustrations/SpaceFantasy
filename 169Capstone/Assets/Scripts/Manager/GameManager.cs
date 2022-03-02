@@ -20,6 +20,9 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool playerDeath = false;
     [HideInInspector] public int bossesKilled = 0;
 
+    // Set to true (permanently) once you have killed the Time Lich at least once
+    // (Makes a new special item pop up in Stellan's shop)
+    [HideInInspector] public bool hasKilledTimeLich = false;
 
     void Awake()
     {
