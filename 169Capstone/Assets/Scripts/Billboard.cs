@@ -8,25 +8,19 @@ public class Billboard : MonoBehaviour
     public Transform spriteHolder;
     public new SpriteRenderer renderer;
 
-    private Vector3 towardsCamera;
     private Vector3 towardsCameraNoY;
-    private Vector3 tiltOffsetVector;
 
     void Start()
     {
         if(!renderer)
             renderer = GetComponentInChildren<SpriteRenderer>();
         
-        towardsCamera = -Camera.main.transform.forward;
-
-        //Adjust the transform to correct for the amount the sprite was tilted
+        Vector3 towardsCamera = -Camera.main.transform.forward;
         towardsCameraNoY = new Vector3(towardsCamera.x, 0, towardsCamera.z).normalized;
 
-        if(renderer)
-        {
-            float tiltAmount = renderer.sprite.bounds.size.y * Mathf.Cos(Vector3.Angle(towardsCameraNoY, towardsCamera)) / 2;
-            tiltOffsetVector = towardsCameraNoY * tiltAmount;
-        }
+        Vector3 tiltVector = Quaternion.FromToRotation(towardsCameraNoY, towardsCamera) * Vector3.up;
+        float scale = 1 / Vector3.Project(tiltVector, Vector3.up).magnitude;
+        transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y * scale, transform.localScale.z);
     }
 
     void Update()
@@ -34,10 +28,7 @@ public class Billboard : MonoBehaviour
         if(spriteHolder)
         {
             //Face the sprite towards the camera
-            spriteHolder.forward = towardsCamera;
-
-            if(renderer)
-                spriteHolder.position = parent.position + tiltOffsetVector;
+            spriteHolder.forward = towardsCameraNoY;
         }
     }
 }

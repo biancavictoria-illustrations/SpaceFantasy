@@ -30,7 +30,7 @@ public class MeleePathing : Pathing
 
             //Flip the sprite to face the direction it's moving
             if(sprite)
-                sprite.transform.localScale = new Vector3(-Mathf.Sign(Vector3.Dot(agent.velocity, Camera.main.transform.right)), sprite.transform.localScale.y, sprite.transform.localScale.z);
+                sprite.flipX = Mathf.Sign(Vector3.Dot(agent.velocity, Camera.main.transform.right)) > 0;
         }
     }
 
