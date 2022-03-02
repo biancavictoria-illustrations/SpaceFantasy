@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyStats : EntityStats
 {
     public EnemyStatObject stats;// {get; private set;}
+    public EnemyID enemyID {get; private set;}
 
     public void initializeStats()
     {
@@ -25,5 +26,7 @@ public class EnemyStats : EntityStats
         moveSpeedMultiplier = 1;
         defenseMultiplier = 1;
         statusResistChanceMultiplier = 1;
+
+        enemyID = stats.EnemyID();
     }
 }

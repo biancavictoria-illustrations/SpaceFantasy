@@ -29,7 +29,7 @@ public class EnemyDropGenerator : ScriptableObject
         
         EquipmentBaseData item;
         List<ItemLine> secondaryLines;
-        Debug.Log("Dropping " + itemType.ToString());
+        // Debug.Log("Dropping " + itemType.ToString());
 
         // Create item to drop in physical space from prefab
         GameObject dropItemObject = Instantiate(dropItemPrefab);
@@ -52,7 +52,7 @@ public class EnemyDropGenerator : ScriptableObject
         }
 
         generatedEquipment.SetEquipmentBaseData(item, rarity);
-        Debug.Log("Setting drop item to Rarity/ItemID: " + rarity + "/" + item.ItemID());
+        // Debug.Log("Setting drop item to Rarity/ItemID: " + rarity + "/" + item.ItemID());
 
         int i = lines.ItemType().IndexOf(item.ItemSlot());
         ItemLine primaryLine = lines.PrimaryWeaponLine()[i];

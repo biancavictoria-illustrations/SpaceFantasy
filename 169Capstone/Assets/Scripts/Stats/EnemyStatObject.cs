@@ -5,9 +5,16 @@ using UnityEngine;
 // Unique internal IDs per enemy
 public enum EnemyID
 {
+    // Bosses
     TimeLich,
+    BeetleBoss,
+    Harvester,
+
+    // Normal Enemies
     Slime,
     EnchantedCloak,
+
+    // Size
     enumSize
 }
 
