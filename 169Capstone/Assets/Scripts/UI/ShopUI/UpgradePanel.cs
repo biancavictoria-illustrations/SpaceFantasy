@@ -13,7 +13,11 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
     [SerializeField] private StellanShopUpgradeType upgradeType;
     public string upgradeName {get; private set;}
-    public string description {get; private set;}
+    public string baseDescription {get; private set;}
+    public string currentDescription {get; private set;}
+
+    private const string TOO_BROKE_ALERT = "\n\n<i>Not enough Star Shards.</i>";
+    private const string STAT_MIN_MAX_ALERT = "\n\n<i>Cannot increase stat minimum above stat maximum.</i>";
 
     [SerializeField] private TMP_Text costText;
     [SerializeField] private TMP_Text skillLevelText;
@@ -22,12 +26,16 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     [SerializeField] private Button upgradeButton;
 
     public bool soldOut {get; private set;}
+    public bool statMinEqualsMax {get; private set;}
+    public bool cannotAffordUpgrade {get; private set;}
 
     private ShopUIStellan shopUI;
 
     void Start()
     {
         soldOut = false;
+        statMinEqualsMax = false;
+        cannotAffordUpgrade = false;
     }
 
     public void SetShopUI(ShopUIStellan _shop)
@@ -42,50 +50,66 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
     public void UpdateUIDisplayValues()
     {
-        // If just a stat upgrade
+        CheckPurchaseConditions();
+        UpdateBaseDescriptionValues();
+
+        // If stat upgrade
         if( (int)upgradeType < 12 ){
             skillLevelText.text = "" + currentUpgradeLevel;            
             // Update description
             if(soldOut){
-                description = "Max <b>" + upgradeName + "</b> reached.";
+                currentDescription = "Max <b>" + upgradeName + "</b> reached.";
             }
             else{
-                description = "Increase your <b>" + upgradeName + "</b> from <b>" + currentUpgradeLevel + "</b> to <color=green>" + (currentUpgradeLevel+1) + "</color>.";
+                currentDescription = baseDescription;
             }
         }
+        // If skill
         else{
             skillLevelText.text = currentUpgradeLevel + "/" + totalUpgradeLevels;
+            currentDescription = baseDescription;
+        }
+        
+        UpdateUIBasedOnTopPriorityCondition();
+
+        // If this is the currently active hover panel, update the focus panel values
+        if(shopUI.activeUpgradeInFocus && shopUI.activeUpgradeInFocus == this){
+            shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, currentDescription, costText.text, upgradeIcon.sprite);
+        }
+    }
+
+    private void UpdateUIBasedOnTopPriorityCondition()
+    {
+        // If sold out, that was handled already so just return (higheset priority)
+        if(soldOut){
+            return;
+        }
+
+        // If a stat and not sold out, set UI based on Min/Max status 
+        if((int)upgradeType <= 11 && !soldOut){     // TODO: Add   && !cannotAffordUpgrade
+            SetStatValuesBasedOnMinMaxStatus();
         }
 
         // If there's still more to purchase, set cost value + set color values based on if we can afford it or not
-        if(!soldOut){
+        if(!soldOut && !statMinEqualsMax){
             costText.text = "$" + upgradeCost;  // TODO: swap out $
             SetValuesBasedOnAffordStatus();
         }
 
-        shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, description, costText.text, upgradeIcon.sprite);
-        SetStatValuesBasedOnMinMaxStatus();
+        if(cannotAffordUpgrade){
+            currentDescription += TOO_BROKE_ALERT;
+        }
     }
 
     private void SetStatValuesBasedOnMinMaxStatus()
     {
-        // If not a stat, remove
-        if((int)upgradeType > 11){
-            return;
-        }
+        if(statMinEqualsMax){
+            currentDescription += STAT_MIN_MAX_ALERT;
 
-        if(StatMinEqualsStatMax()){
-            description += "\n\n<i>Cannot increase stat minimum above stat maximum.</i>";
-            upgradeButton.interactable = false;
             costText.color = shopUI.GetCannotAffordTextColor();
             upgradeIcon.color = shopUI.GetCannotAffordIconColor();
         }
         else{
-            // TODO: Uncomment later
-            // if(CannotAffordUpgrade()){
-            //     return;
-            // }
-            upgradeButton.interactable = true;
             costText.color = shopUI.GetCanPurchaseTextColor();
             upgradeIcon.color = new Color(255,255,255,255);
         }
@@ -93,42 +117,46 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
     private void SetValuesBasedOnAffordStatus()
     {
-        if(CannotAffordUpgrade()){
+        if(cannotAffordUpgrade){
             costText.color = shopUI.GetCannotAffordTextColor();
             upgradeIcon.color = shopUI.GetCannotAffordIconColor();
-            // upgradeButton.interactable = false;  // TODO: Uncomment later
         }
         else{
-            if(StatMinEqualsStatMax()){
-                return;
-            }
-            upgradeButton.interactable = true;
             costText.color = shopUI.GetCanPurchaseTextColor();
             upgradeIcon.color = new Color(255,255,255,255);
         }
     }
 
-    public bool CannotAffordUpgrade()
+    public void CheckPurchaseConditions()
     {
-        return upgradeCost > PlayerInventory.instance.permanentCurrency;
+        cannotAffordUpgrade = upgradeCost > PlayerInventory.instance.permanentCurrency;        
+        StatMinEqualsStatMax();
+    }
+
+    private void UpdateBaseDescriptionValues()
+    {
+        // If stat
+        if((int)upgradeType <= 11){
+            baseDescription = "Increase your <b>" + upgradeName + "</b> from <b>" + currentUpgradeLevel + "</b> to <color=green>" + (currentUpgradeLevel+1) + "</color>.";
+        }
+        // If skill
+        else{
+            baseDescription = "Skill description goes here.";
+        }
     }
 
     private void InitializeStatUpgradeValues()
     {
         // TODO: Get the other stuff
         currentUpgradeLevel = shopUI.playerStats.GetStatGenerationValue(upgradeType);
-
         upgradeName = GetStatNameFromType();
-        description = "Increase your <b>" + upgradeName + "</b> from <b>" + currentUpgradeLevel + "</b> to <color=green>" + (currentUpgradeLevel+1) + "</color>.";
     }
 
     private void InitializeSkillUpgradeValues()
     {
         // TODO: Get data
         currentUpgradeLevel = 0;
-
         upgradeName = "Ability Name";
-        description = "Skill description goes here.";
     }
 
     // Optionally can pass in an upgrade type to change the type of this panel
@@ -149,29 +177,39 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         else{   // If skill
             totalUpgradeLevels = 5;
             InitializeSkillUpgradeValues();
-        }   
+        }
+        UpdateBaseDescriptionValues();
         
         SetMaxUpgradesReached( currentUpgradeLevel == totalUpgradeLevels );
-
-        SetStatValuesBasedOnMinMaxStatus();
+        
+        CheckPurchaseConditions();
+        UpdateUIBasedOnTopPriorityCondition();
     }
 
     public void PurchaseItem()
     {
-        if(PlayerInventory.instance.permanentCurrency - upgradeCost < 0){
+        // Check conditions (if you can't purchase, clicking does nothing)
+        if(soldOut || statMinEqualsMax){
+            Debug.Log("No more of this upgrade available for purchase.");
+            // TODO: Maybe UI feedback?
+            return;
+        }
+
+        if(cannotAffordUpgrade){
             Debug.Log("Too broke to buy this upgrade!");
             // TODO: UI feedback about being too broke to buy an item (don't do this yet cuz inconvenient for testing)
             // return;
         }
 
-        PlayerInventory.instance.SetTempCurrency(PlayerInventory.instance.permanentCurrency - upgradeCost);
+        PlayerInventory.instance.SpendPermanentCurrency(upgradeCost);
         currentUpgradeLevel++;
 
         // If stat upgrade
         if( (int)upgradeType < 12 ){
             UpgradeAssociatedStatValue();
         }
-        else{   // If skill
+        // If skill
+        else{
             // TODO: Upgrade actual skill values
         }
 
@@ -185,14 +223,13 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     private void SetMaxUpgradesReached(bool set)
     {
         soldOut = set;
-        upgradeButton.interactable = !set;
 
         if(set){
             upgradeIcon.color = shopUI.GetMaxUpgradesReachedIconColor();
-            costText.text = "";            
+            costText.text = "";
         }
         else{
-            upgradeIcon.color = new Color(255,255,255,255);            
+            upgradeIcon.color = new Color(255,255,255,255);                
         }
 
         UpdateUIDisplayValues();
@@ -200,23 +237,27 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        shopUI.activeUpgradeInFocus = this;
         UpdateUIDisplayValues();
-        shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, description, costText.text, upgradeIcon.sprite);
+        shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, currentDescription, costText.text, upgradeIcon.sprite);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        shopUI.activeUpgradeInFocus = null;
         shopUI.ClearFocusPanel();
     }
 
     public void OnSelect(BaseEventData eventData)
     {
+        shopUI.activeUpgradeInFocus = this;
         UpdateUIDisplayValues();
-        shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, description, costText.text, upgradeIcon.sprite);
+        shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, currentDescription, costText.text, upgradeIcon.sprite);
     }
 
     public void OnDeselect(BaseEventData eventData)
     {
+        shopUI.activeUpgradeInFocus = null;
         shopUI.ClearFocusPanel();
     }
 
@@ -295,23 +336,28 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         Debug.LogWarning("No method found for upgrade type: " + upgradeType);
     }
 
-    private bool StatMinEqualsStatMax()
+    private void StatMinEqualsStatMax()
     {
         switch(upgradeType){
             case StellanShopUpgradeType.STRMin:
-                return currentUpgradeLevel == shopUI.playerStats.GetStatGenerationValue(StellanShopUpgradeType.STRMax);
+                statMinEqualsMax = currentUpgradeLevel == shopUI.playerStats.GetStatGenerationValue(StellanShopUpgradeType.STRMax);
+                return;
             case StellanShopUpgradeType.DEXMin:
-                return currentUpgradeLevel == shopUI.playerStats.GetStatGenerationValue(StellanShopUpgradeType.DEXMax);
+                statMinEqualsMax = currentUpgradeLevel == shopUI.playerStats.GetStatGenerationValue(StellanShopUpgradeType.DEXMax);
+                return;
             case StellanShopUpgradeType.INTMin:
-                return currentUpgradeLevel == shopUI.playerStats.GetStatGenerationValue(StellanShopUpgradeType.INTMax);
+                statMinEqualsMax = currentUpgradeLevel == shopUI.playerStats.GetStatGenerationValue(StellanShopUpgradeType.INTMax);
+                return;
             case StellanShopUpgradeType.WISMin:
-                return currentUpgradeLevel == shopUI.playerStats.GetStatGenerationValue(StellanShopUpgradeType.WISMax);
+                statMinEqualsMax = currentUpgradeLevel == shopUI.playerStats.GetStatGenerationValue(StellanShopUpgradeType.WISMax);
+                return;
             case StellanShopUpgradeType.CONMin:
-                return currentUpgradeLevel == shopUI.playerStats.GetStatGenerationValue(StellanShopUpgradeType.CONMax);
+                statMinEqualsMax = currentUpgradeLevel == shopUI.playerStats.GetStatGenerationValue(StellanShopUpgradeType.CONMax);
+                return;
             case StellanShopUpgradeType.CHAMin:
-                return currentUpgradeLevel == shopUI.playerStats.GetStatGenerationValue(StellanShopUpgradeType.CHAMax);
+                statMinEqualsMax = currentUpgradeLevel == shopUI.playerStats.GetStatGenerationValue(StellanShopUpgradeType.CHAMax);
+                return;
         }
-        Debug.LogWarning("Unable to compare stats for upgrade type: " + upgradeType);
-        return false;
+        statMinEqualsMax = false;
     }
 }

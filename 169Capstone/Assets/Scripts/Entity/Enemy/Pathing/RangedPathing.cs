@@ -71,7 +71,7 @@ public class RangedPathing : Pathing
         
         //Flip the sprite to face the player
         if(sprite)
-            sprite.transform.localScale = new Vector3(-Mathf.Sign(Vector3.Dot(player.position - transform.position, Camera.main.transform.right)), sprite.transform.localScale.y, sprite.transform.localScale.z);
+            sprite.flipX = Mathf.Sign(Vector3.Dot(player.position - transform.position, Camera.main.transform.right)) > 0;
     }
 
     public override bool Provoked()

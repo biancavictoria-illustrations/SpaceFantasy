@@ -27,7 +27,7 @@ public abstract class Pathing : MonoBehaviour
 
         //Start the enemy randomly flipped left or right
         if(sprite)
-            sprite.transform.localScale = new Vector3(Random.value > 0.5f ? 1 : -1, sprite.transform.localScale.y, sprite.transform.localScale.z);
+            sprite.flipX = Random.value > 0.5f;
         
         if(player == null)
             player = GameObject.FindWithTag("Player").GetComponent<Transform>();

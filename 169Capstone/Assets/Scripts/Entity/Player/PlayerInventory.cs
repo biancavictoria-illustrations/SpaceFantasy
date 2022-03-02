@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
-
 public class PlayerInventory : MonoBehaviour
 {
     public static PlayerInventory instance;
@@ -20,6 +18,8 @@ public class PlayerInventory : MonoBehaviour
 
     public int tempCurrency {get; private set;}
     public int permanentCurrency {get; private set;}
+
+    public int totalPermanentCurrencySpent = 0;
 
     void Awake()
     {
@@ -160,5 +160,19 @@ public class PlayerInventory : MonoBehaviour
     {
         permanentCurrency = value;
         InGameUIManager.instance.SetPermanentCurrencyValue(permanentCurrency);
+    }
+
+    public void SpendPermanentCurrency(int amountSpent)
+    {
+        permanentCurrency -= amountSpent;
+        totalPermanentCurrencySpent += amountSpent;
+        InGameUIManager.instance.SetPermanentCurrencyValue(permanentCurrency);
+    }
+
+    public void ResetPermanentCurrency()
+    {
+        permanentCurrency += totalPermanentCurrencySpent;
+        totalPermanentCurrencySpent = 0;
+        InGameUIManager.instance.SetPermanentCurrencyValue(permanentCurrency);        
     }
 }

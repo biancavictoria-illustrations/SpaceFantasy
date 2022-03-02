@@ -8,7 +8,6 @@ public class Beetle : Enemy
 
     private const float phase1SlamFrequency = 0.25f;
     private const float phase2SlamFrequency = 0.125f;
-    private const float slamDuration = 2f;
 
     [SerializeField] private EnemyLogic phase1logic;
     [SerializeField] private EnemyLogic phase2logic;
@@ -224,6 +223,8 @@ public class Beetle : Enemy
 
     private IEnumerator SlamRoutine()
     {
+        path.enabled = false;
+
         if(isPhase2)
         {
             hurtScript = Instantiate(hurtCirclePrefab, transform.position, Quaternion.identity).GetComponent<HurtCircle>();
@@ -232,7 +233,7 @@ public class Beetle : Enemy
         }
 
         int count = 0;
-        while(count < slamDuration/slamDebrisFrequency)
+        while(count < nextAttack.duration/slamDebrisFrequency)
         {
             GameObject debris = Instantiate(debrisPrefab, transform.position, Quaternion.identity);
             debris.GetComponent<FallingDebris>().damage = logic.baseDamage * nextAttack.damageMultiplier;
@@ -243,8 +244,9 @@ public class Beetle : Enemy
         if(isPhase2)
         {
             hurtScript.canDamage = true;
-            Debug.Log(hurtScript.canDamage);
         }
+
+        path.enabled = true;
     }
 
     private IEnumerator turnTowardsPlayerRoutine(float duration, float variance = 0, CoroutineCallback callback = null)
