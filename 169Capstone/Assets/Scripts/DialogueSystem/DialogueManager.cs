@@ -256,10 +256,12 @@ public class DialogueManager : MonoBehaviour
     }
 
     // Called by the Dialogue Runner to notify us that a node finished running
+    // TODO: FIX THIS this isn't being called?????????
     public void NodeComplete(string nodeName)
     {
         // Log that the node has been run
         visitedNodes.Add(nodeName);
+        Debug.Log("Marked node VISITED: " + nodeName);
     }
 
     // Called automatically when the player clicks the interact button in range of an NPC with something to say

@@ -111,7 +111,7 @@ public class StoryManager : MonoBehaviour
     // Called by Game Manager when you end a run
     public void OnRunEndUpdateStory()
     {
-        // TODO: Increment story beat values
+        // TODO: Increment story beat values (i think that's already happening in the CheckForNewStoryBeats function???)
 
         // When you end a run, reset all talked to bools
         talkedToBryn = false;
@@ -248,7 +248,7 @@ public class StoryManager : MonoBehaviour
     }
 
     // Update beat status to reflect the given active/inactive bool value + increment by the num provided (either 0 or 1)
-    public void UpdateBeatStatus(StoryBeat beat, bool setActive, int incrementCompletionNum)
+    private void UpdateBeatStatus(StoryBeat beat, bool setActive, int incrementCompletionNum)
     {
         StoryBeatType beatType = beat.GetBeatType();
         if( BeatIsInDatabase(beat) ){
@@ -293,7 +293,6 @@ public class StoryManager : MonoBehaviour
     }
 
     // At the end of every run, check if any new story beats have been activated; if so, add them to the list for the DialogueManager to access
-    // TODO: call at the end of every run
     public void CheckForNewStoryBeats()
     {
         // Reset active story beats
@@ -317,7 +316,6 @@ public class StoryManager : MonoBehaviour
     }
 
     // Called when the event is invoked either by killing a creature OR being killed by a creature
-    // TODO: Invoke this whenever the situations occur in the game manager?
     public void KilledEventOccurred(EnemyID enemy, StoryBeatType beatType)
     {
         // If this event's beatType is NOT creatureKilled OR killedBy, error

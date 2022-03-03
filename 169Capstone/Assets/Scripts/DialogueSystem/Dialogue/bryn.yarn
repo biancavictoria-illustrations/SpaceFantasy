@@ -1,9 +1,11 @@
 ﻿title: BrynStart
 tags:
 ---
-// <<if Visited("BrynDefaultDialogue") and Visited("BrynDefaultDialogue1")>>
+// <<set $visitedDefault to Visited("BrynDefaultDialogue")>>
+// <<set $visitedDefault1 to Visited("BrynDefaultDialogue1")>>
+// <<if $visitedDefault and $visitedDefault1>>
     [[BrynNodeSelectHub]]
-// <<elseif Visited("BrynDefaultDialogue")>>
+// <<elseif $visitedDefault>>
 //     [[BrynDefaultDialogue1]]
 // <<else>>
 //     [[BrynDefaultDialogue]]

@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
     // (Makes a new special item pop up in Stellan's shop)
     [HideInInspector] public bool hasKilledTimeLich = false;
 
+    public bool progressRunForTesting = false;  // TEMP
+
     void Awake()
     {
         if( instance ){
@@ -53,6 +55,17 @@ public class GameManager : MonoBehaviour
             InGameUIManager.instance.deathScreen.OpenPlayerDeathUI();
             playerDeath = false;
         }
+
+        if(progressRunForTesting){
+            progressRunForTesting = false;
+
+            // Simulate a new run (reroll stats too)
+            EndRun();
+            PlayerStats pstats = FindObjectsOfType<PlayerStats>()[0];
+            pstats.initializeStats();
+
+            Debug.Log("Run Number: " + currentRunNumber);
+        }
     }
 
     // Add any other reset stuff here too (called when player goes from death screen -> main hub)
@@ -63,6 +76,7 @@ public class GameManager : MonoBehaviour
 
         // Set all NPC talked to variables to false and increment story beats
         StoryManager.instance.OnRunEndUpdateStory();
+        StoryManager.instance.CheckForNewStoryBeats();
         
         // Increment run # -> once in main hub, run # always = # of your NEXT run (not previous)
         currentRunNumber++;
