@@ -80,7 +80,7 @@ public class PauseMenu : MonoBehaviour
         else if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Doctor){
             InGameUIManager.instance.doctorShopUI.SetShopUIInteractable(set);
         }
-        else if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Andy){
+        else if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Rhian){
             InGameUIManager.instance.weaponsShopUI.SetShopUIInteractable(set);
         }
         else{

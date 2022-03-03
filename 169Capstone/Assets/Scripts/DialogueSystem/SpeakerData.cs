@@ -15,7 +15,7 @@ public enum SpeakerID
 
     // === On-Run Shopkeepers ===
     Bryn,
-    Andy,
+    Rhian,
     Doctor,
     Sorrel,
 

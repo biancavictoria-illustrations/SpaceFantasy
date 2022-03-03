@@ -36,7 +36,7 @@ public class StoryManager : MonoBehaviour
 
     public static StoryManager instance;
 
-    [HideInInspector] public bool talkedToBryn, talkedToStellan, talkedToAndy, talkedToDoctor, talkedToSorrel, talkedToLich = false;
+    [HideInInspector] public bool talkedToBryn, talkedToStellan, talkedToRhian, talkedToDoctor, talkedToSorrel, talkedToLich = false;
 
     public Dictionary<StoryBeat,BeatStatus> storyBeatDatabase = new Dictionary<StoryBeat,BeatStatus>();     // All story beats of type Conversation or Killed
     public HashSet<StoryBeat> activeStoryBeats = new HashSet<StoryBeat>();    // For the DialogueManager to see just the active beats
@@ -116,7 +116,7 @@ public class StoryManager : MonoBehaviour
         // When you end a run, reset all talked to bools
         talkedToBryn = false;
         talkedToStellan = false;
-        talkedToAndy = false;
+        talkedToRhian = false;
         talkedToDoctor = false;
         talkedToSorrel = false;
         talkedToLich = false;

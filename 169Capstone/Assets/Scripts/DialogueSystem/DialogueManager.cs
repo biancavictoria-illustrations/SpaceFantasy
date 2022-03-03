@@ -207,20 +207,31 @@ public class DialogueManager : MonoBehaviour
     {
         // Set speaker name
         string speaker = info[0];
+        string speakerNameOverride = "";
 
         // Set portrait emotion
         string emotion = "";
-        if(info.Length > 1){
+        if(info.Length == 1){   // ONE parameter (speakerID)
+            emotion = SpeakerData.EMOTION_NEUTRAL;            
+        }
+        else if(info.Length == 2){  // TWO parameters (speakerID, emotion)
             emotion = info[1];
         }
-        else{
-            emotion = SpeakerData.EMOTION_NEUTRAL;
+        else{  // THREE parameters (speakerID, emotion, speaker display name override)
+            emotion = info[1];
+            speakerNameOverride = info[2];
         }
         
         if(speakers.TryGetValue(speaker, out SpeakerData data)){
-            // TODO: Uncomment once we have sprites :)
             characterPortrait.sprite = data.GetEmotionPortrait(emotion);
-            speakerName.text = speaker;
+
+            if(speakerNameOverride == ""){
+                speakerName.text = data.SpeakerName();
+            }
+            else{
+                speakerName.text = speakerNameOverride;
+            }
+            
             return;
         }
         Debug.LogError("Could not set the speaker data for " + speaker);
