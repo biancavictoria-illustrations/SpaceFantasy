@@ -7,20 +7,26 @@ using TMPro;
 public enum StellanShopUpgradeType{
     // Stat Increases
     STRMin,
-    STRMax,
     DEXMin,
-    DEXMax,
     INTMin,
-    INTMax,
     WISMin,
-    WISMax,
     CONMin,
-    CONMax,
     CHAMin,
+
+    STRMax,
+    DEXMax,
+    INTMax,
+    WISMax,
+    CONMax,
     CHAMax,
 
     // Skills
-    skill,  // TEMP
+    ArmorPlating,
+    ExtensiveTraining,
+    Natural20,
+    PrecisionDrive,
+
+    TimeLichKillerThing,
 
     enumSize
 }
@@ -41,6 +47,7 @@ public class ShopUIStellan : MonoBehaviour
     [SerializeField] private Button resetCurrencyButton;
 
     [SerializeField] public List<UpgradePanel> upgradePanels = new List<UpgradePanel>();
+    [SerializeField] private GameObject killTimeLichItem;
 
     [SerializeField] private TMP_Text focusPanelName;
     [SerializeField] private TMP_Text focusSkillLevel;
@@ -67,7 +74,11 @@ public class ShopUIStellan : MonoBehaviour
 
         foreach(UpgradePanel panel in upgradePanels){
             panel.SetShopUI(this);
-            panel.InitializeUpgradeValues(500, null);
+            panel.InitializeUpgradeValues(null);
+        }
+
+        if(GameManager.instance.hasKilledTimeLich){
+            killTimeLichItem.SetActive(true);
         }
     }
 
@@ -75,7 +86,7 @@ public class ShopUIStellan : MonoBehaviour
     {
         if(giveCurrencyForTesting){
             giveCurrencyForTesting = false;
-            PlayerInventory.instance.SetPermanentCurrency( PlayerInventory.instance.permanentCurrency + 1000 );
+            PlayerInventory.instance.SetPermanentCurrency( PlayerInventory.instance.permanentCurrency + 100 );
         }
     }
 
@@ -162,7 +173,7 @@ public class ShopUIStellan : MonoBehaviour
 
         // Now reflect those values in the UI
         foreach(UpgradePanel panel in upgradePanels){
-            panel.InitializeUpgradeValues(500, null);
+            panel.InitializeUpgradeValues(null);
         }
     }
 

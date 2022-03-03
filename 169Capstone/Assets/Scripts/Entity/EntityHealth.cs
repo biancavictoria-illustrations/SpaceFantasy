@@ -161,6 +161,10 @@ public class EntityHealth : MonoBehaviour
         {
             if(isBossEnemy){
                 InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(false);
+
+                if(enemyID == EnemyID.TimeLich){
+                    GameManager.instance.hasKilledTimeLich = true;
+                }
             }
 
             if(enemyDropGenerator){
