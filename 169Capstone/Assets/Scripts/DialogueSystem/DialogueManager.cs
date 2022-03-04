@@ -56,6 +56,13 @@ public class DialogueManager : MonoBehaviour
             return visitedNodes.Contains(nodeName.AsString);
         });
 
+        // Add random number generator for repeatable and other options that can be played out of order
+        // Min 0, pass in Max (non-inclusive)
+        dialogueRunner.AddFunction("RandomNum", 1, delegate (Yarn.Value[] parameters){
+            var numMaxExclusive = parameters[0];
+            return Random.Range(0, (int)numMaxExclusive.AsNumber);
+        });
+
 
         // Add SelectNextTrigger so that we can find the next conditional category of dialogue to play
         dialogueRunner.AddFunction("SelectNextNode", 0, delegate (Yarn.Value[] parameters){
@@ -256,7 +263,6 @@ public class DialogueManager : MonoBehaviour
     }
 
     // Called by the Dialogue Runner to notify us that a node finished running
-    // TODO: FIX THIS this isn't being called?????????
     public void NodeComplete(string nodeName)
     {
         // Log that the node has been run

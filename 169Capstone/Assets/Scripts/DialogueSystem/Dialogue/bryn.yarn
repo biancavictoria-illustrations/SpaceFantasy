@@ -1,15 +1,15 @@
 ﻿title: BrynStart
 tags:
 ---
-// <<set $visitedDefault to Visited("BrynDefaultDialogue")>>
-// <<set $visitedDefault1 to Visited("BrynDefaultDialogue1")>>
-// <<if $visitedDefault and $visitedDefault1>>
+<<set $visitedDefault to Visited("BrynDefaultDialogue")>>
+<<set $visitedDefault1 to Visited("BrynDefaultDialogue1")>>
+<<if $visitedDefault and $visitedDefault1>>
     [[BrynNodeSelectHub]]
-// <<elseif $visitedDefault>>
-//     [[BrynDefaultDialogue1]]
-// <<else>>
-//     [[BrynDefaultDialogue]]
-// <<endif>>
+<<elseif $visitedDefault>>
+    [[BrynDefaultDialogue1]]
+<<else>>
+    [[BrynDefaultDialogue]]
+<<endif>>
 ===
 
 title: BrynNodeSelectHub
@@ -649,10 +649,32 @@ Psst. I’m trying to get better at marketing my wares. So sorry about everythin
 title: BrynRepeatable
 tags:
 ---
-<<SetSpeaker Player>>
-Build anything new lately?
-<<SetSpeaker Bryn>>
-Why don’t you take a look!
+// Get a random number 0 - 9 and go to that node
+<<set $num to RandomNum(10)>>
+<<if $num is 0>>
+    <<SetSpeaker Player>>
+    Build anything new lately?
+    <<SetSpeaker Bryn>>
+    Why don’t you take a look!
+<<elseif $num is 1>>
+    [[BrynRepeatable1]]
+<<elseif $num is 2>>
+    [[BrynRepeatable2]]
+<<elseif $num is 3>>
+    [[BrynRepeatable3]]
+<<elseif $num is 4>>
+    [[BrynRepeatable4]]
+<<elseif $num is 5>>
+    [[BrynRepeatable5]]
+<<elseif $num is 6>>
+    [[BrynRepeatable6]]
+<<elseif $num is 7>>
+    [[BrynRepeatable7]]
+<<elseif $num is 8>>
+    [[BrynRepeatable8]]
+<<else>>
+    [[BrynRepeatable9]]
+<<endif>>
 ===
 
 title: BrynRepeatable1
