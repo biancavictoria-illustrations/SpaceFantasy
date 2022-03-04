@@ -410,11 +410,13 @@ tags:
     [[StellanDefaultDialogue7]]
 <<else>>
     <<SetSpeaker Player>>
-    
+    Stellan, you’ve seemed to indicate to me in the past that you may have tried to escape this place on your own? Perhaps even… break whatever loop exists here?
     <<SetSpeaker Stellan>>
-    
+    Ah. Yes, well… If anyone on this ship were to know what a hopeless situation you are in, it would be me.
+    <<SetSpeaker Player>>
+    If you’ve tried what I am attempting, surely there’s some sort of information you could share with me about what I’m up against?
     <<SetSpeaker Stellan>>
-    
+    For now, I think the most help I can be is offering up my magic.
 <<endif>>
 ===
 
@@ -425,23 +427,25 @@ tags:
     [[StellanDefaultDialogue8]]
 <<else>>
     <<SetSpeaker Player>>
-    
+    You seem to know far more about what’s going on here than anyone else I’ve encountered on this ship. No one else even seems to find it particularly pressing that we get out of here.
     <<SetSpeaker Stellan>>
-    
+    I’m not certain the others you’ve encountered realize they’re trapped. It’s… complicated.
     <<SetSpeaker Stellan>>
-    
+    But the time loop has plucked everyone from a different moment, and when things reset, memories and perceptions of what they’ve been through and how long they’ve gone through it get hazy.
 <<endif>>
 ===
 
 title: StellanDefaultDialogue8
 tags:
 ---
-<<SetSpeaker Player>><<BranchComplete DefaultDialogue DefaultDialogue>>
-
-<<SetSpeaker Stellan>>
-
+<<SetSpeaker Stellan>><<BranchComplete DefaultDialogue DefaultDialogue>>
+Had enough yet?
 <<SetSpeaker Player>>
-
+What’s one more death to a man who could face countless more before finally facing the gods?
+<<SetSpeaker Stellan>>
+Atlan, you are a scoundrel and a fool and one day you are going to get yourself killed enough times that those very gods will board this ship and drag you to the afterlife with their own hands for making such a mockery of their law.
+<<SetSpeaker Stellan>>
+Until that day… What can I do to help?
 ===
 
 

@@ -19,31 +19,20 @@ tags:
 
 // === Enemy Killed ===
 
-<<if $headNode is "EnemyKilled">>
-    [[BrynEnemyKilled]]
-<<elseif $headNode is "EnemyKilledTimeLich">>
+<<if $headNode is "EnemyKilledTimeLich">>
     [[BrynEnemyKilledTimeLich]]
-<<elseif $headNode is "EnemyKilledSlime">>
-    [[BrynEnemyKilledSlime]]
+<<elseif $headNode is "EnemyKilledSlime50">>
+    [[BrynEnemyKilledSlime50]]  
 
 // === Killed By ===
 
-<<elseif $headNode is "KilledBy">>
-    [[BrynKilledBy]]
 <<elseif $headNode is "KilledByTimeLich">>
     [[BrynKilledByTimeLich]]
 
-// === Dialogue Completed ===
-
-<<elseif $headNode is "DialogueCompleted">>
-    [[BrynDialogueCompleted]]
-<<elseif $headNode is "DialogueCompletedBrynEnemyKilledSlime">>
-    [[BrynDialogueCompleted]]
-
 // === Items ===
 
-<<elseif $headNode is "Item">>
-    [[BrynItem]]
+<<elseif $headNode is "ItemHelmOfTheRam">>
+    [[BrynItemHelmOfTheRam]]
 
 // === Generic Stuff ===
 
@@ -63,15 +52,6 @@ tags:
 <<else>>
     ERROR: No head node found for {$headNode}!
 <<endif>>
-===
-
-
-
-title: BrynDialogueCompleted
-tags:
----
-<<SetSpeaker Bryn>>
-This is a sample DIALOGUE COMPLETED dialogue interaction. So you killed a slime, huh? (Delete this.)
 ===
 
 
