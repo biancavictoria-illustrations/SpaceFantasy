@@ -41,7 +41,7 @@ public class PlayerInventory : MonoBehaviour
         gear[InventoryItemSlot.Weapon] = null;
         gear[InventoryItemSlot.Accessory] = null;
         gear[InventoryItemSlot.Helmet] = null;
-        gear[InventoryItemSlot.Boots] = null;
+        gear[InventoryItemSlot.Legs] = null;
     }
 
     public void UseHealthPotion()
@@ -139,9 +139,9 @@ public class PlayerInventory : MonoBehaviour
             Destroy(gear[InventoryItemSlot.Accessory]);
             ClearItemSlot(InventoryItemSlot.Accessory);
         }
-        if(gear[InventoryItemSlot.Boots]){
-            Destroy(gear[InventoryItemSlot.Boots]);
-            ClearItemSlot(InventoryItemSlot.Boots);
+        if(gear[InventoryItemSlot.Legs]){
+            Destroy(gear[InventoryItemSlot.Legs]);
+            ClearItemSlot(InventoryItemSlot.Legs);
         }
         if(gear[InventoryItemSlot.Helmet]){
             Destroy(gear[InventoryItemSlot.Helmet]);

@@ -98,7 +98,8 @@ Those slimes are surprisingly vicious. You’re a frail old man. Yeah, I still t
 title: TimeLichNumRuns
 tags:
 ---
-<<if Visited("TimeLichNumRuns")>>
+<<set $currentRunNum to GetCurrentRunNum()>>
+<<if $currentRunNum > 19>>
     [[TimeLichNumRuns20]]
 <<else>>
     <<SetSpeaker TimeLich>>

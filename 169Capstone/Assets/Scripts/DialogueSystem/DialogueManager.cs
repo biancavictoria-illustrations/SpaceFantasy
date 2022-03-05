@@ -68,6 +68,11 @@ public class DialogueManager : MonoBehaviour
             return GameManager.instance.currentRunNumber - 1;
         });
 
+        // Add CURRENT num run checker
+        dialogueRunner.AddFunction("GetCurrentRunNum", 0, delegate (Yarn.Value[] parameters){
+            return GameManager.instance.currentRunNumber;
+        });
+
 
         // Add SelectNextTrigger so that we can find the next conditional category of dialogue to play
         dialogueRunner.AddFunction("SelectNextNode", 0, delegate (Yarn.Value[] parameters){
