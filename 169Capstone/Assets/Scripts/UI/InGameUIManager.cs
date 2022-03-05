@@ -51,6 +51,7 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private TMP_Text healthPotionValue;
 
     public BossHealthBar bossHealthBar;
+    
 
 
     void Awake()
