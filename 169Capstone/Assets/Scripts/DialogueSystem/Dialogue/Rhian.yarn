@@ -94,7 +94,7 @@ tags:
     <<SetSpeaker Player>>
     So, Rhian, about this ship–
     <<SetSpeaker Rhian>>
-    Atlan, wait! I have to tell you, I found this insane sniper in storage! It has a laser scope and everything!
+    Atlan, wait! I have to tell you, I found this <i>insane</i> sniper in storage! It has a laser scope and everything!
     <<SetSpeaker Player>>
     Sounds cool, but I’m not much of a sniper guy–
     <<SetSpeaker Rhian>>
@@ -115,7 +115,7 @@ tags:
     <<SetSpeaker Player>>
     R–
     <<SetSpeaker Rhian>>
-    IT SHOOTS ROCKETS! Entire rockets, Atlan! This thing is the best.
+    IT SHOOTS ROCKETS! <i>Entire rockets,</i> Atlan! This thing is the best.
 <<endif>>
 ===
 
@@ -128,11 +128,11 @@ tags:
     <<SetSpeaker Player>>
     Is the ship–
     <<SetSpeaker Rhian>>
-    Wait, wait, look at THIS! Look what I found! It’s… a… revolver! Can you believe it? They stopped making models like this centuries ago!
+    Wait, <i>wait,</i> look at THIS! Look what I found! It’s… a… revolver! Can you believe it? They stopped making models like this <i>centuries</i> ago!
     <<SetSpeaker Player>>
     It’s beautiful.
     <<SetSpeaker Rhian>>
-    Beautiful? Beautiful!? Atlan, it’s a MASTERPIECE!
+    Beautiful? <i>Beautiful?</i> Atlan, it’s a MASTERPIECE!
 <<endif>>
 ===
 
@@ -145,9 +145,9 @@ tags:
     <<SetSpeaker Player>>
     So–
     <<SetSpeaker Rhian>>
-    Hey, Atlan, look. I just… wanted to say. I really appreciate you talking to me all the time. Honestly, my parents never took my interests very seriously. They wanted me to be a bard, like them, but music was never really my thing, y’know? They even specifically named me Rhiannon after the legendary halfling lutist but like… Music was just that thing I did as a kid because I didn’t know any better and I was just going along with whatever my parents wanted for me, but as I grew up, I realized there was another kind of music I was more interested in.
+    Hey, Atlan, look. I just… wanted to say. I really appreciate you talking to me all the time. Honestly, my parents never took my interests very seriously. They wanted me to be a bard, like them, but music was never really my thing, y’know? They even specifically named me <i>Rhiannon</i> after the legendary halfling lutist but like… Music was just that thing I did as a kid because I didn’t know any better and I was just going along with whatever my parents wanted for me, but as I grew up, I realized there was another kind of music I was more interested in.
     <<SetSpeaker Rhian>>
-    Weapons make their own music, you just have to know how to make them sing. And I do. But my parents just… never really got me. But you’ve taken the time to talk to me, and I’ve seen you out there, a bit, and I know you get it. You know how to make your weapons sing, too.
+    Weapons make their own music, you just have to know how to make them sing. And I do. But my parents just… never really got <i>me.</i> But you’ve taken the time to talk to me, and I’ve seen you out there, a bit, and I know you <i>get it.</i> You know how to make your weapons sing, too.
     <<SetSpeaker Rhian>>
     What I’m trying to say is… I think you’re pretty cool. And I appreciate you. Or whatever.
     <<SetSpeaker Player>>
@@ -163,7 +163,7 @@ tags:
 <<SetSpeaker Player>><<BranchComplete DefaultDialogue DefaultDialogue>>
 So, Rhian, I’ve been trying to ask… do you know about what’s going on here?
 <<SetSpeaker Rhian>>
-Oh, on the ship? Yeah, there’s all sorts of screwed up stuff going on. My memory gets all weird about it and it’s hard to keep track of how many times I’ve even seen you run through here but I definitely know SOMETHING is up. And very, very wrong.
+Oh, on the ship? Yeah, there’s all sorts of screwed up stuff going on. My memory gets all weird about it and it’s hard to keep track of how many times I’ve even seen <i>you</i> run through here but I definitely know SOMETHING is up. And very, very wrong.
 <<SetSpeaker Rhian>>
 But whatever. As long as I get to hang out here, I don’t really care about what’s going on out there.
 ===
@@ -177,7 +177,7 @@ tags:
 <<set $num to RandomNum(8)>>
 <<if $num is 0>>
     <<SetSpeaker Rhian>>
-    Ahh, the sweet, sweet symphony of a rail gun.
+    <i>Ahh,</i> the sweet, sweet symphony of a rail gun.
 <<elseif $num is 1>>
     [[RhianRepeatable1]]
 <<elseif $num is 2>>
@@ -253,7 +253,7 @@ tags:
     [[RhianLowHealth1]]
 <<else>>
     <<SetSpeaker Rhian>>
-    Gods, Atlan, you smell terrible. Is that what death smells like? Are you dying? I think you might be dying.
+    Gods, Atlan, you smell <i>terrible.</i> Is that what death smells like? Are you dying? I think you might be dying.
     <<SetSpeaker Player>>
     Thanks for the vote of confidence, Rhi.
 <<endif>>
@@ -266,11 +266,11 @@ tags:
     [[RhianLowHealth2]]
 <<else>>
     <<SetSpeaker Rhian>>
-    Just so we’re clear, Atlan, you’re supposed to use the things I sell you on enemies. Not, y’know, your own foot?
+    Just so we’re clear, Atlan, you’re supposed to use the things I sell you on <i>enemies.</i> Not, y’know, your own foot?
     <<SetSpeaker Player>>
     … Maybe I’ll just take my electrum elsewhere. Buy some armor.
     <<SetSpeaker Rhian>>
-    Pfft, who needs armor? Just get a bigger, better gun and kill the bad guys before they can kill you!
+    <i>Pfft,</i> who needs <i>armor?</i> Just get a bigger, better gun and kill the bad guys before they can kill you!
 <<endif>>
 ===
 
@@ -281,7 +281,7 @@ tags:
     [[RhianLowHealth3]]
 <<else>>
     <<SetSpeaker Rhian>>
-    Eugh, Atlan! You, uh, doin’ okay there buddy?
+    <i>Eugh,</i> Atlan! You, uh, doin’ okay there buddy?
     <<SetSpeaker Player>>
     Never better. Now show me what you got before I pass out.
 <<endif>>
@@ -294,11 +294,11 @@ tags:
     [[RhianLowHealth4]]
 <<else>>
     <<SetSpeaker Rhian>>
-    Uh, Atlan? Can a human survive that much blood loss? Not that I’m concerned or anything, I’m sure you’ve got this all under control.
+    Uh, Atlan? Can a human survive <i>that much</i> blood loss? Not that I’m concerned or anything, I’m sure you’ve got this all under control.
     <<SetSpeaker Player>>
     All according to plan. But, uh, I don’t suppose you have any super special just-for-emergencies kill-everything-in-sight-instantly weapons I could try out?
     <<SetSpeaker Rhian>>
-    Gods, I wish. Even if I did, you think I’d sell them to you? In this shape, you’d lose it as soon as you step outside my shop! I’m not wasting something like that!
+    Gods, I wish. Even if I did, you think I’d sell them to you? In this shape, you’d lose it as soon as you step outside my shop! I’m not <i>wasting</i> something like that!
     <<SetSpeaker Player>>
     Great. Cool. Thanks, Rhi.
 <<endif>>
@@ -308,7 +308,7 @@ title: RhianLowHealth4
 tags:
 ---
 <<SetSpeaker Rhian>><<BranchComplete LowHealth LowHealth>>
-Whoa, Atlan, that’s um… that’s a lot of blood. That’s a lot of blood. Like a lot.
+Whoa, Atlan, that’s um… that’s a lot of blood. That’s a <i>lot</i> of blood. Like a lot.
 <<SetSpeaker Player>>
 I noticed.
 <<SetSpeaker Rhian>>
@@ -343,7 +343,7 @@ tags:
     <<SetSpeaker Player>>
     Rhi, is that a new bandolier? It looks lovely on you.
     <<SetSpeaker Rhian>>
-    I know! And look at how many pockets it has! I was able to buy it with all that electrum you’ve been bringing me. You know what? Take a discount today. Consider this… a customer loyalty program!
+    I know! And <i>look at how many pockets it has!</i> I was able to buy it with all that electrum you’ve been bringing me. You know what? Take a discount today. Consider this… a customer loyalty program!
     <<SetSpeaker Player>>
     I like the sound of that.
 <<endif>>
@@ -377,15 +377,15 @@ tags:
     <<SetSpeaker Player>>
     Where is it? I’ll take a look.
     <<SetSpeaker Rhian>>
-    What, no, it’s not for you. It’s not for SALE.
+    What, no, it’s not for <i>you.</i> It’s not for <i>sale.</i>
     <<SetSpeaker Player>>
     But you said it’s too big for you!
     <<SetSpeaker Rhian>>
-    I said no such thing! Come on, look at my B-tier stuff.
+    I said <i>no such thing!</i> Come on, look at my B-tier stuff.
     <<SetSpeaker Player>>
     If you’re admitting it’s B-tier, I should get a discount.
     <<SetSpeaker Rhian>>
-    Pfft, tough luck, buddy.
+    <i>Pfft,</i> tough luck, buddy.
 <<endif>>
 ===
 
@@ -400,7 +400,7 @@ tags:
     <<SetSpeaker Player>>
     Depends on what you’re getting. And where. Got any ideas?
     <<SetSpeaker Rhian>>
-    Oh, yeah, loads. In fact, for the amount of tattoos I want, I’m raising my prices today. Gonna need lots of electrum to afford all that. Good thinking, Atlan.
+    Oh, yeah, loads. In fact, for the amount of tattoos I want, I’m raising my prices today. Gonna need <i>lots</i> of electrum to afford all that. Good thinking, Atlan.
     <<SetSpeaker Player>>
     That definitely wasn’t what I was suggesting.
 <<endif>>
@@ -410,9 +410,9 @@ title: RhianBarterFail2
 tags:
 ---
 <<SetSpeaker Rhian>><<BranchComplete BarterSuccess BarterSuccess>>
-Hey, Atlan, check this out! It’s a laser scope you can shine directly into the eyes of your enemies to blind them and get that perfect shot!
+Hey, Atlan, check this out! It’s a laser scope you can shine directly into the eyes of your enemies to blind them <i>and</i> get that perfect shot!
 <<SetSpeaker Player>>
-You sure you can reach their eyes?
+You sure you can <i>reach</i> their eyes?
 <<SetSpeaker Rhian>>
 Oh, I get it. Because I’m short. Well, JOKES ON YOU. I’m raising my prices JUST FOR TALL JERKS LIKE YOU. Ha. Take that.
 ===
