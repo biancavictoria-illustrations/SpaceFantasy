@@ -299,7 +299,8 @@ My point remains that if you cannot handle yourself against a simple ooze monste
 title: StellanNumRuns
 tags:
 ---
-<<if Visited("StellanNumRuns")>>
+<<set $currentRunNum to GetCurrentRunNum()>>
+<<if $currentRunNum > 14>>
     [[StellanNumRuns15]]
 <<else>>
     <<SetSpeaker Stellan>>
@@ -312,7 +313,7 @@ tags:
 title: StellanNumRuns15
 tags:
 ---
-<<if Visited("StellanNumRuns15")>>
+<<if $currentRunNum > 30>>
     [[StellanNumRuns34]]
 <<else>>
     <<SetSpeaker Stellan>>

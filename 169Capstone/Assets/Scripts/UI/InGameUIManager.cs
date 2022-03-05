@@ -143,7 +143,7 @@ public class InGameUIManager : MonoBehaviour
             case InventoryItemSlot.Helmet:
                 inGameHelmetIMG.sprite = _icon;
                 break;
-            case InventoryItemSlot.Boots:
+            case InventoryItemSlot.Legs:
                 inGameBootsIMG.sprite = _icon;
                 break;
             default:
@@ -172,7 +172,7 @@ public class InGameUIManager : MonoBehaviour
             case InventoryItemSlot.Helmet:
                 inGameHelmetIMG.sprite = emptySlotHelmetIcon;
                 break;
-            case InventoryItemSlot.Boots:
+            case InventoryItemSlot.Legs:
                 inGameBootsIMG.sprite = emptySlotBootsIcon;
                 break;
             default:
