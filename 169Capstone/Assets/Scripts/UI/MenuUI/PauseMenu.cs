@@ -21,6 +21,7 @@ public class PauseMenu : MonoBehaviour
         ResetPauseUI();
         Time.timeScale = 1f;
         GameIsPaused = false;
+        InputManager.instance.RunGameTimer(true);
 
         if(InGameUIManager.instance.inventoryIsOpen){
             InGameUIManager.instance.inventoryUI.SetInventoryInteractable(true);
@@ -50,6 +51,7 @@ public class PauseMenu : MonoBehaviour
 
     public void PauseGame()
     {
+        InputManager.instance.RunGameTimer(false);
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         GameIsPaused = true;

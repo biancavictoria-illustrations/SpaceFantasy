@@ -284,7 +284,7 @@ public class DialogueManager : MonoBehaviour
     public void OnNPCInteracted()
     {
         // Stop allowing movement input
-        InputManager.instance.isInDialogue = true;
+        InputManager.instance.ToggleDialogueOpenStatus(true);
 
         // Disable UI elements
         InGameUIManager.instance.SetGameUIActive(false);
@@ -297,7 +297,7 @@ public class DialogueManager : MonoBehaviour
     // Called when the dialogue ends/closes
     public void OnDialogueEnd()
     {
-        InputManager.instance.isInDialogue = false;
+        InputManager.instance.ToggleDialogueOpenStatus(false);
         InGameUIManager.instance.SetGameUIActive(true);
         NPC.ActiveNPC.TalkedToNPC();
 

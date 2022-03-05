@@ -51,8 +51,7 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private TMP_Text healthPotionValue;
 
     public BossHealthBar bossHealthBar;
-    
-
+    public TimerUI timerUI;
 
     void Awake()
     {
@@ -86,6 +85,10 @@ public class InGameUIManager : MonoBehaviour
         ToggleInGameGearIconPanel(setRunUIActive);
         tempCurrencyValue.gameObject.SetActive(setRunUIActive);
         healthUIContainer.SetActive(setRunUIActive);
+
+        // Reset timer
+        InputManager.instance.RunGameTimer(setRunUIActive, setRunUIActive);
+        GameManager.instance.gameTimer.ResetTimer();
     }
 
     // Called when player input opens or closes the inventory

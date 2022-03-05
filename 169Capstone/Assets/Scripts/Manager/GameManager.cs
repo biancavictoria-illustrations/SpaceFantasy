@@ -11,7 +11,6 @@ public class GameManager : MonoBehaviour
 
     public int currentRunNumber {get; private set;}
 
-    private InputManager inputManager;
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform playerTransform;
 
@@ -19,6 +18,8 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public bool playerDeath = false;
     [HideInInspector] public int bossesKilled = 0;
+
+    public GameTimer gameTimer;
 
     // Set to true (permanently) once you have killed the Time Lich at least once
     // (Makes a new special item pop up in Stellan's shop)
@@ -46,10 +47,6 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if(inputManager == null)
-        {
-            inputManager = GameObject.FindWithTag("Player").GetComponent<InputManager>();
-        }
         if(playerDeath)
         {
             InGameUIManager.instance.deathScreen.OpenPlayerDeathUI();
@@ -129,6 +126,10 @@ public class GameManager : MonoBehaviour
     {
         if(scene.name == "Main Hub"){
             InGameUIManager.instance.ToggleRunUI(false);
+        }
+        if(scene.name == "TestFloor"){      // TODO: update string
+            InGameUIManager.instance.ToggleRunUI(true);
+            Debug.LogWarning("Update scene string name to FINAL name when possible.");
         }
     }
 
