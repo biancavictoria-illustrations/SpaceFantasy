@@ -154,7 +154,9 @@ public class EntityHealth : MonoBehaviour
         Debug.Log("Death");
         if(gameObject.tag == "Player")
         {
-            //objectManager.playerDeath = true;
+            // Tell the story manager that the player was killed by a creature
+            // TODO: Get the enemyID of the creature who killed you!!!
+            // StoryManager.instance.KilledEventOccurred(enemyID, StoryBeatType.KilledBy);            
             GameManager.instance.playerDeath = true;
         }
         else
@@ -166,6 +168,9 @@ public class EntityHealth : MonoBehaviour
                     GameManager.instance.hasKilledTimeLich = true;
                 }
             }
+
+            // Tell the story manager that this creature was killed
+            StoryManager.instance.KilledEventOccurred(enemyID, StoryBeatType.EnemyKilled);
 
             if(enemyDropGenerator){
                 enemyDropGenerator.GetDrop(GameManager.instance.bossesKilled, transform);

@@ -1,35 +1,38 @@
 ﻿title: BrynStart
 tags:
 ---
+<<set $visitedDefault to Visited("BrynDefaultDialogue")>>
+<<set $visitedDefault1 to Visited("BrynDefaultDialogue1")>>
+<<if $visitedDefault and $visitedDefault1>>
+    [[BrynNodeSelectHub]]
+<<elseif $visitedDefault>>
+    [[BrynDefaultDialogue1]]
+<<else>>
+    [[BrynDefaultDialogue]]
+<<endif>>
+===
+
+title: BrynNodeSelectHub
+tags:
+---
 <<set $headNode to SelectNextNode()>>
 
 // === Enemy Killed ===
 
-<<if $headNode is "EnemyKilled">>
-    [[BrynEnemyKilled]]
-<<elseif $headNode is "EnemyKilledTimeLich">>
+<<if $headNode is "EnemyKilledTimeLich">>
     [[BrynEnemyKilledTimeLich]]
-<<elseif $headNode is "EnemyKilledSlime">>
-    [[BrynEnemyKilledSlime]]
+<<elseif $headNode is "EnemyKilledSlime50">>
+    [[BrynEnemyKilledSlime50]]  
 
 // === Killed By ===
 
-<<elseif $headNode is "KilledBy">>
-    [[BrynKilledBy]]
-<<elseif $headNode is "KilledByEnchantedCloak">>
-    [[BrynKilledByEnchantedCloak]]
-
-// === Dialogue Completed ===
-
-<<elseif $headNode is "DialogueCompleted">>
-    [[BrynDialogueCompleted]]
-<<elseif $headNode is "DialogueCompletedBrynEnemyKilledSlime">>
-    [[BrynDialogueCompleted]]
+<<elseif $headNode is "KilledByTimeLich">>
+    [[BrynKilledByTimeLich]]
 
 // === Items ===
 
-<<elseif $headNode is "Item">>
-    [[BrynItem]]
+<<elseif $headNode is "ItemHelmOfTheRam">>
+    [[BrynItemHelmOfTheRam]]
 
 // === Generic Stuff ===
 
@@ -47,65 +50,97 @@ tags:
     [[BrynRepeatable]]
 
 <<else>>
+    [[BrynRepeatable]]
     ERROR: No head node found for {$headNode}!
 <<endif>>
 ===
 
 
 
-title: BrynEnemyKilled
+title: BrynEnemyKilledTimeLich
 tags:
 ---
-<<SetSpeaker Bryn>>
-This is an ENEMY KILLED dialogue interaction.
+<<if Visited("BrynEnemyKilledTimeLich")>>
+    [[BrynEnemyKilledTimeLich1]]
+<<else>>
+    <<SetSpeaker Player>>
+    Why are you still here?
+    <<SetSpeaker Bryn>>
+    What? I… I’m here to help you, best friend. Here, I have some gear for you to–
+    <<SetSpeaker Player>>
+    You still don’t get it, Bryn! I’m trying to get you out of here so I don’t have to keep <i>killing</i>–
+    <<SetSpeaker Player>>
+    … Fine. Let me see what you have.
+<<endif>>
 ===
 
 title: BrynEnemyKilledTimeLich
 tags:
 ---
+<<SetSpeaker Bryn>><<BranchComplete KilledBy KilledByTimeLich>>
+Hey, you okay there, best friend? You seemed pretty shaken up last time we chatted.
+<<SetSpeaker Player>>
+Just… running into some hiccups with this quest.
 <<SetSpeaker Bryn>>
-Wow! You killed the Time Lich! That's a max priority event!
+I know you’re getting tired. But you can do this! I believe in you! 
 ===
 
-title: BrynEnemyKilledSlime
+title: BrynEnemyKilledSlime50
 tags:
 ---
+<<SetSpeaker Bryn>><<BranchComplete EnemyKilled EnemyKilledSlime50>>
+Is that Atlan, the Great Slime Slayer?
+<<SetSpeaker Player>>
+Uh, yes?
 <<SetSpeaker Bryn>>
-You killed a slime! Nice!
-===
-
-
-
-title: BrynKilledBy
-tags:
----
+Congratulations, best friend! You’ve killed <i>fifty</i> slimes! That’s… that’s a <i>lot</i> of slimes!
+<<SetSpeaker Player>>
+Thanks?
 <<SetSpeaker Bryn>>
-This is a KILLED BY dialogue interaction.
-===
-
-title: BrynKilledByEnchantedCloak
-tags:
----
-<<SetSpeaker Bryn>>
-Oh no! You were killed by an enchanted cloak last time? Yeah, those things are nasty.
+Keep at it! This just goes to show you can accomplish anything you set your mind to!
 ===
 
 
 
-title: BrynDialogueCompleted
+title: BrynKilledByTimeLich
 tags:
 ---
+<<if Visited("BrynKilledByTimeLich")>>
+    [[BrynKilledByTimeLich1]]
+<<else>>
+    <<SetSpeaker Player>>
+    You said the captain is a good guy, right? A “big softie”?
+    <<SetSpeaker Bryn>>
+    He sure is! Why do you ask?
+    <<SetSpeaker Player>>
+    ... No reason.
+<<endif>>
+===
+
+title: BrynKilledByTimeLich1
+tags:
+---
+<<SetSpeaker Player>><<BranchComplete KilledBy KilledByTimeLich>>
+So about the captain. What happened to him?
 <<SetSpeaker Bryn>>
-This is a DIALOGUE COMPLETED dialogue interaction. So you killed a slime, huh?
+I’m not sure I’m following. What happened to the captain? Is he in trouble? Does he need our help? Is that why you’re here – is your quest to save him?
+<<SetSpeaker Player>>
+No, I’m–
+<<SetSpeaker Player>>
+… You know, I’m not even sure anymore.
 ===
 
 
 
-title: BrynItem
+title: BrynItemHelmOfTheRam
 tags:
 ---
+<<SetSpeaker Player>><<BranchComplete Item ItemHelmOfTheRam>>
+I found this helmet out there. Thought you might want to check it out.
 <<SetSpeaker Bryn>>
-This is an ITEM dialogue interaction.
+The Helm of the Ram… Fine dwarvish make. The original prototype was crafted nearly a century ago by my own grandfather!
+<<SetSpeaker Bryn>>
+Atlan, I’m not sure you could find a better helmet in all the galaxy!
 ===
 
 
@@ -114,18 +149,39 @@ title: BrynNumRuns
 tags:
 ---
 <<if Visited("BrynNumRuns")>>
-    [[BrynNumRuns10]]
+    [[BrynNumRuns8]]
 <<else>>
+    <<SetSpeaker Player>>
+    Back again.
     <<SetSpeaker Bryn>>
-    Wow! You're on your fifth run! That's wild.
+    Keep it up, Atlan! Try to have some patience with yourself, you’re making progress even if you can’t see it! Just remember: <i>Du skal kravle, før du kan gå!</i>
 <<endif>>
 ===
 
-title: BrynNumRuns10
+title: BrynNumRuns8
 tags:
 ---
+<<if Visited("BrynNumRuns8")>>
+    [[BrynNumRuns20]]
+<<else>>
+    <<SetSpeaker Player>>
+    I shouldn’t be taking this long! I should’ve finished my quest by now.
+    <<SetSpeaker Bryn>>
+    Hey, woah woah woah, I don’t like the sound of that! Remember, best friend: <i>Kemst þó hægt fari!</i>
+    <<SetSpeaker Player>>
+    You got a dwarvish dictionary somewhere?
+<<endif>>
+===
+
+title: BrynNumRuns20
+tags:
+---
+<<SetSpeaker Bryn>><<BranchComplete NumRuns NumRuns>>
+Keep trying, Atlan! I believe in you!
+<<SetSpeaker Player>>
+Bryn, I must’ve come through here twenty times by now, and you still think I’m not fighting a losing battle?
 <<SetSpeaker Bryn>>
-Wow! You're on your TENTH run! That's crazy!
+Best friend, I’ve fought in many battles, and not one started out as a “winning” battle! There would be no “battle” to begin with if you simply got to win! To battle IS to fight, to fight is to struggle. But how can you overcome if you did not first struggle?
 ===
 
 
@@ -133,8 +189,64 @@ Wow! You're on your TENTH run! That's crazy!
 title: BrynLowHealth
 tags:
 ---
+<<if Visited("BrynLowHealth")>>
+    [[BrynLowHealth1]]
+<<else>>
+    <<SetSpeaker Player>>
+    I’m feeling pretty rough, Bryn. Got anything to help?
+    <<SetSpeaker Bryn>>
+    Oh no! I hope something here can help the rest of your journey go smoother!
+<<endif>>
+===
+
+title: BrynLowHealth1
+tags:
+---
+<<if Visited("BrynLowHealth1")>>
+    [[BrynLowHealth2]]
+<<else>>
+    <<SetSpeaker Player>>
+    I don’t know how much longer I’m going to last, Bryn.
+    <<SetSpeaker Bryn>>
+    Don’t say that! Just remember the old dwarvish saying: <i>Det är som mörkast innan gryningen!</i>
+    <<SetSpeaker Player>>
+    … Right.
+<<endif>>
+===
+
+title: BrynLowHealth2
+tags:
+---
+<<if Visited("BrynLowHealth2")>>
+    [[BrynLowHealth3]]
+<<else>>
+    <<SetSpeaker Player>>
+    Bryn. <i>Ah.</i> I need some help.
+    <<SetSpeaker Bryn>>
+    You don’t sound so good, best friend. Not to fear! You came to the right place!
+<<endif>>
+===
+
+title: BrynLowHealth3
+tags:
+---
+<<if Visited("BrynLowHealth3")>>
+    [[BrynLowHealth4]]
+<<else>>
+    <<SetSpeaker Player>>
+    Feeling a little, <i>ugh,</i> rough. Got anything to help with that?
+    <<SetSpeaker Bryn>>
+    Of course I do! Let’s get you outfitted so that you can get back out there! You’ve got this, best friend! We say NO to death!
+<<endif>>
+===
+
+title: BrynLowHealth4
+tags:
+---
+<<SetSpeaker Player>><<BranchComplete LowHealth LowHealth>>
+Uh, Bryn? I’m bleeding. A lot.
 <<SetSpeaker Bryn>>
-This is a LOW HEALTH dialogue interaction.
+Not to worry! No best friend of mine will bleed out on my shop floor!
 ===
 
 
@@ -146,15 +258,121 @@ tags:
     [[BrynDefaultDialogue1]]
 <<else>>
     <<SetSpeaker Bryn>>
-    This is a DEFAULT dialogue interaction.
+    Welcome to the engine room, home of the Orbis’ arcane reactor, and me, Bryn, its caretaker! Can I interest you in some high quality adventuring gear?
+    <<SetSpeaker Player>>
+    You've caught my attention.
+    <<SetSpeaker Bryn>>
+    Oh, I don’t know you! Are you a new crewmate? My name’s Brynjar, but you can call me Bryn, as you just heard! And, also as you just heard, I am here to help with all your engineering needs!
+    <<SetSpeaker Player>>
+    Name’s Atlan. I’m just passing through. On a bit of a quest, actually.
+    <<SetSpeaker Bryn>>
+    A quest? That’s fantastic! You’ve come to the right place!
 <<endif>>
 ===
 
 title: BrynDefaultDialogue1
 tags:
 ---
-<<SetSpeaker Bryn>><<BranchComplete DefaultDialogue DefaultDialogue>>
-This is a second DEFAULT dialogue interaction. Nice!
+<<if Visited("BrynDefaultDialogue1")>>
+    [[BrynDefaultDialogue2]]
+<<else>>
+    <<SetSpeaker Player>>
+    Where do you find all this stuff, anyway?
+    <<SetSpeaker Bryn>>
+    Oh, Atlan, hi! Most of it, I’ve made or altered myself.
+    <<SetSpeaker Player>>
+    That’s… impressive, Bryn. You’re quite the craftsman.
+    <<SetSpeaker Bryn>>
+    Atlan, you might just be my best friend. Is that okay? Are you comfortable with me calling you my best friend?
+    <<SetSpeaker Player>>
+    … Sure?
+<<endif>>
+===
+
+title: BrynDefaultDialogue2
+tags:
+---
+<<if Visited("BrynDefaultDialogue2")>>
+    [[BrynDefaultDialogue3]]
+<<else>>
+    <<SetSpeaker Player>>
+    Tell me, Bryn, do you ever want to get off this ship? Visit planets, experience the galaxy up close and personal?
+    <<SetSpeaker Bryn>>
+    Sure, eventually! Sounds like a great adventure! For now, though, I’m perfectly content right where I’m at. Because it means I get to help you out, best friend!
+<<endif>>
+===
+
+title: BrynDefaultDialogue3
+tags:
+---
+<<if Visited("BrynDefaultDialogue3")>>
+    [[BrynDefaultDialogue4]]
+<<else>>
+    <<SetSpeaker Player>>
+    Bryn, what do you know of the captain of this ship?
+    <<SetSpeaker Bryn>>
+    Oh, the captain is just the best guy! He can seem intimidating at first, but I promise he’s a big softie once you get to know him!
+<<endif>>
+===
+
+title: BrynDefaultDialogue4
+tags:
+---
+<<if Visited("BrynDefaultDialogue4")>>
+    [[BrynDefaultDialogue5]]
+<<else>>
+    <<SetSpeaker Player>>
+    Bryn, I’ve been meaning to ask… How much do you know about what’s going on here?
+    <<SetSpeaker Bryn>>
+    Not much, but that’s alright! There seems to be something strange going on, but… I’m just along for the ride!
+    <<SetSpeaker Bryn>>
+    My grandfather used to tell me <i>“tíðin rennur sum streymur í á”</i> – “time runs like the river current.” I’ve always taken it to mean I should just go with the flow!
+    <<SetSpeaker Player>>
+    But what if the current changes?
+    <<SetSpeaker Bryn>>
+    Well, then I guess we change with it, or we get left behind.
+    <<SetSpeaker Bryn>>
+    … Woah. That’s pretty deep, huh?
+<<endif>>
+===
+
+title: BrynDefaultDialogue5
+tags:
+---
+<<if Visited("BrynDefaultDialogue5")>>
+    [[BrynDefaultDialogue6]]
+<<else>>
+    <<SetSpeaker Player>>
+    What exactly is your job on this ship, Bryn?
+    <<SetSpeaker Bryn>>
+    This arcane reactor here is the fuel core of the ship – like its heart! It’s my job to make sure the Orbis is feeling alright, and in my spare time I work on my side projects! Speaking of which, you’re going to love what I have in store for you today!
+<<endif>>
+===
+
+title: BrynDefaultDialogue6
+tags:
+---
+<<if Visited("BrynDefaultDialogue6")>>
+    [[BrynDefaultDialogue7]]
+<<else>>
+    <<SetSpeaker Player>>
+    Where did you learn how to be such a magnificent engineer, Bryn? Surely, such skills must have been honed over countless years of careful practice.
+    <<SetSpeaker Bryn>>
+    The dwarves of Planet Svartallir have always been masters of arcane circuits and runic channels! My foundations came from my grandfather, but more recently I’ve been diving into the ways of my ancestors and experimenting with gear like helms infused with arcane energy.
+    <<SetSpeaker Bryn>>
+    It seems to be going well! But I can’t say for certain, because you’re my first customer!
+<<endif>>
+===
+
+title: BrynDefaultDialogue7
+tags:
+---
+<<SetSpeaker Player>><<BranchComplete DefaultDialogue DefaultDialogue>>
+Listen, friend, I have to tell you… I know this might not mean much to you, but I’m going to get you off this ship. Okay?
+<<SetSpeaker Bryn>>
+But, Atlan, why would I want to leave? I have everything I need right here! Gear, crafting supplies, the best friend I could ask for… What more does a dwarf need?
+<<SetSpeaker Player>>
+… I promise, Bryn.
 ===
 
 
@@ -162,8 +380,121 @@ This is a second DEFAULT dialogue interaction. Nice!
 title: BrynBarterSuccess
 tags:
 ---
+<<if Visited("BrynBarterSuccess")>>
+    [[BrynBarterSuccess1]]
+<<else>>
+    <<SetSpeaker Player>>
+    I’m positively amazed by your work, as always. Tell me, what do these stunning pieces go for?
+    <<SetSpeaker Bryn>>
+    Aw, Atlan! Here, you deserve the friends and family discount!
+    <<SetSpeaker Player>>
+    Oh, I couldn’t… though if you insist.
+<<endif>>
+===
+
+title: BrynBarterSuccess1
+tags:
+---
+<<if Visited("BrynBarterSuccess1")>>
+    [[BrynBarterSuccess2]]
+<<else>>
+    <<SetSpeaker Player>>
+    Bryn, your craftsmanship is unmatched! Just look at the detailing… Magnificent work, as always.
+    <<SetSpeaker Bryn>>
+    Do you really mean it?
+    <<SetSpeaker Player>>
+    Without a doubt. You’re an artist.
+    <<SetSpeaker Bryn>>
+    And you’re the BEST best friend, Atlan.
+<<endif>>
+===
+
+title: BrynBarterSuccess2
+tags:
+---
+<<if Visited("BrynBarterSuccess2")>>
+    [[BrynBarterSuccess3]]
+<<else>>
+    <<SetSpeaker Player>>
+    Bryn, your metalwork may be the best I’ve ever seen. And I’ve traveled all over the galaxy.
+    <<SetSpeaker Bryn>>
+    I- … I need a moment.
+    <<SetSpeaker Player>>
+    Are you alright, friend?
+    <<SetSpeaker Bryn>>
+    ...
+    <<SetSpeaker Bryn>>
+    THAT’S ONE OF THE NICEST THINGS ANYONE HAS EVER SAID TO ME. I would be honored if you took one of these pieces – so here, have a discount.
+<<endif>>
+===
+
+title: BrynBarterSuccess3
+tags:
+---
+<<if Visited("BrynBarterSuccess3")>>
+    [[BrynBarterSuccess4]]
+<<else>>
+    <<SetSpeaker Player>>
+    How are you today, best friend?
+    <<SetSpeaker Bryn>>
+    ATLAN, THAT’S THE FIRST TIME YOU’VE CALLED ME YOUR BEST FRIEND!!! Do- do you really mean it?
+    <<SetSpeaker Player>>
+    Depends. If I say yes, do I get the friends and family discount?
+    <<SetSpeaker Bryn>>
+    OBVIOUSLY.
+    <<SetSpeaker Player>>
+    Well, in that case, yes. Though I definitely would have said yes either way.
+<<endif>>
+===
+
+title: BrynBarterSuccess4
+tags:
+---
+<<if Visited("BrynBarterSuccess4")>>
+    [[BrynBarterSuccess5]]
+<<else>>
+    <<SetSpeaker Player>>
+    Bryn! What a pleasant sight you are. Tell me, what do I have to say to you to get that friends and family discount?
+    <<SetSpeaker Bryn>>
+    For you, best friend? Consider it yours!
+<<endif>>
+===
+
+title: BrynBarterSuccess5
+tags:
+---
+<<if Visited("BrynBarterSuccess5")>>
+    [[BrynBarterSuccess6]]
+<<else>>
+    <<SetSpeaker Player>>
+    Bryn, I’ve been meaning to tell you… Thank you. I’m so grateful for your services. I’m sure I wouldn’t have made it this far without you.
+    <<SetSpeaker Bryn>>
+    No, Atlan! You’re incredible! You have to believe in yourself more! You would have made it just as far without me, except I would have been much, much sadder for never having known you! What can I do to show YOU my gratitude for you letting me know you?
+    <<SetSpeaker Player>>
+    Oh, I couldn’t accept anything… But if you’re offering, perhaps a discount?
+<<endif>>
+===
+
+title: BrynBarterSuccess6
+tags:
+---
+<<if Visited("BrynBarterSuccess6")>>
+    [[BrynBarterSuccess7]]
+<<else>>
+    <<SetSpeaker Player>>
+    Bryn, have I ever mentioned what magnificent hair you have?
+    <<SetSpeaker Bryn>>
+    You have not! Thank you, best friend – to compliment my hair is one of the highest compliments a dwarf could ask for!
+<<endif>>
+===
+
+title: BrynBarterSuccess7
+tags:
+---
+<<SetSpeaker Player>><<BranchComplete BarterSuccess BarterSuccess>>
+Bryn, why, you seem extra dashing today. Do anything different? Perhaps a few extra braids in your hair? Trying out a new cologne?
 <<SetSpeaker Bryn>>
-This is a BARTER SUCCESS dialogue interaction.
+Nope! Though, you did arrive just after I completed my pre-mid-afternoon workout warm ups!
 ===
 
 
@@ -171,8 +502,127 @@ This is a BARTER SUCCESS dialogue interaction.
 title: BrynBarterFail
 tags:
 ---
+<<if Visited("BrynBarterFail")>>
+    [[BrynBarterFail1]]
+<<else>>
+    <<SetSpeaker Player>>
+    You have quite the eye for detail, Bryn.
+    <<SetSpeaker Bryn>>
+    Aw, thanks Atlan! But I’m not sure eyes have much to do with it.
+    <<SetSpeaker Player>>
+    Oh, I didn’t mean– ah, I just meant. You’re very talented.
+<<endif>>
+===
+
+title: BrynBarterFail1
+tags:
+---
+<<if Visited("BrynBarterFail1")>>
+    [[BrynBarterFail2]]
+<<else>>
+    <<SetSpeaker Player>>
+    So I’ve been thinking, Bryn – just hear me out – what if you and I became business partners? I could sell your gear far and wide throughout the galaxy!
+    <<SetSpeaker Bryn>>
+    What a glorious idea! Tell me more!
+    <<SetSpeaker Player>>
+    Well, I… I hadn’t gotten that far yet. But maybe we could start with a discount on your products? Just so I can test more of them, you know.
+    <<SetSpeaker Bryn>>
+    Hmm. Without a proper business proposal, I’m not sure I can agree to those terms! Rest assured, however, that you are still my best friend!
+<<endif>>
+===
+
+title: BrynBarterFail2
+tags:
+---
+<<if Visited("BrynBarterFail2")>>
+    [[BrynBarterFail3]]
+<<else>>
+    <<SetSpeaker Player>>
+    Hey, best friend. I’m in a bit of a rush – don’t suppose you could offer me a discount?
+    <<SetSpeaker Bryn>>
+    Atlan, best friend, I would LOVE to but I seem to be running a bit short on electrum after I donated almost all of mine to a neshorn rescue organization back on Planet Svartallir.
+    <<SetSpeaker Bryn>>
+    But on the bright side, some neshorns will be very happy thanks to your generosity!
+<<endif>>
+===
+
+title: BrynBarterFail3
+tags:
+---
+<<if Visited("BrynBarterFail3")>>
+    [[BrynBarterFail4]]
+<<else>>
+    <<SetSpeaker Bryn>>
+    Best friend, I’m so so so sorry, but I have to tell you… my prices are a bit high today because I’m trying to raise electrum for an elven princess on Planet Silvestria who reached out to me personally for help escaping her war-torn nation.
+    <<SetSpeaker Player>>
+    Bryn, you know those comms are all just scams, right? You shouldn’t actually transfer her the money.
+    <<SetSpeaker Bryn>>
+    BUT IF I DON’T, HOW WILL SHE ESCAPE FROM THE ASSASSINS, ATLAN!?
+<<endif>>
+===
+
+title: BrynBarterFail4
+tags:
+---
+<<if Visited("BrynBarterFail4")>>
+    [[BrynBarterFail5]]
+<<else>>
+    <<SetSpeaker Player>>
+    Bryn, your prices seem rather high today. Didn’t you say I was your best friend?
+    <<SetSpeaker Bryn>>
+    I did and you are! Why? Is everything alright?
+    <<SetSpeaker Player>>
+    I was just concerned by your exceedingly high prices, is all.
+    <<SetSpeaker Bryn>>
+    Oh, I see. You’re concerned about my financial stability! See, this is why you’re my best friend – you’re so thoughtful!
+<<endif>>
+===
+
+title: BrynBarterFail5
+tags:
+---
+<<if Visited("BrynBarterFail5")>>
+    [[BrynBarterFail6]]
+<<else>>
+    <<SetSpeaker Player>>
+    Prices look a little high today. Something I need to be concerned about?
+    <<SetSpeaker Bryn>>
+    Not at all! I’m considering adopting a stjernehund and I need some extra electrum.
+    <<SetSpeaker Player>>
+    Bryn, are you sure getting a pet on this ship is the best idea? I mean, would you even have room for it?
+    <<SetSpeaker Bryn>>
+    Not to worry! I have plenty of room in my heart for both a human best friend and a furry four-legged best friend!
+<<endif>>
+===
+
+title: BrynBarterFail6
+tags:
+---
+<<if Visited("BrynBarterFail6")>>
+    [[BrynBarterFail7]]
+<<else>>
+    <<SetSpeaker Player>>
+    I’m feeling a bit short on electrum today, Bryn. Anything you can do to help?
+    <<SetSpeaker Bryn>>
+    I’m always here to help, best friend! Here, only the finest gear selection for you today!
+    <<SetSpeaker Player>>
+    Ah, those are some steep price tags. You sure there’s nothing you can do to help with that?
+    <<SetSpeaker Bryn>>
+    I am helping! Like I said, I’m providing the finest gear selection!
+<<endif>>
+===
+
+title: BrynBarterFail7
+tags:
+---
+<<SetSpeaker Player>><<BranchComplete BarterFail BarterFail>>
+So Bryn, might I be able to get some sort of discount card for being your favorite customer?
 <<SetSpeaker Bryn>>
-This is a FAILED barter ATTEMPT dialogue interaction.
+I treat all my customers equally! No favoritism here, nope! None from me! You’ll have to go elsewhere if you’re looking for cheap, I only supply quality!
+<<SetSpeaker Player>>
+Why are you yelling?
+<<SetSpeaker Bryn>>
+<i>Psst</i>. I’m trying to get better at marketing my wares. So sorry about everything I said about not picking favorites, I promise you’re still my favorite best friend!
 ===
 
 
@@ -180,6 +630,97 @@ This is a FAILED barter ATTEMPT dialogue interaction.
 title: BrynRepeatable
 tags:
 ---
+// Get a random number 0 - 9 and go to that node
+<<set $num to RandomNum(10)>>
+<<if $num is 0>>
+    <<SetSpeaker Player>>
+    Build anything new lately?
+    <<SetSpeaker Bryn>>
+    Why don’t you take a look!
+<<elseif $num is 1>>
+    [[BrynRepeatable1]]
+<<elseif $num is 2>>
+    [[BrynRepeatable2]]
+<<elseif $num is 3>>
+    [[BrynRepeatable3]]
+<<elseif $num is 4>>
+    [[BrynRepeatable4]]
+<<elseif $num is 5>>
+    [[BrynRepeatable5]]
+<<elseif $num is 6>>
+    [[BrynRepeatable6]]
+<<elseif $num is 7>>
+    [[BrynRepeatable7]]
+<<elseif $num is 8>>
+    [[BrynRepeatable8]]
+<<else>>
+    [[BrynRepeatable9]]
+<<endif>>
+===
+
+title: BrynRepeatable1
+tags:
+---
+<<SetSpeaker Player>>
+What do you have for me today?
 <<SetSpeaker Bryn>>
-This is a REPEATABLE dialogue interaction.
+Atlan, welcome! I’ve got just the thing.
+===
+
+title: BrynRepeatable2
+tags:
+---
+<<SetSpeaker Player>>
+I’ll just have a look around.
+<<SetSpeaker Bryn>>
+Thanks for stopping by!
+===
+
+title: BrynRepeatable3
+tags:
+---
+<<SetSpeaker Bryn>>
+Hope you find something you like!
+===
+
+title: BrynRepeatable4
+tags:
+---
+<<SetSpeaker Bryn>>
+I’m here to help!
+===
+
+title: BrynRepeatable5
+tags:
+---
+<<SetSpeaker Bryn>>
+Glad you’re checking in, best friend!
+===
+
+title: BrynRepeatable6
+tags:
+---
+<<SetSpeaker Bryn>>
+Stay safe out there, best friend!
+===
+
+title: BrynRepeatable7
+tags:
+---
+<<SetSpeaker Bryn>>
+Remember, best friend: <i>Kemst þó hægt fari!</i>
+===
+
+title: BrynRepeatable8
+tags:
+---
+<<SetSpeaker Bryn>>
+Let me know if there’s anything I can do to help you on your quest, best friend!
+===
+
+title: BrynRepeatable9
+tags:
+---
+<<SetSpeaker Bryn>>
+You’ve got this, best friend! I believe in you!
 ===

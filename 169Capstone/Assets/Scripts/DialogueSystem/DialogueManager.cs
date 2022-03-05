@@ -24,7 +24,7 @@ public class DialogueManager : MonoBehaviour
 
     private HashSet<string> visitedNodes = new HashSet<string>();       // Keeps track of what nodes the player has seen so that we don't see those again
 
-    [SerializeField] private int numRunsThreshold = 3;   // Threshold for # runs beyond the exact num run that numRun dialogue can trigger
+    [SerializeField] private int numRunsThreshold = 4;   // Threshold for # runs beyond the exact num run that numRun dialogue can trigger
 
     private bool hasBeenInitialized = false;
 
@@ -54,6 +54,18 @@ public class DialogueManager : MonoBehaviour
         dialogueRunner.AddFunction("Visited", 1, delegate (Yarn.Value[] parameters){
             var nodeName = parameters[0];
             return visitedNodes.Contains(nodeName.AsString);
+        });
+
+        // Add random number generator for repeatable and other options that can be played out of order
+        // Min 0, pass in Max (non-inclusive)
+        dialogueRunner.AddFunction("RandomNum", 1, delegate (Yarn.Value[] parameters){
+            var numMaxExclusive = parameters[0];
+            return Random.Range(0, (int)numMaxExclusive.AsNumber);
+        });
+
+        // Add num run checker to retrieve the number of runs you have COMPLETED (so current num - 1)
+        dialogueRunner.AddFunction("GetNumberOfCompletedRuns", 0, delegate (Yarn.Value[] parameters){
+            return GameManager.instance.currentRunNumber - 1;
         });
 
 
@@ -207,20 +219,31 @@ public class DialogueManager : MonoBehaviour
     {
         // Set speaker name
         string speaker = info[0];
+        string speakerNameOverride = "";
 
         // Set portrait emotion
         string emotion = "";
-        if(info.Length > 1){
+        if(info.Length == 1){   // ONE parameter (speakerID)
+            emotion = SpeakerData.EMOTION_NEUTRAL;            
+        }
+        else if(info.Length == 2){  // TWO parameters (speakerID, emotion)
             emotion = info[1];
         }
-        else{
-            emotion = SpeakerData.EMOTION_NEUTRAL;
+        else{  // THREE parameters (speakerID, emotion, speaker display name override)
+            emotion = info[1];
+            speakerNameOverride = info[2];
         }
         
         if(speakers.TryGetValue(speaker, out SpeakerData data)){
-            // TODO: Uncomment once we have sprites :)
             characterPortrait.sprite = data.GetEmotionPortrait(emotion);
-            speakerName.text = speaker;
+
+            if(speakerNameOverride == ""){
+                speakerName.text = data.SpeakerName();
+            }
+            else{
+                speakerName.text = speakerNameOverride;
+            }
+            
             return;
         }
         Debug.LogError("Could not set the speaker data for " + speaker);
@@ -249,6 +272,7 @@ public class DialogueManager : MonoBehaviour
     {
         // Log that the node has been run
         visitedNodes.Add(nodeName);
+        Debug.Log("Marked node VISITED: " + nodeName);
     }
 
     // Called automatically when the player clicks the interact button in range of an NPC with something to say
