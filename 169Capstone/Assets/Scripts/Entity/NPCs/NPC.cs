@@ -32,7 +32,7 @@ public class NPC : MonoBehaviour
             DialogueManager.instance.AddSpeaker(speakerData);
         }
 
-        hasNumRunDialogueList = speakerData.NumRunDialogueList();
+        hasNumRunDialogueList = new List<int>(speakerData.NumRunDialogueList());
         
         // Start/head node for a speaker's yarn file is always their unique speakerID + "Start"
         yarnStartNode = speakerData.SpeakerID() + "Start";

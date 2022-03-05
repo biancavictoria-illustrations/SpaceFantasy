@@ -24,7 +24,7 @@ public class DialogueManager : MonoBehaviour
 
     private HashSet<string> visitedNodes = new HashSet<string>();       // Keeps track of what nodes the player has seen so that we don't see those again
 
-    [SerializeField] private int numRunsThreshold = 3;   // Threshold for # runs beyond the exact num run that numRun dialogue can trigger
+    [SerializeField] private int numRunsThreshold = 4;   // Threshold for # runs beyond the exact num run that numRun dialogue can trigger
 
     private bool hasBeenInitialized = false;
 
@@ -61,6 +61,11 @@ public class DialogueManager : MonoBehaviour
         dialogueRunner.AddFunction("RandomNum", 1, delegate (Yarn.Value[] parameters){
             var numMaxExclusive = parameters[0];
             return Random.Range(0, (int)numMaxExclusive.AsNumber);
+        });
+
+        // Add num run checker to retrieve the number of runs you have COMPLETED (so current num - 1)
+        dialogueRunner.AddFunction("GetNumberOfCompletedRuns", 0, delegate (Yarn.Value[] parameters){
+            return GameManager.instance.currentRunNumber - 1;
         });
 
 

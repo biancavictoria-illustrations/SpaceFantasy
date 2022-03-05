@@ -23,7 +23,7 @@ tags:
 
 // === Dialogue Completed ===
 
-<<elseif $headNode is "DialogueCompletedDoctorNumRuns">>    // Check this node name!!!
+<<elseif $headNode is "DialogueCompletedDoctorNumRuns">>
     [[DoctorDialogueCompletedDoctorNumRuns]]
 
 // === Generic Stuff ===
@@ -106,7 +106,7 @@ tags:
 title: DoctorDialogueCompletedDoctorNumRuns1
 tags:
 ---
-<<SetSpeaker Doctor>><<BranchComplete DialogueCompleted DialogueCompletedDoctorNumRuns>>   // Don't know what to call that either...
+<<SetSpeaker Doctor>><<BranchComplete DialogueCompleted DialogueCompletedDoctorNumRuns>>
 Atlan! Wonderful news. I have discovered what’s in your blood. You know, beyond the human part.
 <<SetSpeaker Player>>
 So this is a good thing then?

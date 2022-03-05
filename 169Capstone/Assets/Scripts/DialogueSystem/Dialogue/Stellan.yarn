@@ -22,15 +22,11 @@ tags:
 
 // === Enemy Killed ===
 
-<<if $headNode is "EnemyKilled">>
-    [[StellanEnemyKilled]]
-<<elseif $headNode is "EnemyKilledTimeLich">>
+<<if $headNode is "EnemyKilledTimeLich">>
     [[StellanEnemyKilledTimeLich]]
 
 // === Killed By ===
 
-<<elseif $headNode is "KilledBy">>
-    [[StellanKilledBy]]
 <<elseif $headNode is "KilledByTimeLich">>
     [[StellanKilledByTimeLich]]
 <<elseif $headNode is "KilledBySlime">>
@@ -38,19 +34,11 @@ tags:
 
 // === Dialogue Completed ===
 
-<<elseif $headNode is "DialogueCompleted">>
-    [[StellanDialogueCompleted]]
+<<elseif $headNode is "DialogueCompletedDoctorDialogueCompletedDoctorNumRuns">>
+    [[StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns]]
 
-<<elseif $headNode is "DialogueCompletedDoctorNumRuns">>    // Check this node name!!! (should be whatever the doctor one is that triggers this interaction, prob needs a #)
-    [[StellanDialogueCompletedDoctorNumRuns]]
-
-<<elseif $headNode is "DialogueCompletedStellanEnemyKilledSlime">>      // Sample
-    [[StellanDialogueCompleted]]
-
-// === Items ===
-
-<<elseif $headNode is "Item">>
-    [[StellanItem]]
+<<elseif $headNode is "DialogueCompletedStellanEnemyKilledTimeLich">>
+    [[StellanDialogueCompletedStellanEnemyKilledTimeLich]]
 
 // === Generic Stuff ===
 
@@ -69,20 +57,11 @@ tags:
 
 
 
-title: StellanDialogueCompleted
+title: StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns
 tags:
 ---
-<<SetSpeaker Stellan>>
-This is a sample DIALOGUE COMPLETED dialogue interaction.
-===
-
-
-
-title: StellanDialogueCompletedDoctorNumRuns
-tags:
----
-<<if Visited("StellanDialogueCompletedDoctorNumRuns")>>
-    [[StellanDialogueCompletedDoctorNumRuns1]]
+<<if Visited("StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns")>>
+    [[StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns1]]
 <<else>>
     <<SetSpeaker Player>>
     You ever heard of the caelarae?
@@ -95,11 +74,11 @@ tags:
 <<endif>>
 ===
 
-title: StellanDialogueCompletedDoctorNumRuns1
+title: StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns1
 tags:
 ---
-<<if Visited("StellanDialogueCompletedDoctorNumRuns1")>>
-    [[StellanDialogueCompletedDoctorNumRuns2]]
+<<if Visited("StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns1")>>
+    [[StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns2]]
 <<else>>
     <<SetSpeaker Player>>
     Are you familiar with Dr. Sanguin?
@@ -114,11 +93,11 @@ tags:
 <<endif>>
 ===
 
-title: StellanDialogueCompletedDoctorNumRuns2
+title: StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns2
 tags:
 ---
-<<if Visited("StellanDialogueCompletedDoctorNumRuns2")>>
-    [[StellanDialogueCompletedDoctorNumRuns3]]
+<<if Visited("StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns2")>>
+    [[StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns3]]
 <<else>>
     <<SetSpeaker Stellan>>
     The caelarae are a myth. Stories told to elven children of sentient stars who watch over them in the night. Guardians. Protectors.
@@ -133,11 +112,11 @@ tags:
 <<endif>>
 ===
 
-title: StellanDialogueCompletedDoctorNumRuns3
+title: StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns3
 tags:
 ---
-<<if Visited("StellanDialogueCompletedDoctorNumRuns3")>>
-    [[StellanDialogueCompletedDoctorNumRuns4]]
+<<if Visited("StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns3")>>
+    [[StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns4]]
 <<else>>
     <<SetSpeaker Player>>
     I’ve been on my own for most of my life. But I have vague memories of my mother telling me my eyes were full of golden starlight.
@@ -150,10 +129,10 @@ tags:
 <<endif>>
 ===
 
-title: StellanDialogueCompletedDoctorNumRuns4
+title: StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns4
 tags:
 ---
-<<SetSpeaker Player>><<BranchComplete DialogueCompleted DialogueCompletedDoctorNumRuns>>   // Don't know what to call that either...
+<<SetSpeaker Player>><<BranchComplete DialogueCompleted DialogueCompletedDoctorDialogueCompletedDoctorNumRuns>>   // Don't know what to call that either...
 So you’ve been experimenting on me this whole time? What, you suspected my bloodline and wanted to see what would happen if you used those Star Shards on me?
 <<SetSpeaker Stellan>>
 I may have suspected certain things. But if I was wrong, it’s not like it would have hurt you.
@@ -169,32 +148,38 @@ We’re in a time loop, Atlan. You would have come back.
 
 
 
-title: StellanEnemyKilledTimeLich
+title: StellanDialogueCompletedStellanEnemyKilledTimeLich
 tags:
 ---
-<<if Visited("StellanEnemyKilledTimeLich")>>
-    [[StellanEnemyKilledTimeLich1]]
-<<else>>
-    <<SetSpeaker Player>>
-    
-    <<SetSpeaker Stellan>>
-    
-    <<SetSpeaker Player>>
-    
-    <<SetSpeaker Player>>
-    
-<<endif>>
+<<SetSpeaker Player>><<BranchComplete DialogueCompleted DialogueCompletedStellanEnemyKilledTimeLich>>
+You didn’t actually think I could do it. You’ve been sending me to die over and over, just to collect these Star Shards for you.
+<<SetSpeaker Stellan>>
+I’ve never exactly hid my skepticism of your capabilities, nor have I tried to give you false hope.
+<<SetSpeaker Player>>
+You’re cruel.
+<<SetSpeaker Stellan>>
+I’m pragmatic.
+<<SetSpeaker Stellan>>
+… And for what it’s worth, you might have given me just a bit of hope, now that you’ve actually done it once. So let me help you stop all this.
 ===
 
+
+
 title: StellanEnemyKilledTimeLich
 tags:
 ---
-<<SetSpeaker Stellan>><<BranchComplete KilledBy KilledByTimeLich>>
-
+<<SetSpeaker Stellan>><<BranchComplete EnemyKilled EnemyKilledTimeLich>>
+Well, that is certainly a concerning look. Tell me, what new horrors did you uncover on this ship last time, the likes of which presumably killed you in inventively horrific ways?
 <<SetSpeaker Player>>
-
+I killed him.
 <<SetSpeaker Stellan>>
-
+...
+<<SetSpeaker Stellan>>
+... What?
+<<SetSpeaker Player>>
+I killed the Lich. Why are we still here? What’s going on? If you know something, if you’re hiding something–
+<<SetSpeaker Stellan>>
+Tone down the aggression, Atlan. You’ve only made it this far because of me. … I have some theories, but I’ll need some time. And lots of Star Shards.
 ===
 
 
@@ -206,25 +191,77 @@ tags:
     [[StellanKilledByTimeLich1]]
 <<else>>
     <<SetSpeaker Player>>
-    
+    Found the Lich.
     <<SetSpeaker Stellan>>
-    
+    … I’m sorry. I can assume how it went.
     <<SetSpeaker Player>>
-    
+    I think I can take him.
+    <<SetSpeaker Stellan>>
+    I think you might be a fool. But unfortunately, you’re the best option we’ve got. So here, let me see if I can help you not get killed as quickly next time.
+    <<SetSpeaker Stellan>>
+    And Atlan? Promise me something.
+    <<SetSpeaker Stellan>>
+    If you do kill him... make him suffer. Make him suffer for what he's done.
+    <<SetSpeaker Player>>
+    That’s an easy promise to make, my friend.
 <<endif>>
 ===
 
 title: StellanKilledByTimeLich1
 tags:
 ---
-<<SetSpeaker Player>><<BranchComplete KilledBy KilledByTimeLich>>
+<<if Visited("StellanKilledByTimeLich1")>>
+    [[StellanKilledByTimeLich2]]
+<<else>>
+    <<SetSpeaker Player>>
+    Stellan, you’ve been on this ship for… quite some time.
+    <<SetSpeaker Stellan>>
+    To say the least.
+    <<SetSpeaker Player>>
+    You must know, what kind of weaknesses does the Lich have? What can I exploit? How do I beat him at his own game?
+    <<SetSpeaker Stellan>>
+    ...
+    <<SetSpeaker Stellan>>
+    You’re right. I do know about him. I know that he will never, ever go easy on you. He will never leave you an opening you can exploit. He is relentless. He has no weaknesses, only power. It has consumed him.
+    <<SetSpeaker Player>>
+    … Great.
+<<endif>>
+===
 
+title: StellanKilledByTimeLich2
+tags:
+---
+<<if Visited("StellanKilledByTimeLich2")>>
+    [[StellanKilledByTimeLich3]]
+<<else>>
+    <<SetSpeaker Player>>
+    You told me the Lich has been consumed by his power. What was he before? Who was he?
+    <<SetSpeaker Stellan>>
+    The same as you and me, and most on this ship. Nothing but a boy with ambition.
+    <<SetSpeaker Player>>
+    You knew him personally?
+    <<SetSpeaker Stellan>>
+    Once.
+    <<SetSpeaker Player>>
+    … I’m sorry.
+<<endif>>
+===
+
+title: StellanKilledByTimeLich3
+tags:
+---
+<<SetSpeaker Stellan>><<BranchComplete KilledBy KilledByTimeLich>>
+Atlan–
 <<SetSpeaker Stellan>>
-
+… You should know. He’s not who you think he is.
 <<SetSpeaker Player>>
-
+What, are you about to tell me the Lich is secretly just misunderstood?
+<<SetSpeaker Stellan>>
+No, Atlan, listen to me. He wasn’t the Captain. This wasn’t his tower, originally. He took it. He was an apprentice. He killed the Wizard.
 <<SetSpeaker Player>>
-
+I don’t see how that changes much, personally.
+<<SetSpeaker Stellan>>
+… I have seen your desire for loot. For wealth. For fame. I tell you this to warn you, friend. Be cautious of ambition. It changes a person. Ambition alone has the power to twist a person into a monstrous shell of what he once was.
 ===
 
 
@@ -232,7 +269,7 @@ tags:
 title: StellanKilledBySlime
 tags:
 ---
-<<if Visited("StellanKilledBySlime")>>      // (need to make sure “killed by creature” is the LATEST run only probably…)
+<<if Visited("StellanKilledBySlime")>>
     [[StellanKilledBySlime1]]
 <<else>>
     <<SetSpeaker Stellan>>
@@ -276,7 +313,7 @@ title: StellanNumRuns15
 tags:
 ---
 <<if Visited("StellanNumRuns15")>>
-    [[StellanNumRuns35]]
+    [[StellanNumRuns34]]
 <<else>>
     <<SetSpeaker Stellan>>
     I’m getting tired of this existence, Atlan.
@@ -287,15 +324,22 @@ tags:
 <<endif>>
 ===
 
-title: StellanNumRuns35
+title: StellanNumRuns34
 tags:
 ---
+<<set $runNum to GetNumberOfCompletedRuns()>>
 <<SetSpeaker Stellan>><<BranchComplete NumRuns NumRuns>>
-
+Have you thought about going any faster? I am exceedingly bored of this ship.
 <<SetSpeaker Player>>
-
+I have gotten myself killed 30 times trying to save your ass, and this is how you thank me for my sacrifice?
 <<SetSpeaker Stellan>>
-
+... {$runNum}.
+<<SetSpeaker Player>>
+… What?
+<<SetSpeaker Stellan>>
+You have gotten yourself killed {$runNum} times. Not 30.
+<<SetSpeaker Player>>
+… You're keeping score?
 ===
 
 
