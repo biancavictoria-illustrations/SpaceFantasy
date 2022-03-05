@@ -234,7 +234,7 @@ public class InGameUIManager : MonoBehaviour
         else if(shopkeeper.SpeakerID() == SpeakerID.Doctor){
             doctorShopUI.OpenShopUI();
         }
-        else if(shopkeeper.SpeakerID() == SpeakerID.Andy){
+        else if(shopkeeper.SpeakerID() == SpeakerID.Rhian){
             weaponsShopUI.OpenShopUI();
         }
         else{

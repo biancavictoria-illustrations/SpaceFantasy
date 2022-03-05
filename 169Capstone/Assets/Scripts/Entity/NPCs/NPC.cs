@@ -32,7 +32,7 @@ public class NPC : MonoBehaviour
             DialogueManager.instance.AddSpeaker(speakerData);
         }
 
-        hasNumRunDialogueList = speakerData.NumRunDialogueList();
+        hasNumRunDialogueList = new List<int>(speakerData.NumRunDialogueList());
         
         // Start/head node for a speaker's yarn file is always their unique speakerID + "Start"
         yarnStartNode = speakerData.SpeakerID() + "Start";
@@ -68,7 +68,7 @@ public class NPC : MonoBehaviour
     // For now, just toggles the newDialogueAlert on/off
     public void SetHaveTalkedToNPCThisRun(bool set)
     {
-        haveTalkedToThisRun = set;
+        // haveTalkedToThisRun = set;
 
         // Check if it exists cuz presumably time lich won't have one so we don't need to set it
         if(newDialogueAlert){
@@ -86,8 +86,8 @@ public class NPC : MonoBehaviour
             StoryManager.instance.talkedToBryn = true;
             return;
         }
-        else if( speaker == SpeakerID.Andy ){
-            StoryManager.instance.talkedToAndy = true;
+        else if( speaker == SpeakerID.Rhian ){
+            StoryManager.instance.talkedToRhian = true;
             return;
         }
         else if( speaker == SpeakerID.Sorrel ){
@@ -116,8 +116,8 @@ public class NPC : MonoBehaviour
         if( speaker == SpeakerID.Bryn ){
             return StoryManager.instance.talkedToBryn;
         }
-        else if( speaker == SpeakerID.Andy ){
-            return StoryManager.instance.talkedToAndy;
+        else if( speaker == SpeakerID.Rhian ){
+            return StoryManager.instance.talkedToRhian;
         }
         else if( speaker == SpeakerID.Sorrel ){
             return StoryManager.instance.talkedToSorrel;
