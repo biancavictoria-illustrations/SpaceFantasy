@@ -1,6 +1,418 @@
 ﻿title: RhianStart
 tags:
 ---
+<<set $visitedDefault to Visited("RhianDefaultDialogue")>>
+<<set $visitedDefault1 to Visited("RhianDefaultDialogue1")>>
+<<if $visitedDefault and $visitedDefault1>>
+    [[RhianNodeSelectHub]]
+<<elseif $visitedDefault>>
+    [[RhianDefaultDialogue1]]
+<<else>>
+    [[RhianDefaultDialogue]]
+<<endif>>
+===
+
+title: RhianNodeSelectHub
+tags:
+---
+<<set $headNode to SelectNextNode()>>
+
+// === Generic Stuff ===
+
+<<if $headNode is "LowHealth">>
+    [[RhianLowHealth]]
+<<elseif $headNode is "BarterSuccess">>
+    [[RhianBarterSuccess]]
+<<elseif $headNode is "BarterFail">>
+    [[RhianBarterFail]]
+<<elseif $headNode is "DefaultDialogue">>
+    [[RhianDefaultDialogue]]
+<<elseif $headNode is "Repeatable">>
+    [[RhianRepeatable]]
+
+<<else>>
+    [[RhianRepeatable]]
+    ERROR: No head node found for {$headNode}!
+<<endif>>
+===
+
+
+
+title: RhianDefaultDialogue
+tags:
+---
+<<if Visited("RhianDefaultDialogue")>>
+    [[RhianDefaultDialogue1]]
+<<else>>
+    <<SetSpeaker Player>>
+    ’Scuse me, Miss, my name’s Atlan and–
+    <<SetSpeaker Rhian neutral ???>>
+    Hang on! More important: You looking for weapons? I got weapons. They’re some pretty badass weapons.
+    <<SetSpeaker Player>>
+    That's all I need to hear.    
+<<endif>>
+===
+
+title: RhianDefaultDialogue1
+tags:
+---
+<<if Visited("RhianDefaultDialogue1")>>
+    [[RhianDefaultDialogue2]]
+<<else>>
+    <<SetSpeaker Rhian neutral ???>>
+    Heya, Stranger. Back for more?
+    <<SetSpeaker Player>>
+    I understand skipping the small talk, but surely an introduction wouldn’t hurt. I’m Atlan and I’m trying to help with the, uh, situation on this ship.
+    <<SetSpeaker Rhian>>
+    Sure. Whatever. Name’s Rhian. You got electrum? Looking for weapons? If not, get out.
+<<endif>>
+===
+
+title: RhianDefaultDialogue2
+tags:
+---
+<<if Visited("RhianDefaultDialogue2")>>
+    [[RhianDefaultDialogue3]]
+<<else>>
+    <<SetSpeaker Player>>
+    Hey, Rhian, quick question about this ship–
+    <<SetSpeaker Rhian>>
+    Nevermind that! Guess what? Today I found out what happens if you light a lute on fire.
+    <<SetSpeaker Player>>
+    Okay. What happened?
+    <<SetSpeaker Rhian>>
+    Well, for starters, it was on fire.
+<<endif>>
+===
+
+title: RhianDefaultDialogue3
+tags:
+---
+<<if Visited("RhianDefaultDialogue3")>>
+    [[RhianDefaultDialogue4]]
+<<else>>
+    <<SetSpeaker Player>>
+    So, Rhian, about this ship–
+    <<SetSpeaker Rhian>>
+    Atlan, wait! I have to tell you, I found this insane sniper in storage! It has a laser scope and everything!
+    <<SetSpeaker Player>>
+    Sounds cool, but I’m not much of a sniper guy–
+    <<SetSpeaker Rhian>>
+    Well, good thing it’s not for you then isn’t it! Not everything is about you, Atlan!
+<<endif>>
+===
+
+title: RhianDefaultDialogue4
+tags:
+---
+<<if Visited("RhianDefaultDialogue4")>>
+    [[RhianDefaultDialogue5]]
+<<else>>
+    <<SetSpeaker Player>>
+    Rhian, I’ve been meaning to ask you–
+    <<SetSpeaker Rhian>>
+    Hang on, check this out. I found this ridiculous rocket launcher down in storage, and you’ll never guess what it shoots.
+    <<SetSpeaker Player>>
+    R–
+    <<SetSpeaker Rhian>>
+    IT SHOOTS ROCKETS! Entire rockets, Atlan! This thing is the best.
+<<endif>>
+===
+
+title: RhianDefaultDialogue5
+tags:
+---
+<<if Visited("RhianDefaultDialogue5")>>
+    [[RhianDefaultDialogue6]]
+<<else>>
+    <<SetSpeaker Player>>
+    Is the ship–
+    <<SetSpeaker Rhian>>
+    Wait, wait, look at THIS! Look what I found! It’s… a… revolver! Can you believe it? They stopped making models like this centuries ago!
+    <<SetSpeaker Player>>
+    It’s beautiful.
+    <<SetSpeaker Rhian>>
+    Beautiful? Beautiful!? Atlan, it’s a MASTERPIECE!
+<<endif>>
+===
+
+title: RhianDefaultDialogue6
+tags:
+---
+<<if Visited("RhianDefaultDialogue6")>>
+    [[RhianDefaultDialogue7]]
+<<else>>
+    <<SetSpeaker Player>>
+    So–
+    <<SetSpeaker Rhian>>
+    Hey, Atlan, look. I just… wanted to say. I really appreciate you talking to me all the time. Honestly, my parents never took my interests very seriously. They wanted me to be a bard, like them, but music was never really my thing, y’know? They even specifically named me Rhiannon after the legendary halfling lutist but like… Music was just that thing I did as a kid because I didn’t know any better and I was just going along with whatever my parents wanted for me, but as I grew up, I realized there was another kind of music I was more interested in.
+    <<SetSpeaker Rhian>>
+    Weapons make their own music, you just have to know how to make them sing. And I do. But my parents just… never really got me. But you’ve taken the time to talk to me, and I’ve seen you out there, a bit, and I know you get it. You know how to make your weapons sing, too.
+    <<SetSpeaker Rhian>>
+    What I’m trying to say is… I think you’re pretty cool. And I appreciate you. Or whatever.
+    <<SetSpeaker Player>>
+    … Thanks, Rhian.
+    <<SetSpeaker Rhian>>
+    Now buy some weapons or get out of my sight.
+<<endif>>
+===
+
+title: RhianDefaultDialogue7
+tags:
+---
+<<SetSpeaker Player>><<BranchComplete DefaultDialogue DefaultDialogue>>
+So, Rhian, I’ve been trying to ask… do you know about what’s going on here?
 <<SetSpeaker Rhian>>
-This is temporary Rhian dialogue.
+Oh, on the ship? Yeah, there’s all sorts of screwed up stuff going on. My memory gets all weird about it and it’s hard to keep track of how many times I’ve even seen you run through here but I definitely know SOMETHING is up. And very, very wrong.
+<<SetSpeaker Rhian>>
+But whatever. As long as I get to hang out here, I don’t really care about what’s going on out there.
+===
+
+
+
+title: RhianRepeatable
+tags:
+---
+// Get a random number 0 - 7 and go to that node
+<<set $num to RandomNum(8)>>
+<<if $num is 0>>
+    <<SetSpeaker Rhian>>
+    Ahh, the sweet, sweet symphony of a rail gun.
+<<elseif $num is 1>>
+    [[RhianRepeatable1]]
+<<elseif $num is 2>>
+    [[RhianRepeatable2]]
+<<elseif $num is 3>>
+    [[RhianRepeatable3]]
+<<elseif $num is 4>>
+    [[RhianRepeatable4]]
+<<elseif $num is 5>>
+    [[RhianRepeatable5]]
+<<elseif $num is 6>>
+    [[RhianRepeatable6]]
+<<else>>
+    [[RhianRepeatable7]]
+<<endif>>
+===
+
+title: RhianRepeatable1
+tags:
+---
+<<SetSpeaker Rhian>>
+What, you just gonna stand there staring or are you gonna buy something?
+===
+
+title: RhianRepeatable2
+tags:
+---
+<<SetSpeaker Rhian>>
+
+===
+
+title: RhianRepeatable3
+tags:
+---
+<<SetSpeaker Rhian>>
+Need something sharpened? Well, DO IT YOURSELF! What, do I look like I’m gonna hold your hand or something? Learn how to sharpen your own blade for a change!
+===
+
+title: RhianRepeatable4
+tags:
+---
+<<SetSpeaker Rhian>>
+You looking for weapons? I got weapons. They’re some pretty badass weapons.
+===
+
+title: RhianRepeatable5
+tags:
+---
+<<SetSpeaker Rhian>>
+You looking to shoot something? Stab something? Blow something up? Maybe laser something in the face? Well, you came to the right place!
+===
+
+title: RhianRepeatable6
+tags:
+---
+<<SetSpeaker Rhian>>
+So much to shoot, so little time… Come on, let’s hurry this along!
+===
+
+title: RhianRepeatable7
+tags:
+---
+<<SetSpeaker Rhian>>
+You sure know how to make your weapons sing.
+===
+
+
+
+title: RhianLowHealth
+tags:
+---
+<<if Visited("RhianLowHealth")>>
+    [[RhianLowHealth1]]
+<<else>>
+    <<SetSpeaker Rhian>>
+    Gods, Atlan, you smell terrible. Is that what death smells like? Are you dying? I think you might be dying.
+    <<SetSpeaker Player>>
+    Thanks for the vote of confidence, Rhi.
+<<endif>>
+===
+
+title: RhianLowHealth1
+tags:
+---
+<<if Visited("RhianLowHealth1")>>
+    [[RhianLowHealth2]]
+<<else>>
+    <<SetSpeaker Rhian>>
+    Just so we’re clear, Atlan, you’re supposed to use the things I sell you on enemies. Not, y’know, your own foot?
+    <<SetSpeaker Player>>
+    … Maybe I’ll just take my electrum elsewhere. Buy some armor.
+    <<SetSpeaker Rhian>>
+    Pfft, who needs armor? Just get a bigger, better gun and kill the bad guys before they can kill you!
+<<endif>>
+===
+
+title: RhianLowHealth2
+tags:
+---
+<<if Visited("RhianLowHealth2")>>
+    [[RhianLowHealth3]]
+<<else>>
+    <<SetSpeaker Rhian>>
+    Eugh, Atlan! You, uh, doin’ okay there buddy?
+    <<SetSpeaker Player>>
+    Never better. Now show me what you got before I pass out.
+<<endif>>
+===
+
+title: RhianLowHealth3
+tags:
+---
+<<if Visited("RhianLowHealth3")>>
+    [[RhianLowHealth4]]
+<<else>>
+    <<SetSpeaker Rhian>>
+    Uh, Atlan? Can a human survive that much blood loss? Not that I’m concerned or anything, I’m sure you’ve got this all under control.
+    <<SetSpeaker Player>>
+    All according to plan. But, uh, I don’t suppose you have any super special just-for-emergencies kill-everything-in-sight-instantly weapons I could try out?
+    <<SetSpeaker Rhian>>
+    Gods, I wish. Even if I did, you think I’d sell them to you? In this shape, you’d lose it as soon as you step outside my shop! I’m not wasting something like that!
+    <<SetSpeaker Player>>
+    Great. Cool. Thanks, Rhi.
+<<endif>>
+===
+
+title: RhianLowHealth4
+tags:
+---
+<<SetSpeaker Rhian>><<BranchComplete LowHealth LowHealth>>
+Whoa, Atlan, that’s um… that’s a lot of blood. That’s a lot of blood. Like a lot.
+<<SetSpeaker Player>>
+I noticed.
+<<SetSpeaker Rhian>>
+Uh… well… good luck out there?
+===
+
+
+
+title: RhianBarterSuccess
+tags:
+---
+<<if Visited("RhianBarterSuccess")>>
+    [[RhianBarterSuccess1]]
+<<else>>
+    <<SetSpeaker Rhian>>
+    Atlan! Oh my gods, is all that for me? You’re so thoughtful! How did you know I was looking for slime ooze?
+    <<SetSpeaker Player>>
+    What, you want all this goop from my boots?
+    <<SetSpeaker Rhian>>
+    Obviously. It’s a great conductor, not to mention coolant. Why do you think the ship has pipes full of it? Anyway, I’ll give you a discount if you’ll let me scrape the goop from your boots!
+    <<SetSpeaker Player>>
+    Well, how could I say no to an offer like that?
+<<endif>>
+===
+
+title: RhianBarterSuccess1
+tags:
+---
+<<if Visited("RhianBarterSuccess1")>>
+    [[RhianBarterSuccess2]]
+<<else>>
+    <<SetSpeaker Player>>
+    Rhi, is that a new bandolier? It looks lovely on you.
+    <<SetSpeaker Rhian>>
+    I know! And look at how many pockets it has! I was able to buy it with all that electrum you’ve been bringing me. You know what? Take a discount today. Consider this… a customer loyalty program!
+    <<SetSpeaker Player>>
+    I like the sound of that.
+<<endif>>
+===
+
+title: RhianBarterSuccess2
+tags:
+---
+<<SetSpeaker Player>><<BranchComplete BarterSuccess BarterSuccess>>
+Hey Rhian, you ever visit the moon Fengari? It’s not too far from where I first boarded this ship.
+<<SetSpeaker Rhian>>
+No. Why?
+<<SetSpeaker Player>>
+Oh, it’s a horrible place. Seedy bars, gambling dens, black market weapons deals everywhere you look. I actually won this here ray gun in a, uh, particularly high stakes game of cards. You find loads of people pawning off gear like this to feed their gambling problems. Or other addictions.
+<<SetSpeaker Rhian>>
+… Promise me you’ll take me someday! Please, I’ll do anything – I’ll even give you a discount!
+<<SetSpeaker Player>>
+I’m sure we can work something out.
+===
+
+
+
+title: RhianBarterFail
+tags:
+---
+<<if Visited("RhianBarterFail")>>
+    [[RhianBarterFail1]]
+<<else>>
+    <<SetSpeaker Rhian>>
+    Guess what? I found this super cool sword down in storage, it’s like as big as I am but it’s perfectly weighted. I swear I’ve never seen such flawless metallurgy.
+    <<SetSpeaker Player>>
+    Where is it? I’ll take a look.
+    <<SetSpeaker Rhian>>
+    What, no, it’s not for you. It’s not for SALE.
+    <<SetSpeaker Player>>
+    But you said it’s too big for you!
+    <<SetSpeaker Rhian>>
+    I said no such thing! Come on, look at my B-tier stuff.
+    <<SetSpeaker Player>>
+    If you’re admitting it’s B-tier, I should get a discount.
+    <<SetSpeaker Rhian>>
+    Pfft, tough luck, buddy.
+<<endif>>
+===
+
+title: RhianBarterFail1
+tags:
+---
+<<if Visited("RhianBarterFail1")>>
+    [[RhianBarterFail2]]
+<<else>>
+    <<SetSpeaker Rhian>>
+    I’m thinking about getting a tattoo. Do you think I’d look good with a tattoo?
+    <<SetSpeaker Player>>
+    Depends on what you’re getting. And where. Got any ideas?
+    <<SetSpeaker Rhian>>
+    Oh, yeah, loads. In fact, for the amount of tattoos I want, I’m raising my prices today. Gonna need lots of electrum to afford all that. Good thinking, Atlan.
+    <<SetSpeaker Player>>
+    That definitely wasn’t what I was suggesting.
+<<endif>>
+===
+
+title: RhianBarterFail2
+tags:
+---
+<<SetSpeaker Rhian>><<BranchComplete BarterSuccess BarterSuccess>>
+Hey, Atlan, check this out! It’s a laser scope you can shine directly into the eyes of your enemies to blind them and get that perfect shot!
+<<SetSpeaker Player>>
+You sure you can reach their eyes?
+<<SetSpeaker Rhian>>
+Oh, I get it. Because I’m short. Well, JOKES ON YOU. I’m raising my prices JUST FOR TALL JERKS LIKE YOU. Ha. Take that.
 ===

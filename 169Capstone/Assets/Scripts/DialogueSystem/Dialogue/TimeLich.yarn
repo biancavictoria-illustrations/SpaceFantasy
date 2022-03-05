@@ -1,6 +1,417 @@
 ﻿title: TimeLichStart
 tags:
 ---
+<<set $visitedDefault to Visited("TimeLichDefaultDialogue")>>
+<<set $visitedDefault1 to Visited("TimeLichDefaultDialogue1")>>
+<<set $visitedDefault2 to Visited("TimeLichDefaultDialogue2")>>
+<<if $visitedDefault and $visitedDefault1 and $visitedDefault2>>
+    [[TimeLichNodeSelectHub]]
+<<elseif $visitedDefault1>>
+    [[TimeLichDefaultDialogue2]]
+<<elseif $visitedDefault>>
+    [[TimeLichDefaultDialogue1]]
+<<else>>
+    [[TimeLichDefaultDialogue]]
+<<endif>>
+===
+
+title: TimeLichNodeSelectHub
+tags:
+---
+<<set $headNode to SelectNextNode()>>
+
+// === Enemy Killed ===
+
+<<if $headNode is "EnemyKilledTimeLich">>
+    [[TimeLichEnemyKilledTimeLich]]
+<<elseif $headNode is "EnemyKilledBeetleBoss">>
+    [[TimeLichEnemyKilledBeetleBoss]]
+
+// === Killed By ===
+
+<<elseif $headNode is "KilledByTimeLich">>
+    [[TimeLichKilledByTimeLich]]
+<<elseif $headNode is "KilledBySlime">>
+    [[TimeLichKilledBySlime]]  
+
+// === Generic Stuff ===
+
+<<elseif $headNode is "NumRuns">>
+    [[TimeLichNumRuns]]
+<<elseif $headNode is "LowHealth">>
+    [[TimeLichLowHealth]]
+<<elseif $headNode is "BarterFail">>
+    [[TimeLichBarterFail]]
+<<elseif $headNode is "DefaultDialogue">>
+    [[TimeLichDefaultDialogue]]
+<<elseif $headNode is "Repeatable">>
+    [[TimeLichRepeatable]]
+
+<<elseif $headNode is "TYPE">>      // *** TODO *** (low WIS type)
+    [[TimeLichTYPE]]
+
+<<else>>
+    [[TimeLichRepeatable]]
+    ERROR: No head node found for {$headNode}!  // How does this throw errors? will this break everything or just alert us
+<<endif>>
+===
+
+
+
+title: TimeLichEnemyKilledTimeLich
+tags:
+---
+// <<if Visited("TimeLichEnemyKilledTimeLich")>>
+//     [[TimeLichEnemyKilledTimeLich1]]
+// <<else>>
+<<SetSpeaker Player>><<BranchComplete EnemyKilled EnemyKilledTimeLich>>
+How? How are you still here? How is all of this still happening? I killed you!
 <<SetSpeaker TimeLich>>
-This is temporary Time Lich dialogue.
+Did I not tell you your attempts were futile?
+<<SetSpeaker Player>>
+I’ve killed you before, I’ll do it again. As many times as it takes.    
+// <<endif>>
+===
+
+title: TimeLichEnemyKilledBeetleBoss
+tags:
+---
+<<SetSpeaker Player>><<BranchComplete EnemyKilled EnemyKilledBeetleBoss>>
+That guard dog of yours… I have to ask, what is it?
+<<SetSpeaker TimeLich>>
+Ahh… so you have met my enforcer. The Brute Pest is a true testament to what happens when you release innovators from their supposed bonds and let ambition run wild. A magnificent beast, is it not?
+<<SetSpeaker Player>>
+Not the word I would use. Nightmare-fuel, maybe. But I guess we all have our interests.
+===
+
+
+
+title: TimeLichKilledBySlime
+tags:
+---
+<<SetSpeaker TimeLich>><<BranchComplete KilledBy KilledBySlime>>
+You have been bested by a mere slime fighting through my domain, yet still you think yourself strong enough to face me?
+<<SetSpeaker Player>>
+Those slimes are surprisingly vicious. You’re a frail old man. Yeah, I still think I can take you.
+===
+
+title: TimeLichKilledByTimeLich
+tags:
+---
+<<if Visited("TimeLichKilledByTimeLich")>>
+    [[TimeLichKilledByTimeLich1]]
+<<else>>
+    <<SetSpeaker Player>>
+    
+    <<SetSpeaker TimeLich>>
+
+    <<SetSpeaker Player>>
+    
+<<endif>>
+===
+
+title: TimeLichKilledByTimeLich1
+tags:
+---
+<<SetSpeaker Player>><<BranchComplete KilledBy KilledByTimeLich>>
+
+<<SetSpeaker TimeLich>>
+
+<<SetSpeaker Player>>
+
+<<SetSpeaker Player>>
+
+===
+
+
+
+title: TimeLichNumRuns
+tags:
+---
+<<if Visited("TimeLichNumRuns")>>
+    [[TimeLichNumRuns8]]
+<<else>>
+    <<SetSpeaker Player>>
+    
+    <<SetSpeaker TimeLich>>
+    
+<<endif>>
+===
+
+title: TimeLichNumRuns8
+tags:
+---
+<<if Visited("TimeLichNumRuns8")>>
+    [[TimeLichNumRuns20]]
+<<else>>
+    <<SetSpeaker Player>>
+    
+    <<SetSpeaker TimeLich>>
+    
+    <<SetSpeaker Player>>
+    
+<<endif>>
+===
+
+title: TimeLichNumRuns20
+tags:
+---
+<<SetSpeaker TimeLich>><<BranchComplete NumRuns NumRuns>>
+
+<<SetSpeaker Player>>
+
+<<SetSpeaker TimeLich>>
+
+===
+
+
+
+title: TimeLichLowHealth
+tags:
+---
+<<if Visited("TimeLichLowHealth")>>
+    [[TimeLichLowHealth1]]
+<<else>>
+    <<SetSpeaker TimeLich>>
+    You approach on the verge of death, yet still you dare to face me? Your arrogance may be unmatched.
+    <<SetSpeaker Player>>
+    Don’t worry. I’m sure that’s one area where you’ve still got me beat.
+<<endif>>
+===
+
+title: TimeLichLowHealth1
+tags:
+---
+<<set $num to RandomNum(4)>>
+<<if $num is 0>>
+    <<SetSpeaker TimeLich>>
+    By the looks of you, this won’t take long.
+<<elseif $num is 1>>
+    <<SetSpeaker TimeLich>>
+    You crawl into my chamber, bloody, beaten, broken. I will grant you mercy. The mercy of release.
+<<elseif $num is 2>>
+    <<SetSpeaker TimeLich>>
+    You are already dying, yet once again you subject yourself to this torment. Fine, then. You shall go no further.
+<<elseif $num is 3>>
+    <<SetSpeaker TimeLich>>
+    Already, you bleed. No one is here to help you now – you will die alone. It is only a matter of time.
+<<endif>>
+===
+
+
+
+title: TimeLichDefaultDialogue
+tags:
+---
+<<if Visited("TimeLichDefaultDialogue")>>
+    [[TimeLichDefaultDialogue1]]
+<<else>>
+    <<SetSpeaker TimeLich>>
+    
+    <<SetSpeaker Player>>
+    
+    <<SetSpeaker TimeLich>>
+    
+    <<SetSpeaker Player>>
+    
+    <<SetSpeaker TimeLich>>
+    
+<<endif>>
+===
+
+title: TimeLichDefaultDialogue1
+tags:
+---
+<<if Visited("TimeLichDefaultDialogue1")>>
+    [[TimeLichDefaultDialogue2]]
+<<else>>
+    <<SetSpeaker Player>>
+    
+    <<SetSpeaker TimeLich>>
+    
+    <<SetSpeaker Player>>
+    
+    <<SetSpeaker TimeLich>>
+    
+    <<SetSpeaker Player>>
+    
+<<endif>>
+===
+
+title: TimeLichDefaultDialogue2
+tags:
+---
+<<if Visited("TimeLichDefaultDialogue2")>>
+    [[TimeLichDefaultDialogue3]]
+<<else>>
+    <<SetSpeaker Player>>
+    
+    <<SetSpeaker TimeLich>>
+    
+<<endif>>
+===
+
+title: TimeLichDefaultDialogue3
+tags:
+---
+<<if Visited("TimeLichDefaultDialogue3")>>
+    [[TimeLichDefaultDialogue4]]
+<<else>>
+    <<SetSpeaker Player>>
+    
+    <<SetSpeaker TimeLich>>
+    
+<<endif>>
+===
+
+title: TimeLichDefaultDialogue4
+tags:
+---
+<<if Visited("TimeLichDefaultDialogue4")>>
+    [[TimeLichDefaultDialogue5]]
+<<else>>
+    <<SetSpeaker Player>>
+    
+    <<SetSpeaker TimeLich>>
+    
+    <<SetSpeaker TimeLich>>
+    
+    <<SetSpeaker Player>>
+    
+    <<SetSpeaker TimeLich>>
+    
+    <<SetSpeaker TimeLich>>
+    
+<<endif>>
+===
+
+title: TimeLichDefaultDialogue5
+tags:
+---
+<<if Visited("TimeLichDefaultDialogue5")>>
+    [[TimeLichDefaultDialogue6]]
+<<else>>
+    <<SetSpeaker Player>>
+    
+    <<SetSpeaker TimeLich>>
+    
+<<endif>>
+===
+
+title: TimeLichDefaultDialogue6
+tags:
+---
+<<if Visited("TimeLichDefaultDialogue6")>>
+    [[TimeLichDefaultDialogue7]]
+<<else>>
+    <<SetSpeaker Player>>
+    
+    <<SetSpeaker TimeLich>>
+    
+    <<SetSpeaker TimeLich>>
+    
+<<endif>>
+===
+
+title: TimeLichDefaultDialogue7
+tags:
+---
+<<SetSpeaker Player>><<BranchComplete DefaultDialogue DefaultDialogue>>
+
+<<SetSpeaker TimeLich>>
+
+<<SetSpeaker Player>>
+
+===
+
+
+
+title: TimeLichBarterFail
+tags:
+---
+<<SetSpeaker Player>><<BranchComplete BarterFail BarterFail>>
+You have the power to stop this. What do you have to gain from keeping everyone trapped here?
+<<SetSpeaker TimeLich>>
+You have resorted to begging. How pathetic. And I was just beginning to respect your determination.
+===
+
+
+
+title: TimeLichTYPE
+tags:
+---
+
+// *** TODO ***
+// Triggered if particularly low WIS
+
+<<SetSpeaker TimeLich>><<BranchComplete TYPE TYPE>>
+You’ll not be a quitter if you submit. Indeed, you would be wise to accept the fate time has written for you.
+<<SetSpeaker Player>>
+I’m not feeling particularly wise today.
+===
+
+
+
+title: TimeLichRepeatable
+tags:
+---
+// Get a random number 0 - 4 and go to that node
+<<set $num to RandomNum(6)>>
+<<if $num is 0>>
+    <<SetSpeaker TimeLich>>
+    Again?
+    <<SetSpeaker Player>>
+    Again.
+    <<SetSpeaker TimeLich>>
+    Fine, then. Let’s get this over with.
+<<elseif $num is 1>>
+    [[TimeLichRepeatable1]]
+<<elseif $num is 2>>
+    [[TimeLichRepeatable2]]
+<<elseif $num is 3>>
+    [[TimeLichRepeatable3]]
+<<elseif $num is 4>>
+    [[TimeLichRepeatable4]]
+<<else>>
+    [[TimeLichRepeatable5]]
+<<endif>>
+===
+
+title: TimeLichRepeatable1
+tags:
+---
+<<SetSpeaker TimeLich>>
+Will you never learn?
+<<SetSpeaker Player>>
+I’ve never been particularly fond of learning.
+===
+
+title: TimeLichRepeatable2
+tags:
+---
+<<SetSpeaker TimeLich>>
+Give up, you pathetic parasite.
+<<SetSpeaker Player>>
+Not this time.
+===
+
+title: TimeLichRepeatable3
+tags:
+---
+<<SetSpeaker TimeLich>>
+Still not giving up?
+===
+
+title: TimeLichRepeatable4
+tags:
+---
+<<SetSpeaker TimeLich>>
+Back again? Fine, then. Again.
+===
+
+title: TimeLichRepeatable5
+tags:
+---
+<<SetSpeaker TimeLich>>
+I have all the time in the universe. But you... Your time is running short.
 ===

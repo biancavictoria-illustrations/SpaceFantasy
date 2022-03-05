@@ -11,7 +11,7 @@ public class StoryManager : MonoBehaviour
         public int numberOfCompletions;    // The number of times the player has done this thing
 
         public HashSet<SpeakerID> speakersWithComments; // Things are removed once they no longer have new things to say on a topic
-
+        
         // Constructor
         public BeatStatus(bool active, int num, List<SpeakerID> speakers){
             speakersWithComments = new HashSet<SpeakerID>();
