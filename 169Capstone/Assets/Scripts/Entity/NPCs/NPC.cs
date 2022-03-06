@@ -9,12 +9,7 @@ public class NPC : MonoBehaviour
 
     [SerializeField] private SpeakerData speakerData;
 
-    [HideInInspector] public YarnProgram yarnDialogue;      // Set on Start from the info in speakerData
-    [HideInInspector] public string yarnStartNode;
-
     public GameObject newDialogueAlert;
-
-    [HideInInspector] public List<int> hasNumRunDialogueList = new List<int>();   // Times at which this NPC comments on how many runs you've done, in order
 
     public bool haveTalkedToThisRun {get; private set;}
 
@@ -29,22 +24,12 @@ public class NPC : MonoBehaviour
             return;
         }
 
-        yarnDialogue = speakerData.YarnDialogue();
-
-        if(!DialogueManager.instance.DialogueManagerHasSpeaker(speakerData)){
-            DialogueManager.instance.dialogueRunner.Add(yarnDialogue);
-            DialogueManager.instance.AddSpeaker(speakerData);
-        }
-
-        hasNumRunDialogueList = new List<int>(speakerData.NumRunDialogueList());
-        
-        // Start/head node for a speaker's yarn file is always their unique speakerID + "Start"
-        yarnStartNode = speakerData.SpeakerID() + "Start";
+        InitializeAssociatedNumRunDialogueList();
 
         if(speakerData.SpeakerID() == SpeakerID.TimeLich || (speakerData.SpeakerID() == SpeakerID.Stellan && GameManager.instance.currentRunNumber == 2)){
             forceNextDialogueOnTriggerEnter = true;
             if(speakerData.SpeakerID() == SpeakerID.Stellan){
-                timeToWaitForAutoDialogue = 1f;
+                timeToWaitForAutoDialogue = GameManager.DEFAULT_AUTO_DIALOGUE_WAIT_TIME;
             }
         }
 
@@ -61,8 +46,7 @@ public class NPC : MonoBehaviour
             // If they're marked to autoplay dialogue this time, immediately start dialogue on trigger enter
             if(forceNextDialogueOnTriggerEnter){
                 forceNextDialogueOnTriggerEnter = false;
-                // DialogueManager.instance.OnNPCInteracted();
-                GameManager.instance.AutoRunDialogueAfterTime(timeToWaitForAutoDialogue);
+                StartCoroutine(GameManager.instance.AutoRunDialogueAfterTime(timeToWaitForAutoDialogue));
                 return;
             }
 
@@ -154,6 +138,54 @@ public class NPC : MonoBehaviour
         }
         Debug.LogError("Tried to check if you have talked to an NPC who does not exist! SpeakerID: " + speaker);
         return false;
+    }
+
+    private void InitializeAssociatedNumRunDialogueList()
+    {
+        StoryManager storyManager = StoryManager.instance;
+
+        switch( speakerData.SpeakerID() ){
+            case SpeakerID.Bryn:
+                if(!storyManager.brynListInitialized){
+                    storyManager.brynListInitialized = true;
+                    storyManager.brynNumRunDialogueList = new List<int>(speakerData.NumRunDialogueList());
+                }                
+                return;
+            case SpeakerID.TimeLich:
+                if(!storyManager.lichListInitialized){
+                    storyManager.lichListInitialized = true;
+                    storyManager.timeLichNumRunDialogueList = new List<int>(speakerData.NumRunDialogueList());
+                }     
+                return;
+            case SpeakerID.Doctor:
+                if(!storyManager.doctorListInitialized){
+                    storyManager.doctorListInitialized = true;
+                    storyManager.doctorNumRunDialogueList = new List<int>(speakerData.NumRunDialogueList());
+                }     
+                return;
+            case SpeakerID.Stellan:
+                if(!storyManager.stellanListInitialized){
+                    storyManager.stellanListInitialized = true;
+                    storyManager.stellanNumRunDialogueList = new List<int>(speakerData.NumRunDialogueList());
+                }     
+                return;
+        }
+    }
+
+    public List<int> GetNumRunDialogueList()
+    {
+        switch( speakerData.SpeakerID() ){
+            case SpeakerID.Bryn:              
+                return StoryManager.instance.brynNumRunDialogueList;
+            case SpeakerID.TimeLich:   
+                return StoryManager.instance.timeLichNumRunDialogueList;
+            case SpeakerID.Doctor:   
+                return StoryManager.instance.doctorNumRunDialogueList;
+            case SpeakerID.Stellan: 
+                return StoryManager.instance.stellanNumRunDialogueList;
+        }
+        Debug.LogError("No num run dialogue list found for SpeakerID: " + speakerData.SpeakerID());
+        return null;
     }
 
     public SpeakerData SpeakerData()

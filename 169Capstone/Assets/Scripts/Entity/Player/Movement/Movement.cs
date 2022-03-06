@@ -22,18 +22,25 @@ public class Movement : MonoBehaviour
     private bool isJumping;
 
     private bool movingLeft, movingRight, movingUp, movingDown = false;
+
+    private InputAction moveLeft;
+    private InputAction moveRight;
+    private InputAction moveUp;
+    private InputAction moveDown;
+    private InputAction jump;
     
-    void Start()
+    void Awake()
     {
         InputActionAsset controls = GetComponent<PlayerInput>().actions;
+        moveLeft = controls.FindAction("MoveLeft");
+        moveRight = controls.FindAction("MoveRight");
+        moveUp = controls.FindAction("MoveUp");
+        moveDown = controls.FindAction("MoveDown");
+        jump = controls.FindAction("Jump");
+    }
 
-        // Add STOPPING moving when you're no longer holding the button
-        controls.FindAction("MoveLeft").canceled += x => OnMoveLeftCanceled();
-        controls.FindAction("MoveRight").canceled += x => OnMoveRightCanceled();
-        controls.FindAction("MoveUp").canceled += x => OnMoveUpCanceled();
-        controls.FindAction("MoveDown").canceled += x => OnMoveDownCanceled();
-        controls.FindAction("Jump").canceled += x => OnJumpCanceled();
-        
+    void Start()
+    {        
         Collider[] colliders = Physics.OverlapSphere(transform.position, 0.1f, LayerMask.GetMask("RoomBounds"));
 
         foreach(Collider col in colliders)
@@ -70,6 +77,43 @@ public class Movement : MonoBehaviour
             return;
         }
         HandleMovement();
+    }
+
+    void OnEnable()
+    {
+        // Add STOPPING moving when you're no longer holding the button
+        moveLeft.canceled += x => OnMoveLeftCanceled();
+        moveLeft.Enable();
+
+        moveRight.canceled += x => OnMoveRightCanceled();
+        moveRight.Enable();
+
+        moveUp.canceled += x => OnMoveUpCanceled();
+        moveUp.Enable();
+
+        moveDown.canceled += x => OnMoveDownCanceled();
+        moveDown.Enable();
+
+        jump.canceled += x => OnJumpCanceled();
+        jump.Enable();
+    }
+
+    void OnDisable()
+    {
+        moveLeft.canceled -= x => OnMoveLeftCanceled();
+        moveLeft.Disable();
+
+        moveRight.canceled -= x => OnMoveRightCanceled();
+        moveRight.Disable();
+
+        moveUp.canceled -= x => OnMoveUpCanceled();
+        moveUp.Disable();
+
+        moveDown.canceled -= x => OnMoveDownCanceled();
+        moveDown.Disable();
+
+        jump.canceled -= x => OnJumpCanceled();
+        jump.Disable();
     }
 
     public void ApplyExternalVelocity(Vector3 velocity)
@@ -211,7 +255,7 @@ public class Movement : MonoBehaviour
 
     private void CheckForIdle()
     {
-        if(verticalMove == 0 && horizontalMove == 0){
+        if(animator != null && verticalMove == 0 && horizontalMove == 0){
             animator.SetBool("IsRunning", false);
         }
     }

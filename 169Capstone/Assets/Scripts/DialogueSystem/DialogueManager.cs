@@ -15,6 +15,7 @@ public class DialogueManager : MonoBehaviour
 
     public Button nextButton;
 
+    [SerializeField] private List<SpeakerData> allSpeakersInGame = new List<SpeakerData>();    // For setting in the inspector and building the dictionary at runtime
     private Dictionary<string, SpeakerData> speakers = new Dictionary<string, SpeakerData>();
 
     public Image characterPortrait; 
@@ -26,6 +27,7 @@ public class DialogueManager : MonoBehaviour
 
     [SerializeField] private int numRunsThreshold = 4;   // Threshold for # runs beyond the exact num run that numRun dialogue can trigger
 
+    public bool stellanCommTriggered = false;
     private bool hasBeenInitialized = false;
 
     void Awake()
@@ -41,6 +43,19 @@ public class DialogueManager : MonoBehaviour
         if(!hasBeenInitialized){
             SetYarnFunctions();
             hasBeenInitialized = true;
+        }
+
+        foreach(SpeakerData s in allSpeakersInGame){
+            if( dialogueRunner.yarnScripts.Length == 0 ){
+                dialogueRunner.Add(s.YarnDialogue());
+            }
+            else if(!dialogueRunner.NodeExists(s.GetYarnHeadNode())){
+                dialogueRunner.Add(s.YarnDialogue());
+            }
+
+            if(!DialogueManagerHasSpeaker(s)){
+                AddSpeakerToDictionary(s);
+            }
         }
     }
 
@@ -74,7 +89,17 @@ public class DialogueManager : MonoBehaviour
         });
 
         dialogueRunner.AddFunction("StellanCommTriggered", 0, delegate (Yarn.Value[] parameters){
-            return false;   // TODO: Set this true when you kill the beetle boi
+            if(stellanCommTriggered){
+                stellanCommTriggered = false;
+                return true;
+            }
+            else{
+                return stellanCommTriggered;
+            }
+        });
+
+        dialogueRunner.AddFunction("HasKilledTimeLich", 0, delegate (Yarn.Value[] parameters){
+            return GameManager.instance.hasKilledTimeLich;
         });
 
 
@@ -133,7 +158,7 @@ public class DialogueManager : MonoBehaviour
                     // Separate from currentNumRunRemoveValue, if one has passed the threshold in which we're okay with seeing runNum dialogue, remove it
                     int opportunityPassedRemoveValue = 0;
                     int currentRunNumber = GameManager.instance.currentRunNumber;
-                    foreach(int num in NPC.ActiveNPC.hasNumRunDialogueList){
+                    foreach(int num in NPC.ActiveNPC.GetNumRunDialogueList()){
                         int difference = currentRunNumber - num;
                         // If THIS NPC has something to say about your number of runs within threshold runs, add it to the pool
                         if( difference <= numRunsThreshold && difference >= 0 ){
@@ -145,13 +170,12 @@ public class DialogueManager : MonoBehaviour
                             opportunityPassedRemoveValue = num;
                         }
                     }
-                    NPC.ActiveNPC.hasNumRunDialogueList.Remove(opportunityPassedRemoveValue);
+                    NPC.ActiveNPC.GetNumRunDialogueList().Remove(opportunityPassedRemoveValue);
                 }
                 // If the beat type is lowHP, check conditions and maybe add it
                 else if( beatType == StoryBeatType.LowHealth ){
                     StoryBeatLowHealth lowHPBeat = (StoryBeatLowHealth)beat;
-                    // TODO: Change  MAX  to  CURRENT / MAX
-                    if( playerStats.getMaxHitPoints() <= lowHPBeat.LowHealthThreshold() ){
+                    if( Player.instance.health.currentHitpoints / Player.instance.health.maxHitpoints <= lowHPBeat.LowHealthThreshold() ){
                         sortedStoryBeats.Add(beat);
                     }
                 }
@@ -169,7 +193,7 @@ public class DialogueManager : MonoBehaviour
             // TODO: This doesn't actually work bc every time NPC start runs it resets its num run dialogue list
             // Is this necessary? It won't run again as long as it's marked complete, and it won't run to begin with unless the num run matches
             if( sortedStoryBeats.Max.GetBeatType() == StoryBeatType.NumRuns ){
-                NPC.ActiveNPC.hasNumRunDialogueList.Remove(currentNumRunRemoveValue);
+                NPC.ActiveNPC.GetNumRunDialogueList().Remove(currentNumRunRemoveValue);
             }
 
             Debug.Log("PLAYING DIALOGUE INTERACTION for " + NPC.ActiveNPC.SpeakerData().SpeakerID() + ": " + sortedStoryBeats.Max.GetYarnHeadNode());
@@ -214,7 +238,7 @@ public class DialogueManager : MonoBehaviour
         return false;
     }
 
-    public void AddSpeaker(SpeakerData data)
+    public void AddSpeakerToDictionary(SpeakerData data)
     {
         if(DialogueManagerHasSpeaker(data)){
             Debug.LogError("Attempting to add " + data.SpeakerName() + " to the speaker database, but it already exists!");
@@ -281,7 +305,6 @@ public class DialogueManager : MonoBehaviour
     {
         // Log that the node has been run
         visitedNodes.Add(nodeName);
-        Debug.Log("Marked node VISITED: " + nodeName);
     }
 
     // Called when the player clicks the interact button in range of an NPC with something to say
@@ -291,10 +314,10 @@ public class DialogueManager : MonoBehaviour
         OnDialogueOpened();
 
         if(NPC.ActiveNPC){
-            dialogueRunner.StartDialogue(NPC.ActiveNPC.yarnStartNode);
+            dialogueRunner.StartDialogue(NPC.ActiveNPC.SpeakerData().GetYarnHeadNode());
         }
         else{
-            dialogueRunner.StartDialogue( Player.instance.playerYarnHeadNode );
+            dialogueRunner.StartDialogue( Player.instance.GetSpeakerData().GetYarnHeadNode() );
         }
     }
 

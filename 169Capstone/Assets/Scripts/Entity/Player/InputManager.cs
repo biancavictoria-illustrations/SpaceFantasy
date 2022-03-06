@@ -234,6 +234,9 @@ public class InputManager : MonoBehaviour
     public void ToggleDialogueOpenStatus(bool set)
     {
         isInDialogue = set;
-        RunGameTimer(!set, !set);
+
+        if(!NPC.ActiveNPC || NPC.ActiveNPC?.SpeakerData().SpeakerID() != SpeakerID.Stellan){
+            RunGameTimer(!set, !set);
+        }
     }
 }

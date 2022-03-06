@@ -82,9 +82,9 @@ public class EntityHealth : MonoBehaviour
 
     public void SetStartingHealthUI()
     {
-        if(gameObject.tag == "Player"){
-            Debug.Log("Max Health At Start: " + maxHitpoints + "\nCurrent Health At Start: " + currentHitpoints);
-        }
+        // if(gameObject.tag == "Player"){
+        //     Debug.Log("Max Health At Start: " + maxHitpoints + "\nCurrent Health At Start: " + currentHitpoints);
+        // }
 
         SetMaxHealthUI();
         SetCurrentHealthUI();
@@ -94,8 +94,8 @@ public class EntityHealth : MonoBehaviour
     {
         currentHitpoints -= damage;
         OnHit.Invoke(this, damage);
-        Debug.Log("Hitpoints");
-        Debug.Log(currentHitpoints);
+        // Debug.Log("Hitpoints");
+        // Debug.Log(currentHitpoints);
         
         SetCurrentHealthUI();
 
@@ -166,6 +166,11 @@ public class EntityHealth : MonoBehaviour
 
                 if(enemyID == EnemyID.TimeLich){
                     GameManager.instance.hasKilledTimeLich = true;
+                }
+                // If you killed the mini boss, trigger Stellan's comm to tell you to go to the elevator
+                else if(enemyID == EnemyID.BeetleBoss){
+                    DialogueManager.instance.stellanCommTriggered = true;
+                    StartCoroutine(GameManager.instance.AutoRunDialogueAfterTime(2f));
                 }
             }
 
