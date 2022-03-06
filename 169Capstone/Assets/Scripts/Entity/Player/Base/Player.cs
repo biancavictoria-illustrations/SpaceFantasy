@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     //public bool test = true;
 
     [SerializeField] private SpeakerData speakerData;
+    public string playerYarnHeadNode {get; private set;}
 
     // TEMP for testing purposes
     public GameObject dropItemPrefab;
@@ -37,6 +38,7 @@ public class Player : MonoBehaviour
         else{
             instance = this;
         }
+        playerYarnHeadNode = speakerData.SpeakerID() + "Start";
     }
 
     // Start is called before the first frame update
@@ -59,6 +61,7 @@ public class Player : MonoBehaviour
         //currentHitpoints = stats.getMaxHitPoints();
 
         if(DialogueManager.instance != null && !DialogueManager.instance.DialogueManagerHasSpeaker(speakerData)){
+            DialogueManager.instance.dialogueRunner.Add(speakerData.YarnDialogue());
             DialogueManager.instance.AddSpeaker(speakerData);
         }
 
@@ -68,6 +71,11 @@ public class Player : MonoBehaviour
         GameObject itemObject = Instantiate(dropItemPrefab, transform.position, Quaternion.identity);
         itemObject.GetComponent<GeneratedEquipment>().SetEquipmentBaseData( swordData, ItemRarity.Common );
         itemObject.GetComponent<DropTrigger>().DropItemModelIn3DSpace();
+
+        // If your first run, auto trigger starting dialogue
+        if(GameManager.instance.currentRunNumber == 1){
+            StartCoroutine(GameManager.instance.AutoRunDialogueAfterTime());
+        }
     }
 
     public float CurrentAttackSpeed()

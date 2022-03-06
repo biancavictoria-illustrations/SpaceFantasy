@@ -1,0 +1,73 @@
+﻿title: PlayerStart
+tags:
+---
+<<set $stellanCommTriggered to StellanCommTriggered()>>
+<<if $stellanCommTriggered>>
+    [[PlayerStellanCommTriggered]]
+<<endif>>
+
+<<set $runNum to GetCurrentRunNum()>>
+<<if $runNum is 1>>
+    [[PlayerFirstRunIntro]]
+<<endif>>
+===
+
+
+
+title: PlayerFirstRunIntro
+tags:
+---
+<<SetSpeaker Player>>
+Huh. Not quite as abandoned as it looked from the outside.
+Ah, well. As long as the loot's good.
+===
+
+
+
+title: PlayerStellanCommTriggered
+tags:
+---
+<<if Visited("PlayerStellanCommTriggered")>>
+    [[PlayerStellanCommTriggered1]]
+<<else>>
+    <<SetSpeaker Stellan>>
+    Stuff
+    <<SetSpeaker Player>>
+    Stuff
+    <<SetSpeaker Stellan>>
+    Stuff
+<<endif>>
+===
+
+title: PlayerStellanCommTriggered1
+tags:
+---
+<<if Visited("PlayerStellanCommTriggered1")>>
+    [[PlayerStellanCommTriggeredRepeatable]]
+<<else>>
+    <<SetSpeaker Stellan>>
+    Stuff
+    <<SetSpeaker Player>>
+    Stuff
+<<endif>>
+===
+
+title: PlayerStellanCommTriggeredRepeatable
+tags:
+---
+// Get a random number 0-3
+<<set $num to RandomNum(4)>>
+<<if $num is 0>>
+    <<SetSpeaker Stellan>>
+    Stuff
+<<elseif $num is 1>>
+    <<SetSpeaker Stellan>>
+    Stuff
+<<elseif $num is 2>>
+    <<SetSpeaker Stellan>>
+    Stuff
+<<else>>
+    <<SetSpeaker Stellan>>
+    Stuff
+<<endif>>
+===

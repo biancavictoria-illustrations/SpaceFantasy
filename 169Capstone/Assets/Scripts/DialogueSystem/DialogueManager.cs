@@ -73,6 +73,10 @@ public class DialogueManager : MonoBehaviour
             return GameManager.instance.currentRunNumber;
         });
 
+        dialogueRunner.AddFunction("StellanCommTriggered", 0, delegate (Yarn.Value[] parameters){
+            return false;   // TODO: Set this true when you kill the beetle boi
+        });
+
 
         // Add SelectNextTrigger so that we can find the next conditional category of dialogue to play
         dialogueRunner.AddFunction("SelectNextNode", 0, delegate (Yarn.Value[] parameters){
@@ -280,8 +284,21 @@ public class DialogueManager : MonoBehaviour
         Debug.Log("Marked node VISITED: " + nodeName);
     }
 
-    // Called automatically when the player clicks the interact button in range of an NPC with something to say
+    // Called when the player clicks the interact button in range of an NPC with something to say
+    // OR when we want to force dialogue when you walk into certain triggers at certain times (Time Lich, etc.)
     public void OnNPCInteracted()
+    {
+        OnDialogueOpened();
+
+        if(NPC.ActiveNPC){
+            dialogueRunner.StartDialogue(NPC.ActiveNPC.yarnStartNode);
+        }
+        else{
+            dialogueRunner.StartDialogue( Player.instance.playerYarnHeadNode );
+        }
+    }
+
+    private void OnDialogueOpened()
     {
         // Stop allowing movement input
         InputManager.instance.ToggleDialogueOpenStatus(true);
@@ -289,9 +306,6 @@ public class DialogueManager : MonoBehaviour
         // Disable UI elements
         InGameUIManager.instance.SetGameUIActive(false);
         AlertTextUI.instance.DisableAlert();
-
-        // Start the dialogue
-        dialogueRunner.StartDialogue(NPC.ActiveNPC.yarnStartNode);
     }
 
     // Called when the dialogue ends/closes
@@ -299,10 +313,16 @@ public class DialogueManager : MonoBehaviour
     {
         InputManager.instance.ToggleDialogueOpenStatus(false);
         InGameUIManager.instance.SetGameUIActive(true);
-        NPC.ActiveNPC.TalkedToNPC();
 
-        if(NPC.ActiveNPC.SpeakerData().IsShopkeeper()){
-            InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.SpeakerData());
+        if(NPC.ActiveNPC){
+            NPC.ActiveNPC.TalkedToNPC();
+            if(NPC.ActiveNPC.SpeakerData().IsShopkeeper()){
+                InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.SpeakerData());
+            }
+            // TODO: If time lich, start the fight here?
+            else if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.TimeLich){
+                // TODO
+            }
         }
     }
 }

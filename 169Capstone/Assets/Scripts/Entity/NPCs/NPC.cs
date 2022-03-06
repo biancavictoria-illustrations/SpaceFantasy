@@ -18,6 +18,10 @@ public class NPC : MonoBehaviour
 
     public bool haveTalkedToThisRun {get; private set;}
 
+    [Tooltip("ONLY true for Time Lich (and set at runtime for first Stellan interaction)")]
+    private bool forceNextDialogueOnTriggerEnter = false;
+    private float timeToWaitForAutoDialogue = 0f;
+
     void Start()
     {
         if(speakerData == null){
@@ -37,6 +41,13 @@ public class NPC : MonoBehaviour
         // Start/head node for a speaker's yarn file is always their unique speakerID + "Start"
         yarnStartNode = speakerData.SpeakerID() + "Start";
 
+        if(speakerData.SpeakerID() == SpeakerID.TimeLich || (speakerData.SpeakerID() == SpeakerID.Stellan && GameManager.instance.currentRunNumber == 2)){
+            forceNextDialogueOnTriggerEnter = true;
+            if(speakerData.SpeakerID() == SpeakerID.Stellan){
+                timeToWaitForAutoDialogue = 1f;
+            }
+        }
+
         SetHaveTalkedToNPCThisRun(HaveTalkedToNPC());
     }
 
@@ -46,10 +57,21 @@ public class NPC : MonoBehaviour
         // If the collision was caused by the player
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
             ActiveNPC = this;
+
+            // If they're marked to autoplay dialogue this time, immediately start dialogue on trigger enter
+            if(forceNextDialogueOnTriggerEnter){
+                forceNextDialogueOnTriggerEnter = false;
+                // DialogueManager.instance.OnNPCInteracted();
+                GameManager.instance.AutoRunDialogueAfterTime(timeToWaitForAutoDialogue);
+                return;
+            }
+
+            // If you haven't talked to them yet, enable interact alert
             if(!haveTalkedToThisRun){
                 AlertTextUI.instance.EnableInteractAlert();
             }
-            else{
+            // If you have talked to them already but they're a shopkeeper, enable the shop alert
+            else if(speakerData.IsShopkeeper()){
                 AlertTextUI.instance.EnableShopAlert();
             }
         }
@@ -65,13 +87,12 @@ public class NPC : MonoBehaviour
         }
     }
 
-    // For now, just toggles the newDialogueAlert on/off
     public void SetHaveTalkedToNPCThisRun(bool set)
     {
-        // haveTalkedToThisRun = set;
+        haveTalkedToThisRun = set;
 
         // Check if it exists cuz presumably time lich won't have one so we don't need to set it
-        if(newDialogueAlert){
+        if(newDialogueAlert && !forceNextDialogueOnTriggerEnter){
             newDialogueAlert.SetActive(!set);
         }
     }
