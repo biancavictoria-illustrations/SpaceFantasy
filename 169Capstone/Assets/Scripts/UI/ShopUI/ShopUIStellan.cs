@@ -144,6 +144,7 @@ public class ShopUIStellan : MonoBehaviour
     public void OpenShopUI()
     {
         InputManager.instance.shopIsOpen = true;
+
         shopInventoryPanel.SetActive(true);
         ClearFocusPanel();
 
@@ -156,6 +157,7 @@ public class ShopUIStellan : MonoBehaviour
     public void CloseShopUI()
     {
         InputManager.instance.shopIsOpen = false;
+        
         shopInventoryPanel.SetActive(false);
         ClearFocusPanel();
 

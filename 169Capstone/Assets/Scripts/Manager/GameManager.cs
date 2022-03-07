@@ -9,9 +9,15 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public const string MAIN_HUB_STRING_NAME = "Main Hub";
+    public const string GAME_LEVEL_STRING_NAME = "TestFloor";   // TODO: Update this!!!
+
+    public string currentSceneName {get; private set;}
+
+    public const float DEFAULT_AUTO_DIALOGUE_WAIT_TIME = 1.1f;
+
     public int currentRunNumber {get; private set;}
 
-    private InputManager inputManager;
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform playerTransform;
 
@@ -20,9 +26,13 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool playerDeath = false;
     [HideInInspector] public int bossesKilled = 0;
 
+    public GameTimer gameTimer;
+
     // Set to true (permanently) once you have killed the Time Lich at least once
     // (Makes a new special item pop up in Stellan's shop)
     [HideInInspector] public bool hasKilledTimeLich = false;
+
+    public bool progressRunForTesting = false;  // TEMP
 
     void Awake()
     {
@@ -34,24 +44,27 @@ public class GameManager : MonoBehaviour
         }
         DontDestroyOnLoad(this.gameObject);
 
-        SceneManager.sceneLoaded += OnSceneLoad;
-    }
-
-    private void Start()
-    {
         currentRunNumber = 1;
+        SceneManager.sceneLoaded += OnSceneLoad;
     }
 
     private void Update()
     {
-        if(inputManager == null)
-        {
-            inputManager = GameObject.FindWithTag("Player").GetComponent<InputManager>();
-        }
         if(playerDeath)
         {
             InGameUIManager.instance.deathScreen.OpenPlayerDeathUI();
             playerDeath = false;
+        }
+
+        if(progressRunForTesting){
+            progressRunForTesting = false;
+
+            // Simulate a new run (reroll stats too)
+            EndRun();
+            PlayerStats pstats = FindObjectsOfType<PlayerStats>()[0];
+            pstats.initializeStats();
+
+            Debug.Log("Run Number: " + currentRunNumber);
         }
     }
 
@@ -63,6 +76,7 @@ public class GameManager : MonoBehaviour
 
         // Set all NPC talked to variables to false and increment story beats
         StoryManager.instance.OnRunEndUpdateStory();
+        StoryManager.instance.CheckForNewStoryBeats();
         
         // Increment run # -> once in main hub, run # always = # of your NEXT run (not previous)
         currentRunNumber++;
@@ -113,9 +127,24 @@ public class GameManager : MonoBehaviour
 
     void OnSceneLoad(Scene scene, LoadSceneMode mode)
     {
-        if(scene.name == "Main Hub"){
+        currentSceneName = scene.name;
+
+        if(currentSceneName == MAIN_HUB_STRING_NAME){
             InGameUIManager.instance.ToggleRunUI(false);
+
+            // TODO: Play animation of you falling or something Idk
+            // In particular, if currentRunNumber == 2 pause for a second before autoplaying Stellan's dialogue so that people can see the new location
         }
+        else if(currentSceneName == GAME_LEVEL_STRING_NAME){
+            InGameUIManager.instance.ToggleRunUI(true);
+        }
+    }
+
+    public IEnumerator AutoRunDialogueAfterTime(float timeToWait = DEFAULT_AUTO_DIALOGUE_WAIT_TIME)
+    {
+        InputManager.instance.ToggleDialogueOpenStatus(true);   // Remove player control while waiting
+        yield return new WaitForSeconds(timeToWait);
+        DialogueManager.instance.OnNPCInteracted();        
     }
 
     public GearManagerObject GearManager()

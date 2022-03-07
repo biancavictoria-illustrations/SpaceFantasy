@@ -39,6 +39,6 @@ public class DeathScreenUI : MonoBehaviour
         Time.timeScale = 1f;
         ClosePlayerDeathUI();
         GameManager.instance.EndRun();
-        SceneManager.LoadScene("Main Hub");
+        SceneManager.LoadScene(GameManager.MAIN_HUB_STRING_NAME);
     }
 }

@@ -136,7 +136,8 @@ public class InputManager : MonoBehaviour
     public void ToggleCompareItemUI(bool set, GeneratedEquipment item)
     {
         compareItemIsOpen = set;
-        InGameUIManager.instance.SetGearSwapUIActive(set, item);        
+        InGameUIManager.instance.SetGearSwapUIActive(set, item);
+        RunGameTimer(set);
     }
 
     // If you're in dialogue, click anywhere to progress
@@ -151,9 +152,11 @@ public class InputManager : MonoBehaviour
     {
         if(PauseMenu.GameIsPaused){
             InGameUIManager.instance.pauseMenu.ResumeGame();
+            RunGameTimer(true);
         }
         else{
             InGameUIManager.instance.pauseMenu.PauseGame();
+            RunGameTimer(false);
         }
     }
 
@@ -166,6 +169,7 @@ public class InputManager : MonoBehaviour
         InGameUIManager.instance.SetInventoryUIActive(!InGameUIManager.instance.inventoryIsOpen);
         inventoryIsOpen = !inventoryIsOpen;
 
+        RunGameTimer(!inventoryIsOpen);
         if(AlertTextUI.instance.alertTextIsActive){
             AlertTextUI.instance.ToggleAlertText(!inventoryIsOpen);
         }
@@ -213,5 +217,26 @@ public class InputManager : MonoBehaviour
     public void OnPoint(InputValue input)
     {
         mousePos = input.Get<Vector2>();
+    }
+
+    public void RunGameTimer(bool set, bool setTimerUIActive = true)
+    {
+        InGameUIManager.instance.timerUI.SetTimerUIActive(setTimerUIActive);
+        GameManager.instance.gameTimer.runTimer = set;
+    }
+
+    public void ToggleShopOpenStatus(bool set)
+    {
+        shopIsOpen = set;
+        RunGameTimer(!set);
+    }
+
+    public void ToggleDialogueOpenStatus(bool set)
+    {
+        isInDialogue = set;
+
+        if(!NPC.ActiveNPC || NPC.ActiveNPC?.SpeakerData().SpeakerID() != SpeakerID.Stellan){
+            RunGameTimer(!set, !set);
+        }
     }
 }

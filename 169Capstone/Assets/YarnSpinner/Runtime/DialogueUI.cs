@@ -289,8 +289,28 @@ namespace Yarn.Unity {
                 // Display the line one character at a time
                 var stringBuilder = new StringBuilder ();
 
-                foreach (char c in text) {
-                    stringBuilder.Append (c);
+                for(int currentIndex = 0; currentIndex < text.Length; currentIndex++){
+                    char c = text[currentIndex];
+
+                    // Check for html tags
+                    if( c == '<' ){
+                        int tagEndIndex = text.IndexOf(">", currentIndex);
+                        if(tagEndIndex != -1){
+                            // Loop through just the current index to the end of the tag and add all those chars at once
+                            for(int tagIndex = currentIndex; tagIndex <= tagEndIndex; tagIndex++){
+                                stringBuilder.Append( text[tagIndex] );
+                            }
+                            // Set new current index (as if we ended on the closing >)
+                            currentIndex = tagEndIndex;
+                        }
+                        else{   // If no end was found, just add it normally
+                            stringBuilder.Append(c);
+                        }
+                    }
+                    else{
+                        stringBuilder.Append(c);
+                    }
+                    
                     onLineUpdate?.Invoke(stringBuilder.ToString ());
                     if (userRequestedNextLine) {
                         // We've requested a skip of the entire line.
@@ -298,8 +318,20 @@ namespace Yarn.Unity {
                         onLineUpdate?.Invoke(text);
                         break;
                     }
-                    yield return new WaitForSeconds (textSpeed);
+                    yield return new WaitForSecondsRealtime (textSpeed);
                 }
+
+                // foreach (char c in text) {
+                //     stringBuilder.Append (c);
+                //     onLineUpdate?.Invoke(stringBuilder.ToString ());
+                //     if (userRequestedNextLine) {
+                //         // We've requested a skip of the entire line.
+                //         // Display all of the text immediately.
+                //         onLineUpdate?.Invoke(text);
+                //         break;
+                //     }
+                //     yield return new WaitForSeconds (textSpeed);
+                // }
             } else {
                 // Display the entire line immediately if textSpeed <= 0
                 onLineUpdate?.Invoke(text);

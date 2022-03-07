@@ -28,6 +28,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1085508124252883344}
+  - component: {fileID: 8968493987308946279}
+  - component: {fileID: 5036781643164286417}
   m_Layer: 0
   m_Name: Time Lich Boss
   m_TagString: Untagged
@@ -50,6 +52,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8968493987308946279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6676617556972136792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b65dcb15a6367a642867cd1324919abd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speakerData: {fileID: 11400000, guid: ca563642d2b24904db882754ebca1e0a, type: 2}
+  yarnDialogue: {fileID: 0}
+  yarnStartNode: 
+  newDialogueAlert: {fileID: 0}
+  hasNumRunDialogueList: 
+  forceNextDialogueOnTriggerEnter: 1
+--- !u!135 &5036781643164286417
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6676617556972136792}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 30
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &3868333306942532835
 PrefabInstance:
   m_ObjectHideFlags: 0

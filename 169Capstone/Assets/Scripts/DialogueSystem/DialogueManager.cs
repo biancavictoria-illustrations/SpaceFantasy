@@ -15,6 +15,7 @@ public class DialogueManager : MonoBehaviour
 
     public Button nextButton;
 
+    [SerializeField] private List<SpeakerData> allSpeakersInGame = new List<SpeakerData>();    // For setting in the inspector and building the dictionary at runtime
     private Dictionary<string, SpeakerData> speakers = new Dictionary<string, SpeakerData>();
 
     public Image characterPortrait; 
@@ -24,8 +25,9 @@ public class DialogueManager : MonoBehaviour
 
     private HashSet<string> visitedNodes = new HashSet<string>();       // Keeps track of what nodes the player has seen so that we don't see those again
 
-    [SerializeField] private int numRunsThreshold = 3;   // Threshold for # runs beyond the exact num run that numRun dialogue can trigger
+    [SerializeField] private int numRunsThreshold = 4;   // Threshold for # runs beyond the exact num run that numRun dialogue can trigger
 
+    public bool stellanCommTriggered = false;
     private bool hasBeenInitialized = false;
 
     void Awake()
@@ -42,6 +44,19 @@ public class DialogueManager : MonoBehaviour
             SetYarnFunctions();
             hasBeenInitialized = true;
         }
+
+        foreach(SpeakerData s in allSpeakersInGame){
+            if( dialogueRunner.yarnScripts.Length == 0 ){
+                dialogueRunner.Add(s.YarnDialogue());
+            }
+            else if(!dialogueRunner.NodeExists(s.GetYarnHeadNode())){
+                dialogueRunner.Add(s.YarnDialogue());
+            }
+
+            if(!DialogueManagerHasSpeaker(s)){
+                AddSpeakerToDictionary(s);
+            }
+        }
     }
 
     private void SetYarnFunctions()
@@ -54,6 +69,37 @@ public class DialogueManager : MonoBehaviour
         dialogueRunner.AddFunction("Visited", 1, delegate (Yarn.Value[] parameters){
             var nodeName = parameters[0];
             return visitedNodes.Contains(nodeName.AsString);
+        });
+
+        // Add random number generator for repeatable and other options that can be played out of order
+        // Min 0, pass in Max (non-inclusive)
+        dialogueRunner.AddFunction("RandomNum", 1, delegate (Yarn.Value[] parameters){
+            var numMaxExclusive = parameters[0];
+            return Random.Range(0, (int)numMaxExclusive.AsNumber);
+        });
+
+        // Add num run checker to retrieve the number of runs you have COMPLETED (so current num - 1)
+        dialogueRunner.AddFunction("GetNumberOfCompletedRuns", 0, delegate (Yarn.Value[] parameters){
+            return GameManager.instance.currentRunNumber - 1;
+        });
+
+        // Add CURRENT num run checker
+        dialogueRunner.AddFunction("GetCurrentRunNum", 0, delegate (Yarn.Value[] parameters){
+            return GameManager.instance.currentRunNumber;
+        });
+
+        dialogueRunner.AddFunction("StellanCommTriggered", 0, delegate (Yarn.Value[] parameters){
+            if(stellanCommTriggered){
+                stellanCommTriggered = false;
+                return true;
+            }
+            else{
+                return stellanCommTriggered;
+            }
+        });
+
+        dialogueRunner.AddFunction("HasKilledTimeLich", 0, delegate (Yarn.Value[] parameters){
+            return GameManager.instance.hasKilledTimeLich;
         });
 
 
@@ -112,7 +158,7 @@ public class DialogueManager : MonoBehaviour
                     // Separate from currentNumRunRemoveValue, if one has passed the threshold in which we're okay with seeing runNum dialogue, remove it
                     int opportunityPassedRemoveValue = 0;
                     int currentRunNumber = GameManager.instance.currentRunNumber;
-                    foreach(int num in NPC.ActiveNPC.hasNumRunDialogueList){
+                    foreach(int num in NPC.ActiveNPC.GetNumRunDialogueList()){
                         int difference = currentRunNumber - num;
                         // If THIS NPC has something to say about your number of runs within threshold runs, add it to the pool
                         if( difference <= numRunsThreshold && difference >= 0 ){
@@ -124,13 +170,12 @@ public class DialogueManager : MonoBehaviour
                             opportunityPassedRemoveValue = num;
                         }
                     }
-                    NPC.ActiveNPC.hasNumRunDialogueList.Remove(opportunityPassedRemoveValue);
+                    NPC.ActiveNPC.GetNumRunDialogueList().Remove(opportunityPassedRemoveValue);
                 }
                 // If the beat type is lowHP, check conditions and maybe add it
                 else if( beatType == StoryBeatType.LowHealth ){
                     StoryBeatLowHealth lowHPBeat = (StoryBeatLowHealth)beat;
-                    // TODO: Change  MAX  to  CURRENT / MAX
-                    if( playerStats.getMaxHitPoints() <= lowHPBeat.LowHealthThreshold() ){
+                    if( Player.instance.health.currentHitpoints / Player.instance.health.maxHitpoints <= lowHPBeat.LowHealthThreshold() ){
                         sortedStoryBeats.Add(beat);
                     }
                 }
@@ -148,7 +193,7 @@ public class DialogueManager : MonoBehaviour
             // TODO: This doesn't actually work bc every time NPC start runs it resets its num run dialogue list
             // Is this necessary? It won't run again as long as it's marked complete, and it won't run to begin with unless the num run matches
             if( sortedStoryBeats.Max.GetBeatType() == StoryBeatType.NumRuns ){
-                NPC.ActiveNPC.hasNumRunDialogueList.Remove(currentNumRunRemoveValue);
+                NPC.ActiveNPC.GetNumRunDialogueList().Remove(currentNumRunRemoveValue);
             }
 
             Debug.Log("PLAYING DIALOGUE INTERACTION for " + NPC.ActiveNPC.SpeakerData().SpeakerID() + ": " + sortedStoryBeats.Max.GetYarnHeadNode());
@@ -193,7 +238,7 @@ public class DialogueManager : MonoBehaviour
         return false;
     }
 
-    public void AddSpeaker(SpeakerData data)
+    public void AddSpeakerToDictionary(SpeakerData data)
     {
         if(DialogueManagerHasSpeaker(data)){
             Debug.LogError("Attempting to add " + data.SpeakerName() + " to the speaker database, but it already exists!");
@@ -207,20 +252,31 @@ public class DialogueManager : MonoBehaviour
     {
         // Set speaker name
         string speaker = info[0];
+        string speakerNameOverride = "";
 
         // Set portrait emotion
         string emotion = "";
-        if(info.Length > 1){
+        if(info.Length == 1){   // ONE parameter (speakerID)
+            emotion = SpeakerData.EMOTION_NEUTRAL;            
+        }
+        else if(info.Length == 2){  // TWO parameters (speakerID, emotion)
             emotion = info[1];
         }
-        else{
-            emotion = SpeakerData.EMOTION_NEUTRAL;
+        else{  // THREE parameters (speakerID, emotion, speaker display name override)
+            emotion = info[1];
+            speakerNameOverride = info[2];
         }
         
         if(speakers.TryGetValue(speaker, out SpeakerData data)){
-            // TODO: Uncomment once we have sprites :)
             characterPortrait.sprite = data.GetEmotionPortrait(emotion);
-            speakerName.text = speaker;
+
+            if(speakerNameOverride == ""){
+                speakerName.text = data.SpeakerName();
+            }
+            else{
+                speakerName.text = speakerNameOverride;
+            }
+            
             return;
         }
         Debug.LogError("Could not set the speaker data for " + speaker);
@@ -251,29 +307,47 @@ public class DialogueManager : MonoBehaviour
         visitedNodes.Add(nodeName);
     }
 
-    // Called automatically when the player clicks the interact button in range of an NPC with something to say
+    // Called when the player clicks the interact button in range of an NPC with something to say
+    // OR when we want to force dialogue when you walk into certain triggers at certain times (Time Lich, etc.)
     public void OnNPCInteracted()
     {
+        OnDialogueOpened();
+
+        if(NPC.ActiveNPC){
+            dialogueRunner.StartDialogue(NPC.ActiveNPC.SpeakerData().GetYarnHeadNode());
+        }
+        else{
+            dialogueRunner.StartDialogue( Player.instance.GetSpeakerData().GetYarnHeadNode() );
+        }
+    }
+
+    private void OnDialogueOpened()
+    {
         // Stop allowing movement input
-        InputManager.instance.isInDialogue = true;
+        InputManager.instance.ToggleDialogueOpenStatus(true);
+        Time.timeScale = 0f;
 
         // Disable UI elements
         InGameUIManager.instance.SetGameUIActive(false);
         AlertTextUI.instance.DisableAlert();
-
-        // Start the dialogue
-        dialogueRunner.StartDialogue(NPC.ActiveNPC.yarnStartNode);
     }
 
     // Called when the dialogue ends/closes
     public void OnDialogueEnd()
     {
-        InputManager.instance.isInDialogue = false;
+        InputManager.instance.ToggleDialogueOpenStatus(false);
         InGameUIManager.instance.SetGameUIActive(true);
-        NPC.ActiveNPC.TalkedToNPC();
+        Time.timeScale = 1f;
 
-        if(NPC.ActiveNPC.SpeakerData().IsShopkeeper()){
-            InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.SpeakerData());
+        if(NPC.ActiveNPC){
+            NPC.ActiveNPC.TalkedToNPC();
+            if(NPC.ActiveNPC.SpeakerData().IsShopkeeper()){
+                InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.SpeakerData());
+            }
+            // TODO: If time lich, start the fight here?
+            else if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.TimeLich){
+                // TODO
+            }
         }
     }
 }

@@ -21,6 +21,7 @@ public class PauseMenu : MonoBehaviour
         ResetPauseUI();
         Time.timeScale = 1f;
         GameIsPaused = false;
+        InputManager.instance.RunGameTimer(true);
 
         if(InGameUIManager.instance.inventoryIsOpen){
             InGameUIManager.instance.inventoryUI.SetInventoryInteractable(true);
@@ -50,6 +51,7 @@ public class PauseMenu : MonoBehaviour
 
     public void PauseGame()
     {
+        InputManager.instance.RunGameTimer(false);
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         GameIsPaused = true;
@@ -80,7 +82,7 @@ public class PauseMenu : MonoBehaviour
         else if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Doctor){
             InGameUIManager.instance.doctorShopUI.SetShopUIInteractable(set);
         }
-        else if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Andy){
+        else if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Rhian){
             InGameUIManager.instance.weaponsShopUI.SetShopUIInteractable(set);
         }
         else{
@@ -95,3 +97,6 @@ public class PauseMenu : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 }
+
+
+// TODO: fix pause menu now that dialogue pauses (if you open pause menu while dialogue open)

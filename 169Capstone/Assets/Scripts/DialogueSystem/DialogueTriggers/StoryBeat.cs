@@ -32,16 +32,26 @@ public enum DialoguePriority
 
 public abstract class StoryBeat : ScriptableObject
 {
-    [SerializeField] protected string yarnHeadNode = "";  // Yarn node title base for the head node of responses to this beat (set automatically by generic, manually for specific)
-    [SerializeField] protected DialoguePriority priorityValue;  // Priority compared to other story beats for someone to comment ( > # = higher priority )
-    [SerializeField] private bool carriesOver = false;        // If this event can be commented on on future runs beyond the immediate next one
+    [Tooltip("Yarn node title base for the head node of responses to this beat (set automatically by generic, manually for specific)")]
+    protected string yarnHeadNode = "";
+
+    [Tooltip("Priority compared to other story beats for someone to comment ( > # = higher priority )")]
+    [SerializeField] protected DialoguePriority priorityValue;
+
+    [Tooltip("If this event can be commented on on future runs beyond the immediate next one")]
+    [SerializeField] private bool carriesOver = false;
 
     protected StoryBeatType beatType;     // Automatically set in the children
 
-    [SerializeField] private List<SpeakerID> speakersWithComments = new List<SpeakerID>();    // List of the speaking characters who have something to say about this event
+    [Tooltip("List of the speaking characters who have something to say about this event")]
+    [SerializeField] private List<SpeakerID> speakersWithComments = new List<SpeakerID>();
 
-    private Dictionary<StoryBeat,int> prereqStoryBeatDatabase = new Dictionary<StoryBeat,int>();    // OPTIONAL list of prereq story beats that have to have numberOfCompletions >= int X
-    [SerializeField] private List<StoryBeat> prereqBeats = new List<StoryBeat>();   // Because dictionaries aren't serializable, we get the data this way and build it in start
+    
+    private Dictionary<StoryBeat,int> prereqStoryBeatDatabase = new Dictionary<StoryBeat,int>();
+    
+    [Tooltip("OPTIONAL list of prereq story beats that have to have number of completions >= int X")]
+    [SerializeField] private List<StoryBeat> prereqBeats = new List<StoryBeat>();
+    [Tooltip("List of numbers (of completion) associated with the above beats (bc dictionaries aren't serializable, we get the data this way and build it in start)")]
     [SerializeField] private List<int> prereqCompletionNumbers = new List<int>();
 
     public void CreatePrereqDatabase()

@@ -1,0 +1,83 @@
+﻿title: PlayerStart
+tags:
+---
+<<set $runNum to GetCurrentRunNum()>>
+<<set $stellanCommTriggered to StellanCommTriggered()>>
+
+<<if $stellanCommTriggered>>
+    [[PlayerStellanCommTriggered]]
+<<elseif $runNum is 1>>
+    [[PlayerFirstRunIntro]]
+<<endif>>
+===
+
+
+
+title: PlayerFirstRunIntro
+tags:
+---
+<<SetSpeaker Player>>
+Huh. Not quite as abandoned as it looked from the outside.
+Ah, well. As long as the loot's good.
+===
+
+
+
+title: PlayerStellanCommTriggered
+tags:
+---
+<<if Visited("PlayerStellanCommTriggered")>>
+    [[PlayerStellanCommTriggered1]]
+<<elseif $runNum > 1>>
+    <<SetSpeaker Player>>
+    Huh. A comm from Stellan. ... Answer comm.
+    <<SetSpeaker Stellan comm>>
+    I'm surprised you've even made it this far, Atlan.
+    <<SetSpeaker Player>>
+    I think you mean <i>impressed.</i>
+    <<SetSpeaker Stellan comm>>
+    Take the elevator up, if you feel ready for the real challenge. But I have a feeling I will be seeing you face-to-face again soon.
+<<else>>
+    <<SetSpeaker Player>>
+    I'm getting a comm? From who? ... Answer comm.
+    <<SetSpeaker Stellan comm ???>>
+    Not bad. Take the elevator up, if you feel ready for the real challenge. But I have a feeling I will be meeting you face-to-face soon.
+    <<SetSpeaker Player>>
+    Huh. Maybe he's the Wizard of this tower.
+<<endif>>
+===
+
+title: PlayerStellanCommTriggered1
+tags:
+---
+<<if Visited("PlayerStellanCommTriggered1")>>
+    [[PlayerStellanCommTriggeredRepeatable]]
+<<else>>
+    <<SetSpeaker Player>>
+    Answer comm.
+    <<SetSpeaker Stellan comm>>
+    Same as last time: Take the elevator up.
+    <<SetSpeaker Stellan comm>>
+    ... See you soon.
+<<endif>>
+===
+
+title: PlayerStellanCommTriggeredRepeatable
+tags:
+---
+// Get a random number 0-3
+<<set $num to RandomNum(4)>>
+<<if $num is 0>>
+    <<SetSpeaker Stellan comm>>
+    Same as always. Take the elevator up.
+<<elseif $num is 1>>
+    <<SetSpeaker Stellan comm>>
+    He's waiting for you. Go find the elevator.
+<<elseif $num is 2>>
+    <<SetSpeaker Stellan comm>>
+    Take the elevator up. ... I'll see you soon.
+<<else>>
+    <<SetSpeaker Stellan comm>>
+    Go on, then. Up the elevator to another pointless death.
+<<endif>>
+===

@@ -15,7 +15,7 @@ public enum SpeakerID
 
     // === On-Run Shopkeepers ===
     Bryn,
-    Andy,
+    Rhian,
     Doctor,
     Sorrel,
 
@@ -26,16 +26,20 @@ public enum SpeakerID
 public class SpeakerData : ScriptableObject
 {
     public const string EMOTION_NEUTRAL = "neutral";
-    // Can add more of these (and more sprites) if we have more, like EMOTION_SURPRISE or EMOTION_ANGER
+    public const string SPRITE_COMM = "comm";
 
-    [SerializeField] private string speakerName;      // The name that shows up to payers
-    [SerializeField] private SpeakerID speakerID;     // Internal ID
+    [Tooltip("The name that shows up to payers")]
+    [SerializeField] private string speakerName;
+    [Tooltip("Internal ID")]
+    [SerializeField] private SpeakerID speakerID;
+    
     [SerializeField] private YarnProgram yarnDialogue;
 
-    [SerializeField] private List<int> hasNumRunDialogueList = new List<int>();   // Times at which this NPC comments on how many runs you've done, in order
+    [Tooltip("Times at which this NPC comments on how many runs you've done, in order")]
+    [SerializeField] private List<int> hasNumRunDialogueList = new List<int>();
 
     [SerializeField] private Sprite portraitNeutral;
-    // Can add different emotions
+    [SerializeField] private Sprite portraitComm;
 
     [SerializeField] private bool isShopkeeper;
 
@@ -43,9 +47,11 @@ public class SpeakerData : ScriptableObject
     {
         switch(emotion)
         {
+            case SPRITE_COMM:
+                return portraitComm;
             default:
-            case EMOTION_NEUTRAL: return portraitNeutral;
-            // Can add different emotions
+            case EMOTION_NEUTRAL:
+                return portraitNeutral;
         }
     }
 
@@ -72,5 +78,10 @@ public class SpeakerData : ScriptableObject
     public bool IsShopkeeper()
     {
         return isShopkeeper;
+    }
+
+    public string GetYarnHeadNode()
+    {
+        return speakerID + "Start";
     }
 }

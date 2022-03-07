@@ -1,6 +1,579 @@
 ﻿title: StellanStart
 tags:
 ---
+<<set $visitedDefault to Visited("StellanDefaultDialogue")>>
+<<set $visitedDefault1 to Visited("StellanDefaultDialogue1")>>
+<<set $visitedDefault2 to Visited("StellanDefaultDialogue2")>>
+<<if $visitedDefault and $visitedDefault1 and $visitedDefault2>>
+    [[StellanNodeSelectHub]]
+<<elseif $visitedDefault1>>
+    [[StellanDefaultDialogue2]]
+<<elseif $visitedDefault>>
+    [[StellanDefaultDialogue1]]
+<<else>>
+    [[StellanDefaultDialogue]]
+<<endif>>
+===
+
+title: StellanNodeSelectHub
+tags:
+---
+<<set $headNode to SelectNextNode()>>
+
+// === Enemy Killed ===
+
+<<if $headNode is "EnemyKilledTimeLich">>
+    [[StellanEnemyKilledTimeLich]]
+
+// === Killed By ===
+
+<<elseif $headNode is "KilledByTimeLich">>
+    [[StellanKilledByTimeLich]]
+<<elseif $headNode is "KilledBySlime">>
+    [[StellanKilledBySlime]]
+
+// === Dialogue Completed ===
+
+<<elseif $headNode is "DialogueCompletedDoctorDialogueCompletedDoctorNumRuns">>
+    [[StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns]]
+
+<<elseif $headNode is "DialogueCompletedStellanEnemyKilledTimeLich">>
+    [[StellanDialogueCompletedStellanEnemyKilledTimeLich]]
+
+// === Generic Stuff ===
+
+<<elseif $headNode is "NumRuns">>
+    [[StellanNumRuns]]
+<<elseif $headNode is "DefaultDialogue">>
+    [[StellanDefaultDialogue]]
+<<elseif $headNode is "Repeatable">>
+    [[StellanRepeatable]]
+
+<<else>>
+    [[StellanRepeatable]]
+    ERROR: No head node found for {$headNode}!
+<<endif>>
+===
+
+
+
+title: StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns
+tags:
+---
+<<if Visited("StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns")>>
+    [[StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns1]]
+<<else>>
+    <<SetSpeaker Player>>
+    You ever heard of the <i>caelarae?</i>
+    <<SetSpeaker Stellan>>
+    Taking up an interest in children’s stories, are you?
+    <<SetSpeaker Player>>
+    An interest in family history, actually.
+    <<SetSpeaker Stellan>>
+    As entertaining as hearing about your latest delusions of grandeur may be, we’re both very busy individuals. Let’s make our exchange and be done with this.
+<<endif>>
+===
+
+title: StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns1
+tags:
+---
+<<if Visited("StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns1")>>
+    [[StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns2]]
+<<else>>
+    <<SetSpeaker Player>>
+    Are you familiar with Dr. Sanguin?
+    <<SetSpeaker Stellan>>
+    I’ve met the resident maniac, yes. What of him?
+    <<SetSpeaker Player>>
+    He claims to have found traces of caelarae ancestry in my blood.
+    <<SetSpeaker Stellan>>
+    He also claims to be a doctor. Perhaps learn not to be so gullible when talking to strangers aboard a cursed ship, Atlan.
+    <<SetSpeaker Stellan>>
+    Oh, and the singular is <i>caelara.</i>
+<<endif>>
+===
+
+title: StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns2
+tags:
+---
+<<if Visited("StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns2")>>
+    [[StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns3]]
+<<else>>
+    <<SetSpeaker Stellan>>
+    The caelarae are a myth. Stories told to elven children of sentient stars who watch over them in the night. Guardians. Protectors.
+    <<SetSpeaker Stellan>>
+    I was named after one by my elven mother – supposedly, Stellan the caelara would watch over me when she left me to the mercy of my human father.
+    <<SetSpeaker Stellan>>
+    Little good that did me.
+    <<SetSpeaker Player>>
+    You’re certain they’re a myth?
+    <<SetSpeaker Stellan>>
+    I was.
+<<endif>>
+===
+
+title: StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns3
+tags:
+---
+<<if Visited("StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns3")>>
+    [[StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns4]]
+<<else>>
+    <<SetSpeaker Player>>
+    I’ve been on my own for most of my life. But I have vague memories of my mother telling me my eyes were full of golden starlight.
+    <<SetSpeaker Stellan>>
+    Drivel. If you truly are descended from a caelara, surely the bloodline is so diluted that it hardly matters–
+    <<SetSpeaker Player>>
+    Not a chance that you believe that. Tell me, Stellan, what exactly have you been doing to me? You once told me your magic only unlocks hidden potential. And these Star Shards you use to do it – you mean to tell me they’re not connected to me being descended from a <i>sentient star?</i>
+    <<SetSpeaker Stellan>>
+    … There may be a correlation.
+<<endif>>
+===
+
+title: StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns4
+tags:
+---
+<<SetSpeaker Player>><<BranchComplete DialogueCompleted DialogueCompletedDoctorDialogueCompletedDoctorNumRuns>>   // Don't know what to call that either...
+So you’ve been experimenting on me this whole time? What, you suspected my bloodline and wanted to see what would happen if you used those Star Shards on me?
 <<SetSpeaker Stellan>>
-This is temporary Stellan dialogue.
+I may have suspected certain things. But if I was wrong, it’s not like it would have hurt you.
+<<SetSpeaker Player>>
+No? And what would have happened, if you had been wrong?
+<<SetSpeaker Stellan>>
+Remember when I mentioned you burning up with arcane energy?
+<<SetSpeaker Player>>
+So it would have killed me.
+<<SetSpeaker Stellan>>
+We’re in a time loop, Atlan. You would have come back.
+===
+
+
+
+title: StellanDialogueCompletedStellanEnemyKilledTimeLich
+tags:
+---
+<<SetSpeaker Player>><<BranchComplete DialogueCompleted DialogueCompletedStellanEnemyKilledTimeLich>>
+You didn’t actually think I could do it. You’ve been sending me to die over and over, just to collect these Star Shards for you.
+<<SetSpeaker Stellan>>
+I’ve never exactly hid my skepticism of your capabilities, nor have I tried to give you false hope.
+<<SetSpeaker Player>>
+You’re cruel.
+<<SetSpeaker Stellan>>
+I’m pragmatic.
+<<SetSpeaker Stellan>>
+… And for what it’s worth, you might have given me just a bit of hope, now that you’ve actually done it once. So let me help you stop all this.
+===
+
+
+
+title: StellanEnemyKilledTimeLich
+tags:
+---
+<<SetSpeaker Stellan>><<BranchComplete EnemyKilled EnemyKilledTimeLich>>
+Well, that is certainly a concerning look. Tell me, what new horrors did you uncover on this ship last time, the likes of which presumably killed you in inventively horrific ways?
+<<SetSpeaker Player>>
+I killed him.
+<<SetSpeaker Stellan>>
+...
+<<SetSpeaker Stellan>>
+... What?
+<<SetSpeaker Player>>
+I killed the Lich. Why are we still here? What’s going on? If you know something, if you’re <i>hiding</i> something–
+<<SetSpeaker Stellan>>
+Tone down the aggression, Atlan. You’ve only made it this far because of me. … I have some theories, but I’ll need some time. And lots of Star Shards.
+===
+
+
+
+title: StellanKilledByTimeLich
+tags:
+---
+<<if Visited("StellanKilledByTimeLich")>>
+    [[StellanKilledByTimeLich1]]
+<<else>>
+    <<SetSpeaker Player>>
+    Found the Lich.
+    <<SetSpeaker Stellan>>
+    … I’m sorry. I can assume how it went.
+    <<SetSpeaker Player>>
+    I think I can take him.
+    <<SetSpeaker Stellan>>
+    I think you might be a fool. But unfortunately, you’re the best option we’ve got. So here, let me see if I can help you not get killed as quickly next time.
+    <<SetSpeaker Stellan>>
+    And Atlan? Promise me something.
+    <<SetSpeaker Stellan>>
+    If you <i>do</i> kill him... make him suffer. Make him suffer for what he's done.
+    <<SetSpeaker Player>>
+    That’s an easy promise to make, my friend.
+<<endif>>
+===
+
+title: StellanKilledByTimeLich1
+tags:
+---
+<<if Visited("StellanKilledByTimeLich1")>>
+    [[StellanKilledByTimeLich2]]
+<<else>>
+    <<SetSpeaker Player>>
+    Stellan, you’ve been on this ship for… quite some time.
+    <<SetSpeaker Stellan>>
+    To say the least.
+    <<SetSpeaker Player>>
+    You must know, what kind of weaknesses does the Lich have? What can I exploit? How do I beat him at his own game?
+    <<SetSpeaker Stellan>>
+    ...
+    <<SetSpeaker Stellan>>
+    You’re right. I do know about him. I know that he will never, ever go easy on you. He will never leave you an opening you can exploit. He is relentless. He has no weaknesses, only power. It has consumed him.
+    <<SetSpeaker Player>>
+    … Great.
+<<endif>>
+===
+
+title: StellanKilledByTimeLich2
+tags:
+---
+<<if Visited("StellanKilledByTimeLich2")>>
+    [[StellanKilledByTimeLich3]]
+<<else>>
+    <<SetSpeaker Player>>
+    You told me the Lich has been consumed by his power. What was he before? <i>Who</i> was he?
+    <<SetSpeaker Stellan>>
+    The same as you and me, and most on this ship. Nothing but a boy with ambition.
+    <<SetSpeaker Player>>
+    You knew him personally?
+    <<SetSpeaker Stellan>>
+    Once.
+    <<SetSpeaker Player>>
+    … I’m sorry.
+<<endif>>
+===
+
+title: StellanKilledByTimeLich3
+tags:
+---
+<<SetSpeaker Stellan>><<BranchComplete KilledBy KilledByTimeLich>>
+Atlan–
+<<SetSpeaker Stellan>>
+… You should know. He’s not who you think he is.
+<<SetSpeaker Player>>
+What, are you about to tell me the Lich is secretly just <i>misunderstood?</i>
+<<SetSpeaker Stellan>>
+No, Atlan, listen to me. He wasn’t the Captain. This wasn’t his tower, originally. He took it. He was an apprentice. He killed the Wizard.
+<<SetSpeaker Player>>
+I don’t see how that changes much, personally.
+<<SetSpeaker Stellan>>
+… I have seen your desire for loot. For wealth. For fame. I tell you this to warn you, friend. Be cautious of ambition. It changes a person. Ambition alone has the power to twist a person into a monstrous shell of what he once was.
+===
+
+
+
+title: StellanKilledBySlime
+tags:
+---
+<<if Visited("StellanKilledBySlime")>>
+    [[StellanKilledBySlime1]]
+<<else>>
+    <<SetSpeaker Stellan>>
+    Is that… residual slime ooze clinging to your sleeve? You let yourself be killed by a slime?
+    <<SetSpeaker Stellan>>
+    A SLIME, Atlan?
+    <<SetSpeaker Player>>
+    A particularly FEROCIOUS slime, yes, Stellan. Your point?
+    <<SetSpeaker Stellan>>
+    You still think you stand a chance against <i>him</i>?
+<<endif>>
+===
+
+title: StellanKilledBySlime1
+tags:
+---
+<<SetSpeaker Stellan>><<BranchComplete KilledBy KilledBySlime>>
+Really, Atlan? Really? A slime. Again?
+<<SetSpeaker Player>>
+Have you ever actually encountered one of those things? They may seem harmless, but you know they’re vicious, right?
+<<SetSpeaker Stellan>>
+My point remains that if you cannot handle yourself against a simple ooze monster a third your size, I highly doubt that you are the ever-so skilled adventurer you claim to be.
+===
+
+
+
+title: StellanNumRuns
+tags:
+---
+<<set $currentRunNum to GetCurrentRunNum()>>
+<<if $currentRunNum > 14>>
+    [[StellanNumRuns15]]
+<<else>>
+    <<SetSpeaker Stellan>>
+    You must be quite the optimist, to keep trying like this. Either that, or just plain stupid. I haven’t quite figured out which yet.
+    <<SetSpeaker Player>>
+    Let me know once you do.
+<<endif>>
+===
+
+title: StellanNumRuns15
+tags:
+---
+<<if $currentRunNum > 30>>
+    [[StellanNumRuns34]]
+<<else>>
+    <<SetSpeaker Stellan>>
+    I’m getting tired of this existence, Atlan.
+    <<SetSpeaker Player>>
+    Then help me set you free.
+    <<SetSpeaker Stellan>>
+    … Only time will tell if you can.
+<<endif>>
+===
+
+title: StellanNumRuns34
+tags:
+---
+<<set $runNum to GetNumberOfCompletedRuns()>>
+<<SetSpeaker Stellan>><<BranchComplete NumRuns NumRuns>>
+Have you thought about going any faster? I am exceedingly bored of this ship.
+<<SetSpeaker Player>>
+I have gotten myself killed 30 times trying to save your ass, and this is how you thank me for my sacrifice?
+<<SetSpeaker Stellan>>
+... {$runNum}.
+<<SetSpeaker Player>>
+… What?
+<<SetSpeaker Stellan>>
+You have gotten yourself killed {$runNum} times. Not 30.
+<<SetSpeaker Player>>
+… You're keeping score?
+===
+
+
+
+title: StellanDefaultDialogue
+tags:
+---
+<<if Visited("StellanDefaultDialogue")>>
+    [[StellanDefaultDialogue1]]
+<<elseif HasKilledTimeLich()>>
+    <<SetSpeaker Stellan neutral ???>>
+    How did you...?
+    // TODO: Add stuff to here and other nodes if you kill the lich too early
+<<else>>
+    <<SetSpeaker Stellan neutral ???>>
+    Well, you certainly don’t belong here.
+    <<SetSpeaker Player>>
+    <i>Uugh</i>... I'm... alive?
+    <<SetSpeaker Stellan neutral ???>>
+    Yes, yes, it's a time loop. How miraculous and novel. Even death won't set us free. Now get on your feet and quit looking so ill. Who are you and what are you doing on this ship?
+    <<SetSpeaker Player>>
+    Name's Atlan. Came in here looking for loot. Maybe some electrum, if anyone left any lying around. Now I'm just trying to get off this godsforsaken ship.
+    <<SetSpeaker Stellan neutral ???>>
+    Ah, yes. The wayward adventurer. You do look like a pirate. Perhaps a <i>scoundrel,</i> if you prefer. And don’t you correct me by claiming to be a “trader” or “privateer,” as if those words mean anything besides “common thief.”
+    <<SetSpeaker Player>>
+    Can't fault a man for trying to steal from an abandoned wizard's tower. Didn't realize it wouldn't be so abandoned on the inside.
+    <<SetSpeaker Stellan neutral ???>>
+    Nevertheless, it was ambition that brought you here. The misguided arrogance that you could handle whatever threats might lurk within. And now, you're stuck. Just like the rest of us.
+    <<SetSpeaker Stellan>>
+    I’m Stellan. I may be willing to help you in your endeavor to escape, for a cost. I’m looking for something, and if you’re going beyond this lounge, you may be able to find it for me. In turn… I can offer a, ah, mutually beneficial relationship using the resources you source on my behalf.
+<<endif>>
+===
+
+title: StellanDefaultDialogue1
+tags:
+---
+<<if Visited("StellanDefaultDialogue1")>>
+    [[StellanDefaultDialogue2]]
+<<else>>
+    <<SetSpeaker Player>>
+    What can you tell me of the Captain of this ship? Who’s cursed tower have I stumbled into?
+    <<SetSpeaker Stellan>>
+    The Wizard is long dead. I was once his apprentice. But the Lich rules this ship now.
+    <<SetSpeaker Player>>
+    What a dramatic way of saying he’s the one I have to kill to break us all out of this godsforsaken loop.
+<<endif>>
+===
+
+title: StellanDefaultDialogue2
+tags:
+---
+<<if Visited("StellanDefaultDialogue2")>>
+    [[StellanDefaultDialogue3]]
+<<else>>
+    <<SetSpeaker Player>>
+    If you’ve got all this fancy magic to make me stronger, why don’t you just do it all at once? Pump me full of magic juice and send me out to conquer this ship?
+    <<SetSpeaker Stellan>>
+    Well, first of all, you would die. Without time to adjust in increments, your body would surely burn up from that much arcane energy at once.
+    <<SetSpeaker Player>>
+    But we’re stuck in a time loop – I’d just come right back.
+    <<SetSpeaker Stellan>>
+    Yes. Without the magic having taken hold. Thus wasting our limited supply of Star Shards – the second limiting factor here, as I can only do so much as the resources you bring me allow.
+    <<SetSpeaker Stellan>>
+    And finally… because I can’t turn you into a <i>god,</i> Atlan. I can only enhance or unlock hidden potential. Believe me. There are boundaries of the arcane that should not be crossed. We all must learn that lesson at some point.
+<<endif>>
+===
+
+title: StellanDefaultDialogue3
+tags:
+---
+<<if Visited("StellanDefaultDialogue3")>>
+    [[StellanDefaultDialogue4]]
+<<else>>
+    <<SetSpeaker Stellan>>
+    Back so soon? Yet you walked out of here with such confidence. Surely you’re more capable than that pathetic display.
+    <<SetSpeaker Player>>
+    Just getting warmed up.
+    <<SetSpeaker Stellan>>
+    Sure. Either that, or you’re in way over your head.
+<<endif>>
+===
+
+title: StellanDefaultDialogue4
+tags:
+---
+<<if Visited("StellanDefaultDialogue4")>>
+    [[StellanDefaultDialogue5]]
+<<else>>
+    <<SetSpeaker Stellan>>
+    Anything new to report? Any progress whatsoever?
+    <<SetSpeaker Player>>
+    Friend, am I mistaken, or could that be a tinge of hope in your voice?
+    <<SetSpeaker Stellan>>
+    Surely not. Merely trying to remind you of how utterly futile your attempts are. Believe me, I would know.
+<<endif>>
+===
+
+title: StellanDefaultDialogue5
+tags:
+---
+<<if Visited("StellanDefaultDialogue5")>>
+    [[StellanDefaultDialogue6]]
+<<else>>
+    <<SetSpeaker Stellan>>
+    Giving up yet?
+    <<SetSpeaker Player>>
+    Never.
+    <<SetSpeaker Stellan>>
+    … You will.
+    <<SetSpeaker Player>>
+    That a threat, friend?
+    <<SetSpeaker Stellan>>
+    A resignation.
+<<endif>>
+===
+
+title: StellanDefaultDialogue6
+tags:
+---
+<<if Visited("StellanDefaultDialogue6")>>
+    [[StellanDefaultDialogue7]]
+<<else>>
+    <<SetSpeaker Player>>
+    Stellan, you’ve seemed to indicate to me in the past that you may have tried to escape this place on your own? Perhaps even… break whatever loop exists here?
+    <<SetSpeaker Stellan>>
+    Ah. Yes, well… If anyone on this ship were to know what a hopeless situation you are in, it would be me.
+    <<SetSpeaker Player>>
+    If you’ve tried what I am attempting, surely there’s some sort of information you could share with me about what I’m up against?
+    <<SetSpeaker Stellan>>
+    For now, I think the most help I can be is offering up my magic.
+<<endif>>
+===
+
+title: StellanDefaultDialogue7
+tags:
+---
+<<if Visited("StellanDefaultDialogue7")>>
+    [[StellanDefaultDialogue8]]
+<<else>>
+    <<SetSpeaker Player>>
+    You seem to know far more about what’s going on here than anyone else I’ve encountered on this ship. No one else even seems to find it particularly pressing that we get out of here.
+    <<SetSpeaker Stellan>>
+    I’m not certain the others you’ve encountered realize they’re trapped. It’s… complicated.
+    <<SetSpeaker Stellan>>
+    But the time loop has plucked everyone from a different moment, and when things reset, memories and perceptions of what they’ve been through and how long they’ve gone through it get hazy.
+<<endif>>
+===
+
+title: StellanDefaultDialogue8
+tags:
+---
+<<SetSpeaker Stellan>><<BranchComplete DefaultDialogue DefaultDialogue>>
+Had enough yet?
+<<SetSpeaker Player>>
+What’s one more death to a man who could face countless more before finally facing the gods?
+<<SetSpeaker Stellan>>
+Atlan, you are a scoundrel and a fool and one day you are going to get yourself killed enough times that those very gods will board this ship and drag you to the afterlife with their own hands for making such a mockery of their law.
+<<SetSpeaker Stellan>>
+Until that day… What can I do to help?
+===
+
+
+
+title: StellanRepeatable
+tags:
+---
+// Get a random number 0 - 7 and go to that node
+<<set $num to RandomNum(8)>>
+<<if $num is 0>>
+    <<SetSpeaker Stellan>>
+    Back again?
+<<elseif $num is 1>>
+    [[StellanRepeatable1]]
+<<elseif $num is 2>>
+    [[StellanRepeatable2]]
+<<elseif $num is 3>>
+    [[StellanRepeatable3]]
+<<elseif $num is 4>>
+    [[StellanRepeatable4]]
+<<elseif $num is 5>>
+    [[StellanRepeatable5]]
+<<elseif $num is 6>>
+    [[StellanRepeatable6]]
+<<else>>
+    [[StellanRepeatable7]]
+<<endif>>
+===
+
+title: StellanRepeatable1
+tags:
+---
+<<SetSpeaker Stellan>>
+Still not giving up?
+===
+
+title: StellanRepeatable2
+tags:
+---
+<<SetSpeaker Stellan>>
+Time for a change?
+===
+
+title: StellanRepeatable3
+tags:
+---
+<<SetSpeaker Stellan>>
+Have you considered it may be time to accept your fate?
+===
+
+title: StellanRepeatable4
+tags:
+---
+<<SetSpeaker Stellan>>
+More Star Shards? I’ll see what I can do this time.
+===
+
+title: StellanRepeatable5
+tags:
+---
+<<SetSpeaker Stellan>>
+Can you hurry it along? I’m getting bored of this.
+===
+
+title: StellanRepeatable6
+tags:
+---
+<<SetSpeaker Stellan>>
+Can’t say I’m surprised to see you here again.
+===
+
+title: StellanRepeatable7
+tags:
+---
+<<SetSpeaker Stellan>>
+Are you sick of this endless existence yet?
 ===

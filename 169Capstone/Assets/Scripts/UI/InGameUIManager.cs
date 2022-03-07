@@ -51,7 +51,7 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private TMP_Text healthPotionValue;
 
     public BossHealthBar bossHealthBar;
-
+    public TimerUI timerUI;
 
     void Awake()
     {
@@ -85,6 +85,10 @@ public class InGameUIManager : MonoBehaviour
         ToggleInGameGearIconPanel(setRunUIActive);
         tempCurrencyValue.gameObject.SetActive(setRunUIActive);
         healthUIContainer.SetActive(setRunUIActive);
+
+        // Reset timer
+        InputManager.instance.RunGameTimer(setRunUIActive, setRunUIActive);
+        GameManager.instance.gameTimer.ResetTimer();
     }
 
     // Called when player input opens or closes the inventory
@@ -143,7 +147,7 @@ public class InGameUIManager : MonoBehaviour
             case InventoryItemSlot.Helmet:
                 inGameHelmetIMG.sprite = _icon;
                 break;
-            case InventoryItemSlot.Boots:
+            case InventoryItemSlot.Legs:
                 inGameBootsIMG.sprite = _icon;
                 break;
             default:
@@ -172,7 +176,7 @@ public class InGameUIManager : MonoBehaviour
             case InventoryItemSlot.Helmet:
                 inGameHelmetIMG.sprite = emptySlotHelmetIcon;
                 break;
-            case InventoryItemSlot.Boots:
+            case InventoryItemSlot.Legs:
                 inGameBootsIMG.sprite = emptySlotBootsIcon;
                 break;
             default:
@@ -234,7 +238,7 @@ public class InGameUIManager : MonoBehaviour
         else if(shopkeeper.SpeakerID() == SpeakerID.Doctor){
             doctorShopUI.OpenShopUI();
         }
-        else if(shopkeeper.SpeakerID() == SpeakerID.Andy){
+        else if(shopkeeper.SpeakerID() == SpeakerID.Rhian){
             weaponsShopUI.OpenShopUI();
         }
         else{

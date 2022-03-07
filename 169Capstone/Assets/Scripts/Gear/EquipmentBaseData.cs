@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// TODO: set these to whatever we're actually calling them in game (player-facing names)
+
 public enum InventoryItemSlot
 {
     Weapon,
     Helmet,
     Accessory,
-    Boots,  // Legwear?
+    Legs,  // Legwear?
 
     enumSize
 }
