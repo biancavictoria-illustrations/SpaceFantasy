@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657838, g: 0.49641234, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -99,7 +99,7 @@ LightmapSettings:
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 112000000, guid: b30ad7b9c61fa124db81e05ad5cd41c4,
     type: 2}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -17034,28 +17034,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d7b3681783879a144a527e66bb39b3cd, type: 3}
---- !u!1 &1739439566 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5998261373688485150, guid: 1d04e89b981a0364586f94b70792903b,
-    type: 3}
-  m_PrefabInstance: {fileID: 5567960422966440563}
-  m_PrefabAsset: {fileID: 0}
---- !u!208 &1739439567
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1739439566}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 5, y: 0.00001, z: 5}
-  m_MoveThreshold: 0.1
-  m_Carve: 0
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5
 --- !u!4 &1780016452 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5409441847631608178, guid: 1d04e89b981a0364586f94b70792903b,
@@ -21847,101 +21825,11 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1965713173}
-    - target: {fileID: 2056895891343894499, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_Type
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2056895891343894499, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_Range
-      value: 57.827713
-      objectReference: {fileID: 0}
-    - target: {fileID: 2056895891343894499, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2056895891343894499, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2056895891343894499, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 0.31132078
-      objectReference: {fileID: 0}
-    - target: {fileID: 2056895891343894499, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_Intensity
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2056895891343894499, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_SpotAngle
-      value: 73.37659
-      objectReference: {fileID: 0}
-    - target: {fileID: 2056895891343894499, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_Lightmapping
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 2056895891343894499, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_InnerSpotAngle
-      value: 60.004086
-      objectReference: {fileID: 0}
-    - target: {fileID: 2056895891343894499, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_BoundingSphereOverride.w
-      value: 0.0000000018460309
-      objectReference: {fileID: 0}
-    - target: {fileID: 2056895891343894499, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_BoundingSphereOverride.x
-      value: 7.5e-43
-      objectReference: {fileID: 0}
-    - target: {fileID: 2056895891343894499, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_BoundingSphereOverride.y
-      value: 1.4035e-41
-      objectReference: {fileID: 0}
-    - target: {fileID: 2056895891343894499, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_BoundingSphereOverride.z
-      value: 7.5e-43
-      objectReference: {fileID: 0}
-    - target: {fileID: 2365775433717176577, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2365775433717176577, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2513316657810563256, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4436166756238739813, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 32.3
-      objectReference: {fileID: 0}
     - target: {fileID: 4710378838631361777, guid: 1d04e89b981a0364586f94b70792903b,
         type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1577656152}
-    - target: {fileID: 5285293437182539475, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 15cf43d4a70a9344399dd39b1f887129, type: 2}
     - target: {fileID: 5409441847631608178, guid: 1d04e89b981a0364586f94b70792903b,
         type: 3}
       propertyPath: m_RootOrder
@@ -22002,46 +21890,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pest Controll Spicey
       objectReference: {fileID: 0}
-    - target: {fileID: 5998261373688485150, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6102892351812226571, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: newColor.b
-      value: 0.15917587
-      objectReference: {fileID: 0}
-    - target: {fileID: 6102892351812226571, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: newColor.g
-      value: 0.15917587
-      objectReference: {fileID: 0}
-    - target: {fileID: 6102892351812226571, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: newColor.r
-      value: 0.6886792
-      objectReference: {fileID: 0}
     - target: {fileID: 6102892351812226571, guid: 1d04e89b981a0364586f94b70792903b,
         type: 3}
       propertyPath: sceneLight
       value: 
       objectReference: {fileID: 1263716556}
-    - target: {fileID: 7760136517070625024, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 15cf43d4a70a9344399dd39b1f887129, type: 2}
-    - target: {fileID: 7848595003562401834, guid: 1d04e89b981a0364586f94b70792903b,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8496841611787598728, guid: 1d04e89b981a0364586f94b70792903b,
         type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1965713173}
-    m_RemovedComponents:
-    - {fileID: 551032607415022639, guid: 1d04e89b981a0364586f94b70792903b, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d04e89b981a0364586f94b70792903b, type: 3}
