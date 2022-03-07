@@ -15,7 +15,8 @@ public class MainMenu : MonoBehaviour
 
     public void PlayGame()
     {
-        SceneManager.LoadScene("Main Hub");
+        SceneManager.LoadScene(GameManager.GAME_LEVEL_STRING_NAME);
+        
         // TODO: Load save files
     }
 

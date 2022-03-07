@@ -318,7 +318,7 @@ namespace Yarn.Unity {
                         onLineUpdate?.Invoke(text);
                         break;
                     }
-                    yield return new WaitForSeconds (textSpeed);
+                    yield return new WaitForSecondsRealtime (textSpeed);
                 }
 
                 // foreach (char c in text) {
