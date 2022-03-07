@@ -5,39 +5,30 @@ using UnityEngine;
 public class GameTimer : MonoBehaviour
 { 
     private float time;
-    private InputManager inputManager = null;
     [HideInInspector] public bool runTimer;
-    public int minutes;
-    public int seconds;
-    // Start is called before the first frame update
-    void Start()
+    public int minutes {get; private set;}
+    public int seconds {get; private set;}
+
+    void Awake()
     {
         runTimer = true;
-        time = 0;
-        minutes = 0;
-        seconds = 0;
+        ResetTimer();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if(inputManager == null)
-        {
-            inputManager = GameObject.FindWithTag("Player").GetComponent<InputManager>();
-        }
-        if(inputManager.shopIsOpen || inputManager.inventoryIsOpen || inputManager.compareItemIsOpen || PauseMenu.GameIsPaused)
-        {
-            runTimer = false;
-        }
-        else if(!runTimer)
-        {
-            runTimer = true;
-        }
-        else
+        if(runTimer)
         {
             time += Time.deltaTime;
             setDisplayTime();
         }
+    }
+
+    public void ResetTimer()
+    {
+        time = 0;
+        minutes = 0;
+        seconds = 0;
     }
 
     private void setDisplayTime()

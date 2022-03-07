@@ -43,8 +43,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcae2d03b94ca264cb45f50a66aaebaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponModel: {fileID: 0}
   dropItemPrefab: {fileID: 936317186558681456, guid: 0ebe962c7adf2124bbd8ce4a7ecb6415,
     type: 3}
+  totalPermanentCurrencySpent: 0
 --- !u!1 &8682984153458562420
 GameObject:
   m_ObjectHideFlags: 0
@@ -56,6 +58,7 @@ GameObject:
   - component: {fileID: 8682984153458562422}
   - component: {fileID: 8682984153458562421}
   - component: {fileID: 5915198418683075109}
+  - component: {fileID: 2958151487729667364}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -96,7 +99,9 @@ MonoBehaviour:
   gearManager: {fileID: 11400000, guid: 900aa733fc21ab34eb7952d9b31c32a1, type: 2}
   playerDeath: 0
   bossesKilled: 0
-  inShopMode: 0
+  gameTimer: {fileID: 2958151487729667364}
+  hasKilledTimeLich: 0
+  progressRunForTesting: 0
 --- !u!114 &5915198418683075109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,3 +114,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fece7ddd53b69c4b998f2c2de03d8a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2958151487729667364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8682984153458562420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03755979943a4444488c0c32fb700865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  runTimer: 0

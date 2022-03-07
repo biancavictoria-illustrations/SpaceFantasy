@@ -52,7 +52,7 @@ public class Shop : MonoBehaviour
         GeneratedEquipment generatedEquipment = itemObject.GetComponent<GeneratedEquipment>();
         generatedEquipment.SetEquipmentBaseData( PickItemFromPool(), rarity );
 
-        Debug.Log("Setting shop item to Rarity/ItemID: " + rarity + "/" + generatedEquipment.data.equipmentBaseData.ItemID());
+        // Debug.Log("Setting shop item to Rarity/ItemID: " + rarity + "/" + generatedEquipment.data.equipmentBaseData.ItemID());
 
         // TODO: Generate the item (see how it's done in the Drop script); for now, item will have default values besides it's EquipmentData and rarity
 
