@@ -97,3 +97,6 @@ public class PauseMenu : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 }
+
+
+// TODO: fix pause menu now that dialogue pauses (if you open pause menu while dialogue open)

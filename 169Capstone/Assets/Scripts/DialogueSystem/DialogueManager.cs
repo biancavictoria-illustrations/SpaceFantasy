@@ -325,6 +325,7 @@ public class DialogueManager : MonoBehaviour
     {
         // Stop allowing movement input
         InputManager.instance.ToggleDialogueOpenStatus(true);
+        Time.timeScale = 0f;
 
         // Disable UI elements
         InGameUIManager.instance.SetGameUIActive(false);
@@ -336,6 +337,7 @@ public class DialogueManager : MonoBehaviour
     {
         InputManager.instance.ToggleDialogueOpenStatus(false);
         InGameUIManager.instance.SetGameUIActive(true);
+        Time.timeScale = 1f;
 
         if(NPC.ActiveNPC){
             NPC.ActiveNPC.TalkedToNPC();
