@@ -17,12 +17,16 @@ public class OrbyBartenderChat : MonoBehaviour
     public const string orbyDialogue0 = "beep boop";
     public const string orbyDialogue1 = "beep beep";
     public const string orbyDialogue2 = "zworp zworp";
-    public const string orbyDialogue3 = "beep boop";
+    public const string orbyDialogue3 = "zeeerp";
     public const string orbyDialogue4 = "*fan whirring*";
-    public const string orbyDialogue5 = "beep boop";
+    public const string orbyDialogue5 = "wubwub";
+    public const string orbyDialogue6 = "zrweeee";
+    public const string orbyDialogue7 = "zyeeerp";
+    public const string orbyDialogue8 = "bweebwah";
 
     
-    public const string annoyedOrbyDialogue = "<i>*fan whirring*</i>";
+    public const string annoyedOrbyDialogue1 = "<i>*fan whirring*</i>";
+    public const string annoyedOrbyDialogue2 = "WHAAAAAAAA";
     public const string angryOrbyDialogue = "<i><color=red>BEEP BEEP</color></i>";
 
     private int numberOfInteracts = 0;
@@ -41,7 +45,11 @@ public class OrbyBartenderChat : MonoBehaviour
     private void PickNewOrbyDialogue()
     {
         if(numberOfInteracts == 15){
-            chatText.text = annoyedOrbyDialogue;
+            chatText.text = annoyedOrbyDialogue1;
+            return;
+        }
+        else if(numberOfInteracts == 16){
+            chatText.text = annoyedOrbyDialogue2;
             return;
         }
         else if(numberOfInteracts == 17){
@@ -52,7 +60,7 @@ public class OrbyBartenderChat : MonoBehaviour
         }
 
         // Randomly pick from the options of Orby dialogue
-        int num = Random.Range(0,6);
+        int num = Random.Range(0,9);
         switch(num){
             case 0:
                 chatText.text = orbyDialogue0;
@@ -70,7 +78,16 @@ public class OrbyBartenderChat : MonoBehaviour
                 chatText.text = orbyDialogue4;
                 return;
             case 5:
-                chatText.text = orbyDialogue4;
+                chatText.text = orbyDialogue5;
+                return;
+            case 6:
+                chatText.text = orbyDialogue6;
+                return;
+            case 7:
+                chatText.text = orbyDialogue7;
+                return;
+            case 8:
+                chatText.text = orbyDialogue8;
                 return;
         }     
     }
@@ -101,8 +118,7 @@ public class OrbyBartenderChat : MonoBehaviour
             inOrbyRange = true;
             if(canInteractWithOrby){
                 AlertTextUI.instance.EnableInteractAlert();
-            }            
-            // Debug.Log("entered orby's radius");
+            }
         }
     }
 
@@ -112,8 +128,7 @@ public class OrbyBartenderChat : MonoBehaviour
             inOrbyRange = false;
             if(canInteractWithOrby){
                 AlertTextUI.instance.DisableAlert();
-            }            
-            // Debug.Log("left orby's radius");
+            }
         }
     }
 }
