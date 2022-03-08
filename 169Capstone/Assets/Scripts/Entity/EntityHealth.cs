@@ -64,7 +64,7 @@ public class EntityHealth : MonoBehaviour
         if(gameObject.tag != "Player"){
             enemyID = GetComponent<EnemyStats>().enemyID;
             // If a boss enemy (update int if we add more bosses)
-            if( (int)enemyID < 3 ){
+            if( enemyID == EnemyID.TimeLich || enemyID == EnemyID.BeetleBoss || enemyID == EnemyID.Harvester ){
                 isBossEnemy = true;
             }
             // If normal enemy
@@ -167,11 +167,6 @@ public class EntityHealth : MonoBehaviour
                 if(enemyID == EnemyID.TimeLich){
                     GameManager.instance.hasKilledTimeLich = true;
                 }
-                // If you killed the mini boss, trigger Stellan's comm to tell you to go to the elevator
-                else if(enemyID == EnemyID.BeetleBoss){
-                    DialogueManager.instance.stellanCommTriggered = true;
-                    StartCoroutine(GameManager.instance.AutoRunDialogueAfterTime(2f));
-                }
             }
 
             if(enemyID == EnemyID.Slime || enemyID == EnemyID.TimeLich || enemyID == EnemyID.BeetleBoss){
@@ -193,6 +188,12 @@ public class EntityHealth : MonoBehaviour
 
             if(Random.value <= TEMPSTARSHARDDROPCHANCE)
                 Instantiate(starShardPrefab, transform.position, Quaternion.identity);
+
+            // If you killed the mini boss, trigger Stellan's comm to tell you to go to the elevator
+            if(enemyID == EnemyID.BeetleBoss){
+                DialogueManager.instance.SetStellanCommTriggered(true);
+                Player.instance.StartAutoDialogueFromPlayer();
+            }
 
             Destroy(gameObject);
         }
