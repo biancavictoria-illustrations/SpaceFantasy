@@ -6,8 +6,10 @@ tags:
 
 <<if $stellanCommTriggered>>
     [[PlayerStellanCommTriggered]]
-<<elseif $runNum is 1>>
+<<elseif $runNum is 1 and not Visited("PlayerFirstRunIntro")>>
     [[PlayerFirstRunIntro]]
+<<else>>
+    ERROR: No player dialogue found.
 <<endif>>
 ===
 

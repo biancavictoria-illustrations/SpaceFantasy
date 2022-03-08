@@ -27,7 +27,7 @@ public class DialogueManager : MonoBehaviour
 
     [SerializeField] private int numRunsThreshold = 4;   // Threshold for # runs beyond the exact num run that numRun dialogue can trigger
 
-    public bool stellanCommTriggered = false;
+    public bool stellanCommTriggered {get; private set;}
     private bool hasBeenInitialized = false;
 
     public bool stopTime;
@@ -59,6 +59,13 @@ public class DialogueManager : MonoBehaviour
                 AddSpeakerToDictionary(s);
             }
         }
+
+        stellanCommTriggered = false;
+    }
+
+    public void SetStellanCommTriggered(bool set)
+    {
+        stellanCommTriggered = set;
     }
 
     private void SetYarnFunctions()
@@ -91,12 +98,12 @@ public class DialogueManager : MonoBehaviour
         });
 
         dialogueRunner.AddFunction("StellanCommTriggered", 0, delegate (Yarn.Value[] parameters){
-            if(stellanCommTriggered){
-                stellanCommTriggered = false;
+            if(DialogueManager.instance.stellanCommTriggered){
+                DialogueManager.instance.SetStellanCommTriggered(false);
                 return true;
             }
             else{
-                return stellanCommTriggered;
+                return false;
             }
         });
 
@@ -313,6 +320,7 @@ public class DialogueManager : MonoBehaviour
     // OR when we want to force dialogue when you walk into certain triggers at certain times (Time Lich, etc.)
     public void OnNPCInteracted()
     {
+        Debug.Log("On NPC interacted");
         OnDialogueOpened();
 
         if(NPC.ActiveNPC){
