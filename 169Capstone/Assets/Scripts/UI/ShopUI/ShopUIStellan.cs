@@ -151,7 +151,7 @@ public class ShopUIStellan : MonoBehaviour
         UpdateAllUpgradePanels();
 
         leaveShopButton.Select();
-        Time.timeScale = 0f;
+        GameManager.instance.shopOpen = true;
     }
   
     public void CloseShopUI()
@@ -162,7 +162,7 @@ public class ShopUIStellan : MonoBehaviour
         ClearFocusPanel();
 
         AlertTextUI.instance.EnableShopAlert();
-        Time.timeScale = 1f;
+        GameManager.instance.shopOpen = false;
     }
 
     public void ResetButtonClicked()

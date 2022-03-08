@@ -19,7 +19,7 @@ public class PauseMenu : MonoBehaviour
     public void ResumeGame()
     {
         ResetPauseUI();
-        Time.timeScale = 1f;
+        GameManager.instance.pauseMenuOpen = false;
         GameIsPaused = false;
         InputManager.instance.RunGameTimer(true);
 
@@ -53,7 +53,7 @@ public class PauseMenu : MonoBehaviour
     {
         InputManager.instance.RunGameTimer(false);
         pauseMenuUI.SetActive(true);
-        Time.timeScale = 0f;
+        GameManager.instance.pauseMenuOpen = true;
         GameIsPaused = true;
         continueButton.Select();
 
@@ -92,7 +92,7 @@ public class PauseMenu : MonoBehaviour
 
     public void LoadMenu()
     {
-        Time.timeScale = 1f;
+        GameManager.instance.pauseMenuOpen = false;
         GameIsPaused = false;
         SceneManager.LoadScene("MainMenu");
     }

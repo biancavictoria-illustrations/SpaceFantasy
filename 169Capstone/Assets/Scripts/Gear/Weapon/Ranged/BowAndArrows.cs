@@ -68,7 +68,7 @@ public class BowAndArrows : Equipment
             yield return null;
         }
 
-        float attackSpeed = player.currentAttackSpeed + maxAttackSpeedModifier - (charge * heldCounter);
+        //float attackSpeed = player.currentAttackSpeed + maxAttackSpeedModifier - (charge * heldCounter);
         float duration = minDuration + (charge * heldCounter);
         currentCharge = charge;
 

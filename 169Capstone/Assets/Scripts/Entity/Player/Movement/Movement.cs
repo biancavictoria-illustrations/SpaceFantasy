@@ -12,8 +12,10 @@ public class Movement : MonoBehaviour
     public float smoothing = 0.1f;
     public float gravityAccel = -10f;
     public float jumpSpeed = 10;
+    public bool isAttacking;
     
     private Vector3 externalVelocity;
+    private Vector3 cursorLookDirection;
     private float smoothingVelocity;
     private float horizontalMove;
     private float verticalMove;
@@ -304,13 +306,19 @@ public class Movement : MonoBehaviour
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
             float angle = Mathf.SmoothDampAngle(model.eulerAngles.y, targetAngle, ref smoothingVelocity, smoothing);
 
-            if(InputManager.instance.isAttacking)
+            if(isAttacking)
             {
-                model.rotation = Quaternion.FromToRotation(Vector3.forward, InputManager.instance.cursorLookDirection);
+                if(cursorLookDirection == Vector3.zero)
+                    cursorLookDirection = InputManager.instance.cursorLookDirection;
+
+                model.rotation = Quaternion.FromToRotation(Vector3.forward, cursorLookDirection);
                 direction /= 2;
             }
             else
             {
+                if(cursorLookDirection != Vector3.zero)
+                    cursorLookDirection = Vector3.zero;
+
                 model.rotation = Quaternion.Euler(0, angle, 0);
             }
         }

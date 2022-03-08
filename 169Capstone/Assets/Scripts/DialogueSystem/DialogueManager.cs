@@ -30,6 +30,8 @@ public class DialogueManager : MonoBehaviour
     public bool stellanCommTriggered = false;
     private bool hasBeenInitialized = false;
 
+    public bool stopTime;
+
     void Awake()
     {
         // Make this a singleton so that it can be accessed from anywhere and there's only one
@@ -325,7 +327,7 @@ public class DialogueManager : MonoBehaviour
     {
         // Stop allowing movement input
         InputManager.instance.ToggleDialogueOpenStatus(true);
-        Time.timeScale = 0f;
+        stopTime = true;
 
         // Disable UI elements
         InGameUIManager.instance.SetGameUIActive(false);
@@ -337,7 +339,7 @@ public class DialogueManager : MonoBehaviour
     {
         InputManager.instance.ToggleDialogueOpenStatus(false);
         InGameUIManager.instance.SetGameUIActive(true);
-        Time.timeScale = 1f;
+        stopTime = false;
 
         if(NPC.ActiveNPC){
             NPC.ActiveNPC.TalkedToNPC();

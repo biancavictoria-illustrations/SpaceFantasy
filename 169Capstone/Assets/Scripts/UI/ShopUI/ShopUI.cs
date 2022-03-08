@@ -35,7 +35,7 @@ public class ShopUI : MonoBehaviour
         shopInventoryTopButton.Select();
         // shopInventoryTopButton.GetComponent<ItemPanelShopUI>().SetHoverAlertsActive(true);
 
-        Time.timeScale = 0f;
+        GameManager.instance.shopOpen = true;
     }
   
     public virtual void CloseShopUI()
@@ -47,7 +47,7 @@ public class ShopUI : MonoBehaviour
         hoverAlerts.DisableAllHoverAlerts();
 
         AlertTextUI.instance.EnableShopAlert();
-        Time.timeScale = 1f;
+        GameManager.instance.shopOpen = false;
     }
 
     public virtual void SetShopUIInteractable(bool set)

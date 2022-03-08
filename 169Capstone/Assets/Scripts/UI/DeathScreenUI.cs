@@ -17,7 +17,7 @@ public class DeathScreenUI : MonoBehaviour
         SetDeathMessage();
         deathScreenUI.SetActive(true);
         InGameUIManager.instance.SetGameUIActive(false);
-        Time.timeScale = 0f;
+        GameManager.instance.deathMenuOpen = true;
         continueButton.Select();
     }
 
@@ -36,7 +36,7 @@ public class DeathScreenUI : MonoBehaviour
     // Called when player clicks continue button on death screen UI
     public void GoToMainHubOnDeath()
     {
-        Time.timeScale = 1f;
+        GameManager.instance.deathMenuOpen = false;
         ClosePlayerDeathUI();
         GameManager.instance.EndRun();
         SceneManager.LoadScene(GameManager.MAIN_HUB_STRING_NAME);

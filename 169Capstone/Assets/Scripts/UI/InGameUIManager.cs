@@ -52,6 +52,7 @@ public class InGameUIManager : MonoBehaviour
 
     public BossHealthBar bossHealthBar;
     public TimerUI timerUI;
+    
 
     void Awake()
     {
@@ -105,11 +106,9 @@ public class InGameUIManager : MonoBehaviour
 
         if(set){
             inventoryUI.OnInventoryOpen();
-            Time.timeScale = 0f;
             AlertTextUI.instance.ToggleAlertText(false);
         }
         else{
-            Time.timeScale = 1f;
             AlertTextUI.instance.ToggleAlertText(true);
         }
     }
@@ -124,11 +123,9 @@ public class InGameUIManager : MonoBehaviour
         if(set){
             gearSwapUI.OnGearSwapUIOpen(item);
             AlertTextUI.instance.DisableAlert();
-            Time.timeScale = 0f;
         }
         else{
             AlertTextUI.instance.EnableItemPickupAlert();
-            Time.timeScale = 1f;
         }
     }
 

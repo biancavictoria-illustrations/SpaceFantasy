@@ -15,6 +15,120 @@ public enum PlayerFacingStatName
 
 public class PlayerStats : EntityStats
 {
+    #region Bonus Management
+        public enum PlayerStatType
+        {
+            CooldownReduction,
+            ShopPriceReduction,
+            Luck,
+            HealingEfficacy,
+
+            enumSize
+        }
+
+        private struct PlayerStatBonusType : System.IEquatable<PlayerStatBonusType>
+        {
+            public PlayerStatBonusType(PlayerStatType s, BonusType b)
+            {
+                stat = s;
+                bonus = b;
+            }
+
+            public PlayerStatType stat;
+            public BonusType bonus;
+
+            public override bool Equals(object obj) => obj is PlayerStatBonusType other && this.Equals(other);
+
+            public bool Equals(PlayerStatBonusType other)
+            {
+                return stat == other.stat && bonus == other.bonus;
+            }
+
+            public override int GetHashCode() => ((int)stat, (int)bonus).GetHashCode();
+        }
+
+        private Dictionary<Object, Dictionary<PlayerStatBonusType, float>> playerStatBonusFromSource;
+
+        public void SetBonusForStat(Object bonusSource, PlayerStatType stat, BonusType bonusType, float bonusAmount)
+        {
+            if(bonusSource == null || stat == PlayerStatType.enumSize ||  bonusType == BonusType.enumSize)
+                return;
+            
+            if(!playerStatBonusFromSource.ContainsKey(bonusSource))
+            {
+                playerStatBonusFromSource.Add(bonusSource, new Dictionary<PlayerStatBonusType, float>());
+            }
+
+            PlayerStatBonusType sbt = new PlayerStatBonusType(stat, bonusType);
+            if(playerStatBonusFromSource[bonusSource].ContainsKey(sbt))
+                playerStatBonusFromSource[bonusSource][sbt] = bonusAmount;
+            else
+                playerStatBonusFromSource[bonusSource].Add(sbt, bonusAmount);
+
+            RecalculateStatBonus(stat, bonusType);
+        }
+
+        public float? GetBonusForStat(Object bonusSource, PlayerStatType stat, BonusType bonusType)
+        {
+            if(bonusSource == null || stat == PlayerStatType.enumSize ||  bonusType == BonusType.enumSize)
+                return null;
+            
+            if(!playerStatBonusFromSource.ContainsKey(bonusSource))
+                return null;
+
+            PlayerStatBonusType sbt = new PlayerStatBonusType(stat, bonusType);
+            if(playerStatBonusFromSource[bonusSource].ContainsKey(sbt))
+                return playerStatBonusFromSource[bonusSource][sbt];
+            else
+                return null;
+        }
+
+        private void RecalculateStatBonus(PlayerStatType stat, BonusType bonusType)
+        {
+            if(stat == PlayerStatType.enumSize ||  bonusType == BonusType.enumSize)
+                return;
+
+            float total = 0;
+            PlayerStatBonusType sbt = new PlayerStatBonusType(stat, bonusType);
+            foreach(Object key in new List<Object>(playerStatBonusFromSource.Keys))
+            {
+                if(key == null)
+                {
+                    playerStatBonusFromSource.Remove(key);
+                }
+                else
+                {
+                    if(playerStatBonusFromSource[key].ContainsKey(sbt))
+                        total += playerStatBonusFromSource[key][sbt];
+                }
+            }
+
+            switch(stat)
+            {
+                case PlayerStatType.CooldownReduction:
+                    if(bonusType == BonusType.flat)
+                        cooldownReductionFlatBonus = total;
+                    break;
+
+                case PlayerStatType.ShopPriceReduction:
+                    if(bonusType == BonusType.flat)
+                        shopPriceReductionFlatBonus = total;
+                    break;
+                    
+                case PlayerStatType.Luck:
+                    if(bonusType == BonusType.flat)
+                        luckFlatBonus = total;
+                    else
+                        luckMultiplier = total;
+                    break;
+                    
+                case PlayerStatType.HealingEfficacy:
+                    if(bonusType == BonusType.flat)
+                        healingEfficacyFlatBonus = (int)total;
+                    break;
+            }
+        }
+    #endregion
 
     #region Primary Stats
 
@@ -213,19 +327,29 @@ public class PlayerStats : EntityStats
 
         public override float getStatusResistChance()
         {
-            return statusResistChanceBase * statusResistChanceMultiplier + statusResistChanceFlatBonus
+            return statusResistChanceBase + statusResistChanceFlatBonus
                     + (constitution * statusResistBonusPerConstitutionPoint);
         }
 
     #endregion
 
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         initializeStats();
     }
 
     public void initializeStats()
     {
+        attackSpeedBase = 1;
+        moveSpeedBase = 1;
+
+        maxHitPointsMultiplier = 1;
+        attackSpeedMultiplier = 1;
+        moveSpeedMultiplier = 1;
+        defenseMultiplier = 1;
+        luckMultiplier = 1;
+
         float relativeWeight = 2;
 
         //TODO implement skill point "pool"

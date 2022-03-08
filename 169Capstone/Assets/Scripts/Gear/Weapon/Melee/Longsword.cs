@@ -20,80 +20,76 @@ public class Longsword : Equipment
     private bool currentlyAttacking = false;
 
     private Player player;
+    private Movement movement;
     private AnimationStateController playerAnim;
     private InputManager input;
+    private Collider swordCollider;
+    private bool isAttacking;
+    private bool holdingAttack;
     [SerializeField] private GameObject timerPrefab;
 
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        movement = player.GetComponentInChildren<Movement>();
+
         playerAnim = player.GetComponentInChildren<AnimationStateController>();
-        StartCoroutine(WatchForAttack());
+        playerAnim.endAttack.AddListener(disableAttacking);
+
+        itemModel.GetComponentInChildren<LongswordCollisionWatcher>().hitEvent.AddListener(DealDamage);
+        swordCollider = itemModel.GetComponentInChildren<Collider>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        playerAnim.animator.SetBool("IsAttacking", InputManager.instance.isAttacking);
+        if(InputManager.instance.isAttacking && !isAttacking)
+        {
+            isAttacking = true;
+            holdingAttack = true;
+            movement.isAttacking = true;
+        }
+
+        if(holdingAttack && !InputManager.instance.isAttacking)
+        {
+            holdingAttack = false;
+            bonusStackCounter = 0;
+            player.stats.SetBonusForStat(this, EntityStats.StatType.AttackSpeed, EntityStats.BonusType.multiplier, 0);
+        }
+
+        playerAnim.animator.SetBool("IsAttacking", isAttacking);
+        playerAnim.animator.SetFloat("AttackSpeed", player.stats.getAttackSpeed());
+        swordCollider.enabled = playerAnim.hitboxActive;
     }
 
-    public bool DealDamage()
+    public void DealDamage(Collider other)
     {
-        Debug.DrawRay(player.transform.position + 2*Vector3.up, InputManager.instance.cursorLookDirection * meleeRange, Color.yellow, 1);
-        RaycastHit hit;
-        if(Physics.SphereCast(player.transform.position + 2*Vector3.up, 1, InputManager.instance.cursorLookDirection, out hit, meleeRange, LayerMask.GetMask("Enemy","Prop")))
+        if(other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            if(hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
-            {
-                Debug.Log("Damage");
-                return hit.collider.GetComponent<EntityHealth>().Damage(damageModifier[heldEffectCounter] * player.currentStr);
-            }
-            else
-            {
-                hit.collider.GetComponent<PropJumpBreak>().BreakProp();
-                return true;
-            }
-            
+            Debug.Log("Damage");
+            other.GetComponent<EntityHealth>().Damage(damageModifier[heldEffectCounter] * player.currentStr);
+            GameManager.instance.EnableHitStop();
         }
         else
         {
-            Debug.Log("No Damage");
-            return false;
+            other.GetComponent<PropJumpBreak>().BreakProp();
         }
-
     }
 
-    private void SecondaryAbility()
+    public void disableAttacking()
     {
-        if(bonusStackCounter < bonusStackMax)
+        if(holdingAttack)
         {
-            bonusStackCounter++;
-            StartCoroutine(SpeedBonus(Instantiate(timerPrefab).GetComponent<Timer>()));
+            if(bonusStackCounter < bonusStackMax)
+                ++bonusStackCounter;
         }
-    }
-
-    private IEnumerator SpeedBonus(Timer timer)
-    {
-        float bonus = player.currentAttackSpeed * attackSpeedModifierBonus;
-        player.currentAttackSpeed += bonus;
-        timer.StartTimer(secondaryDuration);
-        yield return new WaitUntil(() => timer.timeRemaining <= 0);
-        player.currentAttackSpeed -= bonus;
-        bonusStackCounter--;
-        Destroy(timer.gameObject);
-    }
-
-    private IEnumerator WatchForAttack()
-    {
-        while(true)
+        else
         {
-            yield return null;
-            if(playerAnim.attackActive)
-            {
-                playerAnim.attackActive = false;
-                DealDamage();
-            }
+            isAttacking = false;
+            movement.isAttacking = false;
         }
+
+        player.stats.SetBonusForStat(this, EntityStats.StatType.AttackSpeed, EntityStats.BonusType.multiplier, bonusStackCounter * attackSpeedModifierBonus);
     }
 }

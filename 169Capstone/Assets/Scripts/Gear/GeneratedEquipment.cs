@@ -122,6 +122,7 @@ public class GeneratedEquipment : MonoBehaviour
         if( slot == InventoryItemSlot.Weapon ){
             GameObject model = Instantiate( data.equipmentBaseData.EquippedWeaponModelPrefab(), Player.instance.handPos );
             PlayerInventory.instance.weaponModel = model;
+            equippedItemData.InitializeModel(model);
         }
 
         // Destroy THIS game object because we no longer need it to store the generated item data
