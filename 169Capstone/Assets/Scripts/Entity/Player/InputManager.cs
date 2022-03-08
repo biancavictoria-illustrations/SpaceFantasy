@@ -131,6 +131,10 @@ public class InputManager : MonoBehaviour
             GeneratedEquipment itemData = DropTrigger.ActiveGearDrop;
             ToggleCompareItemUI(true, itemData);
         }
+
+        else if(OrbyBartenderChat.instance && OrbyBartenderChat.instance.inOrbyRange){
+            OrbyBartenderChat.instance.OnOrbyInteracted();
+        }
     }
 
     public void ToggleCompareItemUI(bool set, GeneratedEquipment item)
