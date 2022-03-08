@@ -360,6 +360,9 @@ public class PlayerStats : EntityStats
         intelligence = randomOnCurve(minIntelligence, maxIntelligence, relativeWeight);
         wisdom = randomOnCurve(minWisdom, maxWisdom, relativeWeight);
         charisma = randomOnCurve(minCharisma, maxCharisma, relativeWeight);
+
+        healingEfficacyBase = 25;
+        healingEfficacyFlatBonus = 0;
     }
 
     private int randomOnCurve(int min, int max, float relativeWeight)

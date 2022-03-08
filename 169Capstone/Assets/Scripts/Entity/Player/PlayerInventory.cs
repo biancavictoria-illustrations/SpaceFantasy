@@ -51,8 +51,8 @@ public class PlayerInventory : MonoBehaviour
             return;
         }
 
-        EntityHealth playerHealth = Player.instance.GetComponent<EntityHealth>();
-        float healedHitPoints = playerHealth.maxHitpoints * (0.01f * Player.instance.GetComponent<PlayerStats>().getHealingEfficacy());
+        EntityHealth playerHealth = Player.instance.health;
+        float healedHitPoints = playerHealth.maxHitpoints * (0.01f * Player.instance.stats.getHealingEfficacy());
         playerHealth.Heal(healedHitPoints);
 
         healthPotionQuantity--;
