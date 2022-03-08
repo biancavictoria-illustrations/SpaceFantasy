@@ -36,11 +36,11 @@ public class BossRoomClose : MonoBehaviour
 
     private void RoomOpen(EntityHealth _)
     {
-        if (room.hasEnemies())
+        if (!room.hasEnemies())
         {
             transform.GetChild(0).gameObject.SetActive(false);
             sceneLight.color = oldColor;
-            Debug.Log("Room Close");
+            Debug.Log("Room Open");
         }
     }
 
