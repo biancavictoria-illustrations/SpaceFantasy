@@ -108,7 +108,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
         // If there's still more to purchase, set cost value + set color values based on if we can afford it or not
         if(!soldOut && !statMinEqualsMax){
-            costText.text = "$" + currentCost;  // TODO: swap out $
+            costText.text = "" + currentCost;
             SetValuesBasedOnAffordStatus();
         }
 
