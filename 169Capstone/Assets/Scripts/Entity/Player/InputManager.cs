@@ -143,7 +143,7 @@ public class InputManager : MonoBehaviour
     // If you're in dialogue, click anywhere to progress
     public void OnClick(InputValue input)
     {
-        if(isInDialogue && !PauseMenu.GameIsPaused){
+        if(isInDialogue && !PauseMenu.GameIsPaused && !DialogueManager.instance.dialogueUI.IsMidDialogueLineDisplay){
             DialogueManager.instance.dialogueUI.MarkLineComplete();
         }
     }

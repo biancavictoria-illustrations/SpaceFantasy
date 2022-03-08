@@ -69,8 +69,13 @@ public class Player : MonoBehaviour
 
         // If your first run, auto trigger starting dialogue
         if(GameManager.instance.currentRunNumber == 1){
-            StartCoroutine(GameManager.instance.AutoRunDialogueAfterTime());
+            StartAutoDialogueFromPlayer();
         }
+    }
+
+    public void StartAutoDialogueFromPlayer(float timeToWait = GameManager.DEFAULT_AUTO_DIALOGUE_WAIT_TIME)
+    {
+        StartCoroutine(GameManager.instance.AutoRunDialogueAfterTime());
     }
 
     public float CurrentAttackSpeed()
