@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public enum StellanShopUpgradeType{
+public enum PermanentUpgradeType{
     // Stat Increases
     STRMin,
     DEXMin,
@@ -86,7 +86,7 @@ public class ShopUIStellan : MonoBehaviour
     {
         if(giveCurrencyForTesting){
             giveCurrencyForTesting = false;
-            PlayerInventory.instance.SetPermanentCurrency( PlayerInventory.instance.permanentCurrency + 100 );
+            PlayerInventory.instance.SetPermanentCurrency( PlayerInventory.instance.permanentCurrency + 1000 );
         }
     }
 
@@ -173,9 +173,8 @@ public class ShopUIStellan : MonoBehaviour
 
     public void ResetButtonClicked()
     {
-        // TODO: Reset ACTUAL skills to default values
-
-        playerStats.ResetAllStatGenerationValues();
+        PermanentUpgradeManager.instance.ResetAllSkillValuesToDefault();
+        PermanentUpgradeManager.instance.ResetAllStatGenerationValuesToDefault();
         
         PlayerInventory.instance.ResetPermanentCurrency();
 

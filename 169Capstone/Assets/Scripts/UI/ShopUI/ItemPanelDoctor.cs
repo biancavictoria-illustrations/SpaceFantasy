@@ -148,7 +148,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
         base.PurchaseItem();
 
         if(category == UpgradeShopCategory.HealthPotion){
-            PlayerInventory.instance.PurchaseHealthPotion();
+            PlayerInventory.instance.IncrementHealthPotionQuantity();
             IncrementStatValue();
         }
         else if(category == UpgradeShopCategory.PotionEfficacy){

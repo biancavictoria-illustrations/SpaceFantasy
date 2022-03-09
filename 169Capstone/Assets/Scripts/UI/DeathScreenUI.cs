@@ -12,6 +12,10 @@ public class DeathScreenUI : MonoBehaviour
 
     public Button continueButton;
 
+    public const string deathMessage0 = "Resistance is futile. But Atlan resisted nonetheless.";
+    public const string deathMessage1 = "The stubborn, handsome scoundrel once more met his end... only to return.";
+    public const string deathMessage2 = "And so the spacefaring adventurer met yet another end, only to find himself back at the beginning once more.";
+
     public void OpenPlayerDeathUI()
     {
         SetDeathMessage();
@@ -29,8 +33,23 @@ public class DeathScreenUI : MonoBehaviour
 
     private void SetDeathMessage()
     {
-        // TODO: Fill this in!
-        deathMessage.text = "You died!";
+        if(GameManager.instance.currentRunNumber == 1){
+            deathMessage.text = "And so the spacefaring adventurer met his end.\n...Or so he thought.";
+            return;
+        }
+
+        int num = Random.Range(0,2);
+        switch(num){
+            case 0:
+                deathMessage.text = deathMessage0;
+                return;
+            case 1:
+                deathMessage.text = deathMessage1;
+                return;
+            case 2:
+                deathMessage.text = deathMessage2;
+                return;
+        }
     }
 
     // Called when player clicks continue button on death screen UI
