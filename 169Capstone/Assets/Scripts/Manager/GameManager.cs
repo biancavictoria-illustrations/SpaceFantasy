@@ -154,6 +154,7 @@ public class GameManager : MonoBehaviour
             // TODO: Play animation of you falling or something Idk
         }
         else if(currentSceneName == GAME_LEVEL_STRING_NAME){
+            PlayerInventory.instance.SetRunStartHealthPotionQuantity();
             InGameUIManager.instance.ToggleRunUI(true);
         }
     }

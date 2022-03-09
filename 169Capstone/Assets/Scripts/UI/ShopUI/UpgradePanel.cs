@@ -38,19 +38,11 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
     [SerializeField] private Button upgradeButton;
 
-    public bool soldOut {get; private set;}
-    public bool statMinEqualsMax {get; private set;}
-    public bool cannotAffordUpgrade {get; private set;}
+    private bool soldOut = false;
+    private bool statMinEqualsMax = false;
+    private bool cannotAffordUpgrade = false;
 
     private ShopUIStellan shopUI;
-
-    void Start()
-    {
-        soldOut = false;
-        statMinEqualsMax = false;
-        cannotAffordUpgrade = false;
-        currentCost = 0;
-    }
 
     public void SetShopUI(ShopUIStellan _shop)
     {
@@ -64,12 +56,13 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
     public void UpdateUIDisplayValues()
     {
+        SetCurrentCost();
+
         CheckPurchaseConditions();
         UpdateBaseDescriptionValues();
 
         // If stat upgrade
-        if( (int)upgradeType < 12 ){
-            SetStatCurrentCost();
+        if( (int)upgradeType < 12 ){            
             skillLevelText.text = "" + currentUpgradeLevel;            
             // Update description
             if(soldOut){
@@ -80,8 +73,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
             }
         }
         // If skill
-        else{
-            SetSkillCurrentCost();
+        else{            
             skillLevelText.text = currentUpgradeLevel + "/" + totalUpgradeLevels;
             currentDescription = baseDescription;
         }
@@ -91,6 +83,16 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         // If this is the currently active hover panel, update the focus panel values
         if(shopUI.activeUpgradeInFocus && shopUI.activeUpgradeInFocus == this){
             shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, currentDescription, costText.text, upgradeIcon.sprite);
+        }
+    }
+
+    private void SetCurrentCost()
+    {
+        if((int)upgradeType < 12){
+            SetStatCurrentCost();
+        }
+        else{
+            SetSkillCurrentCost();
         }
     }
 
@@ -119,6 +121,10 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
     private void SetStatValuesBasedOnMinMaxStatus()
     {
+        if( (int)upgradeType > 11 ){
+            return;
+        }
+
         if(statMinEqualsMax){
             currentDescription += STAT_MIN_MAX_ALERT;
 
@@ -187,13 +193,9 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     }
 
     // Optionally can pass in an upgrade type to change the type of this panel
-    public void InitializeUpgradeValues( Sprite _icon, PermanentUpgradeType _type = PermanentUpgradeType.enumSize )
+    public void InitializeUpgradeValues( Sprite _icon )
     {
         upgradeIcon.sprite = _icon;
-
-        if(_type != PermanentUpgradeType.enumSize){
-            upgradeType = _type;
-        }
 
         SetValuesByType();        
         if( (int)upgradeType < 12 ){    // If stat upgrade
@@ -241,7 +243,9 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
             SetMaxUpgradesReached(true);
         }
 
-        shopUI.UpdateAllUpgradePanels();
+        UpdateUIDisplayValues();
+
+        // shopUI.UpdateAllUpgradePanels();
     }
 
     private void SetMaxUpgradesReached(bool set)
@@ -261,25 +265,32 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        shopUI.activeUpgradeInFocus = this;
-        UpdateUIDisplayValues();
-        shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, currentDescription, costText.text, upgradeIcon.sprite);
+        OnUpgradePanelSelect();
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        shopUI.activeUpgradeInFocus = null;
-        shopUI.ClearFocusPanel();
+        OnUpgradePanelDeselct();
     }
 
     public void OnSelect(BaseEventData eventData)
+    {
+        OnUpgradePanelSelect();
+    }
+
+    public void OnDeselect(BaseEventData eventData)
+    {
+        OnUpgradePanelDeselct();
+    }
+
+    private void OnUpgradePanelSelect()
     {
         shopUI.activeUpgradeInFocus = this;
         UpdateUIDisplayValues();
         shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, currentDescription, costText.text, upgradeIcon.sprite);
     }
 
-    public void OnDeselect(BaseEventData eventData)
+    private void OnUpgradePanelDeselct()
     {
         shopUI.activeUpgradeInFocus = null;
         shopUI.ClearFocusPanel();
@@ -291,7 +302,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
             case PermanentUpgradeType.STRMin:
                 upgradeName = "Strength Minimum";
                 totalUpgradeLevels = MIN_STAT_MAX;
-                costIncreasePerLevel = -1;
+                costIncreasePerLevel = -1;      // We don't use this value for minimums so it's -1 so that if it's being used we know there's an issue!
                 return;
             case PermanentUpgradeType.STRMax:
                 upgradeName = "Strength Maximum";

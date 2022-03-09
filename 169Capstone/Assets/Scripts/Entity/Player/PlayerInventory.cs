@@ -15,6 +15,7 @@ public class PlayerInventory : MonoBehaviour
     public GameObject dropItemPrefab;
 
     public int healthPotionQuantity {get; private set;}
+    public int startingHealthPotionQuantity = 3;
 
     public int tempCurrency {get; private set;}
     public int permanentCurrency {get; private set;}
@@ -59,9 +60,14 @@ public class PlayerInventory : MonoBehaviour
         InGameUIManager.instance.SetHealthPotionValue(healthPotionQuantity);
     }
 
-    public void PurchaseHealthPotion()
+    public void SetRunStartHealthPotionQuantity()
     {
-        healthPotionQuantity++;
+        healthPotionQuantity = startingHealthPotionQuantity;
+    }
+
+    public void IncrementHealthPotionQuantity( int potionNum = 1 )
+    {
+        healthPotionQuantity += potionNum;
         InGameUIManager.instance.SetHealthPotionValue(healthPotionQuantity);
     }
 

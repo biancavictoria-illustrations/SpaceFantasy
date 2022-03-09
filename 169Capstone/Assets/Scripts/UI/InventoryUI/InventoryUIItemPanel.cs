@@ -36,7 +36,8 @@ public class InventoryUIItemPanel : MonoBehaviour
         expandedDescription = data.LongDescription();
         itemDescription.text = shortDescription;
 
-        // TODO: itemIcon.sprite = data.Icon();
+        itemIcon.sprite = data.Icon();
+        itemIcon.preserveAspect = true;
         
         // Check bc compare item panel doesn't have a toggle
         if(toggle){
@@ -55,7 +56,8 @@ public class InventoryUIItemPanel : MonoBehaviour
         expandedDescription = "";
         itemDescription.text = shortDescription;
 
-        // TODO: itemIcon.sprite = DEFAULT ICON;
+        itemIcon.sprite = InGameUIManager.instance.GetDefaultItemIconForSlot(itemSlot);
+        itemIcon.preserveAspect = true;
 
         if(toggle){
             toggle.interactable = false;
