@@ -4,29 +4,22 @@ using UnityEngine;
 
 public class Longsword : Equipment
 {
-    private const float meleeRange = 4;
-    // private string title = "Berserker's Zweihander";
-    private float[] damageModifier = new float[] { 0.75f, 1, 1.25f };
-    [SerializeField] private float rangeModifier = 0.1f; 
+    private bool isAttacking;
+    private bool holdingAttack;
     private int heldEffectCounter = 0;
-    private int maxHeldEffect = 3;
-    private float[] windUp = new float[] { 0.25f, 0.5f, 0.5f };
-    private float heldDuration = 0.25f;
-    private float windDown = 0.75f;
-    private float secondaryDuration = 3;
-    private float attackSpeedModifierBonus = 0.2f;
+    private int maxHeldEffect = 2;
+    private float[] damageModifier = new float[] { 0.75f, 1, 1.25f };
+
     private int bonusStackCounter = 0;
     private int bonusStackMax = 3;
-    private bool currentlyAttacking = false;
+    private float bonusDuration = 3;
+    private float attackSpeedModifierBonus = 0.2f;
 
     private Player player;
     private Movement movement;
     private AnimationStateController playerAnim;
-    private InputManager input;
     private Collider swordCollider;
-    private bool isAttacking;
-    private bool holdingAttack;
-    [SerializeField] private GameObject timerPrefab;
+    private Coroutine attackSpeedRoutine;
 
     // Start is called before the first frame update
     void Start()
@@ -54,10 +47,10 @@ public class Longsword : Equipment
         if(holdingAttack && !InputManager.instance.isAttacking)
         {
             holdingAttack = false;
-            bonusStackCounter = 0;
-            player.stats.SetBonusForStat(this, EntityStats.StatType.AttackSpeed, EntityStats.BonusType.multiplier, 0);
+            heldEffectCounter = 0;
         }
 
+        playerAnim.animator.SetBool("IsHoldingAttack", heldEffectCounter > 0);
         playerAnim.animator.SetBool("IsAttacking", isAttacking);
         playerAnim.animator.SetFloat("AttackSpeed", player.stats.getAttackSpeed());
         swordCollider.enabled = playerAnim.hitboxActive;
@@ -68,7 +61,19 @@ public class Longsword : Equipment
         if(other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
             Debug.Log("Damage");
-            other.GetComponent<EntityHealth>().Damage(damageModifier[heldEffectCounter] * player.currentStr);
+            bool killed = other.GetComponent<EntityHealth>().Damage(damageModifier[heldEffectCounter] * player.currentStr);
+            if(killed)
+            {
+                if(bonusStackCounter < bonusStackMax)
+                    ++bonusStackCounter;
+
+                if(attackSpeedRoutine != null)
+                    StopCoroutine(attackSpeedRoutine);
+                
+                player.stats.SetBonusForStat(this, EntityStats.StatType.AttackSpeed, EntityStats.BonusType.multiplier, bonusStackCounter * attackSpeedModifierBonus);
+                attackSpeedRoutine = StartCoroutine(bonusDecayRoutine());
+            }
+
             GameManager.instance.EnableHitStop();
         }
         else
@@ -81,15 +86,30 @@ public class Longsword : Equipment
     {
         if(holdingAttack)
         {
-            if(bonusStackCounter < bonusStackMax)
-                ++bonusStackCounter;
+            if(heldEffectCounter < maxHeldEffect)
+            {
+                ++heldEffectCounter;
+            }
+            else
+            {
+                heldEffectCounter = 0;
+            }
         }
         else
         {
             isAttacking = false;
             movement.isAttacking = false;
         }
+    }
 
+    private IEnumerator bonusDecayRoutine()
+    {
+        yield return new WaitForSeconds(bonusDuration);
+        
+        --bonusStackCounter;
         player.stats.SetBonusForStat(this, EntityStats.StatType.AttackSpeed, EntityStats.BonusType.multiplier, bonusStackCounter * attackSpeedModifierBonus);
+
+        if(bonusStackCounter > 0)
+            attackSpeedRoutine = StartCoroutine(bonusDecayRoutine());
     }
 }

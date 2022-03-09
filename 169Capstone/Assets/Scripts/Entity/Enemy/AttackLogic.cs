@@ -11,4 +11,5 @@ public class AttackLogic : ScriptableObject
     public float duration;
     public float windDown;
     public float coolDown;
+    public bool isInterruptible;
 }
