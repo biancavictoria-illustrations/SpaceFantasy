@@ -1,26 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class AnimationStateController : MonoBehaviour
 {
-    public bool attackActive;
+    public bool hitboxActive;
+    public UnityEvent endAttack;
 
     public Animator animator;
 
-    public void ToggleAttackAnimation(bool set)
+    public void ActivateHitbox(int active)
     {
-        animator.SetBool("IsAttacking", set);
-        if(set)
-        {
-            Debug.Log(animator.GetLayerIndex("Slashing"));
-            animator.SetBool("IsAttacking", true);
-        }
+        hitboxActive = active > 0;
     }
 
-    public void ActivateAttack()
+    public void EndAttack()
     {
-        attackActive = true;
+        endAttack.Invoke();
     }
 }
 

@@ -12,11 +12,18 @@ public class GameManager : MonoBehaviour
     public const string MAIN_HUB_STRING_NAME = "Main Hub";
     public const string GAME_LEVEL_STRING_NAME = "TestFloor";   // TODO: Update this!!!
 
+    private const float hitStopDuration = 0.1f;
+
     public string currentSceneName {get; private set;}
 
     public const float DEFAULT_AUTO_DIALOGUE_WAIT_TIME = 1.1f;
 
     public int currentRunNumber {get; private set;}
+
+    public bool hitStop {get; private set;}
+    public bool deathMenuOpen;
+    public bool pauseMenuOpen;
+    public bool shopOpen;
 
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform playerTransform;
@@ -66,6 +73,11 @@ public class GameManager : MonoBehaviour
 
             Debug.Log("Run Number: " + currentRunNumber);
         }
+
+        if(hitStop || DialogueManager.instance.stopTime || pauseMenuOpen || deathMenuOpen || shopOpen || InGameUIManager.instance.inventoryIsOpen || InGameUIManager.instance.gearSwapIsOpen)
+            Time.timeScale = 0;
+        else
+            Time.timeScale = 1;
     }
 
     // Add any other reset stuff here too (called when player goes from death screen -> main hub)
@@ -150,5 +162,17 @@ public class GameManager : MonoBehaviour
     public GearManagerObject GearManager()
     {
         return gearManager;
+    }
+
+    public void EnableHitStop()
+    {
+        hitStop = true;
+        StartCoroutine(DisableHitStop());
+    }
+
+    private IEnumerator DisableHitStop()
+    {
+        yield return new WaitForSecondsRealtime(hitStopDuration);
+        hitStop = false;
     }
 }

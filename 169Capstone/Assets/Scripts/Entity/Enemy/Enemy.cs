@@ -57,7 +57,9 @@ public abstract class Enemy : MonoBehaviour
 
         if(windUpRunning && currentHitPoints > health.currentHitpoints)
         {
-            animator.SetBool("WindUpInterrupted", true);
+            if(nextAttack.isInterruptible)
+                animator.SetBool("WindUpInterrupted", true);
+                
             SetCooldown();
         }
     }

@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
 {
     public static Player instance;
 
-    [SerializeField] private PlayerStats stats;
+    public PlayerStats stats {get; private set;}
     public EntityHealth health {get; private set;}
 
     // Do we need these??? they're not being updated with the doctor shop upgrades i don't think so we should probably get rid of them cuz they're redundant with normal stats...?
@@ -16,8 +16,6 @@ public class Player : MonoBehaviour
     public int currentInt;
     public int currentWis;
     public int currentCha;
-
-    public float currentAttackSpeed;
 
     [SerializeField] public Transform handPos;
 
@@ -43,6 +41,8 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        stats = GetComponent<PlayerStats>();
+
         health = gameObject.GetComponent<EntityHealth>();
         health.maxHitpoints = 30;
         health.currentHitpoints = 30;        
@@ -56,7 +56,6 @@ public class Player : MonoBehaviour
         currentInt = stats.Intelligence();
         currentWis = stats.Wisdom();
         currentCha = stats.Charisma();
-        currentAttackSpeed = stats.getAttackSpeed();
 
         StartCoroutine(DetectFall());
 
@@ -69,13 +68,13 @@ public class Player : MonoBehaviour
 
         // If your first run, auto trigger starting dialogue
         if(GameManager.instance.currentRunNumber == 1){
-            StartCoroutine(GameManager.instance.AutoRunDialogueAfterTime());
+            StartAutoDialogueFromPlayer();
         }
     }
 
-    public float CurrentAttackSpeed()
+    public void StartAutoDialogueFromPlayer(float timeToWait = GameManager.DEFAULT_AUTO_DIALOGUE_WAIT_TIME)
     {
-        return currentAttackSpeed;
+        StartCoroutine(GameManager.instance.AutoRunDialogueAfterTime());
     }
 
     private IEnumerator DetectFall()

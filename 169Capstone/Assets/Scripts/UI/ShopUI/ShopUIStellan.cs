@@ -115,7 +115,10 @@ public class ShopUIStellan : MonoBehaviour
         focusPanelName.text = _name;
         focusSkillLevel.text = _skillLevel;
         focusPanelDesc.text = _desc;
+
+        focusPanelCost.gameObject.SetActive(true);
         focusPanelCost.text = _cost;
+        
         focusPanelIcon.color = new Color(255,255,255,255);
         // focusPanelIcon.sprite = _icon;   // TODO: Uncomment once we have icons (for now, just make it visible again)
 
@@ -128,7 +131,10 @@ public class ShopUIStellan : MonoBehaviour
         focusPanelName.text = "";
         focusSkillLevel.text = "";
         focusPanelDesc.text = "Hover over a skill to examine.";
+        
         focusPanelCost.text = "";
+        focusPanelCost.gameObject.SetActive(false);
+
         focusPanelIcon.color = new Color(255,255,255,0);
         
         focusPanelToPurchaseMessage.SetActive(false);
@@ -151,7 +157,7 @@ public class ShopUIStellan : MonoBehaviour
         UpdateAllUpgradePanels();
 
         leaveShopButton.Select();
-        Time.timeScale = 0f;
+        GameManager.instance.shopOpen = true;
     }
   
     public void CloseShopUI()
@@ -162,7 +168,7 @@ public class ShopUIStellan : MonoBehaviour
         ClearFocusPanel();
 
         AlertTextUI.instance.EnableShopAlert();
-        Time.timeScale = 1f;
+        GameManager.instance.shopOpen = false;
     }
 
     public void ResetButtonClicked()
