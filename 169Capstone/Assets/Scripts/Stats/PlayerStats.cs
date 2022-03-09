@@ -320,11 +320,7 @@ public class PlayerStats : EntityStats
 
     protected override void Awake()
     {
-        base.Awake();        
-    }
-
-    void OnEnable()
-    {
+        base.Awake();
         initializeStats();
     }
 
