@@ -30,6 +30,8 @@ public class Lich : Enemy
     {
         base.Start();
 
+        canAttack = false;
+
         player = FindObjectOfType<Player>();
 
         EntityHealth healthScript = GetComponent<EntityHealth>();

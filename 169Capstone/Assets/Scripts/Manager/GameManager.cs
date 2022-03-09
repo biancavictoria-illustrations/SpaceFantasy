@@ -9,8 +9,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public const string TITLE_SCREEN_STRING_NAME = "MainMenu";
     public const string MAIN_HUB_STRING_NAME = "Main Hub";
     public const string GAME_LEVEL_STRING_NAME = "TestFloor";   // TODO: Update this!!!
+    public const string LICH_ARENA_STRING_NAME = "LichArena";   // TODO: Update this!!!
 
     private const float hitStopDuration = 0.1f;
 
@@ -21,12 +23,11 @@ public class GameManager : MonoBehaviour
     public int currentRunNumber {get; private set;}
 
     public bool hitStop {get; private set;}
-    public bool deathMenuOpen;
-    public bool pauseMenuOpen;
-    public bool shopOpen;
+    [HideInInspector] public bool deathMenuOpen;
+    [HideInInspector] public bool pauseMenuOpen;
 
     [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private Transform playerTransform;
+    [SerializeField] private Transform playerTransform; // TODO: set this at runtime if game manager starts in main menu???
 
     [SerializeField] private GearManagerObject gearManager;
 
@@ -74,14 +75,14 @@ public class GameManager : MonoBehaviour
             Debug.Log("Run Number: " + currentRunNumber);
         }
 
-        if(!DialogueManager.instance){
-            Debug.LogError("No dialogue manager found!");
+        if(currentSceneName == TITLE_SCREEN_STRING_NAME){
+            return;
         }
-        if(!InGameUIManager.instance){
-            Debug.LogError("No UI manager found!");
+        else if(!DialogueManager.instance || !InGameUIManager.instance){
+            Debug.LogError("No dialogue/UI manager found!");
         }
 
-        if(hitStop || DialogueManager.instance.stopTime || pauseMenuOpen || deathMenuOpen || shopOpen || InGameUIManager.instance.inventoryIsOpen || InGameUIManager.instance.gearSwapIsOpen)
+        if(hitStop || DialogueManager.instance.stopTime || pauseMenuOpen || deathMenuOpen || InputManager.instance.shopIsOpen || InGameUIManager.instance.inventoryIsOpen || InGameUIManager.instance.gearSwapIsOpen)
             Time.timeScale = 0;
         else
             Time.timeScale = 1;
@@ -148,14 +149,27 @@ public class GameManager : MonoBehaviour
     {
         currentSceneName = scene.name;
 
+        AudioManager.Instance.stopMusic(true);
+
         if(currentSceneName == MAIN_HUB_STRING_NAME){
             InGameUIManager.instance.ToggleRunUI(false);
 
-            // TODO: Play animation of you falling or something Idk
+            // TODO: play main hub music
+
+            // TODO: Play animation of you falling or something Idk (or like phasing in)
         }
         else if(currentSceneName == GAME_LEVEL_STRING_NAME){
             PlayerInventory.instance.SetRunStartHealthPotionQuantity();
             InGameUIManager.instance.ToggleRunUI(true);
+            AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, false);
+        }
+        else if(currentSceneName == LICH_ARENA_STRING_NAME){
+            // TODO: Play lich fight music
+            
+        }
+        else if(currentSceneName == TITLE_SCREEN_STRING_NAME){
+            // TODO: Play title screen music
+
         }
     }
 

@@ -67,6 +67,7 @@ public class AudioManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     void Start()
@@ -79,8 +80,6 @@ public class AudioManager : MonoBehaviour
 
         sfxVCA = FMODUnity.RuntimeManager.GetVCA(sfxVCAPath);
         sfxVCA.setVolume(sfxVolume);
-
-        playMusic(MusicTrack.Level1, false);
     }
 
     public void SetMasterVolume(float value)
@@ -107,6 +106,7 @@ public class AudioManager : MonoBehaviour
         {
             case MusicTrack.Level1:
                 musicInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                musicInstance.release();
                 musicInstance = FMODUnity.RuntimeManager.CreateInstance(level1MusicTrack);
                 break;
         }
@@ -120,6 +120,7 @@ public class AudioManager : MonoBehaviour
     {
         var stopMode = allowFade ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE;
         musicInstance.stop(stopMode);
+        musicInstance.release();
     }
 
     public void toggleCombat(bool isInCombat)

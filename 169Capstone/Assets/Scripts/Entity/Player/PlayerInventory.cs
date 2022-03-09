@@ -20,7 +20,7 @@ public class PlayerInventory : MonoBehaviour
     public int tempCurrency {get; private set;}
     public int permanentCurrency {get; private set;}
 
-    public int totalPermanentCurrencySpent = 0;
+    [HideInInspector] public int totalPermanentCurrencySpent = 0;
 
     void Awake()
     {

@@ -30,6 +30,8 @@ public class Beetle : Enemy
     {
         player = Player.instance;
 
+        canAttack = false;
+
         EntityHealth healthScript = GetComponent<EntityHealth>();
         healthScript.OnHit.AddListener(checkForHalfHealth);
 
