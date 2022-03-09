@@ -233,7 +233,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
+  m_Mesh: {fileID: -629719859055844128, guid: 22f4dfdad06e98f458423c07a506e2d2, type: 3}
 --- !u!1 &2513316657810563256
 GameObject:
   m_ObjectHideFlags: 0
@@ -807,6 +807,9 @@ MonoBehaviour:
   room: {fileID: 108753926335502793}
   newColor: {r: 0.6886792, g: 0.15917587, b: 0.15917587, a: 0}
   sceneLight: {fileID: 0}
+  isBossRoom: 1
+  forceFields:
+  - {fileID: 5998261373688485150}
 --- !u!64 &1068972025
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -820,7 +823,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
+  m_Mesh: {fileID: 8733429697405204941, guid: 22f4dfdad06e98f458423c07a506e2d2, type: 3}
 --- !u!65 &7017657942390649830
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2299,7 +2302,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 22f4dfdad06e98f458423c07a506e2d2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -20.242
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 22f4dfdad06e98f458423c07a506e2d2,
         type: 3}
@@ -2309,7 +2312,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 22f4dfdad06e98f458423c07a506e2d2,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 29.852
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 22f4dfdad06e98f458423c07a506e2d2,
         type: 3}
@@ -2350,7 +2353,8 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8733429697405204941, guid: 22f4dfdad06e98f458423c07a506e2d2,
+        type: 3}
     - target: {fileID: -1807970279642858887, guid: 22f4dfdad06e98f458423c07a506e2d2,
         type: 3}
       propertyPath: m_Layer
@@ -2390,7 +2394,8 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: -629719859055844128, guid: 22f4dfdad06e98f458423c07a506e2d2,
+        type: 3}
     - target: {fileID: 8247994413960396516, guid: 22f4dfdad06e98f458423c07a506e2d2,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
