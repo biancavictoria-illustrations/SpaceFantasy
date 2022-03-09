@@ -61,6 +61,9 @@ public class EncounterRoomClose : MonoBehaviour
                 sceneLight.color = oldColor;
                 Debug.Log("Room Open");
             }
+
+            Debug.Log("disable encounter room");
+            gameObject.SetActive(false);
         }
     }
 
