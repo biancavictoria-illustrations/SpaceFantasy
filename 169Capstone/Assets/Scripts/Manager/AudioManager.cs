@@ -107,6 +107,7 @@ public class AudioManager : MonoBehaviour
         {
             case MusicTrack.Level1:
                 musicInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                musicInstance.release();
                 musicInstance = FMODUnity.RuntimeManager.CreateInstance(level1MusicTrack);
                 break;
         }
@@ -120,6 +121,7 @@ public class AudioManager : MonoBehaviour
     {
         var stopMode = allowFade ? FMOD.Studio.STOP_MODE.ALLOWFADEOUT : FMOD.Studio.STOP_MODE.IMMEDIATE;
         musicInstance.stop(stopMode);
+        musicInstance.release();
     }
 
     public void toggleCombat(bool isInCombat)
