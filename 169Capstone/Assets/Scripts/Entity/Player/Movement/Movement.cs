@@ -248,6 +248,7 @@ public class Movement : MonoBehaviour
         fallingVelocity = jumpSpeed * Time.fixedDeltaTime;
         isGrounded = false;
         isJumping = true;
+        animator.SetBool("IsJumping", true);
     }
 
     public void OnJumpCanceled()
@@ -331,6 +332,7 @@ public class Movement : MonoBehaviour
         {
             fallingVelocity = -10000;
             isGrounded = true;
+            animator.SetBool("IsJumping", false);
         }
         else
         {
@@ -338,6 +340,7 @@ public class Movement : MonoBehaviour
             {
                 fallingVelocity = 0;
                 isGrounded = false;
+
             }
 
             fallingVelocity += gravityAccel * Time.fixedDeltaTime;
