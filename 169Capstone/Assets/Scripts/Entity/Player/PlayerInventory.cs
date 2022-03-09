@@ -112,6 +112,9 @@ public class PlayerInventory : MonoBehaviour
             RemoveEquippedWeaponModel();
         }
 
+        // Delete the thing
+        Destroy(gear[slot].gameObject);
+
         // Set value to null in the dictionary and clear the UI
         ClearItemSlot(slot);
         AlertTextUI.instance.EnableItemPickupAlert();
