@@ -156,11 +156,17 @@ public class InputManager : MonoBehaviour
     {
         if(PauseMenu.GameIsPaused){
             InGameUIManager.instance.pauseMenu.ResumeGame();
-            RunGameTimer(true);
+
+            if(GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME){
+                RunGameTimer(true);
+            }            
         }
         else{
             InGameUIManager.instance.pauseMenu.PauseGame();
-            RunGameTimer(false);
+
+            if(GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME){
+                RunGameTimer(false);
+            }            
         }
     }
 

@@ -84,7 +84,7 @@ public class InventoryUI : MonoBehaviour
     private void SetStatValues()
     {
         if(!statSTR){
-            Debug.LogWarning("Trying to set stat UI values but they don't exist. (OK if no stat panel to fill!)");
+            // Debug.LogWarning("Trying to set stat UI values but they don't exist. (OK if no stat panel to fill!)");
             return;
         }
         

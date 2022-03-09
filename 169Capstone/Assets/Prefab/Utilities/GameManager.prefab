@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 81574574909924437}
   - component: {fileID: 5639846748687533152}
+  - component: {fileID: 3483883763402212278}
   m_Layer: 0
   m_Name: PlayerInventory
   m_TagString: Untagged
@@ -47,6 +48,18 @@ MonoBehaviour:
   dropItemPrefab: {fileID: 936317186558681456, guid: 0ebe962c7adf2124bbd8ce4a7ecb6415,
     type: 3}
   totalPermanentCurrencySpent: 0
+--- !u!114 &3483883763402212278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2244101807545691745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2f998e5d2765d442808b6c5489f1993, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8682984153458562420
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,6 +106,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43b9dc96492cb3b4d9851a8df02a692a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathMenuOpen: 0
+  pauseMenuOpen: 0
+  shopOpen: 0
   playerPrefab: {fileID: 7643758985477745940, guid: 0ca13e5d4fba8694c89e8a27ff97c1ec,
     type: 3}
   playerTransform: {fileID: 0}
