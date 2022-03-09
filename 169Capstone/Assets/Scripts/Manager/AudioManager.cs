@@ -67,6 +67,7 @@ public class AudioManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     void Start()
@@ -79,8 +80,6 @@ public class AudioManager : MonoBehaviour
 
         sfxVCA = FMODUnity.RuntimeManager.GetVCA(sfxVCAPath);
         sfxVCA.setVolume(sfxVolume);
-
-        playMusic(MusicTrack.Level1, false);
     }
 
     public void SetMasterVolume(float value)
