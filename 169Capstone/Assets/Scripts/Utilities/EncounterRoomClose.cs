@@ -39,6 +39,10 @@ public class EncounterRoomClose : MonoBehaviour
             {
                 oldColor = sceneLight.color;
                 sceneLight.color = newColor;
+
+                Beetle boi = FindObjectOfType<Beetle>();
+                if(boi != null)
+                    boi.canAttack = true;
             }
         }
     }

@@ -14,6 +14,7 @@ public abstract class Pathing : MonoBehaviour
     [HideInInspector] public float attackRadius;
     [HideInInspector] public float speed = 1;
     [HideInInspector] public bool attacking = false;
+    [HideInInspector] public bool canMove = true;
 
     protected abstract void HandleMovement();
     public abstract bool Provoked();
