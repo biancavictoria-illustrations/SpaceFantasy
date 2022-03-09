@@ -74,6 +74,13 @@ public class GameManager : MonoBehaviour
             Debug.Log("Run Number: " + currentRunNumber);
         }
 
+        if(!DialogueManager.instance){
+            Debug.LogError("No dialogue manager found!");
+        }
+        if(!InGameUIManager.instance){
+            Debug.LogError("No UI manager found!");
+        }
+
         if(hitStop || DialogueManager.instance.stopTime || pauseMenuOpen || deathMenuOpen || shopOpen || InGameUIManager.instance.inventoryIsOpen || InGameUIManager.instance.gearSwapIsOpen)
             Time.timeScale = 0;
         else
@@ -145,7 +152,6 @@ public class GameManager : MonoBehaviour
             InGameUIManager.instance.ToggleRunUI(false);
 
             // TODO: Play animation of you falling or something Idk
-            // In particular, if currentRunNumber == 2 pause for a second before autoplaying Stellan's dialogue so that people can see the new location
         }
         else if(currentSceneName == GAME_LEVEL_STRING_NAME){
             InGameUIManager.instance.ToggleRunUI(true);
