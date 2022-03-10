@@ -25,7 +25,6 @@ public class EnemyStats : EntityStats
         attackSpeedMultiplier = 1;
         moveSpeedMultiplier = 1;
         defenseMultiplier = 1;
-        statusResistChanceMultiplier = 1;
 
         enemyID = stats.EnemyID();
     }

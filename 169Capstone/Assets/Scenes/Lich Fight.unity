@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -2211,7 +2211,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 333a401b46a1b4d46bd40f4a168a6464, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackActive: 0
+  hitboxActive: 0
+  endAttack:
+    m_PersistentCalls:
+      m_Calls: []
   animator: {fileID: 1236201206}
 --- !u!1001 &2146448712
 PrefabInstance:
@@ -10565,6 +10568,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 5fa92c8420c007047811fbb34419456a,
         type: 2}
+    - target: {fileID: 5595320043144784552, guid: 426bb01c7e6137941a4c50118d2dcbe3,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5595320043144784552, guid: 426bb01c7e6137941a4c50118d2dcbe3,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5595320043144784552, guid: 426bb01c7e6137941a4c50118d2dcbe3,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.5
+      objectReference: {fileID: 0}
     - target: {fileID: 5904164475859285232, guid: 426bb01c7e6137941a4c50118d2dcbe3,
         type: 3}
       propertyPath: m_Name
@@ -10634,6 +10652,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9150775789561847908, guid: 426bb01c7e6137941a4c50118d2dcbe3,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9150775789561847908, guid: 426bb01c7e6137941a4c50118d2dcbe3,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9150775789561847908, guid: 426bb01c7e6137941a4c50118d2dcbe3,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 426bb01c7e6137941a4c50118d2dcbe3, type: 3}

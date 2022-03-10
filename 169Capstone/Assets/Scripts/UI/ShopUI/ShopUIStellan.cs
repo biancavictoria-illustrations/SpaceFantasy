@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public enum StellanShopUpgradeType{
+public enum PermanentUpgradeType{
     // Stat Increases
     STRMin,
     DEXMin,
@@ -86,7 +86,7 @@ public class ShopUIStellan : MonoBehaviour
     {
         if(giveCurrencyForTesting){
             giveCurrencyForTesting = false;
-            PlayerInventory.instance.SetPermanentCurrency( PlayerInventory.instance.permanentCurrency + 100 );
+            PlayerInventory.instance.SetPermanentCurrency( PlayerInventory.instance.permanentCurrency + 1000 );
         }
     }
 
@@ -115,7 +115,10 @@ public class ShopUIStellan : MonoBehaviour
         focusPanelName.text = _name;
         focusSkillLevel.text = _skillLevel;
         focusPanelDesc.text = _desc;
+
+        focusPanelCost.gameObject.SetActive(true);
         focusPanelCost.text = _cost;
+        
         focusPanelIcon.color = new Color(255,255,255,255);
         // focusPanelIcon.sprite = _icon;   // TODO: Uncomment once we have icons (for now, just make it visible again)
 
@@ -128,7 +131,10 @@ public class ShopUIStellan : MonoBehaviour
         focusPanelName.text = "";
         focusSkillLevel.text = "";
         focusPanelDesc.text = "Hover over a skill to examine.";
+        
         focusPanelCost.text = "";
+        focusPanelCost.gameObject.SetActive(false);
+
         focusPanelIcon.color = new Color(255,255,255,0);
         
         focusPanelToPurchaseMessage.SetActive(false);
@@ -144,30 +150,29 @@ public class ShopUIStellan : MonoBehaviour
     public void OpenShopUI()
     {
         InputManager.instance.shopIsOpen = true;
+
         shopInventoryPanel.SetActive(true);
         ClearFocusPanel();
 
         UpdateAllUpgradePanels();
 
         leaveShopButton.Select();
-        Time.timeScale = 0f;
     }
   
     public void CloseShopUI()
     {
         InputManager.instance.shopIsOpen = false;
+        
         shopInventoryPanel.SetActive(false);
         ClearFocusPanel();
 
         AlertTextUI.instance.EnableShopAlert();
-        Time.timeScale = 1f;
     }
 
     public void ResetButtonClicked()
     {
-        // TODO: Reset ACTUAL skills to default values
-
-        playerStats.ResetAllStatGenerationValues();
+        PermanentUpgradeManager.instance.ResetAllSkillValuesToDefault();
+        PermanentUpgradeManager.instance.ResetAllStatGenerationValuesToDefault();
         
         PlayerInventory.instance.ResetPermanentCurrency();
 

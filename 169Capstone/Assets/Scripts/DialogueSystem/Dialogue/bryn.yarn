@@ -148,8 +148,9 @@ Atlan, I’m not sure you could find a better helmet in all the galaxy!
 title: BrynNumRuns
 tags:
 ---
-<<if Visited("BrynNumRuns")>>
-    [[BrynNumRuns8]]
+<<set $currentRunNum to GetCurrentRunNum()>>
+<<if $currentRunNum > 8>>
+    [[BrynNumRuns9]]
 <<else>>
     <<SetSpeaker Player>>
     Back again.
@@ -158,10 +159,10 @@ tags:
 <<endif>>
 ===
 
-title: BrynNumRuns8
+title: BrynNumRuns9
 tags:
 ---
-<<if Visited("BrynNumRuns8")>>
+<<if $currentRunNum > 19>>
     [[BrynNumRuns20]]
 <<else>>
     <<SetSpeaker Player>>

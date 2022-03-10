@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class EntityHealth : MonoBehaviour
 {
@@ -64,14 +65,14 @@ public class EntityHealth : MonoBehaviour
         if(gameObject.tag != "Player"){
             enemyID = GetComponent<EnemyStats>().enemyID;
             // If a boss enemy (update int if we add more bosses)
-            if( (int)enemyID < 3 ){
+            if( enemyID == EnemyID.TimeLich || enemyID == EnemyID.BeetleBoss || enemyID == EnemyID.Harvester ){
                 isBossEnemy = true;
             }
             // If normal enemy
             else{
                 enemyHealthUI = gameObject.GetComponentInChildren<EnemyHealthBar>();
                 if(enemyHealthUI == null){
-                    Debug.LogError("No enemy health UI found for normal enemy unit!");
+                    Debug.LogError("No enemy health UI found for enemy unit: " + enemyID + "  Transform: " + gameObject.transform.position);
                     return;
                 }
             }
@@ -82,9 +83,9 @@ public class EntityHealth : MonoBehaviour
 
     public void SetStartingHealthUI()
     {
-        if(gameObject.tag == "Player"){
-            Debug.Log("Max Health At Start: " + maxHitpoints + "\nCurrent Health At Start: " + currentHitpoints);
-        }
+        // if(gameObject.tag == "Player"){
+        //     Debug.Log("Max Health At Start: " + maxHitpoints + "\nCurrent Health At Start: " + currentHitpoints);
+        // }
 
         SetMaxHealthUI();
         SetCurrentHealthUI();
@@ -94,8 +95,8 @@ public class EntityHealth : MonoBehaviour
     {
         currentHitpoints -= damage;
         OnHit.Invoke(this, damage);
-        Debug.Log("Hitpoints");
-        Debug.Log(currentHitpoints);
+        // Debug.Log("Hitpoints");
+        // Debug.Log(currentHitpoints);
         
         SetCurrentHealthUI();
 
@@ -169,9 +170,11 @@ public class EntityHealth : MonoBehaviour
                 }
             }
 
-            // Tell the story manager that this creature was killed
-            StoryManager.instance.KilledEventOccurred(enemyID, StoryBeatType.EnemyKilled);
-
+            if(enemyID == EnemyID.Slime || enemyID == EnemyID.TimeLich || enemyID == EnemyID.BeetleBoss){
+                // Tell the story manager that this creature was killed
+                StoryManager.instance.KilledEventOccurred(enemyID, StoryBeatType.EnemyKilled);
+            }
+            
             if(enemyDropGenerator){
                 enemyDropGenerator.GetDrop(GameManager.instance.bossesKilled, transform);
             }
@@ -186,6 +189,12 @@ public class EntityHealth : MonoBehaviour
 
             if(Random.value <= TEMPSTARSHARDDROPCHANCE)
                 Instantiate(starShardPrefab, transform.position, Quaternion.identity);
+
+            // If you killed the mini boss, trigger Stellan's comm to tell you to go to the elevator
+            if(enemyID == EnemyID.BeetleBoss){
+                DialogueManager.instance.SetStellanCommTriggered(true);
+                Player.instance.StartAutoDialogueFromPlayer();
+            }
 
             Destroy(gameObject);
         }

@@ -51,13 +51,10 @@ public class InputManager : MonoBehaviour
 
     void Update()
     {
-        if(!isAttacking)
-        {
-            Vector2 playerPositionOnScreen = (Vector2)Camera.main.WorldToScreenPoint(player.transform.position); //Get Player's position on the screen
-            Vector2 cursorLookDirection2D = (mousePos - playerPositionOnScreen).normalized;                      //Get the vector from the player position to the cursor position 
-            Vector3 lookDirectionRelativeToCamera = Camera.main.transform.right * cursorLookDirection2D.x + Camera.main.transform.up * cursorLookDirection2D.y; //Create the look vector in 3D space relative to the camera
-            cursorLookDirection = Quaternion.FromToRotation(-Camera.main.transform.forward, Vector3.up) * lookDirectionRelativeToCamera;                        //Rotate the look vector to be in terms of world space
-        }
+        Vector2 playerPositionOnScreen = (Vector2)Camera.main.WorldToScreenPoint(player.transform.position); //Get Player's position on the screen
+        Vector2 cursorLookDirection2D = (mousePos - playerPositionOnScreen).normalized;                      //Get the vector from the player position to the cursor position 
+        Vector3 lookDirectionRelativeToCamera = Camera.main.transform.right * cursorLookDirection2D.x + Camera.main.transform.up * cursorLookDirection2D.y; //Create the look vector in 3D space relative to the camera
+        cursorLookDirection = Quaternion.FromToRotation(-Camera.main.transform.forward, Vector3.up) * lookDirectionRelativeToCamera;                        //Rotate the look vector to be in terms of world space
     }
 
     public void UpdateLatestInputDevice()
@@ -131,18 +128,23 @@ public class InputManager : MonoBehaviour
             GeneratedEquipment itemData = DropTrigger.ActiveGearDrop;
             ToggleCompareItemUI(true, itemData);
         }
+
+        else if(OrbyBartenderChat.instance && OrbyBartenderChat.instance.inOrbyRange){
+            OrbyBartenderChat.instance.OnOrbyInteracted();
+        }
     }
 
     public void ToggleCompareItemUI(bool set, GeneratedEquipment item)
     {
         compareItemIsOpen = set;
-        InGameUIManager.instance.SetGearSwapUIActive(set, item);        
+        InGameUIManager.instance.SetGearSwapUIActive(set, item);
+        RunGameTimer(set);
     }
 
     // If you're in dialogue, click anywhere to progress
     public void OnClick(InputValue input)
     {
-        if(isInDialogue && !PauseMenu.GameIsPaused){
+        if(isInDialogue && !PauseMenu.GameIsPaused && !DialogueManager.instance.dialogueUI.IsMidDialogueLineDisplay){
             DialogueManager.instance.dialogueUI.MarkLineComplete();
         }
     }
@@ -151,9 +153,17 @@ public class InputManager : MonoBehaviour
     {
         if(PauseMenu.GameIsPaused){
             InGameUIManager.instance.pauseMenu.ResumeGame();
+
+            if(GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME){
+                RunGameTimer(true);
+            }            
         }
         else{
             InGameUIManager.instance.pauseMenu.PauseGame();
+
+            if(GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME){
+                RunGameTimer(false);
+            }            
         }
     }
 
@@ -166,6 +176,7 @@ public class InputManager : MonoBehaviour
         InGameUIManager.instance.SetInventoryUIActive(!InGameUIManager.instance.inventoryIsOpen);
         inventoryIsOpen = !inventoryIsOpen;
 
+        RunGameTimer(!inventoryIsOpen);
         if(AlertTextUI.instance.alertTextIsActive){
             AlertTextUI.instance.ToggleAlertText(!inventoryIsOpen);
         }
@@ -213,5 +224,26 @@ public class InputManager : MonoBehaviour
     public void OnPoint(InputValue input)
     {
         mousePos = input.Get<Vector2>();
+    }
+
+    public void RunGameTimer(bool set, bool setTimerUIActive = true)
+    {
+        InGameUIManager.instance.timerUI.SetTimerUIActive(setTimerUIActive);
+        GameManager.instance.gameTimer.runTimer = set;
+    }
+
+    public void ToggleShopOpenStatus(bool set)
+    {
+        shopIsOpen = set;
+        RunGameTimer(!set);
+    }
+
+    public void ToggleDialogueOpenStatus(bool set)
+    {
+        isInDialogue = set;
+
+        if(!NPC.ActiveNPC || NPC.ActiveNPC?.SpeakerData().SpeakerID() != SpeakerID.Stellan){
+            RunGameTimer(!set, !set);
+        }
     }
 }

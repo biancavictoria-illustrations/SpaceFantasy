@@ -249,6 +249,11 @@ namespace Yarn.Unity {
         /// DialogueRunner.BlockingCommandHandler)"/> 
         /// <seealso cref="YarnCommandAttribute"/>
         public DialogueRunner.StringUnityEvent onCommand;
+
+        /// <summary>
+        /// Gets a value that indicates if the dialogue is not yet done displaying a given line.
+        /// </summary>
+        public bool IsMidDialogueLineDisplay { get; set; }
         
         internal void Awake ()
         {
@@ -259,6 +264,7 @@ namespace Yarn.Unity {
             foreach (var button in optionButtons) {
                 button.gameObject.SetActive (false);
             }
+            IsMidDialogueLineDisplay = false;
         }
 
         /// Runs a line.
@@ -276,6 +282,8 @@ namespace Yarn.Unity {
             onLineStart?.Invoke();
 
             userRequestedNextLine = false;
+
+            IsMidDialogueLineDisplay = true;
             
             // The final text we'll be showing for this line.
             string text = localisationProvider.GetLocalisedTextForLine(line);
@@ -318,7 +326,7 @@ namespace Yarn.Unity {
                         onLineUpdate?.Invoke(text);
                         break;
                     }
-                    yield return new WaitForSeconds (textSpeed);
+                    yield return new WaitForSecondsRealtime (textSpeed);
                 }
 
                 // foreach (char c in text) {
@@ -336,6 +344,8 @@ namespace Yarn.Unity {
                 // Display the entire line immediately if textSpeed <= 0
                 onLineUpdate?.Invoke(text);
             }
+
+            IsMidDialogueLineDisplay = false;
 
             // We're now waiting for the player to move on to the next line
             userRequestedNextLine = false;

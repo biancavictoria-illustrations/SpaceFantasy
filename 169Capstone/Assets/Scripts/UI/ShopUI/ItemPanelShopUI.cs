@@ -55,7 +55,7 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
     public void UpdateCurrentCost()
     {
         CalculateCurrentCost();
-        costText.text = "$" + currentCostValue;     // TODO: Change $ to better symbol, or just put the icon on the cards
+        costText.text = "" + currentCostValue;
     }
 
     public void SetHoverAlertsActive(bool set)

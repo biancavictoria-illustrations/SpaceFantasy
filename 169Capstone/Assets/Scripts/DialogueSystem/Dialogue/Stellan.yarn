@@ -299,7 +299,8 @@ My point remains that if you cannot handle yourself against a simple ooze monste
 title: StellanNumRuns
 tags:
 ---
-<<if Visited("StellanNumRuns")>>
+<<set $currentRunNum to GetCurrentRunNum()>>
+<<if $currentRunNum > 14>>
     [[StellanNumRuns15]]
 <<else>>
     <<SetSpeaker Stellan>>
@@ -312,7 +313,7 @@ tags:
 title: StellanNumRuns15
 tags:
 ---
-<<if Visited("StellanNumRuns15")>>
+<<if $currentRunNum > 30>>
     [[StellanNumRuns34]]
 <<else>>
     <<SetSpeaker Stellan>>
@@ -349,19 +350,27 @@ tags:
 ---
 <<if Visited("StellanDefaultDialogue")>>
     [[StellanDefaultDialogue1]]
-<<else>>    // Would be REALLY FREAKING COOL if Stellan’s first line here could be said just as he’s passing by and by talking to him it starts from Atlan’s first line
+<<elseif HasKilledTimeLich()>>
+    <<SetSpeaker Stellan neutral ???>>
+    How did you...?
+    // TODO: Add stuff to here and other nodes if you kill the lich too early
+<<else>>
     <<SetSpeaker Stellan neutral ???>>
     Well, you certainly don’t belong here.
     <<SetSpeaker Player>>
-    Care to say that again to my face?
+    <i>Uugh</i>... I'm... alive?
     <<SetSpeaker Stellan neutral ???>>
-    I said you don’t belong here. You look like a pirate. Perhaps a <i>scoundrel,</i> if you prefer. Either way, some sort of vagabond. And don’t you correct me by claiming to be a “trader” or “privateer,” as if those words mean anything besides “common thief.”
+    Yes, yes, it's a time loop. How miraculous and novel. Even death won't set us free. Now get on your feet and quit looking so ill. Who are you and what are you doing on this ship?
     <<SetSpeaker Player>>
-    I’m trying to get off this godsforsaken ship.
+    Name's Atlan. Came in here looking for loot. Maybe some electrum, if anyone left any lying around. Now I'm just trying to get off this godsforsaken ship.
     <<SetSpeaker Stellan neutral ???>>
-    … Oh. I see.
+    Ah, yes. The wayward adventurer. You do look like a pirate. Perhaps a <i>scoundrel,</i> if you prefer. And don’t you correct me by claiming to be a “trader” or “privateer,” as if those words mean anything besides “common thief.”
+    <<SetSpeaker Player>>
+    Can't fault a man for trying to steal from an abandoned wizard's tower. Didn't realize it wouldn't be so abandoned on the inside.
+    <<SetSpeaker Stellan neutral ???>>
+    Nevertheless, it was ambition that brought you here. The misguided arrogance that you could handle whatever threats might lurk within. And now, you're stuck. Just like the rest of us.
     <<SetSpeaker Stellan>>
-    I’m Stellan. I may be willing to help you in that endeavor, for a cost. I’m looking for something, and if you’re going beyond this lounge, you may be able to find it for me. In turn… I can offer a, ah, mutually beneficial relationship.
+    I’m Stellan. I may be willing to help you in your endeavor to escape, for a cost. I’m looking for something, and if you’re going beyond this lounge, you may be able to find it for me. In turn… I can offer a, ah, mutually beneficial relationship using the resources you source on my behalf.
 <<endif>>
 ===
 

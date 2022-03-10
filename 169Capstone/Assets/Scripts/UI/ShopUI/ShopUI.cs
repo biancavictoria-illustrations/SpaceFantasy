@@ -26,26 +26,25 @@ public class ShopUI : MonoBehaviour
 
     public virtual void OpenShopUI()
     {
-        InputManager.instance.shopIsOpen = true;
+        InputManager.instance.ToggleShopOpenStatus(true);
+
         shopInventoryPanel.SetActive(true);
         fadedBackground.SetActive(true);
         hoverAlerts.DisableAllHoverAlerts();
 
         shopInventoryTopButton.Select();
         // shopInventoryTopButton.GetComponent<ItemPanelShopUI>().SetHoverAlertsActive(true);
-
-        Time.timeScale = 0f;
     }
   
     public virtual void CloseShopUI()
     {
-        InputManager.instance.shopIsOpen = false;
+        InputManager.instance.ToggleShopOpenStatus(false);
+
         shopInventoryPanel.SetActive(false);
         fadedBackground.SetActive(false);
         hoverAlerts.DisableAllHoverAlerts();
 
         AlertTextUI.instance.EnableShopAlert();
-        Time.timeScale = 1f;
     }
 
     public virtual void SetShopUIInteractable(bool set)

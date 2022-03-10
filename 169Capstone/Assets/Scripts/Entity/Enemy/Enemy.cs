@@ -47,7 +47,7 @@ public abstract class Enemy : MonoBehaviour
 
     void Update()
     {
-        canAttack = !InputManager.instance.shopIsOpen;
+        path.canMove = canAttack;
 
         if(!coroutineRunning && canAttack && (path.Provoked() || path.InAttackRange())) // Update for damage later
         {
@@ -57,7 +57,9 @@ public abstract class Enemy : MonoBehaviour
 
         if(windUpRunning && currentHitPoints > health.currentHitpoints)
         {
-            animator.SetBool("WindUpInterrupted", true);
+            if(nextAttack.isInterruptible)
+                animator.SetBool("WindUpInterrupted", true);
+                
             SetCooldown();
         }
     }

@@ -6,17 +6,16 @@ public class Player : MonoBehaviour
 {
     public static Player instance;
 
-    [SerializeField] private PlayerStats stats;
-    private EntityHealth health;
+    public PlayerStats stats {get; private set;}
+    public EntityHealth health {get; private set;}
 
+    // Do we need these??? they're not being updated with the doctor shop upgrades i don't think so we should probably get rid of them cuz they're redundant with normal stats...?
     public int currentStr;
     public int currentDex;
     public int currentCon;
     public int currentInt;
     public int currentWis;
     public int currentCha;
-
-    public float currentAttackSpeed;
 
     [SerializeField] public Transform handPos;
 
@@ -42,6 +41,8 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        stats = GetComponent<PlayerStats>();
+
         health = gameObject.GetComponent<EntityHealth>();
         health.maxHitpoints = 30;
         health.currentHitpoints = 30;        
@@ -55,29 +56,35 @@ public class Player : MonoBehaviour
         currentInt = stats.Intelligence();
         currentWis = stats.Wisdom();
         currentCha = stats.Charisma();
-        currentAttackSpeed = stats.getAttackSpeed();
-        //currentHitpoints = stats.getMaxHitPoints();
-
-        if(DialogueManager.instance != null && !DialogueManager.instance.DialogueManagerHasSpeaker(speakerData)){
-            DialogueManager.instance.AddSpeaker(speakerData);
-        }
 
         StartCoroutine(DetectFall());
 
         // TEMP drop the sword on start so the player has a working weapon (for testing purposes)
-        GameObject itemObject = Instantiate(dropItemPrefab, transform.position, Quaternion.identity);
-        itemObject.GetComponent<GeneratedEquipment>().SetEquipmentBaseData( swordData, ItemRarity.Common );
-        itemObject.GetComponent<DropTrigger>().DropItemModelIn3DSpace();
+        if(GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME){
+            GameObject itemObject = Instantiate(dropItemPrefab, transform.position, Quaternion.identity);
+            itemObject.GetComponent<GeneratedEquipment>().SetEquipmentBaseData( swordData, ItemRarity.Common );
+            itemObject.GetComponent<DropTrigger>().DropItemModelIn3DSpace();
+        }
+
+        // If your first run, auto trigger starting dialogue
+        if(GameManager.instance.currentRunNumber == 1){
+            StartAutoDialogueFromPlayer();
+        }
     }
 
-    public float CurrentAttackSpeed()
+    public void StartAutoDialogueFromPlayer(float timeToWait = GameManager.DEFAULT_AUTO_DIALOGUE_WAIT_TIME)
     {
-        return currentAttackSpeed;
+        StartCoroutine(GameManager.instance.AutoRunDialogueAfterTime());
     }
 
     private IEnumerator DetectFall()
     {
         yield return new WaitUntil(() => transform.position.y <= -6);
         health.Damage(health.maxHitpoints);
+    }
+
+    public SpeakerData GetSpeakerData()
+    {
+        return speakerData;
     }
 }

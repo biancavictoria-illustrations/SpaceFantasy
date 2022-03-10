@@ -4,96 +4,114 @@ using UnityEngine;
 
 public class Longsword : Equipment
 {
-    private const float meleeRange = 4;
-    // private string title = "Berserker's Zweihander";
-    private float[] damageModifier = new float[] { 0.75f, 1, 1.25f };
-    [SerializeField] private float rangeModifier = 0.1f; 
+    private bool isAttacking;
+    private bool holdingAttack;
     private int heldEffectCounter = 0;
-    private int maxHeldEffect = 3;
-    private float[] windUp = new float[] { 0.25f, 0.5f, 0.5f };
-    private float heldDuration = 0.25f;
-    private float windDown = 0.75f;
-    private float secondaryDuration = 3;
-    private float attackSpeedModifierBonus = 0.2f;
+    private int maxHeldEffect = 2;
+    private float[] damageModifier = new float[] { 0.75f, 1, 1.25f };
+
     private int bonusStackCounter = 0;
     private int bonusStackMax = 3;
-    private bool currentlyAttacking = false;
+    private float bonusDuration = 3;
+    private float attackSpeedModifierBonus = 0.2f;
 
     private Player player;
+    private Movement movement;
     private AnimationStateController playerAnim;
-    private InputManager input;
-    [SerializeField] private GameObject timerPrefab;
+    private Collider swordCollider;
+    private Coroutine attackSpeedRoutine;
 
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        player = Player.instance;
+        movement = player.GetComponentInChildren<Movement>();
+
         playerAnim = player.GetComponentInChildren<AnimationStateController>();
-        StartCoroutine(WatchForAttack());
+        playerAnim.endAttack.AddListener(disableAttacking);
+
+        itemModel.GetComponentInChildren<LongswordCollisionWatcher>().hitEvent.AddListener(DealDamage);
+        swordCollider = itemModel.GetComponentInChildren<Collider>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        playerAnim.animator.SetBool("IsAttacking", InputManager.instance.isAttacking);
+        if(InputManager.instance.isAttacking && !isAttacking)
+        {
+            isAttacking = true;
+            holdingAttack = true;
+            movement.isAttacking = true;
+            movement.lockLookDirection = true;
+        }
+
+        if(holdingAttack && !InputManager.instance.isAttacking)
+        {
+            holdingAttack = false;
+            heldEffectCounter = 0;
+        }
+
+        playerAnim.animator.SetBool("IsHoldingAttack", heldEffectCounter > 0);
+        playerAnim.animator.SetBool("IsAttacking", isAttacking);
+        playerAnim.animator.SetFloat("AttackSpeed", player.stats.getAttackSpeed());
+        swordCollider.enabled = playerAnim.attackActive;
     }
 
-    public bool DealDamage()
+    public void DealDamage(Collider other)
     {
-        Debug.DrawRay(player.transform.position + 2*Vector3.up, InputManager.instance.cursorLookDirection * meleeRange, Color.yellow, 1);
-        RaycastHit hit;
-        if(Physics.SphereCast(player.transform.position + 2*Vector3.up, 1, InputManager.instance.cursorLookDirection, out hit, meleeRange, LayerMask.GetMask("Enemy","Prop")))
+        if(other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            if(hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            Debug.Log("Damage");
+            bool killed = other.GetComponent<EntityHealth>().Damage(damageModifier[heldEffectCounter] * player.currentStr);
+            if(killed)
             {
-                Debug.Log("Damage");
-                return hit.collider.GetComponent<EntityHealth>().Damage(damageModifier[heldEffectCounter] * player.currentStr);
+                if(bonusStackCounter < bonusStackMax)
+                    ++bonusStackCounter;
+
+                if(attackSpeedRoutine != null)
+                    StopCoroutine(attackSpeedRoutine);
+                
+                player.stats.SetBonusForStat(this, EntityStats.StatType.AttackSpeed, EntityStats.BonusType.multiplier, bonusStackCounter * attackSpeedModifierBonus);
+                attackSpeedRoutine = StartCoroutine(bonusDecayRoutine());
             }
-            else
-            {
-                hit.collider.GetComponent<PropJumpBreak>().BreakProp();
-                return true;
-            }
-            
+
+            GameManager.instance.EnableHitStop();
         }
         else
         {
-            Debug.Log("No Damage");
-            return false;
-        }
-
-    }
-
-    private void SecondaryAbility()
-    {
-        if(bonusStackCounter < bonusStackMax)
-        {
-            bonusStackCounter++;
-            StartCoroutine(SpeedBonus(Instantiate(timerPrefab).GetComponent<Timer>()));
+            other.GetComponent<PropJumpBreak>().BreakProp();
         }
     }
 
-    private IEnumerator SpeedBonus(Timer timer)
+    public void disableAttacking()
     {
-        float bonus = player.currentAttackSpeed * attackSpeedModifierBonus;
-        player.currentAttackSpeed += bonus;
-        timer.StartTimer(secondaryDuration);
-        yield return new WaitUntil(() => timer.timeRemaining <= 0);
-        player.currentAttackSpeed -= bonus;
-        bonusStackCounter--;
-        Destroy(timer.gameObject);
-    }
-
-    private IEnumerator WatchForAttack()
-    {
-        while(true)
+        if(holdingAttack)
         {
-            yield return null;
-            if(playerAnim.attackActive)
+            if(heldEffectCounter < maxHeldEffect)
             {
-                playerAnim.attackActive = false;
-                DealDamage();
+                ++heldEffectCounter;
+            }
+            else
+            {
+                heldEffectCounter = 0;
             }
         }
+        else
+        {
+            isAttacking = false;
+            movement.isAttacking = false;
+            movement.lockLookDirection = false;
+        }
+    }
+
+    private IEnumerator bonusDecayRoutine()
+    {
+        yield return new WaitForSeconds(bonusDuration);
+        
+        --bonusStackCounter;
+        player.stats.SetBonusForStat(this, EntityStats.StatType.AttackSpeed, EntityStats.BonusType.multiplier, bonusStackCounter * attackSpeedModifierBonus);
+
+        if(bonusStackCounter > 0)
+            attackSpeedRoutine = StartCoroutine(bonusDecayRoutine());
     }
 }

@@ -63,7 +63,7 @@ public class ShopUIGear : ShopUI
 
         if(activeCompareItem){
             shopCompareUI.OnGearSwapUIOpen(activeCompareItem.item);
-            purchaseButtonText.text = "Purchase " + "(" + activeCompareItem.currentCostValue + ")";
+            purchaseButtonText.text = "Purchase - " + activeCompareItem.currentCostValue;
         }
         else{
             Debug.LogError("Tried to open compare UI without an active shop item to compare to!");

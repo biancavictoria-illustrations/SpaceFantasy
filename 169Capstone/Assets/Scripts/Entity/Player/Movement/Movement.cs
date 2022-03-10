@@ -12,8 +12,11 @@ public class Movement : MonoBehaviour
     public float smoothing = 0.1f;
     public float gravityAccel = -10f;
     public float jumpSpeed = 10;
+    public bool isAttacking;
+    public bool lockLookDirection;
     
     private Vector3 externalVelocity;
+    private Vector3 cursorLookDirection;
     private float smoothingVelocity;
     private float horizontalMove;
     private float verticalMove;
@@ -22,18 +25,25 @@ public class Movement : MonoBehaviour
     private bool isJumping;
 
     private bool movingLeft, movingRight, movingUp, movingDown = false;
+
+    private InputAction moveLeft;
+    private InputAction moveRight;
+    private InputAction moveUp;
+    private InputAction moveDown;
+    private InputAction jump;
     
-    void Start()
+    void Awake()
     {
         InputActionAsset controls = GetComponent<PlayerInput>().actions;
+        moveLeft = controls.FindAction("MoveLeft");
+        moveRight = controls.FindAction("MoveRight");
+        moveUp = controls.FindAction("MoveUp");
+        moveDown = controls.FindAction("MoveDown");
+        jump = controls.FindAction("Jump");
+    }
 
-        // Add STOPPING moving when you're no longer holding the button
-        controls.FindAction("MoveLeft").canceled += x => OnMoveLeftCanceled();
-        controls.FindAction("MoveRight").canceled += x => OnMoveRightCanceled();
-        controls.FindAction("MoveUp").canceled += x => OnMoveUpCanceled();
-        controls.FindAction("MoveDown").canceled += x => OnMoveDownCanceled();
-        controls.FindAction("Jump").canceled += x => OnJumpCanceled();
-        
+    void Start()
+    {        
         Collider[] colliders = Physics.OverlapSphere(transform.position, 0.1f, LayerMask.GetMask("RoomBounds"));
 
         foreach(Collider col in colliders)
@@ -70,6 +80,43 @@ public class Movement : MonoBehaviour
             return;
         }
         HandleMovement();
+    }
+
+    void OnEnable()
+    {
+        // Add STOPPING moving when you're no longer holding the button
+        moveLeft.canceled += x => OnMoveLeftCanceled();
+        moveLeft.Enable();
+
+        moveRight.canceled += x => OnMoveRightCanceled();
+        moveRight.Enable();
+
+        moveUp.canceled += x => OnMoveUpCanceled();
+        moveUp.Enable();
+
+        moveDown.canceled += x => OnMoveDownCanceled();
+        moveDown.Enable();
+
+        jump.canceled += x => OnJumpCanceled();
+        jump.Enable();
+    }
+
+    void OnDisable()
+    {
+        moveLeft.canceled -= x => OnMoveLeftCanceled();
+        moveLeft.Disable();
+
+        moveRight.canceled -= x => OnMoveRightCanceled();
+        moveRight.Disable();
+
+        moveUp.canceled -= x => OnMoveUpCanceled();
+        moveUp.Disable();
+
+        moveDown.canceled -= x => OnMoveDownCanceled();
+        moveDown.Disable();
+
+        jump.canceled -= x => OnJumpCanceled();
+        jump.Disable();
     }
 
     public void ApplyExternalVelocity(Vector3 velocity)
@@ -202,6 +249,7 @@ public class Movement : MonoBehaviour
         fallingVelocity = jumpSpeed * Time.fixedDeltaTime;
         isGrounded = false;
         isJumping = true;
+        animator.SetBool("IsJumping", true);
     }
 
     public void OnJumpCanceled()
@@ -211,7 +259,7 @@ public class Movement : MonoBehaviour
 
     private void CheckForIdle()
     {
-        if(verticalMove == 0 && horizontalMove == 0){
+        if(animator != null && verticalMove == 0 && horizontalMove == 0){
             animator.SetBool("IsRunning", false);
         }
     }
@@ -256,29 +304,37 @@ public class Movement : MonoBehaviour
             }
 
             direction *= speed * Time.fixedDeltaTime;
-            
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-            float angle = Mathf.SmoothDampAngle(model.eulerAngles.y, targetAngle, ref smoothingVelocity, smoothing);
-
-            if(InputManager.instance.isAttacking)
-            {
-                model.rotation = Quaternion.FromToRotation(Vector3.forward, InputManager.instance.cursorLookDirection);
-                direction /= 2;
-            }
-            else
-            {
-                model.rotation = Quaternion.Euler(0, angle, 0);
-            }
         }
         else
         {
             direction = Vector3.zero;
+        }
+            
+        float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+        float angle = Mathf.SmoothDampAngle(model.eulerAngles.y, targetAngle, ref smoothingVelocity, smoothing);
+
+        if(isAttacking)
+        {
+            if(cursorLookDirection == Vector3.zero || !lockLookDirection)
+                cursorLookDirection = InputManager.instance.cursorLookDirection;
+
+            model.rotation = Quaternion.LookRotation(cursorLookDirection);
+            direction /= 2;
+        }
+        else
+        {
+            if(cursorLookDirection != Vector3.zero)
+                cursorLookDirection = Vector3.zero;
+
+            if(direction.magnitude >= 0.1f)
+                model.rotation = Quaternion.Euler(0, angle, 0);
         }
 
         if(!isJumping && Physics.Raycast(transform.position, Vector3.down, 0.1f, LayerMask.GetMask("Environment")))
         {
             fallingVelocity = -10000;
             isGrounded = true;
+            animator.SetBool("IsJumping", false);
         }
         else
         {

@@ -51,7 +51,8 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private TMP_Text healthPotionValue;
 
     public BossHealthBar bossHealthBar;
-
+    public TimerUI timerUI;
+    
 
     void Awake()
     {
@@ -67,6 +68,7 @@ public class InGameUIManager : MonoBehaviour
     {
         SetTempCurrencyValue(PlayerInventory.instance.tempCurrency);
         SetPermanentCurrencyValue(PlayerInventory.instance.permanentCurrency);
+        SetHealthPotionValue(PlayerInventory.instance.healthPotionQuantity);
     }
 
     // Called when you enter dialogue or other similar things
@@ -85,6 +87,10 @@ public class InGameUIManager : MonoBehaviour
         ToggleInGameGearIconPanel(setRunUIActive);
         tempCurrencyValue.gameObject.SetActive(setRunUIActive);
         healthUIContainer.SetActive(setRunUIActive);
+
+        // Reset timer
+        InputManager.instance.RunGameTimer(setRunUIActive, setRunUIActive);
+        GameManager.instance.gameTimer.ResetTimer();
     }
 
     // Called when player input opens or closes the inventory
@@ -101,11 +107,9 @@ public class InGameUIManager : MonoBehaviour
 
         if(set){
             inventoryUI.OnInventoryOpen();
-            Time.timeScale = 0f;
             AlertTextUI.instance.ToggleAlertText(false);
         }
         else{
-            Time.timeScale = 1f;
             AlertTextUI.instance.ToggleAlertText(true);
         }
     }
@@ -120,31 +124,34 @@ public class InGameUIManager : MonoBehaviour
         if(set){
             gearSwapUI.OnGearSwapUIOpen(item);
             AlertTextUI.instance.DisableAlert();
-            Time.timeScale = 0f;
         }
         else{
             AlertTextUI.instance.EnableItemPickupAlert();
-            Time.timeScale = 1f;
         }
     }
 
     public void SetGearItemUI(InventoryItemSlot itemSlot, Sprite _icon)
     {
-        Debug.LogWarning("No item icons set! (TODO)");
-        return;
-
         switch(itemSlot){
             case InventoryItemSlot.Weapon:
                 inGameWeaponIMG.sprite = _icon;
+                inGameWeaponIMG.preserveAspect = true;
+                // inGameWeaponIMG.SetNativeSize();                
                 break;
             case InventoryItemSlot.Accessory:
                 inGameAccessoryIMG.sprite = _icon;
+                inGameAccessoryIMG.preserveAspect = true;
+                // inGameAccessoryIMG.SetNativeSize();
                 break;
             case InventoryItemSlot.Helmet:
                 inGameHelmetIMG.sprite = _icon;
+                inGameHelmetIMG.preserveAspect = true;
+                // inGameHelmetIMG.SetNativeSize();
                 break;
-            case InventoryItemSlot.Boots:
+            case InventoryItemSlot.Legs:
                 inGameBootsIMG.sprite = _icon;
+                inGameBootsIMG.preserveAspect = true;
+                // inGameBootsIMG.SetNativeSize();
                 break;
             default:
                 Debug.LogError("No item icon found for slot: " + itemSlot.ToString());
@@ -157,27 +164,47 @@ public class InGameUIManager : MonoBehaviour
 
     public void ClearItemUI(InventoryItemSlot itemSlot)
     {
-        if(!emptySlotAccessoryIcon || !emptySlotBootsIcon || !emptySlotWeaponIcon || !emptySlotHelmetIcon){
-            Debug.LogWarning("Empty item icons have not been set");
-            return;
-        }
-
         switch(itemSlot){
             case InventoryItemSlot.Weapon:
                 inGameWeaponIMG.sprite = emptySlotWeaponIcon;
+                inGameWeaponIMG.preserveAspect = true;
+                // inGameWeaponIMG.SetNativeSize();
                 break;
             case InventoryItemSlot.Accessory:
                 inGameAccessoryIMG.sprite = emptySlotAccessoryIcon;
+                inGameAccessoryIMG.preserveAspect = true;
+                // inGameAccessoryIMG.SetNativeSize();
                 break;
             case InventoryItemSlot.Helmet:
                 inGameHelmetIMG.sprite = emptySlotHelmetIcon;
+                inGameHelmetIMG.preserveAspect = true;
+                // inGameHelmetIMG.SetNativeSize();
                 break;
-            case InventoryItemSlot.Boots:
+            case InventoryItemSlot.Legs:
                 inGameBootsIMG.sprite = emptySlotBootsIcon;
+                inGameBootsIMG.preserveAspect = true;
+                // inGameBootsIMG.SetNativeSize();
                 break;
             default:
                 Debug.LogError("No item icon found for slot: " + itemSlot.ToString());
                 return;
+        }
+    }
+
+    public Sprite GetDefaultItemIconForSlot(InventoryItemSlot itemSlot)
+    {
+        switch(itemSlot){
+            case InventoryItemSlot.Weapon:
+                return emptySlotWeaponIcon;
+            case InventoryItemSlot.Accessory:
+                return emptySlotAccessoryIcon;
+            case InventoryItemSlot.Helmet:
+                return emptySlotHelmetIcon;
+            case InventoryItemSlot.Legs:
+                return emptySlotBootsIcon;
+            default:
+                Debug.LogError("No item icon found for slot: " + itemSlot.ToString());
+                return null;
         }
     }
 

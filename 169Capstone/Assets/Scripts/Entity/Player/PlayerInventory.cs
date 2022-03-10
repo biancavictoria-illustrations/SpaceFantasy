@@ -15,11 +15,12 @@ public class PlayerInventory : MonoBehaviour
     public GameObject dropItemPrefab;
 
     public int healthPotionQuantity {get; private set;}
+    public int startingHealthPotionQuantity = 3;
 
     public int tempCurrency {get; private set;}
     public int permanentCurrency {get; private set;}
 
-    public int totalPermanentCurrencySpent = 0;
+    [HideInInspector] public int totalPermanentCurrencySpent = 0;
 
     void Awake()
     {
@@ -41,7 +42,7 @@ public class PlayerInventory : MonoBehaviour
         gear[InventoryItemSlot.Weapon] = null;
         gear[InventoryItemSlot.Accessory] = null;
         gear[InventoryItemSlot.Helmet] = null;
-        gear[InventoryItemSlot.Boots] = null;
+        gear[InventoryItemSlot.Legs] = null;
     }
 
     public void UseHealthPotion()
@@ -51,17 +52,22 @@ public class PlayerInventory : MonoBehaviour
             return;
         }
 
-        EntityHealth playerHealth = Player.instance.GetComponent<EntityHealth>();
-        float healedHitPoints = playerHealth.maxHitpoints * (0.01f * Player.instance.GetComponent<PlayerStats>().getHealingEfficacy());
+        EntityHealth playerHealth = Player.instance.health;
+        float healedHitPoints = playerHealth.maxHitpoints * (0.01f * Player.instance.stats.getHealingEfficacy());
         playerHealth.Heal(healedHitPoints);
 
         healthPotionQuantity--;
         InGameUIManager.instance.SetHealthPotionValue(healthPotionQuantity);
     }
 
-    public void PurchaseHealthPotion()
+    public void SetRunStartHealthPotionQuantity()
     {
-        healthPotionQuantity++;
+        healthPotionQuantity = startingHealthPotionQuantity;
+    }
+
+    public void IncrementHealthPotionQuantity( int potionNum = 1 )
+    {
+        healthPotionQuantity += potionNum;
         InGameUIManager.instance.SetHealthPotionValue(healthPotionQuantity);
     }
 
@@ -106,6 +112,9 @@ public class PlayerInventory : MonoBehaviour
             RemoveEquippedWeaponModel();
         }
 
+        // Delete the thing
+        Destroy(gear[slot].gameObject);
+
         // Set value to null in the dictionary and clear the UI
         ClearItemSlot(slot);
         AlertTextUI.instance.EnableItemPickupAlert();
@@ -139,9 +148,9 @@ public class PlayerInventory : MonoBehaviour
             Destroy(gear[InventoryItemSlot.Accessory]);
             ClearItemSlot(InventoryItemSlot.Accessory);
         }
-        if(gear[InventoryItemSlot.Boots]){
-            Destroy(gear[InventoryItemSlot.Boots]);
-            ClearItemSlot(InventoryItemSlot.Boots);
+        if(gear[InventoryItemSlot.Legs]){
+            Destroy(gear[InventoryItemSlot.Legs]);
+            ClearItemSlot(InventoryItemSlot.Legs);
         }
         if(gear[InventoryItemSlot.Helmet]){
             Destroy(gear[InventoryItemSlot.Helmet]);

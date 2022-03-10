@@ -44,6 +44,10 @@ public class Projectile : MonoBehaviour
             Vector2 lookDirection = Camera.main.WorldToScreenPoint(transform.position + direction) - Camera.main.WorldToScreenPoint(transform.position);
             renderer.transform.rotation = Quaternion.LookRotation(Vector3.forward, new Vector3(lookDirection.y, lookDirection.x, 0).normalized);
         }
+        else
+        {
+            transform.rotation = Quaternion.LookRotation(direction);
+        }
         rb.velocity = direction.normalized * this._speed;
     }
 
@@ -56,7 +60,13 @@ public class Projectile : MonoBehaviour
                 enemyHealth.Damage(damage);
             Destroy(gameObject);
         }
+        else if(other.gameObject.layer == LayerMask.NameToLayer("Prop"))
+        {
+            other.GetComponent<PropJumpBreak>().BreakProp();
+        }
         else if(other.gameObject.layer == LayerMask.NameToLayer("Environment"))
+        {
             Destroy(gameObject);
+        }
     }
 }

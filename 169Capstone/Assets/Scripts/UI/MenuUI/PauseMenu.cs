@@ -15,12 +15,19 @@ public class PauseMenu : MonoBehaviour
     public GameObject areYouSurePanel;
 
     public Button continueButton;
+    public Button settingsButton;
+    public Button controlsButton;
+    public Button quitButton;
 
     public void ResumeGame()
     {
         ResetPauseUI();
-        Time.timeScale = 1f;
+        GameManager.instance.pauseMenuOpen = false;
         GameIsPaused = false;
+
+        if( GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME ){
+            InputManager.instance.RunGameTimer(true);
+        }        
 
         if(InGameUIManager.instance.inventoryIsOpen){
             InGameUIManager.instance.inventoryUI.SetInventoryInteractable(true);
@@ -44,14 +51,24 @@ public class PauseMenu : MonoBehaviour
         controlsMenuPanel.SetActive(false);
         areYouSurePanel.SetActive(false);
         pauseMenuPanel.SetActive(true);
+
+        // In case we click escape to leave while the "are you sure you want to quit" panel is open
+        continueButton.interactable = true;
+        settingsButton.interactable = true;
+        controlsButton.interactable = true;
+        quitButton.interactable = true;
         
         pauseMenuUI.SetActive(false);
     }
 
     public void PauseGame()
     {
+        if( GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME ){
+            InputManager.instance.RunGameTimer(false);
+        }
+
         pauseMenuUI.SetActive(true);
-        Time.timeScale = 0f;
+        GameManager.instance.pauseMenuOpen = true;
         GameIsPaused = true;
         continueButton.Select();
 
@@ -90,8 +107,11 @@ public class PauseMenu : MonoBehaviour
 
     public void LoadMenu()
     {
-        Time.timeScale = 1f;
+        GameManager.instance.pauseMenuOpen = false;
         GameIsPaused = false;
         SceneManager.LoadScene("MainMenu");
     }
 }
+
+
+// TODO: fix pause menu now that dialogue pauses (if you open pause menu while dialogue open)
