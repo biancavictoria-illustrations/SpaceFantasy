@@ -6,6 +6,7 @@ public class TargetPlayer : MonoBehaviour
 {
 
     public float damage = 0.2f;
+    public float turnRate = 90.0f;
     public Transform player;
     public GameObject projectilePrefab;
     public Transform projectileSpawnPoint;
@@ -18,6 +19,19 @@ public class TargetPlayer : MonoBehaviour
     private void Update()
     {
         timer -=Time.deltaTime;
+        
+    }
+
+    private void FixedUpdate()
+    {
+        Vector3 localTargetPos = transform.InverseTransformPoint(player.position);
+        localTargetPos.y = 0.0f;
+        Quaternion rotationGoal = Quaternion.LookRotation(localTargetPos);
+        
+        Quaternion newRotation = Quaternion.RotateTowards(transform.localRotation, rotationGoal, turnRate * Time.deltaTime);
+
+        // Set the new rotation of the base.
+        transform.localRotation = newRotation;
     }
 
     private void OnTriggerEnter(Collider other)
