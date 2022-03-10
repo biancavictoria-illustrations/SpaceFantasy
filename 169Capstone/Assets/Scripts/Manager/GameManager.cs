@@ -25,7 +25,6 @@ public class GameManager : MonoBehaviour
     public bool hitStop {get; private set;}
     [HideInInspector] public bool deathMenuOpen;
     [HideInInspector] public bool pauseMenuOpen;
-    [HideInInspector] public bool shopOpen;
 
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform playerTransform; // TODO: set this at runtime if game manager starts in main menu???
@@ -83,7 +82,7 @@ public class GameManager : MonoBehaviour
             Debug.LogError("No dialogue/UI manager found!");
         }
 
-        if(hitStop || DialogueManager.instance.stopTime || pauseMenuOpen || deathMenuOpen || shopOpen || InGameUIManager.instance.inventoryIsOpen || InGameUIManager.instance.gearSwapIsOpen)
+        if(hitStop || DialogueManager.instance.stopTime || pauseMenuOpen || deathMenuOpen || InputManager.instance.shopIsOpen || InGameUIManager.instance.inventoryIsOpen || InGameUIManager.instance.gearSwapIsOpen)
             Time.timeScale = 0;
         else
             Time.timeScale = 1;

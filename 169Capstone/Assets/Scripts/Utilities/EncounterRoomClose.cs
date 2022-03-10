@@ -39,6 +39,10 @@ public class EncounterRoomClose : MonoBehaviour
             {
                 oldColor = sceneLight.color;
                 sceneLight.color = newColor;
+
+                Beetle boi = FindObjectOfType<Beetle>();
+                if(boi != null)
+                    boi.canAttack = true;
             }
         }
     }
@@ -57,6 +61,9 @@ public class EncounterRoomClose : MonoBehaviour
                 sceneLight.color = oldColor;
                 Debug.Log("Room Open");
             }
+
+            Debug.Log("disable encounter room");
+            gameObject.SetActive(false);
         }
     }
 
