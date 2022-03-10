@@ -892,6 +892,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8190013898339030461}
+  - component: {fileID: 7312634738860031740}
   m_Layer: 0
   m_Name: Turrets_1
   m_TagString: Untagged
@@ -935,6 +936,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!114 &7312634738860031740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6064527791623286287}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a488d7625eb949ccb4e45705efc337c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnPoints: []
+  maxTarget: 0
+  slimePrefab: {fileID: 0}
+  robertPrefab: {fileID: 0}
 --- !u!1 &7958565200929877494
 GameObject:
   m_ObjectHideFlags: 0
@@ -1298,10 +1315,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8190013898339030461}
     m_Modifications:
+    - target: {fileID: 279322589121399120, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 279322589121399120, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4941471536871962134, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
         type: 3}
       propertyPath: m_Name
       value: Slime Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 4941471536871962134, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4941471536871962135, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
         type: 3}
@@ -1448,10 +1480,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8190013898339030461}
     m_Modifications:
+    - target: {fileID: 279322589121399120, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 279322589121399120, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4941471536871962134, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
         type: 3}
       propertyPath: m_Name
       value: Slime Enemy (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4941471536871962134, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4941471536871962135, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
         type: 3}
@@ -1583,6 +1630,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Robert Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 3387626245004855708, guid: d549f5e25c318f547bda155e58899bd3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4439003927008478763, guid: d549f5e25c318f547bda155e58899bd3,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4439003927008478763, guid: d549f5e25c318f547bda155e58899bd3,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d549f5e25c318f547bda155e58899bd3, type: 3}
 --- !u!4 &1967030703919778267 stripped
@@ -1610,10 +1672,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8190013898339030461}
     m_Modifications:
+    - target: {fileID: 279322589121399120, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 279322589121399120, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4941471536871962134, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
         type: 3}
       propertyPath: m_Name
       value: Slime Enemy (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4941471536871962134, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4941471536871962135, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
         type: 3}

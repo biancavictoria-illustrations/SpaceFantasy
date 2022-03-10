@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1041640943641858241
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1588767876877755232}
+  m_Layer: 0
+  m_Name: Enemy Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1588767876877755232
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1041640943641858241}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -6.6, y: 2.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8057201018906592059}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1693469542936749956
 GameObject:
   m_ObjectHideFlags: 0
@@ -103,6 +133,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8057201018906592059}
+  - component: {fileID: 7732963319949648828}
   m_Layer: 0
   m_Name: BigPit
   m_TagString: Untagged
@@ -130,9 +161,31 @@ Transform:
   - {fileID: 8477976142874644562}
   - {fileID: 100561444383567085}
   - {fileID: 6331237364032211661}
+  - {fileID: 1588767876877755232}
+  - {fileID: 9095505633810914250}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7732963319949648828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1892864578746242103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a488d7625eb949ccb4e45705efc337c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnPoints:
+  - {fileID: 1588767876877755232}
+  - {fileID: 9095505633810914250}
+  maxTarget: 5
+  slimePrefab: {fileID: 4941471536871962134, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+    type: 3}
+  robertPrefab: {fileID: 3387626245004855708, guid: d549f5e25c318f547bda155e58899bd3,
+    type: 3}
 --- !u!1 &2506179050645427256
 GameObject:
   m_ObjectHideFlags: 0
@@ -970,6 +1023,36 @@ MonoBehaviour:
   - {fileID: 8898265751703959924}
   - {fileID: 4004864234394435029}
   - {fileID: 7331827096214628645}
+--- !u!1 &9095402460924344554
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9095505633810914250}
+  m_Layer: 0
+  m_Name: Enemy Spawner (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9095505633810914250
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9095402460924344554}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 24.1, y: 2.5, z: 10.7}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8057201018906592059}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &255579591112777278
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1052,10 +1135,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5459917996072325396}
     m_Modifications:
+    - target: {fileID: 279322589121399120, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 279322589121399120, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4941471536871962134, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
         type: 3}
       propertyPath: m_Name
       value: Slime Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 4941471536871962134, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4941471536871962135, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
         type: 3}
@@ -1129,12 +1227,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 04b0f25703f583c4e9d22d3aaf66e6c9, type: 3}
---- !u!4 &5725096973369879844 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4941471536871962135, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
-    type: 3}
-  m_PrefabInstance: {fileID: 855687725088824115}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &855687724182838068 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1509965831, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
@@ -1147,6 +1239,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f60802e625164bbb8c6aaf479fbf304, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &5725096973369879844 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4941471536871962135, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+    type: 3}
+  m_PrefabInstance: {fileID: 855687725088824115}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &888939309325108343
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1950,10 +2048,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5459917996072325396}
     m_Modifications:
+    - target: {fileID: 279322589121399120, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 279322589121399120, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4941471536871962134, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
         type: 3}
       propertyPath: m_Name
       value: Slime Enemy (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4941471536871962134, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4941471536871962135, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
         type: 3}
@@ -2604,6 +2717,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Robert Enemy (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3387626245004855708, guid: d549f5e25c318f547bda155e58899bd3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4439003927008478763, guid: d549f5e25c318f547bda155e58899bd3,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4439003927008478763, guid: d549f5e25c318f547bda155e58899bd3,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d549f5e25c318f547bda155e58899bd3, type: 3}
 --- !u!114 &8553606118851754990 stripped
@@ -2766,14 +2894,23 @@ PrefabInstance:
       propertyPath: m_Name
       value: Robert Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 3387626245004855708, guid: d549f5e25c318f547bda155e58899bd3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4439003927008478763, guid: d549f5e25c318f547bda155e58899bd3,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4439003927008478763, guid: d549f5e25c318f547bda155e58899bd3,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d549f5e25c318f547bda155e58899bd3, type: 3}
---- !u!4 &5353934256780035603 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3387626245004855701, guid: d549f5e25c318f547bda155e58899bd3,
-    type: 3}
-  m_PrefabInstance: {fileID: 7300258889204060038}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5353934256780035607 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3387626245004855697, guid: d549f5e25c318f547bda155e58899bd3,
@@ -2786,6 +2923,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f60802e625164bbb8c6aaf479fbf304, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &5353934256780035603 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3387626245004855701, guid: d549f5e25c318f547bda155e58899bd3,
+    type: 3}
+  m_PrefabInstance: {fileID: 7300258889204060038}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7396449816957914564
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3173,10 +3316,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5459917996072325396}
     m_Modifications:
+    - target: {fileID: 279322589121399120, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 279322589121399120, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4941471536871962134, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
         type: 3}
       propertyPath: m_Name
       value: Slime Enemy (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4941471536871962134, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4941471536871962135, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
         type: 3}
@@ -3350,10 +3508,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5459917996072325396}
     m_Modifications:
+    - target: {fileID: 279322589121399120, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 279322589121399120, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4941471536871962134, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
         type: 3}
       propertyPath: m_Name
       value: Slime Enemy (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4941471536871962134, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4941471536871962135, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
         type: 3}

@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6572024582705956117}
+  - component: {fileID: 1341655377449626648}
   m_Layer: 0
   m_Name: Let it rip
   m_TagString: Untagged
@@ -38,6 +39,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1341655377449626648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4492601805165430409}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a488d7625eb949ccb4e45705efc337c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnPoints: []
+  maxTarget: 0
+  slimePrefab: {fileID: 0}
+  robertPrefab: {fileID: 0}
 --- !u!1 &5341060608956238807
 GameObject:
   m_ObjectHideFlags: 0
@@ -626,6 +643,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6572024582705956117}
     m_Modifications:
+    - target: {fileID: 57449957, guid: 71b731f18eaf20549bc91ba7acb5d23c, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 57449957, guid: 71b731f18eaf20549bc91ba7acb5d23c, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1883920101, guid: 71b731f18eaf20549bc91ba7acb5d23c, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1883920101, guid: 71b731f18eaf20549bc91ba7acb5d23c, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 560206278114478799, guid: 71b731f18eaf20549bc91ba7acb5d23c,
         type: 3}
       propertyPath: m_RootOrder

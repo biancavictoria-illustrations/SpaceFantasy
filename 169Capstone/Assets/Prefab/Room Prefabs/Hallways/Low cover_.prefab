@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4949139758518779275}
   - component: {fileID: 8854891642629388304}
+  - component: {fileID: 6388476760002387483}
   m_Layer: 0
   m_Name: Low cover_
   m_TagString: Untagged
@@ -46,6 +47,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingEnemies: []
   roomExits: []
+--- !u!114 &6388476760002387483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 676403763042867568}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a488d7625eb949ccb4e45705efc337c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnPoints: []
+  maxTarget: 0
+  slimePrefab: {fileID: 0}
+  robertPrefab: {fileID: 0}
 --- !u!1 &1498485104808228304
 GameObject:
   m_ObjectHideFlags: 0
@@ -998,10 +1015,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 328827774442996746}
     m_Modifications:
+    - target: {fileID: 279322589121399120, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 279322589121399120, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4941471536871962134, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
         type: 3}
       propertyPath: m_Name
       value: Slime Enemy (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4941471536871962134, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4941471536871962135, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
         type: 3}
@@ -1148,10 +1180,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 328827774442996746}
     m_Modifications:
+    - target: {fileID: 279322589121399120, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 279322589121399120, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4941471536871962134, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
         type: 3}
       propertyPath: m_Name
       value: Slime Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 4941471536871962134, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4941471536871962135, guid: 04b0f25703f583c4e9d22d3aaf66e6c9,
         type: 3}
