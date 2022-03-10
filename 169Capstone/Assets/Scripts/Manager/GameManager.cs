@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 
     public const string TITLE_SCREEN_STRING_NAME = "MainMenu";
     public const string MAIN_HUB_STRING_NAME = "Main Hub";
-    public const string GAME_LEVEL_STRING_NAME = "TestFloor";   // TODO: Update this!!!
+    public const string GAME_LEVEL1_STRING_NAME = "GenerationSetup";
     public const string LICH_ARENA_STRING_NAME = "LichArena";   // TODO: Update this!!!
 
     private const float hitStopDuration = 0.1f;
@@ -158,7 +158,7 @@ public class GameManager : MonoBehaviour
 
             // TODO: Play animation of you falling or something Idk (or like phasing in)
         }
-        else if(currentSceneName == GAME_LEVEL_STRING_NAME){
+        else if(currentSceneName == GAME_LEVEL1_STRING_NAME){
             PlayerInventory.instance.SetRunStartHealthPotionQuantity();
             InGameUIManager.instance.ToggleRunUI(true);
             AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, false);

@@ -15,7 +15,7 @@ public class MainMenu : MonoBehaviour
 
     public void PlayGame()
     {
-        SceneManager.LoadScene(GameManager.GAME_LEVEL_STRING_NAME);
+        SceneManager.LoadScene(GameManager.GAME_LEVEL1_STRING_NAME);
         
         // TODO: Load save files
     }
