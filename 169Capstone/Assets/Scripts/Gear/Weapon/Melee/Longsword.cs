@@ -24,7 +24,7 @@ public class Longsword : Equipment
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        player = Player.instance;
         movement = player.GetComponentInChildren<Movement>();
 
         playerAnim = player.GetComponentInChildren<AnimationStateController>();
@@ -42,6 +42,7 @@ public class Longsword : Equipment
             isAttacking = true;
             holdingAttack = true;
             movement.isAttacking = true;
+            movement.lockLookDirection = true;
         }
 
         if(holdingAttack && !InputManager.instance.isAttacking)
@@ -53,7 +54,7 @@ public class Longsword : Equipment
         playerAnim.animator.SetBool("IsHoldingAttack", heldEffectCounter > 0);
         playerAnim.animator.SetBool("IsAttacking", isAttacking);
         playerAnim.animator.SetFloat("AttackSpeed", player.stats.getAttackSpeed());
-        swordCollider.enabled = playerAnim.hitboxActive;
+        swordCollider.enabled = playerAnim.attackActive;
     }
 
     public void DealDamage(Collider other)
@@ -99,6 +100,7 @@ public class Longsword : Equipment
         {
             isAttacking = false;
             movement.isAttacking = false;
+            movement.lockLookDirection = false;
         }
     }
 
