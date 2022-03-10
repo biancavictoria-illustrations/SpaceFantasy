@@ -5,14 +5,14 @@ using UnityEngine.Events;
 
 public class AnimationStateController : MonoBehaviour
 {
-    public bool hitboxActive;
+    public bool attackActive;
     public UnityEvent endAttack;
 
     public Animator animator;
 
     public void ActivateHitbox(int active)
     {
-        hitboxActive = active > 0;
+        attackActive = active > 0;
     }
 
     public void EndAttack()

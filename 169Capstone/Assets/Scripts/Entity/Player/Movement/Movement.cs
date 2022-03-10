@@ -13,6 +13,7 @@ public class Movement : MonoBehaviour
     public float gravityAccel = -10f;
     public float jumpSpeed = 10;
     public bool isAttacking;
+    public bool lockLookDirection;
     
     private Vector3 externalVelocity;
     private Vector3 cursorLookDirection;
@@ -303,29 +304,30 @@ public class Movement : MonoBehaviour
             }
 
             direction *= speed * Time.fixedDeltaTime;
-            
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-            float angle = Mathf.SmoothDampAngle(model.eulerAngles.y, targetAngle, ref smoothingVelocity, smoothing);
-
-            if(isAttacking)
-            {
-                if(cursorLookDirection == Vector3.zero)
-                    cursorLookDirection = InputManager.instance.cursorLookDirection;
-
-                model.rotation = Quaternion.FromToRotation(Vector3.forward, cursorLookDirection);
-                direction /= 2;
-            }
-            else
-            {
-                if(cursorLookDirection != Vector3.zero)
-                    cursorLookDirection = Vector3.zero;
-
-                model.rotation = Quaternion.Euler(0, angle, 0);
-            }
         }
         else
         {
             direction = Vector3.zero;
+        }
+            
+        float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+        float angle = Mathf.SmoothDampAngle(model.eulerAngles.y, targetAngle, ref smoothingVelocity, smoothing);
+
+        if(isAttacking)
+        {
+            if(cursorLookDirection == Vector3.zero || !lockLookDirection)
+                cursorLookDirection = InputManager.instance.cursorLookDirection;
+
+            model.rotation = Quaternion.LookRotation(cursorLookDirection);
+            direction /= 2;
+        }
+        else
+        {
+            if(cursorLookDirection != Vector3.zero)
+                cursorLookDirection = Vector3.zero;
+
+            if(direction.magnitude >= 0.1f)
+                model.rotation = Quaternion.Euler(0, angle, 0);
         }
 
         if(!isJumping && Physics.Raycast(transform.position, Vector3.down, 0.1f, LayerMask.GetMask("Environment")))
@@ -340,7 +342,6 @@ public class Movement : MonoBehaviour
             {
                 fallingVelocity = 0;
                 isGrounded = false;
-
             }
 
             fallingVelocity += gravityAccel * Time.fixedDeltaTime;
