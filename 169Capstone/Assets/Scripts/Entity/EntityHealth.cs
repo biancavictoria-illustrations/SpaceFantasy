@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class EntityHealth : MonoBehaviour
 {
@@ -71,7 +72,7 @@ public class EntityHealth : MonoBehaviour
             else{
                 enemyHealthUI = gameObject.GetComponentInChildren<EnemyHealthBar>();
                 if(enemyHealthUI == null){
-                    Debug.LogError("No enemy health UI found for normal enemy unit!");
+                    Debug.LogError("No enemy health UI found for enemy unit: " + enemyID + "  Transform: " + gameObject.transform.position);
                     return;
                 }
             }

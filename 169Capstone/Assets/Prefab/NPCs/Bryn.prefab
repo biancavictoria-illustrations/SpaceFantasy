@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3552362643004917318}
   - component: {fileID: 6701477934687620461}
   - component: {fileID: 2937096020219110281}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,11 +26,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1467408478812761850}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 2.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7887245419925665951}
-  m_Father: {fileID: 1798651827520949020}
+  m_Father: {fileID: 6150463862346388309}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6701477934687620461
@@ -72,9 +72,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -3823212885498798013, guid: 44cd487fe62f07242b9d9c66d9f60d9c,
-    type: 3}
-  m_Color: {r: 0.099043846, g: 0, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 7913d2a269366064db4b315e70524f14, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -97,7 +96,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 1798651827520949020}
-  spriteHolder: {fileID: 3552362643004917318}
+  spriteHolder: {fileID: 6150463862346388309}
   renderer: {fileID: 0}
 --- !u!1 &1798651827520949013
 GameObject:
@@ -111,9 +110,9 @@ GameObject:
   - component: {fileID: 2766571299809117928}
   - component: {fileID: 1798651827520949019}
   - component: {fileID: 1798651827520949018}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Bryn
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -126,10 +125,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1798651827520949013}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.54, y: 1, z: -20.7}
-  m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 3552362643004917318}
+  - {fileID: 6150463862346388309}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -173,10 +172,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speakerData: {fileID: 11400000, guid: cfff8c82e892c3d4898823b12ecca518, type: 2}
-  yarnDialogue: {fileID: 0}
-  yarnStartNode: 
   newDialogueAlert: {fileID: 7887245419925665950}
-  hasNumRunDialogueList: 
+--- !u!1 &7240105195317918347
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6150463862346388309}
+  m_Layer: 0
+  m_Name: SpriteHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6150463862346388309
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7240105195317918347}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 3552362643004917318}
+  m_Father: {fileID: 1798651827520949020}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7887245419925665950
 GameObject:
   m_ObjectHideFlags: 0
@@ -189,7 +216,7 @@ GameObject:
   - component: {fileID: 7887245419925665946}
   - component: {fileID: 7887245419925665945}
   - component: {fileID: 7887245419925665944}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: NPCDialogueAlertCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -213,7 +240,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 2.87}
+  m_AnchoredPosition: {x: 0, y: 3.28}
   m_SizeDelta: {x: 5, y: 5}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!223 &7887245419925665946
@@ -287,7 +314,7 @@ GameObject:
   - component: {fileID: 7887245420375229552}
   - component: {fileID: 7887245420375229554}
   - component: {fileID: 7887245420375229553}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: NewDialogueAlert
   m_TagString: Untagged
   m_Icon: {fileID: 0}
