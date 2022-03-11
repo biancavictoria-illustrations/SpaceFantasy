@@ -15,12 +15,9 @@ public class PlayerInventory : MonoBehaviour
     public GameObject dropItemPrefab;
 
     public int healthPotionQuantity {get; private set;}
-    public int startingHealthPotionQuantity = 3;
 
     public int tempCurrency {get; private set;}
     public int permanentCurrency {get; private set;}
-
-    [HideInInspector] public int totalPermanentCurrencySpent = 0;
 
     void Awake()
     {
@@ -62,7 +59,7 @@ public class PlayerInventory : MonoBehaviour
 
     public void SetRunStartHealthPotionQuantity()
     {
-        healthPotionQuantity = startingHealthPotionQuantity;
+        healthPotionQuantity = PermanentUpgradeManager.instance.startingHealthPotionQuantity;
     }
 
     public void IncrementHealthPotionQuantity( int potionNum = 1 )
@@ -176,14 +173,14 @@ public class PlayerInventory : MonoBehaviour
     public void SpendPermanentCurrency(int amountSpent)
     {
         permanentCurrency -= amountSpent;
-        totalPermanentCurrencySpent += amountSpent;
+        PermanentUpgradeManager.instance.totalPermanentCurrencySpent += amountSpent;
         InGameUIManager.instance.SetPermanentCurrencyValue(permanentCurrency);
     }
 
     public void ResetPermanentCurrency()
     {
-        permanentCurrency += totalPermanentCurrencySpent;
-        totalPermanentCurrencySpent = 0;
+        permanentCurrency += PermanentUpgradeManager.instance.totalPermanentCurrencySpent;
+        PermanentUpgradeManager.instance.totalPermanentCurrencySpent = 0;
         InGameUIManager.instance.SetPermanentCurrencyValue(permanentCurrency);        
     }
 }

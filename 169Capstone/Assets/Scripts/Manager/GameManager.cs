@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -102,49 +100,6 @@ public class GameManager : MonoBehaviour
         currentRunNumber++;
     }
 
-    public void ChangeScene()
-    {
-        SaveGame();
-    }
-
-    private Save CreateSaveGameObject()
-    {
-        Save saveFile = new Save();
-        
-        // TODO: Store the data (set all the variables in the Save class according to the current game state)
-
-        return saveFile;
-    }
-
-    public void SaveGame()
-    {
-        Save save = CreateSaveGameObject();
-
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Create(Application.persistentDataPath + "/gamesave.save");
-        bf.Serialize(file, save);
-        file.Close();
-        
-        Debug.Log("Game Saved");
-    }
-
-    public void LoadGame()
-    {
-        if (File.Exists(Application.persistentDataPath + "/gamesave.save")){
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(Application.persistentDataPath + "/gamesave.save", FileMode.Open);
-            Save save = (Save)bf.Deserialize(file);
-            file.Close();
-
-            // TODO: Set values according to the save file
-
-            Debug.Log("Game Loaded");
-        }
-        else{
-            Debug.Log("No game saved!");
-        }
-    }
-
     void OnSceneLoad(Scene scene, LoadSceneMode mode)
     {
         currentSceneName = scene.name;
@@ -157,6 +112,8 @@ public class GameManager : MonoBehaviour
             // TODO: play main hub music
 
             // TODO: Play animation of you falling or something Idk (or like phasing in)
+
+            SaveLoadManager.SaveGame(this, PlayerInventory.instance, DialogueManager.instance, StoryManager.instance, PermanentUpgradeManager.instance);    // Autosave in main hub!
         }
         else if(currentSceneName == GAME_LEVEL1_STRING_NAME){
             PlayerInventory.instance.SetRunStartHealthPotionQuantity();
@@ -195,5 +152,13 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(hitStopDuration);
         hitStop = false;
+    }
+
+    // Called when you load your game in the Main Menu
+    public void LoadGame()
+    {
+        Save saveData = SaveLoadManager.LoadGame();
+
+        // Set all values
     }
 }

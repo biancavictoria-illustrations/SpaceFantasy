@@ -16,8 +16,20 @@ public class MainMenu : MonoBehaviour
     public void PlayGame()
     {
         SceneManager.LoadScene(GameManager.GAME_LEVEL1_STRING_NAME);
-        
-        // TODO: Load save files
+    }
+
+    // TODO
+    public void StartNewGame()
+    {
+        // if starting a new game, load level 1 scene (new game)
+        SceneManager.LoadScene(GameManager.GAME_LEVEL1_STRING_NAME);
+    }
+
+    // TODO
+    public void LoadSavedGame()
+    {
+        // TODO: Load save files and load main hub
+        SceneManager.LoadScene(GameManager.MAIN_HUB_STRING_NAME);
     }
 
     public void QuitGame()
