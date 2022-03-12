@@ -20,11 +20,6 @@ public class SaveFilePanel : MonoBehaviour
     {
         slotIsFull = GameManager.instance.SaveFileIsFull(slotNumber);
 
-        // FOR TESTING (REMOVE THIS)
-        if(slotNumber == 1){
-            return;
-        }
-
         if(slotIsFull){
             escapeAttempts.text = GameManager.instance.GetNumCompletedRunsInSaveFile(slotNumber) + "";
             escapeAttempts.text = GameManager.instance.GetStarShardsSpentInSaveFile(slotNumber) + "";

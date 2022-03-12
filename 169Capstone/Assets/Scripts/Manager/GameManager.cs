@@ -115,9 +115,9 @@ public class GameManager : MonoBehaviour
 
             // TODO: Play animation of you falling or something Idk (or like phasing in)
 
-            // TODO: Uncomment when ready to test saving
-            // SaveDisplayValuesToPlayerPrefs();
-            // SaveLoadManager.SaveGame(saveSlotNum, this, PlayerInventory.instance, DialogueManager.instance, StoryManager.instance, PermanentUpgradeManager.instance);    // Autosave in main hub!
+            // Autosave in main hub!
+            SaveDisplayValuesToPlayerPrefs();
+            SaveLoadManager.SaveGame(saveSlotNum, this, PlayerInventory.instance, DialogueManager.instance, StoryManager.instance, PermanentUpgradeManager.instance);
         }
         else if(currentSceneName == GAME_LEVEL1_STRING_NAME){
             PlayerInventory.instance.SetRunStartHealthPotionQuantity();
