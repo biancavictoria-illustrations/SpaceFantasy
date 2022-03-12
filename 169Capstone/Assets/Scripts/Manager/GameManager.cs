@@ -38,6 +38,8 @@ public class GameManager : MonoBehaviour
     // (Makes a new special item pop up in Stellan's shop)
     [HideInInspector] public bool hasKilledTimeLich = false;
 
+    private int saveSlotNum;
+
     public bool progressRunForTesting = false;  // TEMP
 
     void Awake()
@@ -114,7 +116,8 @@ public class GameManager : MonoBehaviour
             // TODO: Play animation of you falling or something Idk (or like phasing in)
 
             // TODO: Uncomment when ready to test saving
-            // SaveLoadManager.SaveGame(this, PlayerInventory.instance, DialogueManager.instance, StoryManager.instance, PermanentUpgradeManager.instance);    // Autosave in main hub!
+            // SaveDisplayValuesToPlayerPrefs();
+            // SaveLoadManager.SaveGame(saveSlotNum, this, PlayerInventory.instance, DialogueManager.instance, StoryManager.instance, PermanentUpgradeManager.instance);    // Autosave in main hub!
         }
         else if(currentSceneName == GAME_LEVEL1_STRING_NAME){
             PlayerInventory.instance.SetRunStartHealthPotionQuantity();
@@ -155,11 +158,16 @@ public class GameManager : MonoBehaviour
         hitStop = false;
     }
 
-    // Called when you load your game in the Main Menu
-    public void LoadGame()
+
+    #region Save/Load
+
+    // Called when you load your game in the Main Menu (and ONLY then)
+    public void LoadGame(int _slot)
     {
+        saveSlotNum = _slot;
+
         // Retrieve save data & set all values from there
-        Save saveData = SaveLoadManager.LoadGame();
+        Save saveData = SaveLoadManager.LoadGame(saveSlotNum);
 
         // Game Manager Stuff
         currentRunNumber = saveData.currentRunNumber;
@@ -221,5 +229,79 @@ public class GameManager : MonoBehaviour
         // Story Beat Status Values
         // TODO
         // Probably just pass on the saveData string[]s on to the StoryManager and let it deal with this garbage
+
+
+        SceneManager.LoadScene(GameManager.MAIN_HUB_STRING_NAME);
     }
+
+    public void StartNewGame(int _newSlot)
+    {
+        saveSlotNum = _newSlot;
+        
+        // Save that we are using this save file now
+        PlayerPrefs.SetInt(GetSaveFilePlayerPrefsKey(saveSlotNum), 1);
+        PlayerPrefs.Save();
+
+        // If starting a new game, load level 1 scene (new game)
+        SceneManager.LoadScene(GameManager.GAME_LEVEL1_STRING_NAME);
+    }
+
+    public string GetSaveFilePlayerPrefsKey(int _slot)
+    {
+        return "SaveFile" + _slot;
+    }
+
+    public bool SaveFileIsFull(int _slot)
+    {
+        string s = GetSaveFilePlayerPrefsKey(_slot);
+
+        // If the key is not even in player prefs, we have never set a save file for that value
+        if(!PlayerPrefs.HasKey(s)){
+            return false;
+        }
+        // If the key IS there and the value is 1, there is currently a save file there
+        else if(PlayerPrefs.GetInt(s) == 1){
+            return true;
+        }
+        // Else if 0 or -1, there's no save file there currently
+        return false;
+    }
+
+    private void SaveDisplayValuesToPlayerPrefs()
+    {
+        string s = GetSaveFilePlayerPrefsKey(saveSlotNum);
+
+        PlayerPrefs.SetInt( s + "StarShards", PermanentUpgradeManager.instance.totalPermanentCurrencySpent );
+        
+        // If we're calling this ONLY in Main Hub, it's current run num - 1
+        PlayerPrefs.SetInt( s + "CompletedRunNum", currentRunNumber - 1 );
+
+        PlayerPrefs.Save();
+    }
+
+    public int GetStarShardsSpentInSaveFile(int _slot)
+    {
+        string s = GetSaveFilePlayerPrefsKey(_slot) + "StarShards";
+
+        if(!PlayerPrefs.HasKey(s)){
+            Debug.LogError("No value found for key " + s + " in PlayerPrefs");
+            return -1;
+        }
+
+        return PlayerPrefs.GetInt(s);
+    }
+
+    public int GetNumCompletedRunsInSaveFile(int _slot)
+    {
+        string s = GetSaveFilePlayerPrefsKey(_slot) + "CompletedRunNum";
+
+        if(!PlayerPrefs.HasKey(s)){
+            Debug.LogError("No value found for key " + s + " in PlayerPrefs");
+            return -1;
+        }
+
+        return PlayerPrefs.GetInt(s);
+    }
+
+    #endregion
 }

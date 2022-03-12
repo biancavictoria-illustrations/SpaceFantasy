@@ -1,40 +1,91 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
+    public static MainMenu instance;
+
     [SerializeField] private Button playButton;
+    [SerializeField] private GameObject mainMenuPanel;
+
+    [SerializeField] private GameObject saveFilePanel;
+
+    [SerializeField] private List<Button> fileSelectButtons;
+
+    [SerializeField] private GameObject areYouSurePanel;
+    [SerializeField] private Button areYouSureNoButton;
+    private int activeDeletePanel = 0;
+
+    void Awake()
+    {
+        if( instance ){
+            Destroy(gameObject);
+        }
+        else{
+            instance = this;
+        }
+    }
 
     void Start()
     {
         playButton.Select();
     }
 
-    public void PlayGame()
+    public void ToggleSaveFileMenu(bool set)
     {
-        SceneManager.LoadScene(GameManager.GAME_LEVEL1_STRING_NAME);
-    }
+        saveFilePanel.SetActive(set);
+        mainMenuPanel.SetActive(!set);
 
-    // TODO (call this when you start a new save file)
-    public void StartNewGame()
-    {
-        // If starting a new game, load level 1 scene (new game)
-        SceneManager.LoadScene(GameManager.GAME_LEVEL1_STRING_NAME);
-    }
-
-    // TODO (call this when you select your save file)
-    public void LoadSavedGame()
-    {
-        GameManager.instance.LoadGame();
-        SceneManager.LoadScene(GameManager.MAIN_HUB_STRING_NAME);
+        if(set){
+            fileSelectButtons[0].Select();
+        }
+        else{
+            playButton.Select();
+        }
     }
 
     public void QuitGame()
     {
         Application.Quit();
-        Debug.Log("Quitting game!");
+    }
+
+    private void SetAllFileSelectButtonsInteractable(bool set)
+    {
+        foreach(Button b in fileSelectButtons){
+            b.interactable = set;
+        }
+    }
+
+    public void ToggleAreYouSureYouWantToDeleteSaveFilePanel(bool set, int _slot)
+    {
+        areYouSurePanel.SetActive(set);
+        SetAllFileSelectButtonsInteractable(!set);
+        activeDeletePanel = _slot;
+
+        if(set){
+            areYouSureNoButton.Select();
+        }
+        else{
+            fileSelectButtons[0].Select();
+        }
+    }
+
+    public void CancelDeleteButtonClicked()
+    {
+        ToggleAreYouSureYouWantToDeleteSaveFilePanel(false, 0);
+    }
+
+    public void DeleteFile()
+    {
+        foreach(Button b in fileSelectButtons){
+            SaveFilePanel p = b.GetComponent<SaveFilePanel>();
+            if( p && p.GetSlotNumber() == activeDeletePanel ){
+                p.ClearSaveFile();
+            }
+        }
+
+        ToggleAreYouSureYouWantToDeleteSaveFilePanel(false, 0);
     }
 }
