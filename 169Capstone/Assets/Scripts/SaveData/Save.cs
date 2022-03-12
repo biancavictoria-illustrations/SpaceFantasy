@@ -49,7 +49,14 @@ public class Save
     public bool doctorListInitialized;
 
     // Story Beat Status Values
-    // TODO
+
+    // NOTE: Beat Statuses might NOT be able to be serialized like this
+    // If this doesn't work... going to need another system :(
+    public StoryManager.BeatStatus[] storyBeatDatabaseStatuses;
+    public StoryManager.BeatStatus[] itemStoryBeatStatuses;
+    public StoryManager.BeatStatus[] genericStoryBeatStatuses;
+
+    public string[] activeStoryBeatHeadNodes;
 
     // Constructor
     public Save(GameManager gameManager, PlayerInventory playerInventory, DialogueManager dialogueManager, StoryManager storyManager, PermanentUpgradeManager permanentUpgradeManager)
@@ -105,7 +112,10 @@ public class Save
         CharacterSpecificNumRunListToArray(SpeakerID.TimeLich, storyManager.timeLichNumRunDialogueList);
 
         // Story Beat Status Values
-        // TODO
+        SaveStoryBeatStatuses(storyManager);
+
+        activeStoryBeatHeadNodes = new string[storyManager.activeStoryBeats.Count];
+        SaveActiveStoryBeats(storyManager.activeStoryBeats);
     }
 
     private void SaveVisitedNodes( HashSet<string> _visisted )
@@ -113,6 +123,40 @@ public class Save
         int i = 0;
         foreach(string s in _visisted){
             visistedNodes[i] = s;
+            i++;
+        }
+    }
+
+    private void SaveStoryBeatStatuses( StoryManager sm )
+    {
+        storyBeatDatabaseStatuses = new StoryManager.BeatStatus[sm.storyBeatDatabase.Count];
+        itemStoryBeatStatuses = new StoryManager.BeatStatus[sm.itemStoryBeats.Count];
+        genericStoryBeatStatuses = new StoryManager.BeatStatus[sm.genericStoryBeats.Count];
+
+        int i = 0;
+        foreach( StoryManager.BeatStatus beatStatus in sm.storyBeatDatabase.Values ){
+            storyBeatDatabaseStatuses[i] = beatStatus;
+            i++;
+        }
+
+        i = 0;
+        foreach( StoryManager.BeatStatus beatStatus in sm.itemStoryBeats.Values ){
+            itemStoryBeatStatuses[i] = beatStatus;
+            i++;
+        }
+
+        i = 0;
+        foreach( StoryManager.BeatStatus beatStatus in sm.genericStoryBeats.Values ){
+            genericStoryBeatStatuses[i] = beatStatus;
+            i++;
+        }
+    }
+
+    private void SaveActiveStoryBeats( HashSet<StoryBeat> activeBeats )
+    {
+        int i = 0;
+        foreach(StoryBeat beat in activeBeats){
+            activeStoryBeatHeadNodes[i] = beat.GetYarnHeadNode();
             i++;
         }
     }

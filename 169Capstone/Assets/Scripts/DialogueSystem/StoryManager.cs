@@ -6,31 +6,64 @@ using UnityEngine;
 public class StoryManager : MonoBehaviour
 {
     // Struct for storing data about story beats that changes at runtime (current state stuff)
-    public struct BeatStatus{
+    [System.Serializable] public struct BeatStatus{
+        public string storyBeatHeadNode;
         public bool beatIsActive;          // If the player did this thing on their latest run (so characters can/should respond to it)
         public int numberOfCompletions;    // The number of times the player has done this thing
 
-        public HashSet<SpeakerID> speakersWithComments; // Things are removed once they no longer have new things to say on a topic
+        public int[] speakersWithComments; // Things are removed once they no longer have new things to say on a topic
         
         // Constructor
-        public BeatStatus(bool active, int num, List<SpeakerID> speakers){
-            speakersWithComments = new HashSet<SpeakerID>();
-            // Add all the speakerIDs to the hashset
+        public BeatStatus(string headNode, bool active, int num, List<SpeakerID> speakers){
+            storyBeatHeadNode = headNode;
+
+            speakersWithComments = new int[speakers.Count];
+            // Add all the speakerIDs
             for(int i = 0; i < speakers.Count; ++i){
-                speakersWithComments.Add(speakers[i]);
+                speakersWithComments[i] = (int)speakers[i];
             }
 
             this.beatIsActive = active;
             this.numberOfCompletions = num;
         }
 
-        // Constructor with HashSet instead of List
-        public BeatStatus(bool active, int num, HashSet<SpeakerID> speakers){
-            speakersWithComments = new HashSet<SpeakerID>();
-            this.speakersWithComments = speakers;
+        // Constructor w/ Array instead of List
+        public BeatStatus(string headNode, bool active, int num, int[] speakers){
+            storyBeatHeadNode = headNode;
+
+            speakersWithComments = new int[speakers.Length];
+            // Add all the speakerIDs
+            for(int i = 0; i < speakers.Length; ++i){
+                speakersWithComments[i] = speakers[i];
+            }
 
             this.beatIsActive = active;
             this.numberOfCompletions = num;
+        }
+
+        public bool SpeakerHasComments(int speakerIDNum)
+        {
+            foreach(int num in speakersWithComments){
+                if(num == speakerIDNum){
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void RemoveSpeaker(int speakerIDNum)
+        {
+            int index = -1;
+            for(int i = 0; i < speakersWithComments.Length; i++){
+                if(speakersWithComments[i] == speakerIDNum){
+                    index = i;
+                }
+            }
+            if(index == -1){
+                Debug.LogWarning("Speaker not found in beat!");
+                return;
+            }
+            speakersWithComments[index] = -1;
         }
     }
 
@@ -88,7 +121,7 @@ public class StoryManager : MonoBehaviour
             beat.CreatePrereqDatabase();
             beat.SetValues();
             // Add the storybeat to the dictionary
-            storyBeatDatabase.Add( beat, new BeatStatus( false, 0, beat.GetSpeakersWithComments() ) );
+            storyBeatDatabase.Add( beat, new BeatStatus( beat.GetYarnHeadNode(), false, 0, beat.GetSpeakersWithComments() ) );
         }
 
         // Load in the ItemDialogueTriggers from the ItemTriggers folder in Resources
@@ -102,7 +135,7 @@ public class StoryManager : MonoBehaviour
 
             beat.CreatePrereqDatabase();
             beat.SetValues();
-            itemStoryBeats.Add(beat,new BeatStatus( false, 0, beat.GetSpeakersWithComments() ));
+            itemStoryBeats.Add(beat,new BeatStatus( beat.GetYarnHeadNode(), false, 0, beat.GetSpeakersWithComments() ));
         }
 
         // Load in the generic story beats from the GenericStoryBeats folders in Resources
@@ -116,7 +149,7 @@ public class StoryManager : MonoBehaviour
 
             beat.CreatePrereqDatabase();
             beat.SetValues();
-            genericStoryBeats.Add( beat, new BeatStatus( false, 0, beat.GetSpeakersWithComments() ) );
+            genericStoryBeats.Add( beat, new BeatStatus( beat.GetYarnHeadNode(), false, 0, beat.GetSpeakersWithComments() ) );
         }
     }
 
@@ -141,18 +174,18 @@ public class StoryManager : MonoBehaviour
         bool flag = true;
 
         // If it's a Killed Event or Conversation Event
-        if((beatType == StoryBeatType.KilledBy || beatType == StoryBeatType.EnemyKilled || beatType == StoryBeatType.DialogueCompleted) && (!BeatIsInDatabase(beat) || !storyBeatDatabase[beat].speakersWithComments.Contains(speakerID))){
+        if((beatType == StoryBeatType.KilledBy || beatType == StoryBeatType.EnemyKilled || beatType == StoryBeatType.DialogueCompleted) && (!BeatIsInDatabase(beat) || !storyBeatDatabase[beat].SpeakerHasComments((int)speakerID))){
             flag = false;
         }
         // If it's an item
         else if(beatType == StoryBeatType.Item){
             StoryBeatItem item = (StoryBeatItem)beat;
-            if( !BeatIsInDatabase(beat) || !itemStoryBeats[item].speakersWithComments.Contains(speakerID) ){
+            if( !BeatIsInDatabase(beat) || !itemStoryBeats[item].SpeakerHasComments((int)speakerID) ){
                 flag = false;
             }
         }
         // If it's a generic storybeat
-        else if(((int)beatType <= 5) && (!BeatIsInDatabase(beat) || !genericStoryBeats[beat].speakersWithComments.Contains(speakerID))){
+        else if(((int)beatType <= 5) && (!BeatIsInDatabase(beat) || !genericStoryBeats[beat].SpeakerHasComments((int)speakerID))){
             flag = false;
         }
         if(flag == false){
@@ -195,16 +228,16 @@ public class StoryManager : MonoBehaviour
             // If Killed or Conversation Event
             if( beatType == StoryBeatType.EnemyKilled || beatType == StoryBeatType.KilledBy || beatType == StoryBeatType.DialogueCompleted ){
                 // VERIFY that this works; might not bc of struct stuff, in which case would have to make a new BeatStatus with a new hash set that doesn't have that speakerID
-                storyBeatDatabase[beat].speakersWithComments.Remove(speakerID);
+                storyBeatDatabase[beat].RemoveSpeaker((int)speakerID);
             }
             // If item
             else if( beatType == StoryBeatType.Item ){
                 StoryBeatItem item = (StoryBeatItem)beat;
-                itemStoryBeats[item].speakersWithComments.Remove(speakerID);
+                itemStoryBeats[item].RemoveSpeaker((int)speakerID);
             }
             // If generic
             else if( (int)beatType <= 5 ){
-                genericStoryBeats[beat].speakersWithComments.Remove(speakerID);
+                genericStoryBeats[beat].RemoveSpeaker((int)speakerID);
             }
         }
     }
@@ -266,16 +299,16 @@ public class StoryManager : MonoBehaviour
         if( BeatIsInDatabase(beat) ){
             // If Killed or Conversation Event
             if( beatType == StoryBeatType.EnemyKilled || beatType == StoryBeatType.KilledBy || beatType == StoryBeatType.DialogueCompleted ){
-                storyBeatDatabase[beat] = new BeatStatus( setActive, storyBeatDatabase[beat].numberOfCompletions + incrementCompletionNum, storyBeatDatabase[beat].speakersWithComments );
+                storyBeatDatabase[beat] = new BeatStatus( beat.GetYarnHeadNode(), setActive, storyBeatDatabase[beat].numberOfCompletions + incrementCompletionNum, storyBeatDatabase[beat].speakersWithComments );
             }
             // If item
             else if( beatType == StoryBeatType.Item ){
                 StoryBeatItem item = (StoryBeatItem)beat;
-                itemStoryBeats[item] = new BeatStatus( setActive, storyBeatDatabase[beat].numberOfCompletions + incrementCompletionNum, storyBeatDatabase[beat].speakersWithComments );
+                itemStoryBeats[item] = new BeatStatus( item.GetYarnHeadNode(), setActive, storyBeatDatabase[beat].numberOfCompletions + incrementCompletionNum, storyBeatDatabase[beat].speakersWithComments );
             }
             // If generic
             else if( (int)beatType <= 5 ){
-                genericStoryBeats[beat] = new BeatStatus( setActive, storyBeatDatabase[beat].numberOfCompletions + incrementCompletionNum, storyBeatDatabase[beat].speakersWithComments );
+                genericStoryBeats[beat] = new BeatStatus( beat.GetYarnHeadNode(), setActive, storyBeatDatabase[beat].numberOfCompletions + incrementCompletionNum, storyBeatDatabase[beat].speakersWithComments );
             }
         }
     }
