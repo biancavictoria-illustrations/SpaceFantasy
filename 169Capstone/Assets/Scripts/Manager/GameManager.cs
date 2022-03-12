@@ -113,7 +113,8 @@ public class GameManager : MonoBehaviour
 
             // TODO: Play animation of you falling or something Idk (or like phasing in)
 
-            SaveLoadManager.SaveGame(this, PlayerInventory.instance, DialogueManager.instance, StoryManager.instance, PermanentUpgradeManager.instance);    // Autosave in main hub!
+            // TODO: Uncomment when ready to test saving
+            // SaveLoadManager.SaveGame(this, PlayerInventory.instance, DialogueManager.instance, StoryManager.instance, PermanentUpgradeManager.instance);    // Autosave in main hub!
         }
         else if(currentSceneName == GAME_LEVEL1_STRING_NAME){
             PlayerInventory.instance.SetRunStartHealthPotionQuantity();
@@ -157,8 +158,68 @@ public class GameManager : MonoBehaviour
     // Called when you load your game in the Main Menu
     public void LoadGame()
     {
+        // Retrieve save data & set all values from there
         Save saveData = SaveLoadManager.LoadGame();
 
-        // Set all values
+        // Game Manager Stuff
+        currentRunNumber = saveData.currentRunNumber;
+        hasKilledTimeLich = saveData.hasKilledTimeLich;
+
+        // Inventory Stuff
+        PlayerInventory.instance.SetPermanentCurrency(saveData.permanentCurrency);
+
+        // Permanent Upgrades (Skills & Stats)
+        PermanentUpgradeManager pum = PermanentUpgradeManager.instance;
+
+        pum.totalPermanentCurrencySpent = saveData.totalPermanentCurrencySpent;
+        
+        pum.startingHealthPotionQuantity = saveData.startingHealthPotionQuantity;
+        pum.levelsInArmorPlating = saveData.levelsInArmorPlating;
+        pum.levelsInExtensiveTraining = saveData.levelsInExtensiveTraining;
+        pum.levelsInNatural20 = saveData.levelsInNatural20;
+        pum.levelsInPrecisionDrive = saveData.levelsInPrecisionDrive;
+        pum.levelsInTimeLichKillerThing = saveData.levelsInTimeLichKillerThing;
+
+        pum.strMin = saveData.strMin;
+        pum.strMax = saveData.strMax;
+        pum.dexMin = saveData.dexMin;
+        pum.dexMax = saveData.dexMax;
+        pum.intMin = saveData.intMin;
+        pum.intMax = saveData.intMax;
+        pum.wisMin = saveData.wisMin;
+        pum.wisMax = saveData.wisMax;
+        pum.conMin = saveData.conMin;
+        pum.conMax = saveData.conMax;
+        pum.charismaMin = saveData.charismaMin;
+        pum.charismaMax = saveData.charismaMax;
+
+        // Dialogue System Stuff
+        for(int i = 0; i < saveData.visistedNodes.Length; i++){
+            DialogueManager.instance.visitedNodes.Add(saveData.visistedNodes[i]);
+        }
+
+        StoryManager sm = StoryManager.instance;
+
+        sm.brynListInitialized = saveData.brynListInitialized;
+        sm.stellanListInitialized = saveData.stellanListInitialized;
+        sm.doctorListInitialized = saveData.doctorListInitialized;
+        sm.lichListInitialized = saveData.lichListInitialized;
+
+        for(int i = 0; i < saveData.brynNumRunDialogueList.Length; i++){
+            sm.brynNumRunDialogueList.Add(saveData.brynNumRunDialogueList[i]);
+        }
+        for(int i = 0; i < saveData.stellanNumRunDialogueList.Length; i++){
+            sm.stellanNumRunDialogueList.Add(saveData.stellanNumRunDialogueList[i]);
+        }
+        for(int i = 0; i < saveData.doctorNumRunDialogueList.Length; i++){
+            sm.doctorNumRunDialogueList.Add(saveData.doctorNumRunDialogueList[i]);
+        }
+        for(int i = 0; i < saveData.timeLichNumRunDialogueList.Length; i++){
+            sm.timeLichNumRunDialogueList.Add(saveData.timeLichNumRunDialogueList[i]);
+        }
+
+        // Story Beat Status Values
+        // TODO
+        // Probably just pass on the saveData string[]s on to the StoryManager and let it deal with this garbage
     }
 }

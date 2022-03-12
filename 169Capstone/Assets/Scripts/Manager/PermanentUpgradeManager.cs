@@ -11,46 +11,46 @@ public class PermanentUpgradeManager : MonoBehaviour
     public int startingHealthPotionQuantity = 3;    // Putting this here in case it ends up being something you can upgrade (should prob start @ 0)
 
     // Skills
-    public int levelsInArmorPlating {get; private set;}
+    public int levelsInArmorPlating;
     public const int maxArmorPlatingLevels = 5;
     public readonly float armorPlatingBonusPerLevel = 2f;
     
-    public int levelsInExtensiveTraining {get; private set;}
+    public int levelsInExtensiveTraining;
     public const int maxExtensiveTrainingLevels = 5;
     public readonly float extensiveTrainingBonusPerLevel = 0.02f;
     
-    public int levelsInNatural20 {get; private set;}
+    public int levelsInNatural20;
     public const int maxNatural20Levels = 1;
     public readonly float natural20BonusPerLevel = 0.05f;
     
-    public int levelsInPrecisionDrive {get; private set;}
+    public int levelsInPrecisionDrive;
     public const int maxPrecisionDriveLevels = 3;
     public readonly float[] precisionDriveBonusPerLevel = new float[] {0f, 0.1f, 0.25f, 0.5f};
 
-    public int levelsInTimeLichKillerThing {get; private set;}
+    public int levelsInTimeLichKillerThing;
     public const int maxTimeLichThingLevels = 1;
 
     // Stats
     public const int DEFAULT_MIN = 5;
     public const int DEFAULT_MAX = 15;
 
-    public int strMin {get; private set;}
-    public int strMax {get; private set;}
+    public int strMin;
+    public int strMax;
 
-    public int dexMin {get; private set;}
-    public int dexMax {get; private set;}
+    public int dexMin;
+    public int dexMax;
 
-    public int intMin {get; private set;}
-    public int intMax {get; private set;}
+    public int intMin;
+    public int intMax;
 
-    public int wisMin {get; private set;}
-    public int wisMax {get; private set;}
+    public int wisMin;
+    public int wisMax;
 
-    public int conMin {get; private set;}
-    public int conMax {get; private set;}
+    public int conMin;
+    public int conMax;
 
-    public int charismaMin {get; private set;}
-    public int charismaMax {get; private set;}
+    public int charismaMin;
+    public int charismaMax;
     
 
     void Awake()

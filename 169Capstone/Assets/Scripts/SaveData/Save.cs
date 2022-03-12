@@ -68,7 +68,7 @@ public class Save
         // Inventory stuff
         permanentCurrency = playerInventory.permanentCurrency;
 
-        // Permanent upgrades (skills and stats)
+        // Permanent Upgrades (Skills & Stats)
         totalPermanentCurrencySpent = permanentUpgradeManager.totalPermanentCurrencySpent;
         
         startingHealthPotionQuantity = permanentUpgradeManager.startingHealthPotionQuantity;
