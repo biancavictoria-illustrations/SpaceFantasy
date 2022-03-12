@@ -37,6 +37,8 @@ public class Save
     public int charismaMax;
 
     // Dialogue Stuff
+    public bool talkedToStellan;
+
     public string[] visistedNodes;
 
     public int[] brynNumRunDialogueList;
@@ -92,6 +94,8 @@ public class Save
         charismaMax = permanentUpgradeManager.charismaMax;
 
         // Dialogue System Stuff
+        talkedToStellan = storyManager.talkedToStellan;
+
         visistedNodes = new string[dialogueManager.visitedNodes.Count];
         SaveVisitedNodes(dialogueManager.visitedNodes);
 

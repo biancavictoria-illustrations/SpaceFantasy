@@ -15,7 +15,7 @@ public static class SaveLoadManager
         bf.Serialize(stream, saveData);
         stream.Close();
         
-        Debug.Log("Game Saved");
+        Debug.Log("Game Saved in Save Slot: " + saveSlotNum);
     }
 
     public static Save LoadGame(int saveSlotNum)
@@ -30,7 +30,7 @@ public static class SaveLoadManager
             Save saveData = bf.Deserialize(stream) as Save;
             stream.Close();
 
-            Debug.Log("Game Loaded");
+            Debug.Log("Game Loaded from Save Slot: " + saveSlotNum);
             return saveData;
         }
         else{

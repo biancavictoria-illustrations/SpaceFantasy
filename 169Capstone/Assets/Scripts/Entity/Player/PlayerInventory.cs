@@ -164,10 +164,13 @@ public class PlayerInventory : MonoBehaviour
         InGameUIManager.instance.SetTempCurrencyValue(tempCurrency);
     }
 
-    public void SetPermanentCurrency(int value)
+    public void SetPermanentCurrency(int value, bool setUI = true)
     {
         permanentCurrency = value;
-        InGameUIManager.instance.SetPermanentCurrencyValue(permanentCurrency);
+
+        if(setUI){
+            InGameUIManager.instance.SetPermanentCurrencyValue(permanentCurrency);
+        }        
     }
 
     public void SpendPermanentCurrency(int amountSpent)

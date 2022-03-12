@@ -86,6 +86,8 @@ public class MainMenu : MonoBehaviour
             }
         }
 
+        GameManager.instance.DeleteSaveFile(activeDeletePanel);
+
         ToggleAreYouSureYouWantToDeleteSaveFilePanel(false, 0);
     }
 }

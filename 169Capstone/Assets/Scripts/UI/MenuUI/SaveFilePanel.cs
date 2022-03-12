@@ -13,6 +13,7 @@ public class SaveFilePanel : MonoBehaviour
 
     [SerializeField] private TMP_Text escapeAttempts;
     [SerializeField] private TMP_Text totalStarShards;
+    [SerializeField] private TMP_Text timePlayed;
 
     [SerializeField] private List<GameObject> allFullSlotElements;
 
@@ -22,7 +23,8 @@ public class SaveFilePanel : MonoBehaviour
 
         if(slotIsFull){
             escapeAttempts.text = GameManager.instance.GetNumCompletedRunsInSaveFile(slotNumber) + "";
-            escapeAttempts.text = GameManager.instance.GetStarShardsSpentInSaveFile(slotNumber) + "";
+            totalStarShards.text = GameManager.instance.GetStarShardsCollectedInSaveFile(slotNumber) + "";
+            timePlayed.text = GameManager.instance.GetTotalTimePlayedInSaveFile(slotNumber);
         }
         else{
             ToggleAllFullSlotElements(false);

@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour
     {
         if( instance ){
             Destroy(gameObject);
+            return;
         }
         else{
             instance = this;
@@ -116,8 +117,7 @@ public class GameManager : MonoBehaviour
             // TODO: Play animation of you falling or something Idk (or like phasing in)
 
             // Autosave in main hub!
-            SaveDisplayValuesToPlayerPrefs();
-            SaveLoadManager.SaveGame(saveSlotNum, this, PlayerInventory.instance, DialogueManager.instance, StoryManager.instance, PermanentUpgradeManager.instance);
+            SaveGame();
         }
         else if(currentSceneName == GAME_LEVEL1_STRING_NAME){
             PlayerInventory.instance.SetRunStartHealthPotionQuantity();
@@ -129,6 +129,8 @@ public class GameManager : MonoBehaviour
             
         }
         else if(currentSceneName == TITLE_SCREEN_STRING_NAME){
+            gameTimer.runTotalTimer = false;
+
             // TODO: Play title screen music
 
         }
@@ -161,10 +163,21 @@ public class GameManager : MonoBehaviour
 
     #region Save/Load
 
+    public void SaveGame()
+    {
+        Debug.Log("Save slot num before saving: " + saveSlotNum);
+
+        SaveDisplayValuesToPlayerPrefs();
+        SaveLoadManager.SaveGame(saveSlotNum, this, PlayerInventory.instance, DialogueManager.instance, StoryManager.instance, PermanentUpgradeManager.instance);
+
+        Debug.Log("Save slot num after saving: " + saveSlotNum);
+    }
+
     // Called when you load your game in the Main Menu (and ONLY then)
     public void LoadGame(int _slot)
     {
         saveSlotNum = _slot;
+        Debug.Log("Loading Game... Save Slot Num in Game Manager set to: " + saveSlotNum);
 
         // Retrieve save data & set all values from there
         Save saveData = SaveLoadManager.LoadGame(saveSlotNum);
@@ -174,7 +187,7 @@ public class GameManager : MonoBehaviour
         hasKilledTimeLich = saveData.hasKilledTimeLich;
 
         // Inventory Stuff
-        PlayerInventory.instance.SetPermanentCurrency(saveData.permanentCurrency);
+        PlayerInventory.instance.SetPermanentCurrency(saveData.permanentCurrency, false);
 
         // Permanent Upgrades (Skills & Stats)
         PermanentUpgradeManager pum = PermanentUpgradeManager.instance;
@@ -208,6 +221,8 @@ public class GameManager : MonoBehaviour
 
         StoryManager sm = StoryManager.instance;
 
+        sm.talkedToStellan = saveData.talkedToStellan;
+
         sm.brynListInitialized = saveData.brynListInitialized;
         sm.stellanListInitialized = saveData.stellanListInitialized;
         sm.doctorListInitialized = saveData.doctorListInitialized;
@@ -232,6 +247,7 @@ public class GameManager : MonoBehaviour
 
 
         SceneManager.LoadScene(GameManager.MAIN_HUB_STRING_NAME);
+        gameTimer.runTotalTimer = true;
     }
 
     public void StartNewGame(int _newSlot)
@@ -244,6 +260,21 @@ public class GameManager : MonoBehaviour
 
         // If starting a new game, load level 1 scene (new game)
         SceneManager.LoadScene(GameManager.GAME_LEVEL1_STRING_NAME);
+
+        // Reset all starting values
+        // TODO: Basically any data that gets saved (particularly in dontdestroyonload stuff) should be moved from Start to a Setup function
+        // Call it in Start but also here?
+        currentRunNumber = 1;
+        DialogueManager.instance.visitedNodes.Clear();
+
+        gameTimer.ResetTotalTimer();
+        gameTimer.runTotalTimer = true;
+    }
+
+    public void DeleteSaveFile(int _slot)
+    {
+        PlayerPrefs.SetInt(GetSaveFilePlayerPrefsKey(_slot), 0);
+        PlayerPrefs.Save();
     }
 
     public string GetSaveFilePlayerPrefsKey(int _slot)
@@ -271,36 +302,44 @@ public class GameManager : MonoBehaviour
     {
         string s = GetSaveFilePlayerPrefsKey(saveSlotNum);
 
-        PlayerPrefs.SetInt( s + "StarShards", PermanentUpgradeManager.instance.totalPermanentCurrencySpent );
+        PlayerPrefs.SetInt( s + "StarShards", PermanentUpgradeManager.instance.totalPermanentCurrencySpent + PlayerInventory.instance.permanentCurrency );
         
         // If we're calling this ONLY in Main Hub, it's current run num - 1
         PlayerPrefs.SetInt( s + "CompletedRunNum", currentRunNumber - 1 );
 
+        PlayerPrefs.SetString( s + "TimePlayed", gameTimer.ConvertTotalTimeToReadableString() );
+
         PlayerPrefs.Save();
     }
 
-    public int GetStarShardsSpentInSaveFile(int _slot)
+    public int GetStarShardsCollectedInSaveFile(int _slot)
     {
         string s = GetSaveFilePlayerPrefsKey(_slot) + "StarShards";
-
         if(!PlayerPrefs.HasKey(s)){
             Debug.LogError("No value found for key " + s + " in PlayerPrefs");
             return -1;
         }
-
         return PlayerPrefs.GetInt(s);
     }
 
     public int GetNumCompletedRunsInSaveFile(int _slot)
     {
         string s = GetSaveFilePlayerPrefsKey(_slot) + "CompletedRunNum";
-
         if(!PlayerPrefs.HasKey(s)){
             Debug.LogError("No value found for key " + s + " in PlayerPrefs");
             return -1;
         }
-
         return PlayerPrefs.GetInt(s);
+    }
+
+    public string GetTotalTimePlayedInSaveFile(int _slot)
+    {
+        string s = GetSaveFilePlayerPrefsKey(_slot) + "TimePlayed";
+        if(!PlayerPrefs.HasKey(s)){
+            Debug.LogError("No value found for key " + s + " in PlayerPrefs");
+            return "";
+        }
+        return PlayerPrefs.GetString(s);
     }
 
     #endregion
