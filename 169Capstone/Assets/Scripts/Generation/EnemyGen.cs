@@ -8,6 +8,7 @@ public class EnemyGen : MonoBehaviour
     [SerializeField] private int maxTarget;
     [SerializeField] private GameObject slimePrefab;
     [SerializeField] private GameObject robertPrefab;
+    [SerializeField] private Room roomScript;
     private int slimeCount;
     private int robertCount;
 
@@ -38,14 +39,14 @@ public class EnemyGen : MonoBehaviour
         for (int i = 0; i < slimeCount; i++)
         {
             Transform spawnPoint = spawnPoints[r.Next(0, spawnPoints.Count)];
-            GameObject enemy = Instantiate(slimePrefab, spawnPoint);
-            enemy.transform.rotation = slimePrefab.transform.rotation;
+            GameObject enemy = Instantiate(slimePrefab, spawnPoint.position, slimePrefab.transform.rotation);
+            roomScript.enemies.Add(enemy.GetComponent<EntityHealth>());
         }
         for (int i = 0; i < robertCount; i++)
         {
             Transform spawnPoint = spawnPoints[r.Next(0, spawnPoints.Count)];
-            GameObject enemy = Instantiate(robertPrefab, spawnPoint);
-            enemy.transform.rotation = robertPrefab.transform.rotation;
+            GameObject enemy = Instantiate(robertPrefab, spawnPoint.position, robertPrefab.transform.rotation);
+            roomScript.enemies.Add(enemy.GetComponent<EntityHealth>());
         }
     }
 }
