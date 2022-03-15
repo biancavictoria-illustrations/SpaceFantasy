@@ -297,6 +297,7 @@ MonoBehaviour:
   gravityAccel: -1.5
   jumpSpeed: 30
   isAttacking: 0
+  lockLookDirection: 0
 --- !u!114 &448433941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -321,8 +322,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 333a401b46a1b4d46bd40f4a168a6464, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitboxActive: 0
+  attackActive: 0
   endAttack:
+    m_PersistentCalls:
+      m_Calls: []
+  startAccessory:
+    m_PersistentCalls:
+      m_Calls: []
+  endAccessory:
     m_PersistentCalls:
       m_Calls: []
   animator: {fileID: 3497098114046577830}

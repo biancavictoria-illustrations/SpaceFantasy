@@ -7,6 +7,8 @@ public class AnimationStateController : MonoBehaviour
 {
     public bool attackActive;
     public UnityEvent endAttack;
+    public UnityEvent startAccessory;
+    public UnityEvent endAccessory;
 
     public Animator animator;
 
@@ -18,6 +20,16 @@ public class AnimationStateController : MonoBehaviour
     public void EndAttack()
     {
         endAttack.Invoke();
+    }
+
+    public void StartAccessory()
+    {
+        startAccessory.Invoke();
+    }
+
+    public void EndAccessory()
+    {
+        endAccessory.Invoke();
     }
 }
 

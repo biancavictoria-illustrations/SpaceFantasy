@@ -16,9 +16,16 @@ public class Projectile : MonoBehaviour
     [SerializeField] private float _speed;
     private float damage;
     private Rigidbody rb;
+    private int _radius = 0;
 
     public void Initialize(string enemyLayer, float damage, Vector3 direction, float? speed = null)
     {
+        Initialize(LayerMask.NameToLayer(enemyLayer), damage, direction, speed);
+    }
+
+    public void Initialize(string enemyLayer, float damage, Vector3 direction, int radius, float? speed = null)
+    {
+        _radius = radius;
         Initialize(LayerMask.NameToLayer(enemyLayer), damage, direction, speed);
     }
 
@@ -58,15 +65,47 @@ public class Projectile : MonoBehaviour
             EntityHealth enemyHealth = other.GetComponent<EntityHealth>();
             if(enemyHealth)
                 enemyHealth.Damage(damage);
+            Explode();
             Destroy(gameObject);
         }
         else if(other.gameObject.layer == LayerMask.NameToLayer("Prop"))
         {
             other.GetComponent<PropJumpBreak>().BreakProp();
+            Explode();
+            if(_radius != 0)
+            {
+                Destroy(gameObject);
+            }
         }
         else if(other.gameObject.layer == LayerMask.NameToLayer("Environment"))
         {
+            Explode();
             Destroy(gameObject);
+        }
+    }
+
+    private void Explode()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject[] props = GameObject.FindGameObjectsWithTag("Prop");
+
+        for(int i = 0; i < enemies.Length; i++)
+        {
+            if(Vector3.Distance(transform.position, enemies[i].transform.position) <= _radius)
+            {
+                EntityHealth enemyHealth = enemies[i].GetComponent<EntityHealth>();
+                if(enemyHealth)
+                {
+                    enemyHealth.Damage(damage);
+                }
+            }
+        }
+        for(int i = 0; i < props.Length; i++)
+        {
+            if(Vector3.Distance(transform.position, props[i].transform.position) <= _radius)
+            {
+                props[i].GetComponent<PropJumpBreak>().BreakProp();
+            }
         }
     }
 }
