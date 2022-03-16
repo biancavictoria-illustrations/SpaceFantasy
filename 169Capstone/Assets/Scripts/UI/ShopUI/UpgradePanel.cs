@@ -193,10 +193,8 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     }
 
     // Optionally can pass in an upgrade type to change the type of this panel
-    public void InitializeUpgradeValues( Sprite _icon )
+    public void InitializeUpgradeValues()
     {
-        upgradeIcon.sprite = _icon;
-
         SetValuesByType();        
         if( (int)upgradeType < 12 ){    // If stat upgrade
             currentUpgradeLevel = PermanentUpgradeManager.instance.GetStatGenerationValueFromUpgradeType(upgradeType);
