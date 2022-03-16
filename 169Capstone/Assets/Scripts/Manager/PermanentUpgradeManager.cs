@@ -6,6 +6,10 @@ public class PermanentUpgradeManager : MonoBehaviour
 {
     public static PermanentUpgradeManager instance;
 
+    [HideInInspector] public int totalPermanentCurrencySpent = 0;
+
+    public int startingHealthPotionQuantity = 3;    // Putting this here in case it ends up being something you can upgrade (should prob start @ 0)
+
     // Skills
     public int levelsInArmorPlating {get; private set;}
     public const int maxArmorPlatingLevels = 5;
