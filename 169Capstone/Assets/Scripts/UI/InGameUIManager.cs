@@ -69,6 +69,10 @@ public class InGameUIManager : MonoBehaviour
         SetTempCurrencyValue(PlayerInventory.instance.tempCurrency);
         SetPermanentCurrencyValue(PlayerInventory.instance.permanentCurrency);
         SetHealthPotionValue(PlayerInventory.instance.healthPotionQuantity);
+
+        if(GameManager.instance.currentSceneName != GameManager.LICH_ARENA_STRING_NAME){
+            ClearAllItemUI();
+        }
     }
 
     // Called when you enter dialogue or other similar things
@@ -157,9 +161,14 @@ public class InGameUIManager : MonoBehaviour
                 Debug.LogError("No item icon found for slot: " + itemSlot.ToString());
                 return;
         }
-        
-        // Can we set InventoryUI values here (and in ClearItemUI) or no because it's not active?
-        // Might want to change that structure in order to be able to access those values, if it's possible
+    }
+
+    public void ClearAllItemUI()
+    {
+        ClearItemUI(InventoryItemSlot.Weapon);
+        ClearItemUI(InventoryItemSlot.Accessory);
+        ClearItemUI(InventoryItemSlot.Helmet);
+        ClearItemUI(InventoryItemSlot.Legs);
     }
 
     public void ClearItemUI(InventoryItemSlot itemSlot)
