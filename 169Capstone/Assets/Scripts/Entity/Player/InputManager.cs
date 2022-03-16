@@ -193,12 +193,17 @@ public class InputManager : MonoBehaviour
 
     public void OnAccessoryAbility()
     {
-        if(!CanAcceptGameplayInput())
+        if (!CanAcceptGameplayInput())
         {
             return;
         }
 
         useAccessory = true;
+    }
+
+    public void OnAccessoryAbilityCanceled()
+    {
+        useAccessory = false;
     }
 
     public void OnHelmetAbility()
