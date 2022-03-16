@@ -18,6 +18,7 @@ public class GearSwapUI : MonoBehaviour
 
         newItem = item;
         newItemPanel.SetItemPanelValues(item.data);
+        newItemPanel.SetExpandedDescription(true);
         
         if(gearSwapInventoryUI.itemPanels.Count == 0){
             Debug.LogError("No item panels found in gear swap inventory UI!");
