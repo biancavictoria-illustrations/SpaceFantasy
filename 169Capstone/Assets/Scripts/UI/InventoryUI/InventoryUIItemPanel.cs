@@ -72,7 +72,7 @@ public class InventoryUIItemPanel : MonoBehaviour
     public void SetExpandedDescription(bool set)
     {
         if(set){
-            itemDescription.text = shortDescription + expandedDescription;
+            itemDescription.text = shortDescription + "\n" + expandedDescription;
         }
         else{
             itemDescription.text = shortDescription;
