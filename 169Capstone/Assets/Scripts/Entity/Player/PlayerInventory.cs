@@ -27,10 +27,8 @@ public class PlayerInventory : MonoBehaviour
         else{
             instance = this;
         }
-
         gear = new Dictionary<InventoryItemSlot, Equipment>();
         tempCurrency = 0;
-        permanentCurrency = 0;
     }
 
     void Start()
@@ -40,6 +38,11 @@ public class PlayerInventory : MonoBehaviour
         gear[InventoryItemSlot.Accessory] = null;
         gear[InventoryItemSlot.Helmet] = null;
         gear[InventoryItemSlot.Legs] = null;
+    }
+
+    public void InitializeInventoryValuesOnNewGame()
+    {        
+        permanentCurrency = 0;
     }
 
     public void UseHealthPotion()
@@ -164,10 +167,13 @@ public class PlayerInventory : MonoBehaviour
         InGameUIManager.instance.SetTempCurrencyValue(tempCurrency);
     }
 
-    public void SetPermanentCurrency(int value)
+    public void SetPermanentCurrency(int value, bool setUI = true)
     {
         permanentCurrency = value;
-        InGameUIManager.instance.SetPermanentCurrencyValue(permanentCurrency);
+
+        if(setUI){
+            InGameUIManager.instance.SetPermanentCurrencyValue(permanentCurrency);
+        }        
     }
 
     public void SpendPermanentCurrency(int amountSpent)
