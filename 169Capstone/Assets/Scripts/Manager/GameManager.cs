@@ -317,8 +317,15 @@ public class GameManager : MonoBehaviour
         // If we're calling this ONLY in Main Hub, it's current run num - 1
         PlayerPrefs.SetInt( s + "CompletedRunNum", currentRunNumber - 1 );
 
-        PlayerPrefs.SetString( s + "TimePlayed", gameTimer.ConvertTotalTimeToReadableString() );
-
+        // If total time doesn't exist yet for this save file, set it for the first time; else, update it
+        float totalTimeFromPlayerPrefs = GetTotalTimePlayedInSaveFile(saveSlotNum);
+        if(totalTimeFromPlayerPrefs != -1){
+            PlayerPrefs.SetFloat( s + "TimePlayed", gameTimer.totalTimePlayedOnThisSaveFile + totalTimeFromPlayerPrefs );
+        }
+        else{
+            PlayerPrefs.SetFloat( s + "TimePlayed", gameTimer.totalTimePlayedOnThisSaveFile );
+        }
+        
         PlayerPrefs.Save();
     }
 
@@ -342,14 +349,14 @@ public class GameManager : MonoBehaviour
         return PlayerPrefs.GetInt(s);
     }
 
-    public string GetTotalTimePlayedInSaveFile(int _slot)
+    public float GetTotalTimePlayedInSaveFile(int _slot)
     {
         string s = GetSaveFilePlayerPrefsKey(_slot) + "TimePlayed";
         if(!PlayerPrefs.HasKey(s)){
-            Debug.LogError("No value found for key " + s + " in PlayerPrefs");
-            return "";
+            Debug.LogWarning("No value found for key " + s + " in PlayerPrefs; okay if checking in SaveDisplayValuesToPlayerPrefs");
+            return -1;
         }
-        return PlayerPrefs.GetString(s);
+        return PlayerPrefs.GetFloat(s);
     }
 
     #endregion
