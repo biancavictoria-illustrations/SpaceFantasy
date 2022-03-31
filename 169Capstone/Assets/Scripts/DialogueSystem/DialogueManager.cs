@@ -354,9 +354,8 @@ public class DialogueManager : MonoBehaviour
             if(NPC.ActiveNPC.SpeakerData().IsShopkeeper()){
                 InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.SpeakerData());
             }
-            // TODO: If time lich, start the fight here?
             else if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.TimeLich){
-                // TODO
+                // TODO: If time lich, start the fight here?
             }
         }
     }

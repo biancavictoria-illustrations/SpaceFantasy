@@ -7,10 +7,11 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    // TODO: Make sure these are all correct and up to date
     public const string TITLE_SCREEN_STRING_NAME = "MainMenu";
     public const string MAIN_HUB_STRING_NAME = "Main Hub";
     public const string GAME_LEVEL1_STRING_NAME = "GenerationSetup";
-    public const string LICH_ARENA_STRING_NAME = "LichArena";   // TODO: Update this!!!
+    public const string LICH_ARENA_STRING_NAME = "LichArena";
 
     private const float hitStopDuration = 0.1f;
 
