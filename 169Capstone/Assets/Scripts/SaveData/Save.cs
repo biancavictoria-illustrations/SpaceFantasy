@@ -8,6 +8,7 @@ public class Save
     // Game Manager Stuff
     public int currentRunNumber;
     public bool hasKilledTimeLich;
+    public int bossesKilled;
 
     // Inventory
     public int permanentCurrency;
@@ -66,6 +67,7 @@ public class Save
         // Game Manager Stuff
         currentRunNumber = gameManager.currentRunNumber;
         hasKilledTimeLich = gameManager.hasKilledTimeLich;
+        bossesKilled = gameManager.bossesKilled;
 
         // Inventory stuff
         permanentCurrency = playerInventory.permanentCurrency;

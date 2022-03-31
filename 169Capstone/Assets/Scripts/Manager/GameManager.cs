@@ -30,13 +30,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GearManagerObject gearManager;
 
     [HideInInspector] public bool playerDeath = false;
-    [HideInInspector] public int bossesKilled = 0;
+    [HideInInspector] public int bossesKilled;
 
     public GameTimer gameTimer;
 
     // Set to true (permanently) once you have killed the Time Lich at least once
     // (Makes a new special item pop up in Stellan's shop)
-    [HideInInspector] public bool hasKilledTimeLich = false;
+    [HideInInspector] public bool hasKilledTimeLich;
 
     private int saveSlotNum;
 
@@ -51,10 +51,16 @@ public class GameManager : MonoBehaviour
         else{
             instance = this;
         }
-        DontDestroyOnLoad(this.gameObject);
-
-        currentRunNumber = 1;
+        DontDestroyOnLoad(this.gameObject);        
         SceneManager.sceneLoaded += OnSceneLoad;
+    }
+
+    // Called when you start a new game to set values to default
+    private void InitializeGameManagerValuesOnNewGame()
+    {
+        currentRunNumber = 1;
+        hasKilledTimeLich = false;
+        bossesKilled = 0;
     }
 
     private void Update()
@@ -185,6 +191,7 @@ public class GameManager : MonoBehaviour
         // Game Manager Stuff
         currentRunNumber = saveData.currentRunNumber;
         hasKilledTimeLich = saveData.hasKilledTimeLich;
+        bossesKilled = saveData.bossesKilled;
 
         // Inventory Stuff
         PlayerInventory.instance.SetPermanentCurrency(saveData.permanentCurrency, false);
@@ -263,8 +270,11 @@ public class GameManager : MonoBehaviour
 
         // Reset all starting values
         // TODO: Basically any data that gets saved (particularly in dontdestroyonload stuff) should be moved from Start to a Setup function
-        // Call it in Start but also here?
-        currentRunNumber = 1;
+        InitializeGameManagerValuesOnNewGame();
+        PlayerInventory.instance.InitializeInventoryValuesOnNewGame();
+        PermanentUpgradeManager.instance.InitializePermanentUpgradeValuesOnNewGame();
+        // TODO: Initialize / set up new game dialogue stuff
+
         DialogueManager.instance.visitedNodes.Clear();
 
         gameTimer.ResetTotalTimer();

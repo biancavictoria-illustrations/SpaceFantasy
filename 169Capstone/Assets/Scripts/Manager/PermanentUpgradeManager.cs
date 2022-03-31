@@ -6,53 +6,51 @@ public class PermanentUpgradeManager : MonoBehaviour
 {
     public static PermanentUpgradeManager instance;
 
-    [HideInInspector] public int totalPermanentCurrencySpent = 0;
-
-    public int startingHealthPotionQuantity = 3;    // Putting this here in case it ends up being something you can upgrade (should prob start @ 0)
+    [HideInInspector] public int totalPermanentCurrencySpent;
+    [HideInInspector] public int startingHealthPotionQuantity;    // Putting this here in case it ends up being something you can upgrade (should prob start @ 0)
 
     // Skills
-    public int levelsInArmorPlating;
+    [HideInInspector] public int levelsInArmorPlating;
     public const int maxArmorPlatingLevels = 5;
     public readonly float armorPlatingBonusPerLevel = 2f;
     
-    public int levelsInExtensiveTraining;
+    [HideInInspector] public int levelsInExtensiveTraining;
     public const int maxExtensiveTrainingLevels = 5;
     public readonly float extensiveTrainingBonusPerLevel = 0.02f;
     
-    public int levelsInNatural20;
+    [HideInInspector] public int levelsInNatural20;
     public const int maxNatural20Levels = 1;
     public readonly float natural20BonusPerLevel = 0.05f;
     
-    public int levelsInPrecisionDrive;
+    [HideInInspector] public int levelsInPrecisionDrive;
     public const int maxPrecisionDriveLevels = 3;
     public readonly float[] precisionDriveBonusPerLevel = new float[] {0f, 0.1f, 0.25f, 0.5f};
 
-    public int levelsInTimeLichKillerThing;
+    [HideInInspector] public int levelsInTimeLichKillerThing;
     public const int maxTimeLichThingLevels = 1;
 
     // Stats
     public const int DEFAULT_MIN = 5;
     public const int DEFAULT_MAX = 15;
 
-    public int strMin;
-    public int strMax;
+    [HideInInspector] public int strMin;
+    [HideInInspector] public int strMax;
 
-    public int dexMin;
-    public int dexMax;
+    [HideInInspector] public int dexMin;
+    [HideInInspector] public int dexMax;
 
-    public int intMin;
-    public int intMax;
+    [HideInInspector] public int intMin;
+    [HideInInspector] public int intMax;
 
-    public int wisMin;
-    public int wisMax;
+    [HideInInspector] public int wisMin;
+    [HideInInspector] public int wisMax;
 
-    public int conMin;
-    public int conMax;
+    [HideInInspector] public int conMin;
+    [HideInInspector] public int conMax;
 
-    public int charismaMin;
-    public int charismaMax;
+    [HideInInspector] public int charismaMin;
+    [HideInInspector] public int charismaMax;
     
-
     void Awake()
     {
         if( instance ){
@@ -61,19 +59,15 @@ public class PermanentUpgradeManager : MonoBehaviour
         else{
             instance = this;
         }
-        SetupPermanentUpgradeValues();
     }
-    
-    public void SetupPermanentUpgradeValues()
+
+    public void InitializePermanentUpgradeValuesOnNewGame()
     {
-        // If you have saved stats, set them; if not, set to default
-        if(false){
-            
-        }
-        else{
-            ResetAllStatGenerationValuesToDefault();
-            ResetAllSkillValuesToDefault();
-        }
+        totalPermanentCurrencySpent = 0;
+        startingHealthPotionQuantity = 3;
+
+        ResetAllStatGenerationValuesToDefault();
+        ResetAllSkillValuesToDefault();
     }
 
     public void ResetAllSkillValuesToDefault()

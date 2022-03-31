@@ -27,10 +27,8 @@ public class PlayerInventory : MonoBehaviour
         else{
             instance = this;
         }
-
         gear = new Dictionary<InventoryItemSlot, Equipment>();
         tempCurrency = 0;
-        permanentCurrency = 0;
     }
 
     void Start()
@@ -40,6 +38,11 @@ public class PlayerInventory : MonoBehaviour
         gear[InventoryItemSlot.Accessory] = null;
         gear[InventoryItemSlot.Helmet] = null;
         gear[InventoryItemSlot.Legs] = null;
+    }
+
+    public void InitializeInventoryValuesOnNewGame()
+    {        
+        permanentCurrency = 0;
     }
 
     public void UseHealthPotion()
