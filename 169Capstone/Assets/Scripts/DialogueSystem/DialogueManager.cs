@@ -23,7 +23,7 @@ public class DialogueManager : MonoBehaviour
 
     public DialogueRunner dialogueRunner;
 
-    private HashSet<string> visitedNodes = new HashSet<string>();       // Keeps track of what nodes the player has seen so that we don't see those again
+    public HashSet<string> visitedNodes = new HashSet<string>();       // Keeps track of what nodes the player has seen so that we don't see those again
 
     [SerializeField] private int numRunsThreshold = 4;   // Threshold for # runs beyond the exact num run that numRun dialogue can trigger
 
@@ -301,7 +301,7 @@ public class DialogueManager : MonoBehaviour
 
         // Convert beat type string and find corresponding beat from node title
         StoryBeatType beatType = StoryManager.instance.GetBeatTypeFromString(beatTypeString);
-        StoryBeat beat = StoryManager.instance.FindBeatFromNodeName(nodeName, beatType);
+        StoryBeat beat = StoryManager.instance.FindBeatFromNodeNameAndType(nodeName, beatType);
 
         Debug.Log("Removing " + beat.GetYarnHeadNode() + " from " + NPC.ActiveNPC.SpeakerData().SpeakerID());
 

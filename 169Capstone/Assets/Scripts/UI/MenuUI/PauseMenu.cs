@@ -109,6 +109,11 @@ public class PauseMenu : MonoBehaviour
     {
         GameManager.instance.pauseMenuOpen = false;
         GameIsPaused = false;
+
+        if( GameManager.instance.currentSceneName == GameManager.MAIN_HUB_STRING_NAME ){
+            GameManager.instance.SaveGame();
+        }
+
         SceneManager.LoadScene("MainMenu");
     }
 }
