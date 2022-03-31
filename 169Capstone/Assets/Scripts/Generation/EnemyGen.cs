@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyGen : MonoBehaviour
 {
+    [SerializeField] private bool spawnOnStart = false;
     [SerializeField] private List<Transform> spawnPoints;
     [SerializeField] private int maxTarget;
     [SerializeField] private GameObject slimePrefab;
@@ -16,7 +17,8 @@ public class EnemyGen : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        spawnEnemies();
+        if(spawnOnStart)
+            spawnEnemies();
     }
 
     public void spawnEnemies()

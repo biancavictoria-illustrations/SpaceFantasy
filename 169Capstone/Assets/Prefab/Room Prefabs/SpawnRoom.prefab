@@ -632,7 +632,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7014975080110476830
 Transform:
   m_ObjectHideFlags: 0
@@ -914,7 +914,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2776887369574345725
 Transform:
   m_ObjectHideFlags: 0
@@ -1017,13 +1017,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8817877899110510501}
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -10.359997, y: 5, z: -30.370003}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -10, y: 5, z: -30}
   m_LocalScale: {x: 40, y: 10, z: 40}
   m_Children: []
   m_Father: {fileID: 8057201018906592059}
   m_RootOrder: 17
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!33 &8607791446296207162
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1082,8 +1082,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.99731714, y: 1, z: 1}
-  m_Center: {x: 0.49986324, y: 0, z: 0}
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0.5, y: 0, z: 0}
 --- !u!114 &1347837616824349057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1099,6 +1099,8 @@ MonoBehaviour:
   roomExits:
   - {fileID: 2776887369574345725}
   - {fileID: 7014975080110476830}
+  roomSize: {x: 0, y: 0}
+  numGridSpaces: 0
 --- !u!1001 &812431869
 PrefabInstance:
   m_ObjectHideFlags: 0
