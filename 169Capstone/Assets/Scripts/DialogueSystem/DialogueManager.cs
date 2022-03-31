@@ -301,7 +301,7 @@ public class DialogueManager : MonoBehaviour
 
         // Convert beat type string and find corresponding beat from node title
         StoryBeatType beatType = StoryManager.instance.GetBeatTypeFromString(beatTypeString);
-        StoryBeat beat = StoryManager.instance.FindBeatFromNodeName(nodeName, beatType);
+        StoryBeat beat = StoryManager.instance.FindBeatFromNodeNameAndType(nodeName, beatType);
 
         Debug.Log("Removing " + beat.GetYarnHeadNode() + " from " + NPC.ActiveNPC.SpeakerData().SpeakerID());
 

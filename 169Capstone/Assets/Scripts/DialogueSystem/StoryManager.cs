@@ -8,14 +8,17 @@ public class StoryManager : MonoBehaviour
     // Struct for storing data about story beats that changes at runtime (current state stuff)
     [System.Serializable] public struct BeatStatus{
         public string storyBeatHeadNode;
+        public int storyBeatType;
+
         public bool beatIsActive;          // If the player did this thing on their latest run (so characters can/should respond to it)
         public int numberOfCompletions;    // The number of times the player has done this thing
 
         public int[] speakersWithComments; // Things are removed once they no longer have new things to say on a topic
         
         // Constructor
-        public BeatStatus(string headNode, bool active, int num, List<SpeakerID> speakers){
+        public BeatStatus(string headNode, bool active, int num, List<SpeakerID> speakers, int beatType){
             storyBeatHeadNode = headNode;
+            storyBeatType = beatType;
 
             speakersWithComments = new int[speakers.Count];
             // Add all the speakerIDs
@@ -28,8 +31,9 @@ public class StoryManager : MonoBehaviour
         }
 
         // Constructor w/ Array instead of List
-        public BeatStatus(string headNode, bool active, int num, int[] speakers){
+        public BeatStatus(string headNode, bool active, int num, int[] speakers, int beatType){
             storyBeatHeadNode = headNode;
+            storyBeatType = beatType;
 
             speakersWithComments = new int[speakers.Length];
             // Add all the speakerIDs
@@ -72,16 +76,16 @@ public class StoryManager : MonoBehaviour
     [HideInInspector] public bool talkedToBryn, talkedToStellan, talkedToRhian, talkedToDoctor, talkedToSorrel, talkedToLich = false;
 
     [HideInInspector] public List<int> brynNumRunDialogueList = new List<int>();
-    [HideInInspector] public bool brynListInitialized = false;
+    [HideInInspector] public bool brynListInitialized;
 
     [HideInInspector] public List<int> stellanNumRunDialogueList = new List<int>();
-    [HideInInspector] public bool stellanListInitialized = false;
+    [HideInInspector] public bool stellanListInitialized;
 
     [HideInInspector] public List<int> timeLichNumRunDialogueList = new List<int>();
-    [HideInInspector] public bool lichListInitialized = false;
+    [HideInInspector] public bool lichListInitialized;
 
     [HideInInspector] public List<int> doctorNumRunDialogueList = new List<int>();
-    [HideInInspector] public bool doctorListInitialized = false;
+    [HideInInspector] public bool doctorListInitialized;
 
     public Dictionary<StoryBeat,BeatStatus> storyBeatDatabase = new Dictionary<StoryBeat,BeatStatus>();     // All story beats of type Conversation or Killed
     public HashSet<StoryBeat> activeStoryBeats = new HashSet<StoryBeat>();    // For the DialogueManager to see just the active beats
@@ -107,6 +111,48 @@ public class StoryManager : MonoBehaviour
         }
     }
 
+    public void InitializeStoryManagerOnNewGame()
+    {
+        brynListInitialized = false;
+        stellanListInitialized = false;
+        lichListInitialized = false;
+        doctorListInitialized = false;
+
+        activeStoryBeats.Clear();
+
+        // Set all story beat statuses to default values
+        storyBeatDatabase.Clear();
+        itemStoryBeats.Clear();
+        genericStoryBeats.Clear();
+        LoadAllStoryBeats();
+    }
+
+    public void LoadSavedStoryBeatStatuses(BeatStatus[] storyBeatDatabaseStatuses, BeatStatus[] itemStoryBeatStatuses, BeatStatus[] genericStoryBeatStatuses, string[] activeStoryBeatHeadNodes)
+    {
+        for(int i = 0; i < storyBeatDatabaseStatuses.Length; i++){
+            BeatStatus status = storyBeatDatabaseStatuses[i];
+            StoryBeat beat = FindBeatFromNodeNameAndType(status.storyBeatHeadNode, (StoryBeatType)status.storyBeatType);
+            storyBeatDatabase[beat] = status;
+        }
+
+        for(int i = 0; i < itemStoryBeatStatuses.Length; i++){
+            BeatStatus status = itemStoryBeatStatuses[i];
+            StoryBeatItem beat = (StoryBeatItem)FindBeatFromNodeNameAndType(status.storyBeatHeadNode, (StoryBeatType)status.storyBeatType);
+            itemStoryBeats[beat] = status;
+        }
+
+        for(int i = 0; i < genericStoryBeatStatuses.Length; i++){
+            BeatStatus status = genericStoryBeatStatuses[i];
+            StoryBeat beat = FindBeatFromNodeNameAndType(status.storyBeatHeadNode, (StoryBeatType)status.storyBeatType);
+            genericStoryBeats[beat] = status;
+        }
+
+        activeStoryBeats.Clear();
+        for(int i = 0; i < activeStoryBeatHeadNodes.Length; i++){
+            activeStoryBeats.Add( FindBeatFromNodeNameOnly(activeStoryBeatHeadNodes[i]) );
+        }
+    }
+
     private void LoadAllStoryBeats()
     {
         // Load in the StoryBeats (only of type Killed and Conversation) from the StoryBeats folder in Resources
@@ -121,7 +167,7 @@ public class StoryManager : MonoBehaviour
             beat.CreatePrereqDatabase();
             beat.SetValues();
             // Add the storybeat to the dictionary
-            storyBeatDatabase.Add( beat, new BeatStatus( beat.GetYarnHeadNode(), false, 0, beat.GetSpeakersWithComments() ) );
+            storyBeatDatabase.Add( beat, new BeatStatus( beat.GetYarnHeadNode(), false, 0, beat.GetSpeakersWithComments(), (int)beat.GetBeatType() ) );
         }
 
         // Load in the ItemDialogueTriggers from the ItemTriggers folder in Resources
@@ -135,7 +181,7 @@ public class StoryManager : MonoBehaviour
 
             beat.CreatePrereqDatabase();
             beat.SetValues();
-            itemStoryBeats.Add(beat,new BeatStatus( beat.GetYarnHeadNode(), false, 0, beat.GetSpeakersWithComments() ));
+            itemStoryBeats.Add(beat,new BeatStatus( beat.GetYarnHeadNode(), false, 0, beat.GetSpeakersWithComments(), (int)beat.GetBeatType() ));
         }
 
         // Load in the generic story beats from the GenericStoryBeats folders in Resources
@@ -149,7 +195,7 @@ public class StoryManager : MonoBehaviour
 
             beat.CreatePrereqDatabase();
             beat.SetValues();
-            genericStoryBeats.Add( beat, new BeatStatus( beat.GetYarnHeadNode(), false, 0, beat.GetSpeakersWithComments() ) );
+            genericStoryBeats.Add( beat, new BeatStatus( beat.GetYarnHeadNode(), false, 0, beat.GetSpeakersWithComments(), (int)beat.GetBeatType() ) );
         }
     }
 
@@ -243,7 +289,7 @@ public class StoryManager : MonoBehaviour
     }
 
     // Find the StoryBeat corresponding to a given node name string, given a beat type
-    public StoryBeat FindBeatFromNodeName(string nodeName, StoryBeatType beatType)
+    public StoryBeat FindBeatFromNodeNameAndType(string nodeName, StoryBeatType beatType)
     {
         // If Killed or Conversation Event search storyBeatDatabase
         if( beatType == StoryBeatType.EnemyKilled || beatType == StoryBeatType.KilledBy || beatType == StoryBeatType.DialogueCompleted ){
@@ -277,6 +323,29 @@ public class StoryManager : MonoBehaviour
         return null;
     }
 
+    // Less efficient way of tracking down a story beat, as it has to check ALL the databases. Only use if necessary (like when loading save data)
+    public StoryBeat FindBeatFromNodeNameOnly(string nodeName)
+    {
+        // Check all 3 story beat databases for a matching node name; return the first match found or null if none match
+        foreach(StoryBeat beat in storyBeatDatabase.Keys){
+            if( beat.GetYarnHeadNode().Equals(nodeName) ){
+                return beat;
+            }
+        }
+        foreach(StoryBeatItem beat in itemStoryBeats.Keys){
+            if( beat.GetYarnHeadNode().Equals(nodeName) ){
+                return beat;
+            }
+        }
+        foreach(StoryBeat beat in genericStoryBeats.Keys){
+            if( beat.GetYarnHeadNode().Equals(nodeName) ){
+                return beat;
+            }
+        }
+        Debug.LogError("No beats found for node name " + nodeName);
+        return null;
+    }
+
     // Takes in a string that should match a StoryBeatType enum string value perfectly; convert to the enum value
     public StoryBeatType GetBeatTypeFromString(string beatTypeString)
     {
@@ -299,16 +368,16 @@ public class StoryManager : MonoBehaviour
         if( BeatIsInDatabase(beat) ){
             // If Killed or Conversation Event
             if( beatType == StoryBeatType.EnemyKilled || beatType == StoryBeatType.KilledBy || beatType == StoryBeatType.DialogueCompleted ){
-                storyBeatDatabase[beat] = new BeatStatus( beat.GetYarnHeadNode(), setActive, storyBeatDatabase[beat].numberOfCompletions + incrementCompletionNum, storyBeatDatabase[beat].speakersWithComments );
+                storyBeatDatabase[beat] = new BeatStatus( beat.GetYarnHeadNode(), setActive, storyBeatDatabase[beat].numberOfCompletions + incrementCompletionNum, storyBeatDatabase[beat].speakersWithComments, (int)beatType );
             }
             // If item
             else if( beatType == StoryBeatType.Item ){
                 StoryBeatItem item = (StoryBeatItem)beat;
-                itemStoryBeats[item] = new BeatStatus( item.GetYarnHeadNode(), setActive, storyBeatDatabase[beat].numberOfCompletions + incrementCompletionNum, storyBeatDatabase[beat].speakersWithComments );
+                itemStoryBeats[item] = new BeatStatus( item.GetYarnHeadNode(), setActive, storyBeatDatabase[beat].numberOfCompletions + incrementCompletionNum, storyBeatDatabase[beat].speakersWithComments, (int)beatType );
             }
             // If generic
             else if( (int)beatType <= 5 ){
-                genericStoryBeats[beat] = new BeatStatus( beat.GetYarnHeadNode(), setActive, storyBeatDatabase[beat].numberOfCompletions + incrementCompletionNum, storyBeatDatabase[beat].speakersWithComments );
+                genericStoryBeats[beat] = new BeatStatus( beat.GetYarnHeadNode(), setActive, storyBeatDatabase[beat].numberOfCompletions + incrementCompletionNum, storyBeatDatabase[beat].speakersWithComments, (int)beatType );
             }
         }
     }
@@ -369,7 +438,7 @@ public class StoryManager : MonoBehaviour
             return;
         }
 
-        StoryBeat beat = FindBeatFromNodeName(beatType.ToString() + enemy, beatType);
+        StoryBeat beat = FindBeatFromNodeNameAndType(beatType.ToString() + enemy, beatType);
         AchievedStoryBeat(beat);
     }
 
@@ -379,7 +448,7 @@ public class StoryManager : MonoBehaviour
         // TODO: Either implement a use for the speakerID or remove it from this (probably need it actually so that it's with a specific character not just that branch as a WHOLE?)
         // Wherever this is called can either pass in just a string that combines that info automatically (SpeakerID + otherDialogueHeadNode (like the base, not inherently having the SpeakerID))
         // or it can pass them in separately like this and we can do that + here
-        StoryBeat beat = FindBeatFromNodeName(StoryBeatType.DialogueCompleted + otherDialogueHeadNode, StoryBeatType.DialogueCompleted);
+        StoryBeat beat = FindBeatFromNodeNameAndType(StoryBeatType.DialogueCompleted + otherDialogueHeadNode, StoryBeatType.DialogueCompleted);
         AchievedStoryBeat(beat);
     }
 }
