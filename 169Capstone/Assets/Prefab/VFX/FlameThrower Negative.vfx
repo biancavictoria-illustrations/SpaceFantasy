@@ -32,7 +32,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7d4c867f6b72b714dbb5fd1780afe208, type: 3}
-  m_Name: FlameThrower
+  m_Name: FlameThrower Negative
   m_EditorClassIdentifier: 
   m_Parent: {fileID: 0}
   m_Children:
@@ -83,7 +83,7 @@ VisualEffectResource:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FlameThrower
+  m_Name: FlameThrower Negative
   m_Graph: {fileID: 114350483966674976}
   m_ShaderSources:
   - compute: 1
@@ -152,8 +152,8 @@ VisualEffectResource:
       const StripData stripData = GetStripDataFromStripIndex(stripIndex, PARTICLE_PER_STRIP_COUNT);\n\t\tInitStripAttributes(particleIndex,
       attributes, stripData);\n\t\t// TODO Change seed to be sure we're deterministic
       on random with strip\n#endif\n        \n        {\n            SetAttribute_E6295C0(
-      /*inout */attributes.velocity,  /*inout */attributes.seed, float3(-2, -2, 40),
-      float3(6, 6, 60));\n        }\n        {\n            SetAttribute_F01429A3(
+      /*inout */attributes.velocity,  /*inout */attributes.seed, float3(-2, -2, -40),
+      float3(6, 6, -60));\n        }\n        {\n            SetAttribute_F01429A3(
       /*inout */attributes.lifetime,  /*inout */attributes.seed, (float)2.5, (float)3.5);\n       
       }\n        \n\n\t\t\n#if VFX_USE_ALIVE_CURRENT\n        if (attributes.alive)\n#endif      
       \n        {\n#if USE_DEAD_LIST\n\t        uint deadIndex = deadListIn.DecrementCounter();\n           
@@ -246,7 +246,7 @@ VisualEffectResource:
       = index;\n#endif\n#endif\n\t}\n}\n"
   - compute: 0
     name: '[System 1]Output Particle Quad'
-    source: "Shader \"Hidden/VFX/FlameThrower/System 1/Output Particle Quad\"\n{\n\tSubShader\n\t{\t\n\t\tCull
+    source: "Shader \"Hidden/VFX/FlameThrower Negative/System 1/Output Particle Quad\"\n{\n\tSubShader\n\t{\t\n\t\tCull
       Off\n\t\t\n\t\tTags { \"Queue\"=\"Transparent\" \"IgnoreProjector\"=\"True\"
       \"RenderType\"=\"Transparent\" }\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\t\n\t\tBlend
       SrcAlpha One\n\t\tZTest LEqual\n\t\tZWrite Off\n\t\tCull Off\n\t\t\n\t\n\t\t\t\n\t\tHLSLINCLUDE\n\t\t\n\t\t#define
@@ -914,9 +914,9 @@ VisualEffectResource:
       m_Vector3f:
         m_Array:
         - m_ExpressionIndex: 15
-          m_Value: {x: 6, y: 6, z: 60}
+          m_Value: {x: 6, y: 6, z: -60}
         - m_ExpressionIndex: 16
-          m_Value: {x: -2, y: -2, z: 40}
+          m_Value: {x: -2, y: -2, z: -40}
         - m_ExpressionIndex: 17
           m_Value: {x: 2, y: 3, z: 2}
         - m_ExpressionIndex: 18
@@ -1759,7 +1759,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEditor.VFX.Vector, Unity.VisualEffectGraph.Editor,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"vector":{"x":-2.0,"y":-2.0,"z":40.0}}'
+      m_SerializableObject: '{"vector":{"x":-2.0,"y":-2.0,"z":-40.0}}'
     m_Space: 0
   m_Property:
     name: A
@@ -1941,7 +1941,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEditor.VFX.Vector, Unity.VisualEffectGraph.Editor,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"vector":{"x":6.0,"y":6.0,"z":60.0}}'
+      m_SerializableObject: '{"vector":{"x":6.0,"y":6.0,"z":-60.0}}'
     m_Space: 0
   m_Property:
     name: B

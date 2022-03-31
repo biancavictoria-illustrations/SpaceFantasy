@@ -74,7 +74,7 @@ public class ShopUIStellan : MonoBehaviour
 
         foreach(UpgradePanel panel in upgradePanels){
             panel.SetShopUI(this);
-            panel.InitializeUpgradeValues(null);
+            panel.InitializeUpgradeValues();
         }
 
         if(GameManager.instance.hasKilledTimeLich){
@@ -120,7 +120,7 @@ public class ShopUIStellan : MonoBehaviour
         focusPanelCost.text = _cost;
         
         focusPanelIcon.color = new Color(255,255,255,255);
-        // focusPanelIcon.sprite = _icon;   // TODO: Uncomment once we have icons (for now, just make it visible again)
+        focusPanelIcon.sprite = _icon;
 
         focusPanelToPurchaseMessage.SetActive(true);
         SetPurchaseMessageButton(InputManager.instance.latestInputIsController, _cost=="");
@@ -178,7 +178,7 @@ public class ShopUIStellan : MonoBehaviour
 
         // Now reflect those values in the UI
         foreach(UpgradePanel panel in upgradePanels){
-            panel.InitializeUpgradeValues(null);
+            panel.InitializeUpgradeValues();
         }
     }
 
