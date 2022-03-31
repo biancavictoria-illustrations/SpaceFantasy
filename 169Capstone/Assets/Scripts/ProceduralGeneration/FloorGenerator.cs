@@ -143,47 +143,144 @@ public class FloorGenerator : MonoBehaviour
 
                 //Add nearby rooms for encounter rooms
                 foreach(GameObject room in encounterRooms)
-                    foreach(GameObject destRoom in findRoomsWithinSphere(room.transform.position, maxHallwayLength))
+                    foreach(GameObject destRoom in FindRoomsWithinSphere(room, maxHallwayLength))
                         AddKeyValuePairReflexively<GameObject, HashSet<GameObject>>(roomsWithinRange, room, destRoom);
 
                 //Add nearby rooms for non-encounter rooms
-                foreach(GameObject destRoom in findRoomsWithinSphere(spawnRoom.transform.position, maxHallwayLength))
+                foreach(GameObject destRoom in FindRoomsWithinSphere(spawnRoom, maxHallwayLength))
                     AddKeyValuePairReflexively<GameObject, HashSet<GameObject>>(roomsWithinRange, spawnRoom, destRoom);
 
-                foreach(GameObject destRoom in findRoomsWithinSphere(centerShop.transform.position, maxHallwayLength))
+                foreach(GameObject destRoom in FindRoomsWithinSphere(centerShop, maxHallwayLength))
                     AddKeyValuePairReflexively<GameObject, HashSet<GameObject>>(roomsWithinRange, centerShop, destRoom);
 
-                foreach(GameObject destRoom in findRoomsWithinSphere(xShop.transform.position, maxHallwayLength))
+                foreach(GameObject destRoom in FindRoomsWithinSphere(xShop, maxHallwayLength))
                     AddKeyValuePairReflexively<GameObject, HashSet<GameObject>>(roomsWithinRange, xShop, destRoom);
 
-                foreach(GameObject destRoom in findRoomsWithinSphere(zShop.transform.position, maxHallwayLength))
+                foreach(GameObject destRoom in FindRoomsWithinSphere(zShop, maxHallwayLength))
                     AddKeyValuePairReflexively<GameObject, HashSet<GameObject>>(roomsWithinRange, zShop, destRoom);
 
-                foreach(GameObject destRoom in findRoomsWithinSphere(bossRoom.transform.position, maxHallwayLength))
+                foreach(GameObject destRoom in FindRoomsWithinSphere(bossRoom, maxHallwayLength))
                     AddKeyValuePairReflexively<GameObject, HashSet<GameObject>>(roomsWithinRange, bossRoom, destRoom);
 
             #endregion
 
-            //Define a couple useful functions
-            #region Generation Helpers
+            //The bulk of hallway generation
+            #region Hallway Generation Methods
 
                 bool CreateHallwayBetweenRooms(GameObject startRoom, GameObject destRoom)
                 {
-                    List<GameObject> hallwayPrefabs = new List<GameObject>(hallwayRoomPrefabs);
-                    bool success = false;
+                    //Get the exit on destRoom that is closest to startRoom
+                    List<Transform> destRoomExits = new List<Transform>(destRoom.GetComponentInChildren<Room>().roomExits);
+                    Transform destExit = destRoomExits[0];
+                    float shortestDistance = Vector3.Distance(destExit.position, startRoom.transform.position);
+                    foreach(Transform exit in destRoomExits)
+                    {
+                        float distance = Vector3.Distance(exit.position, startRoom.transform.position);
+                        if(distance < shortestDistance)
+                        {
+                            destExit = exit;
+                            shortestDistance = distance;
+                        }
+                    }
 
+                    //Get the list of exits on startRoom
+                    List<Transform> roomExits = new List<Transform>(startRoom.GetComponentInChildren<Room>().roomExits);
+                    bool successfulHallway = false;
+
+                    //Try to connect to destExit with each of startRoom's exits, in order of which exit is closest
                     do
                     {
-                        //Pick a random hallway piece
-                        int index = Random.Range(0, hallwayPrefabs.Count);
-                        GameObject prefab = hallwayPrefabs[index];
-                        hallwayPrefabs.RemoveAt(index);
+                        //Find the closest exit to destExit
+                        Transform closestExit = roomExits[0];
+                        shortestDistance = Vector3.Distance(closestExit.position, destExit.position);
+                        foreach(Transform exit in roomExits)
+                        {
+                            float distance = Vector3.Distance(exit.position, destExit.position);
+                            if(distance < shortestDistance)
+                            {
+                                closestExit = exit;
+                                shortestDistance = distance;
+                            }
+                        }
+                        closestExit.gameObject.SetActive(false);
+                        roomExits.Remove(closestExit);
 
-                        //
+                        //Keep picking hallway pieces until we find one that connects to destExit
+                        List<GameObject> hallwayPrefabs = new List<GameObject>(hallwayRoomPrefabs);
+                        do
+                        {
+                            //Pick and instantiate a random hallway piece
+                            int index = Random.Range(0, hallwayPrefabs.Count);
+                            GameObject prefab = hallwayPrefabs[index];
+                            hallwayPrefabs.RemoveAt(index);
+                            GameObject hallwayPiece = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+
+                            //Try each orientation of the hallway until we find one that gets us closer to destExit
+                            List<Transform> hallwayExits = hallwayPiece.GetComponentInChildren<Room>().roomExits;
+                            for(int i = 0; i < hallwayExits.Count; ++i)
+                            {
+                                Transform hallwayExit = hallwayExits[i];
+
+                                //Rotate the hallway to match closestExit
+                                Quaternion orientation = Quaternion.AngleAxis((Mathf.Atan2((hallwayExit.up).z, (hallwayExit.up).x) - Mathf.Atan2((-closestExit.up).z, (-closestExit.up).x)) * Mathf.Rad2Deg, Vector3.up);
+                                //FromToRotation(hallwayExit.up, -closestExit.up);
+                                hallwayPiece.transform.rotation = orientation * hallwayPiece.transform.rotation;
+
+                                //Move the hallway so exit matches closestExit
+                                Vector3 exitToCenter = hallwayPiece.transform.position - hallwayExit.position;
+                                hallwayPiece.transform.position = closestExit.position + exitToCenter;
+
+                                //TODO: Check if the hallway piece overlaps another room
+
+                                //Find the closest exit from the hallway to destExit (can't be exit since that's connected to)
+                                Transform hallwayDestExit = hallwayExits[0];
+                                if(hallwayDestExit == hallwayExit)
+                                    hallwayDestExit = hallwayExits[1];
+
+                                float hallwayDistance = Vector3.Distance(hallwayDestExit.position, destExit.position);
+                                foreach(Transform otherExit in hallwayPiece.GetComponentInChildren<Room>().roomExits)
+                                {
+                                    if(otherExit == hallwayDestExit) continue;
+
+                                    float distance = Vector3.Distance(otherExit.position, destExit.position);
+                                    if(distance < hallwayDistance)
+                                    {
+                                        hallwayDestExit = otherExit;
+                                        hallwayDistance = distance;
+                                    }
+                                }
+
+                                //Remove the wall at the exit
+                                hallwayExit.gameObject.SetActive(false);
+                                hallwayExits.RemoveAt(i);
+                                --i;
+
+                                //If the distance is negligible we finally created a working hallway
+                                if(hallwayDistance < 0.1f)
+                                {
+                                    return true;
+                                }
+                                else if(hallwayDistance < shortestDistance) //Only continue the hallway if hallwayExit is closer to destExit than closestExit
+                                {
+                                    successfulHallway = CreateHallwayBetweenRooms(hallwayPiece, destRoom);
+                                    if(successfulHallway)
+                                        break;
+                                }
+
+                                //If we make it this far it wasn't successful so we add the exit back
+                                ++i;
+                                hallwayExits.Insert(i, hallwayDestExit);
+                                hallwayDestExit.gameObject.SetActive(true);
+                            }
+                            
+                            if(!successfulHallway)
+                                Destroy(hallwayPiece);
+                        }
+                        while(!successfulHallway && hallwayPrefabs.Count > 0);
                     }
-                    while(!success && hallwayPrefabs.Count > 0);
+                    while(!successfulHallway && roomExits.Count > 0);
 
-                    return false;
+                    return successfulHallway;
                 }
 
                 bool CreateChainOfHallwaysBetweenRooms(GameObject startRoom, GameObject destRoom)
@@ -196,18 +293,20 @@ public class FloorGenerator : MonoBehaviour
                     else
                     {
                         //For each room we can connect startRoom to, see if we can create a chain that leads to destRoom
-                        HashSet<GameObject> validRooms = roomsWithinRange[startRoom];
-                        GameObject nextClosestRoom;
+                        GameObject nextClosestRoom = null;
                         bool connectionSuccessful = false;
 
                         do
                         {
+                            if(roomsWithinRange[startRoom].Count == 0)
+                                break;
+
                             //Pick an arbitrary room from the set of valid rooms
-                            nextClosestRoom = validRooms.ElementAt(0);
+                            nextClosestRoom = roomsWithinRange[startRoom].ElementAt(0);
                             float shortestDistance = Vector3.Distance(nextClosestRoom.transform.position, destRoom.transform.position);
 
                             //Find the closest valid room to destRoom
-                            foreach(GameObject room in validRooms)
+                            foreach(GameObject room in roomsWithinRange[startRoom])
                             {
                                 float distance = Vector3.Distance(room.transform.position, destRoom.transform.position);
                                 if(distance < shortestDistance)
@@ -217,14 +316,15 @@ public class FloorGenerator : MonoBehaviour
                                 }
                             }
 
+                            //Whether it succeeds or not, we want to remove the rooms from each other's sets of valid rooms so we know not to try to connect them again later
+                            RemoveKeyValuePairReflexively<GameObject, HashSet<GameObject>>(roomsWithinRange, ref startRoom, ref nextClosestRoom);
+
                             //Attempt to create a chain between this room and destRoom
                             connectionSuccessful = CreateChainOfHallwaysBetweenRooms(nextClosestRoom, destRoom);
-                            //Whether it succeeds or not, we want to remove the rooms from each other's sets of valid rooms so we know not to try to connect them again later
-                            RemoveKeyValuePairReflexively<GameObject, HashSet<GameObject>>(roomsWithinRange, startRoom, nextClosestRoom);
                         } 
-                        while(!connectionSuccessful && validRooms.Count > 0);
+                        while(!connectionSuccessful && roomsWithinRange[startRoom].Count > 0);
 
-                        if(connectionSuccessful)
+                        if(connectionSuccessful && nextClosestRoom != null)
                             connectionSuccessful = CreateHallwayBetweenRooms(startRoom, nextClosestRoom);
                         
                         return connectionSuccessful;
@@ -263,19 +363,20 @@ public class FloorGenerator : MonoBehaviour
 
             #endregion
 
-            //Iterate through pairs of nearby rooms and connect them with hallways
+            //TODO: Iterate through pairs of nearby rooms and connect them with hallways
 
         #endregion
     }
 
-    private HashSet<GameObject> findRoomsWithinSphere(Vector3 center, float radius, bool increaseRadiusIfNoneFound = true)
+    private HashSet<GameObject> FindRoomsWithinSphere(GameObject room, float radius, bool increaseRadiusIfNoneFound = true)
     {
         //Using a hashset guarantees there will be no duplicate rooms
         HashSet<GameObject> rooms = new HashSet<GameObject>();
         do
         {
-            foreach(Collider col in Physics.OverlapSphere(center, radius * gridCellSizeInUnits, LayerMask.GetMask("RoomBounds")))
-                rooms.Add(col.gameObject);
+            foreach(Collider col in Physics.OverlapSphere(room.transform.position, radius * gridCellSizeInUnits, LayerMask.GetMask("RoomBounds")))
+                if(col.gameObject != room)
+                    rooms.Add(col.gameObject);
             
             ++radius;
         } while(increaseRadiusIfNoneFound && rooms.Count == 0);
@@ -285,6 +386,9 @@ public class FloorGenerator : MonoBehaviour
 
     private void AddKeyValuePairReflexively<T, C>(Dictionary<T, C> dictionary, T key, T value) where C : ICollection<T>, new()
     {
+        if(key.Equals(value))
+            return;
+
         if(!dictionary.ContainsKey(key))
             dictionary.Add(key, new C());
 
@@ -295,12 +399,12 @@ public class FloorGenerator : MonoBehaviour
         dictionary[value].Add(key);
     }
 
-    private void RemoveKeyValuePairReflexively<T, C>(Dictionary<T, C> dictionary, T key, T value) where C : ICollection<T>
+    private void RemoveKeyValuePairReflexively<T, C>(Dictionary<T, C> dictionary, ref T key, ref T value) where C : ICollection<T>
     {
         if(dictionary.ContainsKey(key))
             dictionary[key].Remove(value);
 
-        if(!dictionary.ContainsKey(value))
+        if(dictionary.ContainsKey(value))
             dictionary[value].Remove(key);
     }
 }
