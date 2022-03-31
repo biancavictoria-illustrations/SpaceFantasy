@@ -5,6 +5,10 @@ using UnityEngine;
 public class Room : MonoBehaviour
 {
     public List<Transform> roomExits;
+    [Tooltip("X is room length along the X axis in grid units, Y is the same for the Z axis")]
+    public Vector2Int roomSize;
+    [Tooltip("Total number of grid units in the room")]
+    public int numGridSpaces;
     public HashSet<EntityHealth> enemies{get; private set;}
 
     void Awake()
