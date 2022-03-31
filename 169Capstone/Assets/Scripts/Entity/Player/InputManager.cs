@@ -169,7 +169,7 @@ public class InputManager : MonoBehaviour
 
     public void OnToggleInventory(InputValue input)
     {
-        if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen){
+        if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || GameManager.instance.currentSceneName == GameManager.MAIN_HUB_STRING_NAME){
             return;
         }
         

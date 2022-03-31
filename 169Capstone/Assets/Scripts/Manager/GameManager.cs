@@ -249,9 +249,7 @@ public class GameManager : MonoBehaviour
         }
 
         // Story Beat Status Values
-        // TODO
-        // Probably just pass on the saveData string[]s on to the StoryManager and let it deal with this garbage
-
+        sm.LoadSavedStoryBeatStatuses(saveData.storyBeatDatabaseStatuses, saveData.itemStoryBeatStatuses, saveData.genericStoryBeatStatuses, saveData.activeStoryBeatHeadNodes);
 
         SceneManager.LoadScene(GameManager.MAIN_HUB_STRING_NAME);
         gameTimer.runTotalTimer = true;
@@ -268,12 +266,11 @@ public class GameManager : MonoBehaviour
         // If starting a new game, load level 1 scene (new game)
         SceneManager.LoadScene(GameManager.GAME_LEVEL1_STRING_NAME);
 
-        // Reset all starting values
-        // TODO: Basically any data that gets saved (particularly in dontdestroyonload stuff) should be moved from Start to a Setup function
+        // Reset all starting values for anything set to dontdestroyonload
         InitializeGameManagerValuesOnNewGame();
         PlayerInventory.instance.InitializeInventoryValuesOnNewGame();
         PermanentUpgradeManager.instance.InitializePermanentUpgradeValuesOnNewGame();
-        // TODO: Initialize / set up new game dialogue stuff
+        StoryManager.instance.InitializeStoryManagerOnNewGame();
 
         DialogueManager.instance.visitedNodes.Clear();
 
