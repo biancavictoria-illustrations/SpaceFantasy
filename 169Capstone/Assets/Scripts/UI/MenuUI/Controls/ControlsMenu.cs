@@ -48,6 +48,7 @@ public class ControlsMenu : MonoBehaviour
     public static Dictionary<ControlKeys, Sprite> currentControlButtonSpritesForController {get; private set;}
 
     public static bool inputDeviceChanged = false;
+    public bool currentlyRebinding = false;
 
     // Keybinding buttons
     [SerializeField] private ControlRebindButton moveUp;
@@ -103,7 +104,7 @@ public class ControlsMenu : MonoBehaviour
 
     void Update()
     {
-        if(inputDeviceChanged){
+        if(inputDeviceChanged && !currentlyRebinding){
             UpdateAllButtonText();
             inputDeviceChanged = false;
         }
@@ -136,6 +137,8 @@ public class ControlsMenu : MonoBehaviour
 
     private void StartRebinding(ControlKeys key)
     {
+        currentlyRebinding = true;
+
         if((int)key > 13){
             Debug.LogError("Cannot rebind setting: " + key.ToString());
             return;
@@ -148,26 +151,30 @@ public class ControlsMenu : MonoBehaviour
 
         InputAction action = GetAction(key);
 
+        bool canceled = false;
+
         // If latest input is controller, only rebind this for that control scheme
         if( InputManager.instance.latestInputIsController ){
             rebindingOperation = action.PerformInteractiveRebinding()
                 .WithBindingGroup("Gamepad")
                 .WithControlsExcluding("Mouse")
+                .WithControlsExcluding("<Keyboard>")
                 .OnMatchWaitForAnother(0.1f)
-                .OnComplete(operation => RebindComplete(key,action))
+                .OnComplete(operation => RebindComplete(key,action,canceled))
                 .Start();
         }   // Else only rebind for keyboard scheme
         else{
             rebindingOperation = action.PerformInteractiveRebinding()
                 .WithBindingGroup("Keyboard")
                 .WithControlsExcluding("Mouse")
+                .WithControlsExcluding("<Gamepad>")
                 .OnMatchWaitForAnother(0.1f)
-                .OnComplete(operation => RebindComplete(key,action))
+                .OnComplete(operation => RebindComplete(key,action,canceled))
                 .Start();
         }        
     }
 
-    private void RebindComplete(ControlKeys key, InputAction action)
+    private void RebindComplete(ControlKeys key, InputAction action, bool canceled=false)
     {
         int bindingIndex = action.GetBindingIndexForControl(action.controls[0]);
 
@@ -193,7 +200,20 @@ public class ControlsMenu : MonoBehaviour
         CleanUpAction();
         controls.Enable();
         SetBottomButtonsInteractable(true);
+
+        currentlyRebinding = false;
     }
+
+    // private bool BindingIsInvalid(ControlKeys key, InputAction action)
+    // {
+    //     if( InputManager.instance.latestInputIsController && InputControlPath.MatchesPrefix("<Keyboard>", action.activeControl) ){
+    //         return true;
+    //     }
+    //     else if( !InputManager.instance.latestInputIsController && InputControlPath.MatchesPrefix("<Gamepad>", action.activeControl) ){
+    //         return true;
+    //     }
+    //     return false;
+    // }
 
     private bool IsDuplicateBinding(ControlKeys key, InputAction action, int bindingIndex)
     {  

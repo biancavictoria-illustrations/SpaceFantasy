@@ -24,7 +24,7 @@ public class SaveFilePanel : MonoBehaviour
         if(slotIsFull){
             escapeAttempts.text = GameManager.instance.GetNumCompletedRunsInSaveFile(slotNumber) + "";
             totalStarShards.text = GameManager.instance.GetStarShardsCollectedInSaveFile(slotNumber) + "";
-            timePlayed.text = GameManager.instance.GetTotalTimePlayedInSaveFile(slotNumber);
+            timePlayed.text = GameManager.instance.gameTimer.ConvertTimeFloatToReadableString(GameManager.instance.GetTotalTimePlayedInSaveFile(slotNumber));
         }
         else{
             ToggleAllFullSlotElements(false);

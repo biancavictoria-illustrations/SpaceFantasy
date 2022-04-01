@@ -44,7 +44,7 @@ public class NPC : MonoBehaviour
             ActiveNPC = this;
 
             // If they're marked to autoplay dialogue this time, immediately start dialogue on trigger enter
-            if(forceNextDialogueOnTriggerEnter){
+            if(forceNextDialogueOnTriggerEnter && !haveTalkedToThisRun){
                 forceNextDialogueOnTriggerEnter = false;
                 StartCoroutine(GameManager.instance.AutoRunDialogueAfterTime(timeToWaitForAutoDialogue));
                 return;

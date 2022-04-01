@@ -9,11 +9,12 @@ public class GameTimer : MonoBehaviour
     public int minutes {get; private set;}
     public int seconds {get; private set;}
 
-    private float totalTimePlayedOnThisSaveFile = 0;
+    public float totalTimePlayedOnThisSaveFile {get; private set;}
     [HideInInspector] public bool runTotalTimer = false;    // Set to true when we're NOT in the Main Menu
 
     void Awake()
     {
+        totalTimePlayedOnThisSaveFile = 0;
         runTimer = true;
         ResetTimer();
     }
@@ -49,8 +50,8 @@ public class GameTimer : MonoBehaviour
         totalTimePlayedOnThisSaveFile = 0;
     }
 
-    public string ConvertTotalTimeToReadableString()
+    public string ConvertTimeFloatToReadableString(float time)
     {
-        return Mathf.FloorToInt(totalTimePlayedOnThisSaveFile / 60) + ":" + Mathf.FloorToInt(totalTimePlayedOnThisSaveFile % 60);
+        return Mathf.FloorToInt(time / 60) + ":" + Mathf.FloorToInt(time % 60);
     }
 }
