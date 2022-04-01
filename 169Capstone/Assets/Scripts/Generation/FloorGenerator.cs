@@ -5,7 +5,7 @@ using System.Linq;
 
 public class FloorGenerator : MonoBehaviour
 {
-    private const int maxNumberOfPlacementAttempts = 50;
+    private const int maxNumberOfPlacementAttempts = 100;
 
     [Tooltip("Whether to generate the floor in the script's Start function.")]
     public bool generateOnStart = false;
@@ -244,7 +244,7 @@ public class FloorGenerator : MonoBehaviour
                         Transform hallwayExit = hallwayExits[i];
 
                         //Rotate the hallway to match closestExit
-                        Quaternion orientation = Quaternion.AngleAxis((Mathf.Atan2((hallwayExit.up).z, (hallwayExit.up).x) - Mathf.Atan2((-closestExit.up).z, (-closestExit.up).x)) * Mathf.Rad2Deg, Vector3.up);
+                        Quaternion orientation = Quaternion.FromToRotation(hallwayExit.up, -closestExit.up);
                         hallwayPiece.transform.rotation = orientation * hallwayPiece.transform.rotation;
 
                         //Move the hallway so exit matches closestExit
@@ -308,6 +308,7 @@ public class FloorGenerator : MonoBehaviour
                             //Remove the walls at the exits
                             hallwayExit.gameObject.SetActive(false);
                             hallwayDestExit.gameObject.SetActive(false);
+                            destExit.gameObject.SetActive(false);
                             return true;
                         }
                         else if(hallwayDistance < shortestDistance) //Only continue the hallway if hallwayExit is closer to destExit than closestExit
@@ -466,8 +467,16 @@ public class FloorGenerator : MonoBehaviour
         HashSet<GameObject> rooms = new HashSet<GameObject>();
 
         foreach(Collider col in Physics.OverlapSphere(room.transform.position, radius * gridCellSizeInUnits, LayerMask.GetMask("RoomBounds")))
-            if(col.gameObject != room)
-                rooms.Add(col.gameObject);
+        {
+            if(!col.transform.IsChildOf(room.transform))
+            {
+                Transform grandestParent = col.transform;
+                while(grandestParent.parent != null)
+                    grandestParent = grandestParent.parent;
+
+                rooms.Add(grandestParent.gameObject);
+            }
+        }
         
         return rooms;
     }
@@ -480,7 +489,7 @@ public class FloorGenerator : MonoBehaviour
         do
         {
             validRooms = FindRoomsWithinSphere(room, expandingRadius);
-            foreach(GameObject validRoom in validRooms)
+            foreach(GameObject validRoom in new List<GameObject>(validRooms))
             {
                 if(roomsWithinRange.ContainsKey(room) && roomsWithinRange[room].Contains(validRoom))
                     validRooms.Remove(validRoom);
