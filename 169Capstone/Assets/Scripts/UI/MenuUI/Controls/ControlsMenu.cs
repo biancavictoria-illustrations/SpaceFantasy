@@ -48,7 +48,7 @@ public class ControlsMenu : MonoBehaviour
     public static Dictionary<ControlKeys, Sprite> currentControlButtonSpritesForController {get; private set;}
 
     public static bool inputDeviceChanged = false;
-    public bool currentlyRebinding = false;
+    [HideInInspector] public bool currentlyRebinding = false;
 
     // Keybinding buttons
     [SerializeField] private ControlRebindButton moveUp;
@@ -99,7 +99,9 @@ public class ControlsMenu : MonoBehaviour
             SetControlsToSavedValues();
         }
 
-        AlertTextUI.instance.UpdateAlertText();
+        if(AlertTextUI.instance){
+            AlertTextUI.instance.UpdateAlertText();
+        }        
     }
 
     void Update()
@@ -313,6 +315,11 @@ public class ControlsMenu : MonoBehaviour
 
     public void SetControlPanelActive(bool set)
     {
+        if(!pauseMenu){
+            Debug.LogWarning("No pause menu found (don't call SetControlPanelActive on Main Menu)");
+            return;
+        }
+
         pauseMenu.controlsMenuPanel.SetActive(set);
         pauseMenu.pauseMenuPanel.SetActive(!set);
 
