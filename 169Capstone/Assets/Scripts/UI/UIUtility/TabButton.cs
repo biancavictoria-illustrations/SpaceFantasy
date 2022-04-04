@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(Image))]
-public class TabButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerExitHandler
+public class TabButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler
 {
     public TabGroup tabGroup;
     public Image background;
@@ -20,14 +20,10 @@ public class TabButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandl
         tabGroup.Subscribe(this);
     }
 
+    // Hovering w/ mouse
     public void OnPointerEnter(PointerEventData eventData)
     {
         tabGroup.OnTabEnter(this);
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        tabGroup.OnTabSelected(this);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -35,6 +31,24 @@ public class TabButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandl
         tabGroup.OnTabExit(this);
     }
 
+    // For actually clicking this option (TODO: need to check if this works on controller!!!)
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        tabGroup.OnTabSelected(this);
+    }
+   
+    // Navigating with controller/keyboard
+    public void OnSelect(BaseEventData eventData)
+    {
+        tabGroup.OnTabEnter(this);
+    }
+
+    public void OnDeselect(BaseEventData eventData)
+    {
+        tabGroup.OnTabExit(this);
+    }
+
+    // Called when actually clicked
     public void Select()
     {
         if(onTabSelected != null){
