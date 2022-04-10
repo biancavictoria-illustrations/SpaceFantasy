@@ -27,7 +27,7 @@ public class EncounterRoomClose : MonoBehaviour
             foreach(GameObject ff in forceFields)
                 ff.SetActive(true);
             
-            foreach(EntityHealth e in room.enemies)
+            foreach(EntityHealth e in room.GetEnemyList())
             {
                 e.OnDeath.AddListener(RoomOpen);
                 if( isBossRoom && e.isBossEnemy ){
