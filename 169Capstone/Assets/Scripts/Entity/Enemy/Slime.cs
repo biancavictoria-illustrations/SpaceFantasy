@@ -4,6 +4,18 @@ using UnityEngine;
 
 public class Slime : Enemy
 {
+    private Material defaultMat;
+    private SpriteRenderer spriteRenderer;
+
+    protected override void Start()
+    {
+        base.Start();
+        EntityHealth healthScript = GetComponent<EntityHealth>();
+        healthScript.OnHit.AddListener(flashWhenHit);
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        defaultMat = spriteRenderer.material;
+    }
+
     protected override IEnumerator EnemyLogic()
     {
         animator.SetBool("IsMoving", true);
@@ -34,5 +46,25 @@ public class Slime : Enemy
         {
             return false;
         }
+    }
+
+    private void flashWhenHit(EntityHealth health, float damage)
+    {
+        Material flash = new Material(defaultMat);
+        Material red = new Material(defaultMat);
+        red.color = Color.red;
+        spriteRenderer.material = flash;
+        flash.Lerp(defaultMat, red, 1);
+        Invoke("ResetMaterial", 0.05f);
+
+    }
+
+    private void ResetMaterial()
+    {
+        Material flash = new Material(defaultMat);
+        Material red = new Material(defaultMat);
+        red.color = Color.red;
+        spriteRenderer.material = flash;
+        flash.Lerp(red, defaultMat, 1);
     }
 }
