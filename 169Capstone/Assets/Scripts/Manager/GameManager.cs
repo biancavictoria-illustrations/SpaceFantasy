@@ -235,6 +235,7 @@ public class GameManager : MonoBehaviour
         sm.stellanListInitialized = saveData.stellanListInitialized;
         sm.doctorListInitialized = saveData.doctorListInitialized;
         sm.lichListInitialized = saveData.lichListInitialized;
+        sm.rhianListInitialized = saveData.rhianListInitialized;
 
         for(int i = 0; i < saveData.brynNumRunDialogueList.Length; i++){
             sm.brynNumRunDialogueList.Add(saveData.brynNumRunDialogueList[i]);
@@ -247,6 +248,9 @@ public class GameManager : MonoBehaviour
         }
         for(int i = 0; i < saveData.timeLichNumRunDialogueList.Length; i++){
             sm.timeLichNumRunDialogueList.Add(saveData.timeLichNumRunDialogueList[i]);
+        }
+        for(int i = 0; i < saveData.rhianNumRunDialogueList.Length; i++){
+            sm.rhianNumRunDialogueList.Add(saveData.rhianNumRunDialogueList[i]);
         }
 
         // Story Beat Status Values
