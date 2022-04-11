@@ -151,6 +151,7 @@ MonoBehaviour:
   attackRadius: 0
   speed: 1
   attacking: 0
+  canMove: 1
   nearAttackRange: 5
   needsLOS: 1
 --- !u!114 &34736846052281846
@@ -165,13 +166,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7aa38866ae020d48960f1b8dd7b63ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logic: {fileID: 11400000, guid: 4d4c6547397508c4eb687e1c74b8abd2, type: 2}
+  logic: {fileID: 11400000, guid: 5fa92c8420c007047811fbb34419456a, type: 2}
   timerPrefab: {fileID: 8884618211834378937, guid: 70b863b9231e14d20905af9d7a45d1ce,
     type: 3}
   path: {fileID: 0}
   canAttack: 1
   coroutineRunning: 0
-  animator: {fileID: 0}
+  animator: {fileID: 5344691466682606731}
   phase1logic: {fileID: 11400000, guid: 4d4c6547397508c4eb687e1c74b8abd2, type: 2}
   phase2logic: {fileID: 11400000, guid: 5fa92c8420c007047811fbb34419456a, type: 2}
   meteorPrefab: {fileID: 6971681032639802214, guid: 1bad081c16ce4584ba32837e84b73b56,
@@ -700,6 +701,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3613485421710623989, guid: 138a1eb222192bd43a01dec3fa6b5790,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3613485421710623989, guid: 138a1eb222192bd43a01dec3fa6b5790,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3613485421710623989, guid: 138a1eb222192bd43a01dec3fa6b5790,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3868333307526925014, guid: 138a1eb222192bd43a01dec3fa6b5790,
         type: 3}
       propertyPath: m_Controller
@@ -721,6 +737,12 @@ Transform:
 --- !u!1 &5110812910351085586 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4138383044915306063, guid: 138a1eb222192bd43a01dec3fa6b5790,
+    type: 3}
+  m_PrefabInstance: {fileID: 9188253874007961181}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &5344691466682606731 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 3868333307526925014, guid: 138a1eb222192bd43a01dec3fa6b5790,
     type: 3}
   m_PrefabInstance: {fileID: 9188253874007961181}
   m_PrefabAsset: {fileID: 0}

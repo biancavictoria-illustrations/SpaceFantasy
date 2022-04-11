@@ -9,6 +9,7 @@ public class Beetle : Enemy
     private const float phase1SlamFrequency = 0.25f;
     private const float phase2SlamFrequency = 0.125f;
 
+    [SerializeField] private Room bossRoomScript;
     [SerializeField] private EnemyLogic phase1logic;
     [SerializeField] private EnemyLogic phase2logic;
     [SerializeField] private GameObject debrisPrefab;
@@ -25,6 +26,12 @@ public class Beetle : Enemy
     private bool isPhase2;
     private float slamDebrisFrequency { get { return isPhase2 ? phase2SlamFrequency : phase1SlamFrequency; } }
     private int shockwaveCount;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        bossRoomScript.AddEnemy(health);
+    }
 
     protected override void Start()
     {
