@@ -489,6 +489,10 @@ public class FloorGenerator : MonoBehaviour
                         {
                             Transform hallwayExit = hallwayExits[i];
 
+                            //ADD TO ALGORITHM
+                            if(!hallwayExit.gameObject.activeSelf)
+                                continue;
+
                             //Rotate the hallway to match closestExit
                             Quaternion orientation = Quaternion.FromToRotation(hallwayExit.up, -closestExit.up);
                             hallwayPiece.transform.rotation = orientation * hallwayPiece.transform.rotation;
@@ -522,6 +526,9 @@ public class FloorGenerator : MonoBehaviour
                                 if(intersects)
                                     break;
                             }
+                            
+                            Debug.Log("Check for intersect");
+                            yield return null;
 
                             //If the room overlaps another room, try a different orientation. 
                             //If we run out of possible orientations the algorithm will move on to a new hallway prefab
@@ -530,17 +537,18 @@ public class FloorGenerator : MonoBehaviour
                                 continue;
                             }
 
-                            //Find the closest exit from the hallway to destExit (can't be exit since that's connected to)
+                            //Find the closest exit from the hallway to destRoom (can't be hallwayExit since that's connected to startRoom)
                             Transform hallwayDestExit = hallwayExits[0];
-                            if(hallwayDestExit == hallwayExit)
+                            if(hallwayDestExit == hallwayExit || !hallwayDestExit.gameObject.activeSelf)
                                 hallwayDestExit = hallwayExits[1];
 
-                            float hallwayDistance = Vector3.Distance(hallwayDestExit.position, destExit.position);
+                            float hallwayDistance = Vector3.Distance(hallwayDestExit.position, destRoom.transform.position);
                             foreach(Transform otherExit in hallwayPiece.GetComponentInChildren<Room>().roomExits)
                             {
-                                if(otherExit == hallwayDestExit) continue;
+                                //ADD TO ALGORITHM
+                                if(otherExit == hallwayDestExit || !otherExit.gameObject.activeSelf) continue;
 
-                                float distance = Vector3.Distance(otherExit.position, destExit.position);
+                                float distance = Vector3.Distance(otherExit.position, destRoom.transform.position);
                                 if(distance < hallwayDistance)
                                 {
                                     hallwayDestExit = otherExit;
@@ -548,26 +556,69 @@ public class FloorGenerator : MonoBehaviour
                                 }
                             }
 
+                            //ADD TO ALGORITHM
+                            if(!hallwayDestExit.gameObject.activeSelf) 
+                            {
+                                continue;
+                            }
+
+                            Debug.Log("Previous hallwayDistance: " + hallwayDistance);
+                            Debug.Log("Previous destExit: " + destExit);
+
+                            //ADD ALL THIS CODE TO ALGORITHM
+                            //Re-evaluate the exit that is closest to the hallwayDestExit
+                            float newShortestDistance = Vector3.Distance(destExit.position, hallwayDestExit.position);
+                            foreach(Transform exit in destRoomExits)
+                            {
+                                if(!exit.gameObject.activeSelf) continue;
+
+                                float distance = Vector3.Distance(exit.position, hallwayDestExit.position);
+                                if(distance < newShortestDistance)
+                                {
+                                    destExit = exit;
+                                    newShortestDistance = distance;
+                                }
+                            }
+
+                            hallwayDistance = Vector3.Distance(hallwayDestExit.position, destExit.position);
+                            //ADD ALL THIS CODE TO ALGORITHM
+
+                            Debug.Log("New hallwayDistance: " + hallwayDistance);
+                            Debug.Log("New destExit: " + destExit);
+
                             //If the distance is negligible we finally created a working hallway
                             if(hallwayDistance < 0.1f)
                             {
                                 //Remove the walls at the exits
+                                closestExit.gameObject.SetActive(false); //ADD THESE TO MAIN ALGORITHM
                                 hallwayExit.gameObject.SetActive(false);
                                 hallwayDestExit.gameObject.SetActive(false);
-                                destExit.gameObject.SetActive(false);
-                                returnValue = true;
+                                destExit.gameObject.SetActive(false); //ADD THESE TO MAIN ALGORITHM
+                                Debug.Log("Successful Hallway");
                                 yield return null;
+                                returnValue = true;
+                                callback();
+                                yield break;
                             }
                             else if(hallwayDistance < shortestDistance) //Only continue the hallway if hallwayExit is closer to destExit than closestExit
                             {
                                 bool isRunning = true;
+                                hallwayExit.gameObject.SetActive(false); //ADD THESE TO MAIN ALGORITHM
+                                closestExit.gameObject.SetActive(false); //ADD THESE TO MAIN ALGORITHM
+                                Debug.Log("Case hallwayDistance < shortestDistance");
+                                yield return null;
                                 StartCoroutine(CreateHallwayBetweenRoomsRoutine(hallwayPiece, destRoom, () => {isRunning = false;}));
                                 yield return new WaitWhile(() => isRunning);
+                                Debug.Log("Return Value: " + returnValue);
                                 successfulHallway = returnValue;
-                                if(successfulHallway)
+                                yield return null;
+                                if(!successfulHallway) //THIS WAS CHANGED TOO
                                 {
-                                    hallwayExit.gameObject.SetActive(false);
-                                    hallwayDestExit.gameObject.SetActive(false);
+                                    hallwayExit.gameObject.SetActive(true);
+                                    closestExit.gameObject.SetActive(true);
+                                }
+                                else
+                                {
                                     break;
                                 }
                             }
@@ -581,20 +632,20 @@ public class FloorGenerator : MonoBehaviour
                             }
 
                             Debug.Log("Could not place hallway " + hallwayPiece + " connected to " + startRoom);
+                            yield return null;
                             Destroy(hallwayPiece);
                         }
                     }
                     while(!successfulHallway && hallwayPrefabs.Count > 0);
 
-                    //If that exit worked, remove it
-                    if(successfulHallway)
-                        closestExit.gameObject.SetActive(false);
+                    //THERE WAS CODE HERE THAT NEEDS TO BE REMOVED
                 }
                 while(!successfulHallway && roomExits.Count > 0);
 
-                returnValue = successfulHallway;
+                Debug.Log("Reached end of routine, successful hallway: " + successfulHallway);
                 yield return null;
 
+                returnValue = successfulHallway;
                 callback();
             }
         
