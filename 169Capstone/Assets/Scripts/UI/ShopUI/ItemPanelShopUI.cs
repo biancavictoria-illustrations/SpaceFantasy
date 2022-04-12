@@ -38,10 +38,10 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
 
     public virtual void PurchaseItem()
     {
-        // if(PlayerInventory.instance.tempCurrency - currentCostValue < 0){
-            // TODO: UI feedback about being too broke to buy an item (don't do this yet cuz inconvenient for testing)
-        //     return;      // If we return here, does it still do the child version of the function? that's bad
-        // }
+        if(PlayerInventory.instance.tempCurrency - currentCostValue < 0){
+            // TODO: UI feedback about being too broke to buy an item
+            return;
+        }
 
         PlayerInventory.instance.SetTempCurrency(PlayerInventory.instance.tempCurrency - currentCostValue);
     }

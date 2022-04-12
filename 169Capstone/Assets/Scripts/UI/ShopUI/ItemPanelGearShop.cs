@@ -44,6 +44,11 @@ public class ItemPanelGearShop : ItemPanelShopUI
     {
         // Purchase the item
         base.PurchaseItem();
+
+        if(PlayerInventory.instance.tempCurrency - currentCostValue < 0){
+            // TODO: Make the purchase button not interactable and instead it says something like "not enough electrum!"
+            return;
+        }
         
         // Generate the actual item object in the scene (from the item data)
         item.EquipGeneratedItem();

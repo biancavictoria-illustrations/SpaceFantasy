@@ -45,15 +45,15 @@ public class ItemPanelDoctor : ItemPanelShopUI
             int r = Random.Range(0,2);
             if(category == UpgradeShopCategory.STROrDEX){
                 statName = r == 0 ? PlayerFacingStatName.STR : PlayerFacingStatName.DEX;
-                upgradeName = statName == PlayerFacingStatName.STR ? "STR FLAVOR NAME" : "DEX FLAVOR NAME";
+                upgradeName = statName == PlayerFacingStatName.STR ? "Muscle Enhancement" : "Reflex Enhancement";
             }
             else if(category == UpgradeShopCategory.INTOrWIS){
                 statName = r == 0 ? PlayerFacingStatName.INT : PlayerFacingStatName.WIS;
-                upgradeName = statName == PlayerFacingStatName.INT ? "INT FLAVOR NAME" : "WIS FLAVOR NAME";
+                upgradeName = statName == PlayerFacingStatName.INT ? "Brain Function" : "Willpower";
             }
             else{       // CHAorCON
                 statName = r == 0 ? PlayerFacingStatName.CHA : PlayerFacingStatName.CON;
-                upgradeName = statName == PlayerFacingStatName.CHA ? "CHA FLAVOR NAME" : "CON FLAVOR NAME";
+                upgradeName = statName == PlayerFacingStatName.CHA ? "Bone Structure" : "Bone Fortitude";
             }
         }
         else if(category == UpgradeShopCategory.HealthPotion){
@@ -147,6 +147,11 @@ public class ItemPanelDoctor : ItemPanelShopUI
     {
         base.PurchaseItem();
 
+        if(PlayerInventory.instance.tempCurrency - currentCostValue < 0){
+            // TODO: UI feedback about being too broke to buy the thing
+            return;
+        }
+
         if(category == UpgradeShopCategory.HealthPotion){
             PlayerInventory.instance.IncrementHealthPotionQuantity();
             IncrementStatValue();
@@ -202,20 +207,20 @@ public class ItemPanelDoctor : ItemPanelShopUI
         UpdateCurrentCost();    // Updates cost value as well as UI
     }
 
-    // TODO: Update according to Salil's actual equation
+    // TODO: Update according to Salil's actual equation (might have...?)
     protected override void CalculateCurrentCost()
     {
         float cost = upgradeBaseCost;      // Set base cost
 
         // Set coeff to (time factor * time in min) * stage factor
         int playerFactor = 1;
-        float timeInMin = 0;        // TODO: Set to time in min
+        float timeInMin = GameManager.instance.gameTimer.minutes;
         float stageFactor = 1f;     // TODO: Set to stage factor
         float coeff = (playerFactor + timeInMin * timeFactor) * stageFactor;
 
         // Raise coeff to the power of the costPowerValue
         coeff = Mathf.Pow(coeff,costPowerValue);
 
-        currentCostValue = (int)Mathf.Floor(cost);       // Get int using Floor to round
+        currentCostValue = (int)Mathf.Floor(cost * coeff);       // Get int using Floor to round
     }
 }
