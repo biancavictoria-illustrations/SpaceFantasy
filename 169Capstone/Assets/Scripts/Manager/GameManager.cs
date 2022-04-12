@@ -172,12 +172,8 @@ public class GameManager : MonoBehaviour
 
     public void SaveGame()
     {
-        Debug.Log("Save slot num before saving: " + saveSlotNum);
-
         SaveDisplayValuesToPlayerPrefs();
         SaveLoadManager.SaveGame(saveSlotNum, this, PlayerInventory.instance, DialogueManager.instance, StoryManager.instance, PermanentUpgradeManager.instance);
-
-        Debug.Log("Save slot num after saving: " + saveSlotNum);
     }
 
     // Called when you load your game in the Main Menu (and ONLY then)
