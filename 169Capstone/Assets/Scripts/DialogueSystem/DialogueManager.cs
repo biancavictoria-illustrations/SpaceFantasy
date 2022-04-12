@@ -356,6 +356,7 @@ public class DialogueManager : MonoBehaviour
             }
             else if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.TimeLich){
                 FindObjectOfType<Lich>().canAttack = true;
+                InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(true, EnemyID.TimeLich);
             }
         }
     }
