@@ -6,6 +6,15 @@ using UnityEngine.UI;
 
 public class InventoryUIItemPanel : MonoBehaviour
 {
+    // public enum StringVariableValues{
+    //     STR,
+    //     DEX,
+    //     INT,
+    //     WIS,
+    //     CON,
+    //     CHA
+    // }
+
     [SerializeField] private InventoryItemSlot itemSlot;
     [HideInInspector] public ItemRarity rarity;
 
@@ -14,7 +23,7 @@ public class InventoryUIItemPanel : MonoBehaviour
     public TMP_Text itemTypeRarity;
     public TMP_Text itemDescription;
 
-    private string shortDescription = "";    // Single line
+    private string shortDescription = "";    // 1-2 lines
     private string expandedDescription = ""; // Detailed additions
 
     public GameObject descriptionPanel;
@@ -72,7 +81,7 @@ public class InventoryUIItemPanel : MonoBehaviour
     public void SetExpandedDescription(bool set)
     {
         if(set){
-            itemDescription.text = shortDescription + "\n" + expandedDescription;
+            itemDescription.text = expandedDescription;
         }
         else{
             itemDescription.text = shortDescription;

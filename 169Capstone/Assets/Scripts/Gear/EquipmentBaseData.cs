@@ -45,6 +45,7 @@ public class EquipmentBaseData : ScriptableObject
     [SerializeField] private InventoryItemSlot itemSlot;
     [SerializeField] private int baseCost = 10;
 
+    [TextArea(4,20)]
     [SerializeField] private string shortDescription;
     [TextArea(15,20)]
     [SerializeField] private string longDescription;
