@@ -15,6 +15,11 @@ public class TargetPlayer : MonoBehaviour
     public Transform projectileSpawnPoint4;
     private float timer = 5;
 
+    void Start()
+    {
+        player = Player.instance.transform;
+    }
+
     // Start is called before the first frame update
     private void Update()
     {

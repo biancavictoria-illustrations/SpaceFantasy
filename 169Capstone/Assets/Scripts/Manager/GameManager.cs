@@ -172,12 +172,8 @@ public class GameManager : MonoBehaviour
 
     public void SaveGame()
     {
-        Debug.Log("Save slot num before saving: " + saveSlotNum);
-
         SaveDisplayValuesToPlayerPrefs();
         SaveLoadManager.SaveGame(saveSlotNum, this, PlayerInventory.instance, DialogueManager.instance, StoryManager.instance, PermanentUpgradeManager.instance);
-
-        Debug.Log("Save slot num after saving: " + saveSlotNum);
     }
 
     // Called when you load your game in the Main Menu (and ONLY then)
@@ -235,6 +231,7 @@ public class GameManager : MonoBehaviour
         sm.stellanListInitialized = saveData.stellanListInitialized;
         sm.doctorListInitialized = saveData.doctorListInitialized;
         sm.lichListInitialized = saveData.lichListInitialized;
+        sm.rhianListInitialized = saveData.rhianListInitialized;
 
         for(int i = 0; i < saveData.brynNumRunDialogueList.Length; i++){
             sm.brynNumRunDialogueList.Add(saveData.brynNumRunDialogueList[i]);
@@ -247,6 +244,9 @@ public class GameManager : MonoBehaviour
         }
         for(int i = 0; i < saveData.timeLichNumRunDialogueList.Length; i++){
             sm.timeLichNumRunDialogueList.Add(saveData.timeLichNumRunDialogueList[i]);
+        }
+        for(int i = 0; i < saveData.rhianNumRunDialogueList.Length; i++){
+            sm.rhianNumRunDialogueList.Add(saveData.rhianNumRunDialogueList[i]);
         }
 
         // Story Beat Status Values

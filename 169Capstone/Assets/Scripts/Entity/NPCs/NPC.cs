@@ -169,6 +169,12 @@ public class NPC : MonoBehaviour
                     storyManager.stellanNumRunDialogueList = new List<int>(speakerData.NumRunDialogueList());
                 }     
                 return;
+            case SpeakerID.Rhian:
+                if(!storyManager.rhianListInitialized){
+                    storyManager.rhianListInitialized = true;
+                    storyManager.rhianNumRunDialogueList = new List<int>(speakerData.NumRunDialogueList());
+                }     
+                return;
         }
     }
 
@@ -183,6 +189,8 @@ public class NPC : MonoBehaviour
                 return StoryManager.instance.doctorNumRunDialogueList;
             case SpeakerID.Stellan: 
                 return StoryManager.instance.stellanNumRunDialogueList;
+            case SpeakerID.Rhian: 
+                return StoryManager.instance.rhianNumRunDialogueList;
         }
         Debug.LogError("No num run dialogue list found for SpeakerID: " + speakerData.SpeakerID());
         return null;

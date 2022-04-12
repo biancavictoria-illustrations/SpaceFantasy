@@ -86,7 +86,7 @@ public class ShopUIStellan : MonoBehaviour
     {
         if(giveCurrencyForTesting){
             giveCurrencyForTesting = false;
-            PlayerInventory.instance.SetPermanentCurrency( PlayerInventory.instance.permanentCurrency + 1000 );
+            PlayerInventory.instance.SetPermanentCurrency( PlayerInventory.instance.permanentCurrency + 1 );
         }
     }
 

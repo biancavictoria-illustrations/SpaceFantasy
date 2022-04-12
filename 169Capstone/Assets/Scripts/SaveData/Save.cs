@@ -50,6 +50,8 @@ public class Save
     public bool lichListInitialized;
     public int[] doctorNumRunDialogueList;
     public bool doctorListInitialized;
+    public int[] rhianNumRunDialogueList;
+    public bool rhianListInitialized;
 
     // Story Beat Status Values
 
@@ -112,6 +114,10 @@ public class Save
         doctorListInitialized = storyManager.doctorListInitialized;
         doctorNumRunDialogueList = new int[storyManager.doctorNumRunDialogueList.Count];
         CharacterSpecificNumRunListToArray(SpeakerID.Doctor, storyManager.doctorNumRunDialogueList);
+
+        rhianListInitialized = storyManager.rhianListInitialized;
+        rhianNumRunDialogueList = new int[storyManager.rhianNumRunDialogueList.Count];
+        CharacterSpecificNumRunListToArray(SpeakerID.Rhian, storyManager.rhianNumRunDialogueList);
         
         lichListInitialized = storyManager.lichListInitialized;
         timeLichNumRunDialogueList = new int[storyManager.timeLichNumRunDialogueList.Count];

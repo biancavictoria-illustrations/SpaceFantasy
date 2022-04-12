@@ -33,6 +33,11 @@ public class AlertTextUI : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        UpdateAlertText();
+    }
+
     void Update()
     {
         if(inputDeviceChanged){
