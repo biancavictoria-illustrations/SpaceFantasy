@@ -46,7 +46,7 @@ public class EnemyGen : MonoBehaviour
         for (int i = 0; i < robertCount; i++)
         {
             Transform spawnPoint = spawnPoints[r.Next(0, spawnPoints.Count)];
-            GameObject enemy = Instantiate(robertPrefab, spawnPoint.position + new Vector3(r.Next(-1 * offsetRadius), 0, r.Next(-1 * offsetRadius, offsetRadius)), robertPrefab.transform.rotation);
+            GameObject enemy = Instantiate(robertPrefab, spawnPoint.position + new Vector3(r.Next(-1 * offsetRadius, offsetRadius), 0, r.Next(-1 * offsetRadius, offsetRadius)), robertPrefab.transform.rotation);
             roomScript.AddEnemy(enemy.GetComponent<EntityHealth>());
         }
     }
