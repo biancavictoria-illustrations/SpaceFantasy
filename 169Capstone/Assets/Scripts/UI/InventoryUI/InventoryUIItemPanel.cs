@@ -109,7 +109,7 @@ public class InventoryUIItemPanel : MonoBehaviour
         }
     }
 
-    // TODO: Need to update this EVERY TIME your stats change
+    // TODO: Currently happening EVERY TIME you open the thing; should change it to probably only be when your stats change...?
     private string GenerateExpandedDescription(string baseDescription)
     {
         string generatedDescription = baseDescription;
