@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.42344362, g: 0.47082424, b: 0.51312023, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2825,10 +2825,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e024ad859ebae364d8037be5751518a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tabButtons: []
+  tabButtons:
+  - {fileID: 1179428859}
+  - {fileID: 701485688}
+  - {fileID: 701485688}
+  - {fileID: 1179428859}
+  - {fileID: 701485688}
+  - {fileID: 1179428859}
+  - {fileID: 701485688}
+  - {fileID: 1179428859}
+  - {fileID: 701485688}
+  - {fileID: 1179428859}
+  - {fileID: 701485688}
+  - {fileID: 1179428859}
+  - {fileID: 701485688}
+  - {fileID: 1179428859}
+  - {fileID: 701485688}
+  - {fileID: 1179428859}
+  - {fileID: 701485688}
+  - {fileID: 1179428859}
   tabIdle: {r: 1, g: 1, b: 1, a: 1}
-  tabHover: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  tabActive: {r: 0.05724919, g: 1, b: 0, a: 1}
+  tabHover: {r: 0.05724919, g: 1, b: 0, a: 0.5882353}
+  tabActive: {r: 1, g: 0, b: 0.39731216, a: 0.8784314}
   selectedTab: {fileID: 701485688}
   panelGroup: {fileID: 1030744078}
 --- !u!1 &583013859
@@ -3479,6 +3497,7 @@ GameObject:
   - component: {fileID: 701485687}
   - component: {fileID: 701485686}
   - component: {fileID: 701485688}
+  - component: {fileID: 701485689}
   m_Layer: 5
   m_Name: SettingsPanel
   m_TagString: Untagged
@@ -3555,6 +3574,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20dc683b4b3bf144a8b66367173a43f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 0}
+    m_PressedColor: {r: 0.08388376, g: 0.38679248, b: 0.029191885, a: 1}
+    m_SelectedColor: {r: 0.05724919, g: 1, b: 0, a: 0.5882353}
+    m_DisabledColor: {r: 0.2830189, g: 0.2830189, b: 0.2830189, a: 0.84313726}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 701485686}
   tabGroup: {fileID: 567068971}
   background: {fileID: 701485686}
   onTabSelected:
@@ -3563,6 +3610,18 @@ MonoBehaviour:
   onTabDeselcted:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &701485689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 701485684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d6fc31776f4b944b9570f2e48e297b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &721394419
 GameObject:
   m_ObjectHideFlags: 0
@@ -5432,6 +5491,7 @@ GameObject:
   - component: {fileID: 1179428858}
   - component: {fileID: 1179428857}
   - component: {fileID: 1179428859}
+  - component: {fileID: 1179428860}
   m_Layer: 5
   m_Name: ControlsPanel
   m_TagString: Untagged
@@ -5508,6 +5568,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20dc683b4b3bf144a8b66367173a43f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.15294118, g: 1, b: 0, a: 1}
+    m_PressedColor: {r: 0.08388376, g: 0.38679248, b: 0.029191885, a: 1}
+    m_SelectedColor: {r: 0.15294118, g: 1, b: 0, a: 1}
+    m_DisabledColor: {r: 0.2830189, g: 0.2830189, b: 0.2830189, a: 0.84313726}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1179428857}
   tabGroup: {fileID: 567068971}
   background: {fileID: 1179428857}
   onTabSelected:
@@ -5516,6 +5604,18 @@ MonoBehaviour:
   onTabDeselcted:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1179428860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1179428855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d6fc31776f4b944b9570f2e48e297b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1221200462
 GameObject:
   m_ObjectHideFlags: 0
@@ -5566,7 +5666,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.16078432, g: 0.16078432, b: 0.16078432, a: 0.84313726}
+  m_Color: {r: 0.16078432, g: 0.16078432, b: 0.16078432, a: 0.9490196}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
