@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -457,53 +457,45 @@ public class FloorGenerator : MonoBehaviour
 
             IEnumerator CreateHallwayBetweenRoomsRoutine(GameObject startRoom, GameObject destRoom, CallbackDelegate callback)
             {
-                //Get the exit on destRoom that is closest to startRoom
-                List<Transform> destRoomExits = new List<Transform>(destRoom.GetComponentInChildren<Room>().roomExits);
-                if(destRoomExits.Count <= 0) 
-                {
-                    returnValue = false;
-                    yield break;
-                }
-                Transform destExit = destRoomExits[0];
-                float shortestDistance = Vector3.Distance(destExit.position, startRoom.transform.position);
-                foreach(Transform exit in destRoomExits)
-                {
-                    if(!exit.gameObject.activeSelf) continue;
+                //Get the list of active exits on startRoom
+                List<Transform> startRoomExits = new List<Transform>(startRoom.GetComponentInChildren<Room>().roomExits.Where((Transform t) => t.gameObject.activeSelf));
 
-                    float distance = Vector3.Distance(exit.position, startRoom.transform.position);
-                    if(distance < shortestDistance)
-                    {
-                        destExit = exit;
-                        shortestDistance = distance;
-                    }
-                }
-
-                //If all of the exits are already taken, give up
-                if(!destExit.gameObject.activeSelf) 
+                //If there are no active exits on startRoom, a connection is impossible
+                if(startRoomExits.Count == 0) 
                 {
+                    Debug.LogWarning("No exits on startRoom");
                     returnValue = false;
                     yield break;
                 }
 
-                //Get the list of exits on startRoom
-                List<Transform> roomExits = new List<Transform>(startRoom.GetComponentInChildren<Room>().roomExits);
-                bool successfulHallway = false;
+                //Get a list of all active exits on destRoom
+                List<Transform> destRoomExits = new List<Transform>(destRoom.GetComponentInChildren<Room>().roomExits.Where((Transform t) => t.gameObject.activeSelf));
+
+                //If there are no active exits on destRoom, a connection is impossible
+                if(destRoomExits.Count == 0) 
+                {
+                    Debug.LogWarning("No exits on destRoom");
+                    returnValue = false;
+                    yield break;
+                }
 
                 //Try to connect to destExit with each of startRoom's exits, in order of which exit is closest
-                do
+                while(startRoomExits.Count > 0)
                 {
+                    //COROUTINE STUFF
                     Debug.Log("First Loop");
                     yield return null;
-                    if(roomExits.Count <= 0) break;
+                    //COROUTINE STUFF
+
                     //Find the closest exit to destExit
-                    Transform closestExit = roomExits[0];
+                    Transform closestExit = startRoomExits[0];
                     shortestDistance = Vector3.Distance(closestExit.position, destExit.position);
-                    foreach(Transform exit in roomExits)
+                    foreach(Transform exit in startRoomExits)
                     {
                         if(!exit.gameObject.activeSelf) continue;
 
                         float distance = Vector3.Distance(exit.position, destExit.position);
-                        if(distance < shortestDistance)
+                        if(!closestExit.gameObject.activeSelf || distance < shortestDistance) //ADD TO ALGORITHM
                         {
                             closestExit = exit;
                             shortestDistance = distance;
@@ -513,15 +505,15 @@ public class FloorGenerator : MonoBehaviour
                     //If all of the exits are already taken, give up
                     if(!closestExit.gameObject.activeSelf) 
                     {
-                        returnValue = false;
-                        yield break;
+                        Debug.Log("No Active Exits");
+                        break;
                     }
                     
-                    roomExits.Remove(closestExit);
+                    startRoomExits.Remove(closestExit);
 
                     //Keep picking hallway pieces until we find one that connects to destExit
                     List<GameObject> hallwayPrefabs = new List<GameObject>(hallwayRoomPrefabs);
-                    do
+                    while(hallwayPrefabs.Count > 0)
                     {
                         Debug.Log("Second Loop");
                         yield return null;
@@ -589,7 +581,7 @@ public class FloorGenerator : MonoBehaviour
 
                             //Find the closest exit from the hallway to destRoom (can't be hallwayExit since that's connected to startRoom)
                             Transform hallwayDestExit = hallwayExits[0];
-                            if(hallwayDestExit == hallwayExit || !hallwayDestExit.gameObject.activeSelf)
+                            if(hallwayDestExit == hallwayExit)
                                 hallwayDestExit = hallwayExits[1];
 
                             float hallwayDistance = Vector3.Distance(hallwayDestExit.position, destRoom.transform.position);
@@ -599,7 +591,7 @@ public class FloorGenerator : MonoBehaviour
                                 if(otherExit == hallwayDestExit || !otherExit.gameObject.activeSelf) continue;
 
                                 float distance = Vector3.Distance(otherExit.position, destRoom.transform.position);
-                                if(distance < hallwayDistance)
+                                if(!hallwayDestExit.gameObject.activeSelf || distance < hallwayDistance) //ADD TO ALGORITHM
                                 {
                                     hallwayDestExit = otherExit;
                                     hallwayDistance = distance;
@@ -612,12 +604,14 @@ public class FloorGenerator : MonoBehaviour
                                 continue;
                             }
 
-                            Debug.Log("Previous hallwayDistance: " + hallwayDistance);
-                            Debug.Log("Previous destExit: " + destExit);
-
                             //ADD ALL THIS CODE TO ALGORITHM
                             //Re-evaluate the exit that is closest to the hallwayDestExit
                             float newShortestDistance = Vector3.Distance(destExit.position, hallwayDestExit.position);
+                            Transform newDestExit = destExit;
+
+                            Debug.Log("Previous hallwayDistance: " + newShortestDistance);
+                            Debug.Log("Previous destExit: " + newDestExit);
+
                             foreach(Transform exit in destRoomExits)
                             {
                                 if(!exit.gameObject.activeSelf) continue;
@@ -625,16 +619,20 @@ public class FloorGenerator : MonoBehaviour
                                 float distance = Vector3.Distance(exit.position, hallwayDestExit.position);
                                 if(distance < newShortestDistance)
                                 {
-                                    destExit = exit;
+                                    newDestExit = exit;
                                     newShortestDistance = distance;
                                 }
                             }
 
-                            hallwayDistance = Vector3.Distance(hallwayDestExit.position, destExit.position);
-                            //ADD ALL THIS CODE TO ALGORITHM
+                            Debug.Log("New hallwayDistance: " + newShortestDistance);
+                            Debug.Log("New destExit: " + newDestExit);
 
-                            Debug.Log("New hallwayDistance: " + hallwayDistance);
-                            Debug.Log("New destExit: " + destExit);
+                            if(newShortestDistance <= 0.1f)
+                            {
+                                destExit = newDestExit;
+                                hallwayDistance = Vector3.Distance(hallwayDestExit.position, destExit.position);
+                            }
+                            //ADD ALL THIS CODE TO ALGORITHM
 
                             //If the distance is negligible we finally created a working hallway
                             if(hallwayDistance < 0.1f)
@@ -687,11 +685,7 @@ public class FloorGenerator : MonoBehaviour
                             Destroy(hallwayPiece);
                         }
                     }
-                    while(!successfulHallway && hallwayPrefabs.Count > 0);
-
-                    //THERE WAS CODE HERE THAT NEEDS TO BE REMOVED
                 }
-                while(!successfulHallway && roomExits.Count > 0);
 
                 Debug.Log("Reached end of routine, successful hallway: " + successfulHallway);
                 yield return null;
@@ -960,5 +954,45 @@ public class FloorGenerator : MonoBehaviour
 
         if(dictionary.ContainsKey(value))
             dictionary[value].Remove(key);
+    }
+
+    private Transform FindClosestTransformToDestination<C>(C potentialStartPoints, Transform destination) where C : ICollection<Transform>
+    {
+        if(potentialStartPoints == null || potentialStartPoints.Count == 0 || destination == null) return null;
+
+        Transform closest = potentialStartPoints.ElementAt(0);
+        float distance = Vector3.Distance(closest.position, destination.position);
+        foreach(Transform t in potentialStartPoints)
+        {
+            float newDistance = Vector3.Distance(t.position, destination.position);
+            if(newDistance < distance)
+            {
+                closest = t;
+                distance = newDistance;
+            }
+        }
+        return closest;
+    }
+
+    private KeyValuePair<Transform, Transform> FindClosestTransformPair<C,D>(C potentialStartPoints, D potentialDestinations) where C : ICollection<Transform> where D : ICollection<Transform>
+    {
+        if(potentialStartPoints == null || potentialStartPoints.Count == 0 || potentialDestinations == null || potentialDestinations.Count == 0) 
+            return new KeyValuePair<Transform, Transform>(null, null);
+
+        Transform closestDestination = potentialDestinations.ElementAt(0);
+        Transform closestStart = potentialStartPoints.ElementAt(0);
+        float distance = Vector3.Distance(closestStart.position, closestDestination.position);
+        foreach(Transform tDest in potentialDestinations)
+        {
+            Transform tStart = FindClosestTransformToDestination(potentialStartPoints, tDest);
+            float newDistance = Vector3.Distance(tStart.position, tDest.position);
+            if(newDistance < distance)
+            {
+                closestDestination = tDest;
+                closestStart = tStart;
+                distance = newDistance;
+            }
+        }
+        return new KeyValuePair<Transform, Transform>(closestStart, closestDestination);
     }
 }
