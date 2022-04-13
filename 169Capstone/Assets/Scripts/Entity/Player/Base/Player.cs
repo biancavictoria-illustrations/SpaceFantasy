@@ -24,10 +24,6 @@ public class Player : MonoBehaviour
 
     [SerializeField] private SpeakerData speakerData;
 
-    // TEMP for testing purposes
-    public GameObject dropItemPrefab;
-    public EquipmentBaseData swordData;
-
     void Awake()
     {
         if( instance ){
@@ -58,13 +54,6 @@ public class Player : MonoBehaviour
         currentCha = stats.Charisma();
 
         StartCoroutine(DetectFall());
-
-        // TEMP drop the sword on start so the player has a working weapon (for testing purposes)
-        if(GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME){
-            GameObject itemObject = Instantiate(dropItemPrefab, transform.position, Quaternion.identity);
-            itemObject.GetComponent<GeneratedEquipment>().SetEquipmentBaseData( swordData, ItemRarity.Common );
-            itemObject.GetComponent<DropTrigger>().DropItemModelIn3DSpace();
-        }
 
         // If your first run, auto trigger starting dialogue
         if(GameManager.instance.currentRunNumber == 1){

@@ -62,6 +62,7 @@ public class GearSwapUI : MonoBehaviour
     {
         newItem.EquipGeneratedItem();
         CloseGearSwapUI();
+        AlertTextUI.instance.DisableAlert();
     }
 
     public void SetSwapUIInteractable(bool set)
