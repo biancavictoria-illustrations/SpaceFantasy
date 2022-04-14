@@ -24,6 +24,7 @@ public class ItemPanelGearShop : ItemPanelShopUI
     {
         item = _item;
         EquipmentBaseData data = item.data.equipmentBaseData;
+        rarity = item.data.rarity;
 
         SetBaseShopItemValues(data.BaseCost(), data.ItemName(), data.ShortDescription());
 
@@ -37,7 +38,7 @@ public class ItemPanelGearShop : ItemPanelShopUI
     {
         shopUI.activeCompareItem = this;
         hoverAlerts.EnableAlert(panelPos, false);
-        shopUI.ToggleShopCompareOn();
+        shopUI.ToggleShopCompareOn(PlayerInventory.instance.tempCurrency - currentCostValue > 0);
     }
 
     public override void PurchaseItem()
@@ -46,7 +47,6 @@ public class ItemPanelGearShop : ItemPanelShopUI
         base.PurchaseItem();
 
         if(PlayerInventory.instance.tempCurrency - currentCostValue < 0){
-            // TODO: Make the purchase button not interactable and instead it says something like "not enough electrum!"
             return;
         }
         
@@ -55,25 +55,5 @@ public class ItemPanelGearShop : ItemPanelShopUI
 
         descriptionText.text = "<b><color=red>SOLD";    // TODO: Make this permanent (it's not at the moment)
         itemCardButton.interactable = false;
-    }
-
-    protected override void CalculateCurrentCost()
-    {
-        float cost = baseCost;      // Set base cost
-
-        // Set the rarity multiplier (rarity multiplier base to a power of the ItemRarity value)
-        float rarityMultiplier = Mathf.Pow(rarityMultiplierBase, (int)item.data.rarity);
-
-        // Set coeff to (time factor * time in min) * stage factor
-        int playerFactor = 1;
-        float timeInMin = 0;        // TODO: Set to time in min
-        float stageFactor = 1f;     // TODO: Set to stage factor
-        float coeff = (playerFactor + timeInMin * timeFactor) * stageFactor;
-
-        // Raise coeff to the power of the costPowerValue
-        coeff = Mathf.Pow(coeff,costPowerValue);
-
-        cost = cost * coeff * rarityMultiplier;     // Multiply base cost by coeff and rarity multiplier
-        currentCostValue = (int)Mathf.Floor(cost);  // Get int using Floor to round
     }
 }

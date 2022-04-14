@@ -27,6 +27,12 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
 
     [SerializeField] protected ItemPanelPos panelPos;   // Set in the inspector
     [HideInInspector] public ShopHoverAlerts hoverAlerts;
+
+    private const float costPowerValue = 1.25f;
+    private const float timeFactor = 0.0606f;
+    private const float rarityMultiplierBase = 1.2f;
+
+    public ItemRarity rarity {get; protected set;}
     
     protected void SetBaseShopItemValues(int iBaseCost, string iName, string iDesc)
     {
@@ -46,16 +52,39 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
         PlayerInventory.instance.SetTempCurrency(PlayerInventory.instance.tempCurrency - currentCostValue);
     }
 
-    protected virtual void CalculateCurrentCost()
+    public void CalculateCurrentCost()
     {
-        // Implemented uniquely in children
+        // int charismaStat = Player.instance.stats.Charisma();    // TODO: Factor in CHA stat to price calculation
+
+        float cost = baseCost;      // Set base cost
+
+        // Set the rarity multiplier (rarity multiplier base to a power of the ItemRarity value)
+        float rarityMultiplier = Mathf.Pow(rarityMultiplierBase, (int)rarity);
+
+        // Set coeff to (time factor * time in min) * stage factor
+        int playerFactor = 1;
+        float timeInMin = GameManager.instance.gameTimer.minutes;
+        float stageFactor = 1f;     // TODO: Set to stage factor
+        float coeff = (playerFactor + timeInMin * timeFactor) * stageFactor;
+
+        // Raise coeff to the power of the costPowerValue
+        coeff = Mathf.Pow(coeff,costPowerValue);
+
+        cost = cost * coeff * rarityMultiplier;     // Multiply base cost by coeff and rarity multiplier
+        currentCostValue = (int)Mathf.Floor(cost);       // Get int using Floor to round
     }
 
     // Updates both cost value and UI
     public void UpdateCurrentCost()
     {
         CalculateCurrentCost();
-        costText.text = "" + currentCostValue;
+
+        if(PlayerInventory.instance.tempCurrency - currentCostValue > 0){
+            costText.text = "" + currentCostValue;
+        }
+        else{
+            costText.text = "<color=red>" + currentCostValue + "</color>";
+        }
     }
 
     public void SetHoverAlertsActive(bool set)
