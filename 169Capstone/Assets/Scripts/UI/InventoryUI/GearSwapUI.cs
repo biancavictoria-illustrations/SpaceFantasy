@@ -10,7 +10,7 @@ public class GearSwapUI : MonoBehaviour
     public Button keepCurrentItemButton;
 
     private GeneratedEquipment newItem;
-    [SerializeField] private InventoryUIItemPanel newItemPanel;
+    [SerializeField] public InventoryUIItemPanel newItemPanel;
 
     public void OnGearSwapUIOpen(GeneratedEquipment item)
     {
@@ -62,6 +62,7 @@ public class GearSwapUI : MonoBehaviour
     {
         newItem.EquipGeneratedItem();
         CloseGearSwapUI();
+        AlertTextUI.instance.DisableAlert();
     }
 
     public void SetSwapUIInteractable(bool set)

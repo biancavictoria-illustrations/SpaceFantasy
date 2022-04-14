@@ -108,12 +108,15 @@ public class AlertTextUI : MonoBehaviour
     public void UpdateAlertText()
     {
         interactControlIcon = GetIconForAction( ControlKeys.Interact );
+        interactControlString = "";
 
         // If it's null at this point, get the string for the control instead
         if(!interactControlIcon){
             interactControlString = GetActionString(interactAction);
             controlButtonText.text = interactControlString;
-        }  
+        }
+
+        SetAlertText(alertTextIsActive, interactControlIcon, interactControlString, alertText.text);
     }
 
     private string GetActionString(InputActionReference action)
@@ -121,11 +124,7 @@ public class AlertTextUI : MonoBehaviour
         int bindingIndex = action.action.GetBindingIndexForControl(action.action.controls[0]);
         return InputControlPath.ToHumanReadableString(action.action.bindings[bindingIndex].effectivePath,InputControlPath.HumanReadableStringOptions.OmitDevice);
     }
-
-    /*
-        TODO: Make this update if you're CURRENTLY in the trigger's range
-        - it was doing that before but now that it's icons instead of text it's not
-    */
+    
     private Sprite GetIconForAction(ControlKeys key)
     {
         if(InputManager.instance.latestInputIsController){

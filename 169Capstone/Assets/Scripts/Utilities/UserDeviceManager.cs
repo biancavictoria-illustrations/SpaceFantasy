@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public enum InputDevice{
     KeyboardMouse,
@@ -18,18 +19,28 @@ public enum InputDevice{
 
 public class UserDeviceManager : MonoBehaviour
 {
-    UnityEngine.InputSystem.PlayerInput _controls;
+    PlayerInput _controls;
     public static InputDevice currentControlDevice;
+    private string currentControlScheme;
     
     void Start()
     {
-        _controls = GetComponent<UnityEngine.InputSystem.PlayerInput>();
-        _controls.onControlsChanged += OnControlsChanged;
+        _controls = FindObjectOfType<PlayerInput>();
+        OnControlSchemeChanged();
     }
-    
-    private void OnControlsChanged(UnityEngine.InputSystem.PlayerInput obj)
+
+    void Update()
     {
-        if (obj.currentControlScheme == "Gamepad"){
+        if (_controls.currentControlScheme != currentControlScheme)
+        {
+            OnControlSchemeChanged();
+            currentControlScheme = _controls.currentControlScheme;
+        }
+    }
+
+    private void OnControlSchemeChanged()
+    {
+        if (_controls.currentControlScheme == "Gamepad"){
             if (currentControlDevice != InputDevice.Gamepad){
                 currentControlDevice = InputDevice.Gamepad;
                 UpdateInputDeviceValues();

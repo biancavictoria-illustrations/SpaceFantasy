@@ -24,16 +24,16 @@ public class ItemPanelDoctor : ItemPanelShopUI
 
     private PlayerStats stats;
 
-    private int upgradeBaseCost;
-    private const float costPowerValue = 1.25f;
-    private const float timeFactor = 0.0606f;
-
+    void Start()
+    {
+        rarity = ItemRarity.Legendary;
+    }
 
     // Called JUST first time you visit this shop per run
     public void GenerateNewDoctorUpgradeValues(int _baseCost)
     {
         stats = FindObjectsOfType<PlayerStats>()[0];
-        upgradeBaseCost = _baseCost;
+        baseCost = _baseCost;
         GenerateNewPanelValues();
     }
 
@@ -67,7 +67,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
         GetCurrentStatValue();
 
         // === Set the Initial Values ===
-        SetBaseShopItemValues(upgradeBaseCost, upgradeName, GenerateDescription());
+        SetBaseShopItemValues(baseCost, upgradeName, GenerateDescription());
     }
 
     private string GenerateDescription()
@@ -148,7 +148,6 @@ public class ItemPanelDoctor : ItemPanelShopUI
         base.PurchaseItem();
 
         if(PlayerInventory.instance.tempCurrency - currentCostValue < 0){
-            // TODO: UI feedback about being too broke to buy the thing
             return;
         }
 
@@ -205,22 +204,5 @@ public class ItemPanelDoctor : ItemPanelShopUI
         GetCurrentStatValue();
         descriptionText.text = GenerateDescription();
         UpdateCurrentCost();    // Updates cost value as well as UI
-    }
-
-    // TODO: Update according to Salil's actual equation (might have...?)
-    protected override void CalculateCurrentCost()
-    {
-        float cost = upgradeBaseCost;      // Set base cost
-
-        // Set coeff to (time factor * time in min) * stage factor
-        int playerFactor = 1;
-        float timeInMin = GameManager.instance.gameTimer.minutes;
-        float stageFactor = 1f;     // TODO: Set to stage factor
-        float coeff = (playerFactor + timeInMin * timeFactor) * stageFactor;
-
-        // Raise coeff to the power of the costPowerValue
-        coeff = Mathf.Pow(coeff,costPowerValue);
-
-        currentCostValue = (int)Mathf.Floor(cost * coeff);       // Get int using Floor to round
     }
 }
