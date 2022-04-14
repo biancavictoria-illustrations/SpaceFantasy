@@ -23,15 +23,10 @@ public class UserDeviceManager : MonoBehaviour
     public static InputDevice currentControlDevice;
     private string currentControlScheme;
     
-    // void Start()
-    // {
-    //     UpdatePlayerController();
-    // }
-
     void Start()
     {
         _controls = FindObjectOfType<PlayerInput>();
-
+        OnControlSchemeChanged();
     }
 
     void Update()
@@ -42,17 +37,6 @@ public class UserDeviceManager : MonoBehaviour
             currentControlScheme = _controls.currentControlScheme;
         }
     }
-
-    // public void UpdatePlayerController()
-    // {
-    //     _controls = FindObjectOfType<PlayerInput>(); // GetComponent<PlayerInput>();        
-        // _controls.onControlsChanged += OnControlsChanged;
-    // }
-
-    // void OnDisable()
-    // {
-    //     _controls.onControlsChanged -= OnControlsChanged;
-    // }
 
     private void OnControlSchemeChanged()
     {
@@ -75,28 +59,6 @@ public class UserDeviceManager : MonoBehaviour
             }
         }
     }
-    
-    // private void OnControlsChanged(PlayerInput obj)
-    // {
-    //     if (obj.currentControlScheme == "Gamepad"){
-    //         if (currentControlDevice != InputDevice.Gamepad){
-    //             currentControlDevice = InputDevice.Gamepad;
-    //             UpdateInputDeviceValues();
-
-    //             // Send Event
-    //             // EventHandler.ExecuteEvent("DeviceChanged", currentControlDevice);
-    //         }
-    //     }
-    //     else{
-    //         if (currentControlDevice != InputDevice.KeyboardMouse){
-    //             currentControlDevice = InputDevice.KeyboardMouse;
-    //             UpdateInputDeviceValues();
-                
-    //             // Send Event
-    //             // EventHandler.ExecuteEvent("DeviceChanged", currentControlDevice);
-    //         }
-    //     }
-    // }
 
     private void UpdateInputDeviceValues()
     {
