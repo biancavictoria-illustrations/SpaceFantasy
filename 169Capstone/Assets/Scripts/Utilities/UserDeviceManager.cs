@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public enum InputDevice{
     KeyboardMouse,
@@ -18,30 +19,44 @@ public enum InputDevice{
 
 public class UserDeviceManager : MonoBehaviour
 {
-    UnityEngine.InputSystem.PlayerInput _controls;
+    PlayerInput _controls;
     public static InputDevice currentControlDevice;
+    private string currentControlScheme;
     
+    // void Start()
+    // {
+    //     UpdatePlayerController();
+    // }
+
     void Start()
     {
-        UpdatePlayerController();
+        _controls = FindObjectOfType<PlayerInput>();
+
     }
 
-    public void UpdatePlayerController()
+    void Update()
     {
-        _controls = FindObjectOfType<UnityEngine.InputSystem.PlayerInput>(); // GetComponent<UnityEngine.InputSystem.PlayerInput>();
-        _controls.onControlsChanged += OnControlsChanged;
+        if (_controls.currentControlScheme != currentControlScheme)
+        {
+            OnControlSchemeChanged();
+            currentControlScheme = _controls.currentControlScheme;
+        }
     }
 
-    void OnDisable()
-    {
-        _controls.onControlsChanged -= OnControlsChanged;
-    }
-    
-    private void OnControlsChanged(UnityEngine.InputSystem.PlayerInput obj)
-    {
-        Debug.LogWarning("on controls changed");
+    // public void UpdatePlayerController()
+    // {
+    //     _controls = FindObjectOfType<PlayerInput>(); // GetComponent<PlayerInput>();        
+        // _controls.onControlsChanged += OnControlsChanged;
+    // }
 
-        if (obj.currentControlScheme == "Gamepad"){
+    // void OnDisable()
+    // {
+    //     _controls.onControlsChanged -= OnControlsChanged;
+    // }
+
+    private void OnControlSchemeChanged()
+    {
+        if (_controls.currentControlScheme == "Gamepad"){
             if (currentControlDevice != InputDevice.Gamepad){
                 currentControlDevice = InputDevice.Gamepad;
                 UpdateInputDeviceValues();
@@ -60,6 +75,28 @@ public class UserDeviceManager : MonoBehaviour
             }
         }
     }
+    
+    // private void OnControlsChanged(PlayerInput obj)
+    // {
+    //     if (obj.currentControlScheme == "Gamepad"){
+    //         if (currentControlDevice != InputDevice.Gamepad){
+    //             currentControlDevice = InputDevice.Gamepad;
+    //             UpdateInputDeviceValues();
+
+    //             // Send Event
+    //             // EventHandler.ExecuteEvent("DeviceChanged", currentControlDevice);
+    //         }
+    //     }
+    //     else{
+    //         if (currentControlDevice != InputDevice.KeyboardMouse){
+    //             currentControlDevice = InputDevice.KeyboardMouse;
+    //             UpdateInputDeviceValues();
+                
+    //             // Send Event
+    //             // EventHandler.ExecuteEvent("DeviceChanged", currentControlDevice);
+    //         }
+    //     }
+    // }
 
     private void UpdateInputDeviceValues()
     {
