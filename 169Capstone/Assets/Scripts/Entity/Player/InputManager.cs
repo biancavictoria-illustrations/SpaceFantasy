@@ -37,8 +37,6 @@ public class InputManager : MonoBehaviour
         else{
             instance = this;
         }
-        // DontDestroyOnLoad(this.gameObject);
-
         latestInputIsController = false;
         currentDevice = InputDevice.KeyboardMouse;
     }

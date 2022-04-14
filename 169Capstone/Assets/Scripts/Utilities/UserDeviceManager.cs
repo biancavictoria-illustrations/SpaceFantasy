@@ -23,12 +23,24 @@ public class UserDeviceManager : MonoBehaviour
     
     void Start()
     {
-        _controls = GetComponent<UnityEngine.InputSystem.PlayerInput>();
+        UpdatePlayerController();
+    }
+
+    public void UpdatePlayerController()
+    {
+        _controls = FindObjectOfType<UnityEngine.InputSystem.PlayerInput>(); // GetComponent<UnityEngine.InputSystem.PlayerInput>();
         _controls.onControlsChanged += OnControlsChanged;
+    }
+
+    void OnDisable()
+    {
+        _controls.onControlsChanged -= OnControlsChanged;
     }
     
     private void OnControlsChanged(UnityEngine.InputSystem.PlayerInput obj)
     {
+        Debug.LogWarning("on controls changed");
+
         if (obj.currentControlScheme == "Gamepad"){
             if (currentControlDevice != InputDevice.Gamepad){
                 currentControlDevice = InputDevice.Gamepad;
