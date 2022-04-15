@@ -11,7 +11,6 @@ public class EnemyDropGenerator : ScriptableObject
 
     [SerializeField] private GameObject dropItemPrefab;
 
-
     // Called by the enemey health script when the enemy dies
     public void GetDrop(int tier, Transform pos)
     {

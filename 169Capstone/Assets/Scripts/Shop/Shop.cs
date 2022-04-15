@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Shop : MonoBehaviour
@@ -8,7 +9,8 @@ public class Shop : MonoBehaviour
     private List<RarityAssignmentTier> inventoryList;
     private HashSet<int> indexes;
 
-    public GameObject shopItemPrefab;
+    [SerializeField] private LineTable lines;
+    [SerializeField] private GameObject shopItemPrefab;
 
     public List<GeneratedEquipment> inventory {get; private set;}
 
@@ -39,7 +41,8 @@ public class Shop : MonoBehaviour
                 inventory.Add( GenerateItem((ItemRarity)tier) );
             }
             else if(inventoryList[i] == RarityAssignmentTier.X_1){
-                inventory.Add( GenerateItem((ItemRarity)(tier+1)) );
+                // inventory.Add( GenerateItem((ItemRarity)(tier+1)) );
+                inventory.Add( GenerateItem((ItemRarity)tier) );    // TEMP: Only generates COMMON ITEMS (remove once data for other rarities is added)
             }
         }
     }
@@ -52,19 +55,17 @@ public class Shop : MonoBehaviour
         GeneratedEquipment generatedEquipment = itemObject.GetComponent<GeneratedEquipment>();
         generatedEquipment.SetEquipmentBaseData( PickItemFromPool(), rarity );
 
-        // Debug.Log("Setting shop item to Rarity/ItemID: " + rarity + "/" + generatedEquipment.data.equipmentBaseData.ItemID());
-
-        // TODO: Generate the item (see how it's done in the Drop script); for now, item will have default values besides it's EquipmentData and rarity
-
-        /*
-            Generating Drop Items:
-            ======================
-            int i = lines.ItemType().IndexOf(item.ItemSlot());
+        // TEMP: Only generates WEAPONS (remove once other gear is implemented)
+        if( generatedEquipment.data.equipmentBaseData.ItemSlot() == InventoryItemSlot.Weapon ){
+            int i = lines.ItemType().IndexOf(generatedEquipment.data.equipmentBaseData.ItemSlot());
             ItemLine primaryLine = lines.PrimaryWeaponLine()[i];
-            float primaryLineTierScaling = 0.1f * tier;
+            float primaryLineTierScaling = 0.1f * (int)rarity;
 
             i = lines.ItemRarityTier().IndexOf(rarity);
 
+            // Generate a random number
+            System.Random r = new System.Random();
+            float chance = (float)r.NextDouble();
             chance = (float)r.NextDouble();
             
             lines.Setup();
@@ -72,16 +73,25 @@ public class Shop : MonoBehaviour
             int secondaryLineNum = lines.SecondaryLineNumberRates()[i].IndexOf(lines.SecondaryLineNumberRates()[i].First(x => chance <= x));
             chance = (float)r.NextDouble();
             int secondaryLineEnhancementsNum = lines.LineEnhancementRates()[i].IndexOf(lines.LineEnhancementRates()[i].First(x => chance <= x));    // Is this used anywhere?
-            secondaryLines = GenerateSecondaryLines(secondaryLineNum);
+            List<ItemLine> secondaryLines = GenerateSecondaryLines(secondaryLineNum);
 
             // Set the data in the generatedEquipment
-            generatedEquipment.SetModifiers(primaryLine, primaryLineTierScaling, secondaryLines, tier);
-
-            // Drop the item now that the data is generated!
-            generatedEquipment.Drop();
-        */
+            generatedEquipment.SetModifiers(primaryLine, primaryLineTierScaling, secondaryLines, (int)rarity);
+        }       
 
         return generatedEquipment;
+    }
+
+    private List<ItemLine> GenerateSecondaryLines(int size)
+    {
+        List<ItemLine> secondaryLines = new List<ItemLine>();
+        System.Random r = new System.Random();
+
+        for(int i = 0; i < size; i++){
+            secondaryLines.Add(lines.LinePool()[r.Next(0, lines.LinePool().Count)]);
+        }
+
+        return secondaryLines;
     }
 
     private EquipmentBaseData PickItemFromPool()
