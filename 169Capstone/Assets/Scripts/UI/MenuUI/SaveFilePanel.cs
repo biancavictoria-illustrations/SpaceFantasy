@@ -9,6 +9,8 @@ public class SaveFilePanel : MonoBehaviour
     [SerializeField] private int slotNumber;
     [HideInInspector] public bool slotIsFull = false;
 
+    private bool markedToDelete = false;
+
     [SerializeField] private TMP_Text emptySlotText;
 
     [SerializeField] private TMP_Text escapeAttempts;
@@ -22,14 +24,23 @@ public class SaveFilePanel : MonoBehaviour
         slotIsFull = GameManager.instance.SaveFileIsFull(slotNumber);
 
         if(slotIsFull){
-            escapeAttempts.text = GameManager.instance.GetNumCompletedRunsInSaveFile(slotNumber) + "";
-            totalStarShards.text = GameManager.instance.GetStarShardsCollectedInSaveFile(slotNumber) + "";
-            timePlayed.text = GameManager.instance.gameTimer.ConvertTimeFloatToReadableString(GameManager.instance.GetTotalTimePlayedInSaveFile(slotNumber));
+            markedToDelete = PlayerPrefs.GetInt(GameManager.instance.GetPlayerPrefsMarkedToDeleteFileKey(slotNumber)) == 1;
+            int numCompletedRuns = GameManager.instance.GetNumCompletedRunsInSaveFile(slotNumber);
+
+            // Make sure there really is a save file here (if no completed runs, treat it like a new save file slot) AND that we want to keep it
+            if(numCompletedRuns > 0 && !markedToDelete){
+                escapeAttempts.text = numCompletedRuns + "";
+                totalStarShards.text = GameManager.instance.GetStarShardsCollectedInSaveFile(slotNumber) + "";
+                timePlayed.text = GameManager.instance.gameTimer.ConvertTimeFloatToReadableString(GameManager.instance.GetTotalTimePlayedInSaveFile(slotNumber));
+                return;
+            }
+            else{
+                slotIsFull = false;
+            }
         }
-        else{
-            ToggleAllFullSlotElements(false);
-            ToggleEmptyText(true);
-        }
+        // Else
+        ToggleAllFullSlotElements(false);
+        ToggleEmptyText(true);
     }
 
     public void ToggleEmptyText(bool set)
@@ -62,6 +73,8 @@ public class SaveFilePanel : MonoBehaviour
     public void ClearSaveFile()
     {
         slotIsFull = false;
+        GameManager.instance.MarkSlotToDelete(true, slotNumber);
+
         ToggleAllFullSlotElements(false);
         ToggleEmptyText(true);
     }

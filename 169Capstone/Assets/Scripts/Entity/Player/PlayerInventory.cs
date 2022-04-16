@@ -172,19 +172,19 @@ public class PlayerInventory : MonoBehaviour
         // Delete each item object and clear the inventory slot
         // (Can't loop because can't delete the things while iterating, stuff gets mad)
         if(gear[InventoryItemSlot.Weapon]){
-            Destroy(gear[InventoryItemSlot.Weapon]);
+            Destroy(gear[InventoryItemSlot.Weapon].gameObject);
             ClearItemSlot(InventoryItemSlot.Weapon);
         }
         if(gear[InventoryItemSlot.Accessory]){
-            Destroy(gear[InventoryItemSlot.Accessory]);
+            Destroy(gear[InventoryItemSlot.Accessory].gameObject);
             ClearItemSlot(InventoryItemSlot.Accessory);
         }
         if(gear[InventoryItemSlot.Legs]){
-            Destroy(gear[InventoryItemSlot.Legs]);
+            Destroy(gear[InventoryItemSlot.Legs].gameObject);
             ClearItemSlot(InventoryItemSlot.Legs);
         }
         if(gear[InventoryItemSlot.Helmet]){
-            Destroy(gear[InventoryItemSlot.Helmet]);
+            Destroy(gear[InventoryItemSlot.Helmet].gameObject);
             ClearItemSlot(InventoryItemSlot.Helmet);
         }
 

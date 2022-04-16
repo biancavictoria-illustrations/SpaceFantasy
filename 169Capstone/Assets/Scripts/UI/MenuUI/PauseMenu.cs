@@ -107,6 +107,8 @@ public class PauseMenu : MonoBehaviour
 
     public void LoadMenu()
     {
+        PlayerInventory.instance.ClearRunInventory();
+        
         GameManager.instance.pauseMenuOpen = false;
         GameIsPaused = false;
 
