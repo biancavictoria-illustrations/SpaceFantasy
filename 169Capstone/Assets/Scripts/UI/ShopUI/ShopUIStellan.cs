@@ -25,6 +25,7 @@ public enum PermanentUpgradeType{
     ExtensiveTraining,
     Natural20,
     PrecisionDrive,
+    StartingPotions,
 
     TimeLichKillerThing,
 

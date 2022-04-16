@@ -385,6 +385,13 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
                 totalUpgradeLevels = PermanentUpgradeManager.maxPrecisionDriveLevels;
                 UpdateBaseDescriptionValues();
                 return;
+            case PermanentUpgradeType.StartingPotions:
+                upgradeName = "[POTIONS]";  // TODO: Update these values!
+                upgradeBaseCost = 10;
+                costIncreasePerLevel = 5;
+                totalUpgradeLevels = PermanentUpgradeManager.maxStartingHealthPotionQuantity;
+                baseDescription = "Increase your starting health potion quantity by 1.";
+                return;
             case PermanentUpgradeType.TimeLichKillerThing:
                 upgradeName = "Deus Ex Machina";
                 upgradeBaseCost = 100;

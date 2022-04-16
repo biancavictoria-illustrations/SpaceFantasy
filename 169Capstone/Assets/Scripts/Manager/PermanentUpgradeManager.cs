@@ -7,7 +7,9 @@ public class PermanentUpgradeManager : MonoBehaviour
     public static PermanentUpgradeManager instance;
 
     [HideInInspector] public int totalPermanentCurrencySpent;
+
     [HideInInspector] public int startingHealthPotionQuantity;
+    public const int maxStartingHealthPotionQuantity = 3;
 
     // Skills
     [HideInInspector] public int levelsInArmorPlating;
@@ -94,6 +96,9 @@ public class PermanentUpgradeManager : MonoBehaviour
             case PermanentUpgradeType.PrecisionDrive:
                 levelsInPrecisionDrive = level;
                 return;
+            case PermanentUpgradeType.StartingPotions:
+                startingHealthPotionQuantity = level;
+                return;
             case PermanentUpgradeType.TimeLichKillerThing:
                 levelsInTimeLichKillerThing = level;
                 return;
@@ -112,6 +117,8 @@ public class PermanentUpgradeManager : MonoBehaviour
                 return levelsInNatural20;
             case PermanentUpgradeType.PrecisionDrive:
                 return levelsInPrecisionDrive;
+            case PermanentUpgradeType.StartingPotions:
+                return startingHealthPotionQuantity;
             case PermanentUpgradeType.TimeLichKillerThing:
                 return levelsInTimeLichKillerThing;
         }
@@ -130,6 +137,8 @@ public class PermanentUpgradeManager : MonoBehaviour
                 return levelsInNatural20 * natural20BonusPerLevel;
             case PermanentUpgradeType.PrecisionDrive:
                 return precisionDriveBonusPerLevel[levelsInPrecisionDrive];
+            case PermanentUpgradeType.StartingPotions:
+                return startingHealthPotionQuantity;
             case PermanentUpgradeType.TimeLichKillerThing:
                 return levelsInTimeLichKillerThing;
         }
