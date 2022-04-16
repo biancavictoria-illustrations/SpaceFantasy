@@ -8,15 +8,18 @@ using UnityEngine;
 */
 public struct SpawnedEquipmentData
 {
-    public ItemLine primaryLine;
+    public StatType primaryLine;
     public float primaryModifier;
+    
     public float criticalChance;
     public float criticalDamage;
     public float attackSpeed;
     public int defense;
     public float movementSpeed;
-    public float effectChance;
-    public float effectResist;
+    public float stunChance;
+    public float burnChance;
+    public float slowChance;
+    public float statusResist;
     public float dodgeChance;
     public int hp;
 
@@ -24,6 +27,66 @@ public struct SpawnedEquipmentData
 
     public ItemRarity rarity;
     public int enhancementCount;
+
+    public float GetValueFromStatType(StatType type)
+    {
+        switch(type){
+            case StatType.CritChance:
+                return criticalChance;
+            case StatType.CritDamage:
+                return criticalDamage;
+            case StatType.AttackSpeed:
+                return attackSpeed;
+            case StatType.Defense:
+                return defense;
+            case StatType.MoveSpeed:
+                return movementSpeed;
+            case StatType.StunChance:
+                return stunChance;
+            case StatType.BurnChance:
+                return burnChance;
+            case StatType.SlowChance:
+                return slowChance;
+            case StatType.StatusResist:
+                return statusResist;
+            case StatType.DodgeChance:
+                return dodgeChance;
+            case StatType.HitPoints:
+                return hp;
+        }
+        Debug.LogError("No value found for stat type: " + type);
+        return -1;
+    }
+
+    public string GetPlayerFacingStatName(StatType type)
+    {
+        switch(type){
+            case StatType.CritChance:
+                return "Crit Chance";
+            case StatType.CritDamage:
+                return "Crit Damage";
+            case StatType.AttackSpeed:
+                return "Attack Speed";
+            case StatType.Defense:
+                return "Defense";
+            case StatType.MoveSpeed:
+                return "Movement Speed";
+            case StatType.StunChance:
+                return "Stun Chance";
+            case StatType.BurnChance:
+                return "Burn Chance";
+            case StatType.SlowChance:
+                return "Slow Chance";
+            case StatType.StatusResist:
+                return "Status Resist Chance";
+            case StatType.DodgeChance:
+                return "Dodge Chance";
+            case StatType.HitPoints:
+                return "Hit Points";        // TODO: What do we want to call this???
+        }
+        Debug.LogError("No string found for stat type: " + type);
+        return "ERROR";
+    }
 }
 
 public class GeneratedEquipment : MonoBehaviour
@@ -33,7 +96,7 @@ public class GeneratedEquipment : MonoBehaviour
     void Start()
     {
         // Set default values
-        data.primaryLine = ItemLine.enumSize;
+        data.primaryLine = StatType.enumSize;
         data.primaryModifier = 0f;
         data.criticalChance = 0f;
         data.criticalChance = 0f;
@@ -41,8 +104,10 @@ public class GeneratedEquipment : MonoBehaviour
         data.attackSpeed = 0f;
         data.defense = 0;
         data.movementSpeed = 0f;
-        data.effectChance = 0f;
-        data.effectResist = 0f;
+        data.stunChance = 0f;
+        data.burnChance = 0f;
+        data.slowChance = 0f;
+        data.statusResist = 0f;
         data.dodgeChance = 0f;
         data.hp = 0;
     }
@@ -58,40 +123,46 @@ public class GeneratedEquipment : MonoBehaviour
         data.rarity = _rarity;
     }
 
-    public void SetModifiers(ItemLine _primaryLine, float _primaryModifier, List<ItemLine> secondaryLines, int tier)
+    public void SetModifiers(StatType _primaryLine, float _primaryModifier, List<StatType> secondaryLines, int tier)
     {
         data.primaryLine = _primaryLine;
         data.primaryModifier = _primaryModifier;
 
-        foreach (ItemLine line in secondaryLines)
+        foreach (StatType line in secondaryLines)
         {
             switch (line)
             {
-                case ItemLine.CritChance:
+                case StatType.CritChance:
                     data.criticalChance += 0.02f;
                     break;
-                case ItemLine.CritDamage:
+                case StatType.CritDamage:
                     data.criticalDamage += 0.05f;
                     break;
-                case ItemLine.AttackSpeed:
+                case StatType.AttackSpeed:
                     data.attackSpeed += 0.02f;
                     break;
-                case ItemLine.Defense:
+                case StatType.Defense:
                     data.defense++;
                     break;
-                case ItemLine.MovementSpeed:
+                case StatType.MoveSpeed:
                     data.movementSpeed += 0.1f;
                     break;
-                case ItemLine.EffectChance:
-                    data.effectChance += 0.03f;
+                case StatType.StunChance:
+                    data.stunChance += 0.03f;       // TODO: How much should this be?
                     break;
-                case ItemLine.EffectResist:
-                    data.effectResist += 0.02f;
+                case StatType.BurnChance:
+                    data.burnChance += 0.03f;       // TODO: How much should this be?
                     break;
-                case ItemLine.DodgeChance:
+                case StatType.SlowChance:
+                    data.slowChance += 0.03f;       // TODO: How much should this be?
+                    break;
+                case StatType.StatusResist:
+                    data.statusResist += 0.02f;
+                    break;
+                case StatType.DodgeChance:
                     data.dodgeChance += 0.02f;
                     break;
-                case ItemLine.HPIncrease:
+                case StatType.HitPoints:
                     data.hp += (2 * tier);
                     break;
             }

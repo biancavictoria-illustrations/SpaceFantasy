@@ -2,6 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum StatType
+{
+    HitPoints,
+    AttackSpeed,
+    MoveSpeed,
+    Defense,
+    DodgeChance,
+    CritChance,
+    CritDamage,
+    StunChance,
+    BurnChance,
+    SlowChance,
+    StatusResist,
+
+    enumSize
+}
+
 public abstract class EntityStats : MonoBehaviour
 {
     protected virtual void Awake()
@@ -10,23 +27,7 @@ public abstract class EntityStats : MonoBehaviour
     }
 
     #region Bonus Management
-        public enum StatType
-        {
-            HitPoints,
-            AttackSpeed,
-            MoveSpeed,
-            Defense,
-            DodgeChance,
-            CritChance,
-            CritDamage,
-            StunChance,
-            BurnChance,
-            SlowChance,
-            StatusResist,
-
-            enumSize
-        }
-
+        
         public enum BonusType
         {
             flat,
@@ -301,4 +302,63 @@ public abstract class EntityStats : MonoBehaviour
         }
     #endregion
 
+    public float GetCurrentValueFromStatType(StatType type)
+    {
+        switch(type){
+            case StatType.CritChance:
+                return getCritChance();
+            case StatType.CritDamage:
+                return getCritDamage();
+            case StatType.AttackSpeed:
+                return getAttackSpeed();
+            case StatType.Defense:
+                return getDefense();
+            case StatType.MoveSpeed:
+                return getMoveSpeed();
+            case StatType.StunChance:
+                return getStunChance();
+            case StatType.BurnChance:
+                return getBurnChance();
+            case StatType.SlowChance:
+                return getSlowChance();
+            case StatType.StatusResist:
+                return getStatusResistChance();
+            case StatType.DodgeChance:
+                return getDodgeChance();
+            case StatType.HitPoints:
+                return getMaxHitPoints();
+        }
+        Debug.LogError("No current value found for stat type: " + type);
+        return -1;
+    }
+
+    public float GetBaseValueFromStatType(StatType type)
+    {
+        switch(type){
+            case StatType.CritChance:
+                return critChanceBase;
+            case StatType.CritDamage:
+                return critDamageBase;
+            case StatType.AttackSpeed:
+                return attackSpeedBase;
+            case StatType.Defense:
+                return defenseBase;
+            case StatType.MoveSpeed:
+                return moveSpeedBase;
+            case StatType.StunChance:
+                return stunChanceBase;
+            case StatType.BurnChance:
+                return burnChanceBase;
+            case StatType.SlowChance:
+                return slowChanceBase;
+            case StatType.StatusResist:
+                return statusResistChanceBase;
+            case StatType.DodgeChance:
+                return dodgeChanceBase;
+            case StatType.HitPoints:
+                return maxHitPointsBase;
+        }
+        Debug.LogError("No base value found for stat type: " + type);
+        return -1;
+    }
 }

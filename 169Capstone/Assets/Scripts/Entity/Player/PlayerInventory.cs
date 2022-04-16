@@ -89,6 +89,29 @@ public class PlayerInventory : MonoBehaviour
         
         // Update UI accordingly
         InGameUIManager.instance.SetGearItemUI(slot, item.data.equipmentBaseData.Icon());
+
+        // Add your new passive upgrades
+        SetStatBonusesFromItem(item.data);
+    }
+
+    private void SetStatBonusesFromItem(SpawnedEquipmentData itemData)
+    {
+        for(int i = 0; i < (int)StatType.enumSize; i++){
+            float bonusValue = itemData.GetValueFromStatType((StatType)i);
+            if(bonusValue != 0){
+                Player.instance.stats.SetBonusForStat(this, (StatType)i, EntityStats.BonusType.flat, bonusValue);
+            }
+        }
+    }
+
+    private void RemoveStatBonusesFromItem(SpawnedEquipmentData itemData)
+    {
+        for(int i = 0; i < (int)StatType.enumSize; i++){
+            float bonusValue = itemData.GetValueFromStatType((StatType)i);
+            if(bonusValue != 0){
+                Player.instance.stats.SetBonusForStat(this, (StatType)i, EntityStats.BonusType.flat, 0);
+            }
+        }
     }
 
     public void UnequipItemSlot(InventoryItemSlot slot)
@@ -97,6 +120,9 @@ public class PlayerInventory : MonoBehaviour
         if( !gear[slot] ){
             return;
         }
+
+        // Remove your passive upgrades from that item
+        RemoveStatBonusesFromItem(gear[slot].data);
 
         // Instantiate the item to drop on the ground
         GameObject dropItem = Instantiate(dropItemPrefab, Player.instance.transform.position, Quaternion.identity);
@@ -117,7 +143,7 @@ public class PlayerInventory : MonoBehaviour
 
         // Set value to null in the dictionary and clear the UI
         ClearItemSlot(slot);
-        AlertTextUI.instance.EnableItemPickupAlert();
+        AlertTextUI.instance.EnableItemPickupAlert();        
     }
 
     private void RemoveEquippedWeaponModel()

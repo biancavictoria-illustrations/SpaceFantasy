@@ -7,7 +7,7 @@ public class PermanentUpgradeManager : MonoBehaviour
     public static PermanentUpgradeManager instance;
 
     [HideInInspector] public int totalPermanentCurrencySpent;
-    [HideInInspector] public int startingHealthPotionQuantity;    // Putting this here in case it ends up being something you can upgrade (should prob start @ 0)
+    [HideInInspector] public int startingHealthPotionQuantity;
 
     // Skills
     [HideInInspector] public int levelsInArmorPlating;
@@ -64,7 +64,7 @@ public class PermanentUpgradeManager : MonoBehaviour
     public void InitializePermanentUpgradeValuesOnNewGame()
     {
         totalPermanentCurrencySpent = 0;
-        startingHealthPotionQuantity = 3;
+        startingHealthPotionQuantity = 0;
 
         ResetAllStatGenerationValuesToDefault();
         ResetAllSkillValuesToDefault();

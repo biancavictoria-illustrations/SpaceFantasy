@@ -58,7 +58,7 @@ public class Shop : MonoBehaviour
         // TEMP: Only generates WEAPONS (remove once other gear is implemented)
         if( generatedEquipment.data.equipmentBaseData.ItemSlot() == InventoryItemSlot.Weapon ){
             int i = lines.ItemType().IndexOf(generatedEquipment.data.equipmentBaseData.ItemSlot());
-            ItemLine primaryLine = lines.PrimaryWeaponLine()[i];
+            StatType primaryLine = lines.PrimaryWeaponLine()[i];
             float primaryLineTierScaling = 0.1f * (int)rarity;
 
             i = lines.ItemRarityTier().IndexOf(rarity);
@@ -73,7 +73,7 @@ public class Shop : MonoBehaviour
             int secondaryLineNum = lines.SecondaryLineNumberRates()[i].IndexOf(lines.SecondaryLineNumberRates()[i].First(x => chance <= x));
             chance = (float)r.NextDouble();
             int secondaryLineEnhancementsNum = lines.LineEnhancementRates()[i].IndexOf(lines.LineEnhancementRates()[i].First(x => chance <= x));    // Is this used anywhere?
-            List<ItemLine> secondaryLines = GenerateSecondaryLines(secondaryLineNum);
+            List<StatType> secondaryLines = GenerateSecondaryLines(secondaryLineNum);
 
             // Set the data in the generatedEquipment
             generatedEquipment.SetModifiers(primaryLine, primaryLineTierScaling, secondaryLines, (int)rarity);
@@ -82,9 +82,9 @@ public class Shop : MonoBehaviour
         return generatedEquipment;
     }
 
-    private List<ItemLine> GenerateSecondaryLines(int size)
+    private List<StatType> GenerateSecondaryLines(int size)
     {
-        List<ItemLine> secondaryLines = new List<ItemLine>();
+        List<StatType> secondaryLines = new List<StatType>();
         System.Random r = new System.Random();
 
         for(int i = 0; i < size; i++){

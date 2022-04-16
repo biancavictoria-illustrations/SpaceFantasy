@@ -27,8 +27,7 @@ public class EnemyDropGenerator : ScriptableObject
         ItemRarity rarity = dropTable.ItemRarityTier()[index];
         
         EquipmentBaseData item;
-        List<ItemLine> secondaryLines;
-        // Debug.Log("Dropping " + itemType.ToString());
+        List<StatType> secondaryLines;
 
         // Create item to drop in physical space from prefab
         GameObject dropItemObject = Instantiate(dropItemPrefab);
@@ -54,7 +53,7 @@ public class EnemyDropGenerator : ScriptableObject
         // Debug.Log("Setting drop item to Rarity/ItemID: " + rarity + "/" + item.ItemID());
 
         int i = lines.ItemType().IndexOf(item.ItemSlot());
-        ItemLine primaryLine = lines.PrimaryWeaponLine()[i];
+        StatType primaryLine = lines.PrimaryWeaponLine()[i];
         float primaryLineTierScaling = 0.1f * tier;
 
         i = lines.ItemRarityTier().IndexOf(rarity);
@@ -77,9 +76,9 @@ public class EnemyDropGenerator : ScriptableObject
         // return $"{dropTable.ItemRarityTier[index]} {dropTable.ItemType[index]}";
     }
 
-    private List<ItemLine> GenerateSecondaryLines(int size)
+    private List<StatType> GenerateSecondaryLines(int size)
     {
-        List<ItemLine> secondaryLines = new List<ItemLine>();
+        List<StatType> secondaryLines = new List<StatType>();
         System.Random r = new System.Random();
 
         for(int i = 0; i < size; i++){

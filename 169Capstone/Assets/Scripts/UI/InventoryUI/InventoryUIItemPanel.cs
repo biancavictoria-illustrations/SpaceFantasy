@@ -63,7 +63,7 @@ public class InventoryUIItemPanel : MonoBehaviour
         itemTypeRarity.text = rarity.ToString() + " " + data.ItemSlot().ToString();
 
         shortDescription = data.ShortDescription();
-        expandedDescription = GenerateExpandedDescription(data.LongDescription());
+        expandedDescription = GenerateExpandedDescription(item);
         itemDescription.text = shortDescription;
 
         itemIcon.sprite = data.Icon();
@@ -110,9 +110,9 @@ public class InventoryUIItemPanel : MonoBehaviour
     }
 
     // TODO: Currently happening EVERY TIME you open the thing; should change it to probably only be when your stats change...?
-    private string GenerateExpandedDescription(string baseDescription)
+    private string GenerateExpandedDescription(SpawnedEquipmentData data)
     {
-        string generatedDescription = baseDescription;
+        string generatedDescription = data.equipmentBaseData.LongDescription();
 
         Regex rgx = new Regex(STAT_VARIABLE_PATTERN);
         foreach(Match match in rgx.Matches(generatedDescription)){
@@ -126,8 +126,43 @@ public class InventoryUIItemPanel : MonoBehaviour
             // Swap out that part of the string for the value
             generatedDescription = generatedDescription.Replace(matchString, newStringValue);
         }
+        generatedDescription += GetStatModifierDescription(data);
 
         return generatedDescription;
+    }
+
+    private string GetStatModifierDescription(SpawnedEquipmentData data)
+    {
+        string s = "\n";
+
+        for(int i = 0; i < (int)StatType.enumSize; i++){
+            float bonusValue = data.GetValueFromStatType((StatType)i);
+            if(bonusValue != 0){
+                Debug.Log("ITEM HAS LINE: " + ((StatType)i).ToString());
+                s += "\n<b>" + data.GetPlayerFacingStatName((StatType)i) + ":</b> +" + GetColorModifierForStatValue(bonusValue, (StatType)i) + bonusValue + "</color>";
+            }
+        }
+
+        // TODO: Enhancements???
+
+        return s;
+    }
+
+    // Returns green if increase in value, red if decrease
+    // TODO: UPDATE THIS; i don't think it calculates correctly to factor in bonuses; ideally would use GetBonusForStat knowing what the object is that gave the bonus...
+    private string GetColorModifierForStatValue(float newBonusValue, StatType type)
+    {
+        float statBase = Player.instance.stats.GetBaseValueFromStatType(type);
+        float currentValue = Player.instance.stats.GetCurrentValueFromStatType(type);
+
+        string colorMod = "<color=";
+        if( newBonusValue + statBase > currentValue ){
+            colorMod += "green";
+        }
+        else{
+            colorMod += "red";
+        }
+        return colorMod + ">";
     }
 
     private string GetStatVariableValue(string matchString)

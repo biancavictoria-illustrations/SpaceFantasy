@@ -2,21 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ItemLine
-{
-    CritChance,
-    CritDamage,
-    AttackSpeed,
-    Defense,
-    MovementSpeed,
-    EffectChance,
-    EffectResist,
-    DodgeChance,
-    HPIncrease,
-
-    enumSize
-}
-
 [CreateAssetMenu(menuName = "Gear/LineTableObject")]
 public class LineTable : ScriptableObject
 {
@@ -36,9 +21,9 @@ public class LineTable : ScriptableObject
     [SerializeField] private List<float> EpicLineEnhancementRates;
     [SerializeField] private List<float> LegendaryLineEnhancementRates;
 
-    [SerializeField] private List<ItemLine> primaryWeaponLine;
+    [SerializeField] private List<StatType> primaryWeaponLine;
     [SerializeField] private List<InventoryItemSlot> itemType;
-    [SerializeField] private List<ItemLine> linePool;
+    [SerializeField] private List<StatType> linePool;
 
     public void Setup()
     {
@@ -70,7 +55,7 @@ public class LineTable : ScriptableObject
         return lineEnhancementRates;
     }
 
-    public List<ItemLine> PrimaryWeaponLine()
+    public List<StatType> PrimaryWeaponLine()
     {
         return primaryWeaponLine;
     }
@@ -80,7 +65,7 @@ public class LineTable : ScriptableObject
         return itemType;
     }
 
-    public List<ItemLine> LinePool()
+    public List<StatType> LinePool()
     {
         return linePool;
     }
