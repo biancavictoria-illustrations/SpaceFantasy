@@ -51,10 +51,14 @@ public class InventoryUIItemPanel : MonoBehaviour
     public FlexibleGridLayout textGrid;
     public HorizontalLayoutGroup horizontalLayoutGroup;
 
+    private GeneratedEquipment itemData;
+
     [SerializeField] private Toggle toggle;
 
-    public void SetItemPanelValues(GeneratedEquipment itemData)
+    public void SetItemPanelValues(GeneratedEquipment _itemData)
     {
+        itemData = _itemData;
+
         EquipmentBaseData baseData = itemData.equipmentBaseData;
 
         itemName.text = baseData.ItemName();
@@ -63,7 +67,7 @@ public class InventoryUIItemPanel : MonoBehaviour
         itemTypeRarity.text = rarity.ToString() + " " + baseData.ItemSlot().ToString();
 
         shortDescription = baseData.ShortDescription();
-        expandedDescription = GenerateExpandedDescription(itemData);
+        expandedDescription = GenerateExpandedDescription();
         itemDescription.text = shortDescription;
 
         itemIcon.sprite = baseData.Icon();
@@ -110,7 +114,7 @@ public class InventoryUIItemPanel : MonoBehaviour
     }
 
     // TODO: Currently happening EVERY TIME you open the thing; should change it to probably only be when your stats change...?
-    private string GenerateExpandedDescription(GeneratedEquipment itemData)
+    private string GenerateExpandedDescription()
     {
         string generatedDescription = itemData.equipmentBaseData.LongDescription();
 
@@ -126,19 +130,18 @@ public class InventoryUIItemPanel : MonoBehaviour
             // Swap out that part of the string for the value
             generatedDescription = generatedDescription.Replace(matchString, newStringValue);
         }
-        generatedDescription += GetStatModifierDescription(itemData);
+        generatedDescription += GetStatModifierDescription();
 
         return generatedDescription;
     }
 
-    private string GetStatModifierDescription(GeneratedEquipment itemData)
+    private string GetStatModifierDescription()
     {
         string s = "\n";
 
         for(int i = 0; i < (int)StatType.enumSize; i++){
             float bonusValue = itemData.GetValueFromStatType((StatType)i);
             if(bonusValue != 0){
-                Debug.Log("ITEM HAS LINE: " + ((StatType)i).ToString());
                 s += "\n<b>" + itemData.GetPlayerFacingStatName((StatType)i) + ":</b> +" + GetColorModifierForStatValue(bonusValue, (StatType)i) + bonusValue + "</color>";
             }
         }
@@ -149,19 +152,27 @@ public class InventoryUIItemPanel : MonoBehaviour
     }
 
     // Returns green if increase in value, red if decrease
-    // TODO: UPDATE THIS; i don't think it calculates correctly to factor in bonuses; ideally would use GetBonusForStat knowing what the object is that gave the bonus...
     private string GetColorModifierForStatValue(float newBonusValue, StatType type)
     {
-        float statBase = Player.instance.stats.GetBaseValueFromStatType(type);
-        float currentValue = Player.instance.stats.GetCurrentValueFromStatType(type);
-
         string colorMod = "<color=";
-        if( newBonusValue + statBase > currentValue ){
-            colorMod += "green";
+
+        // If you currently have something in that slot, compare new value to that value
+        if(PlayerInventory.instance.ItemSlotIsFull(itemSlot)){
+            GeneratedEquipment currentlyEquippedItem = PlayerInventory.instance.gear[itemSlot].data;
+            float? currentValue = Player.instance.stats.GetBonusForStat( currentlyEquippedItem, type, EntityStats.BonusType.flat);
+
+            // If it gives a bonus for that stat and that bonus is higher than the new item's bonus
+            if(currentValue != null && newBonusValue < currentValue){
+                colorMod += "red";
+            }
+            else{
+                colorMod += "green";
+            }
         }
         else{
-            colorMod += "red";
+            colorMod += "green";
         }
+
         return colorMod + ">";
     }
 

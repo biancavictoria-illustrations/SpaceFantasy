@@ -51,7 +51,7 @@ public class ShopUIGear : ShopUI
         shopCompareItemPanel.SetActive(false);
         InGameUIManager.instance.ToggleInGameGearIconPanel(true);
 
-        shopInventoryTopButton.Select();
+        leaveShopButton.Select();
     }
 
     public void ToggleShopCompareOn(bool canAfford)

@@ -33,26 +33,31 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
     private const float rarityMultiplierBase = 1.2f;
 
     public ItemRarity rarity {get; protected set;}
+
+    protected bool itemIsAvailable = true;
+    protected bool canAffordItem = false;
     
     protected void SetBaseShopItemValues(int iBaseCost, string iName, string iDesc)
     {
         baseCost = iBaseCost;
-        UpdateCurrentCost();
         itemName.text = iName;
         descriptionText.text = iDesc;
+        
+        UpdateCurrentCost();
     }
 
+    // TODO: UI feedback about being too broke to buy an item
     public virtual void PurchaseItem()
     {
         if(PlayerInventory.instance.tempCurrency - currentCostValue < 0){
-            // TODO: UI feedback about being too broke to buy an item
+            Debug.LogError("Can't afford! UI Button should NOT be interactable!!! :(");
             return;
         }
 
         PlayerInventory.instance.SetTempCurrency(PlayerInventory.instance.tempCurrency - currentCostValue);
     }
 
-    public void CalculateCurrentCost()
+    private void CalculateCurrentCost()
     {
         // int charismaStat = Player.instance.stats.Charisma();    // TODO: Factor in CHA stat to price calculation
 
@@ -75,21 +80,25 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
     }
 
     // Updates both cost value and UI
-    public void UpdateCurrentCost()
+    public void UpdateCurrentCost(bool recalculateCost=true)
     {
-        CalculateCurrentCost();
+        if(recalculateCost){
+            CalculateCurrentCost();
+        }        
 
-        if(PlayerInventory.instance.tempCurrency - currentCostValue > 0){
+        if(PlayerInventory.instance.tempCurrency - currentCostValue >= 0){
             costText.text = "" + currentCostValue;
+            canAffordItem = true;
         }
         else{
             costText.text = "<color=red>" + currentCostValue + "</color>";
+            canAffordItem = false;
         }
     }
 
     public void SetHoverAlertsActive(bool set)
     {
-        if(itemCardButton.interactable){
+        if(itemCardButton.interactable || !set){
             hoverAlerts.EnableAlert(panelPos, set);
         }
     }

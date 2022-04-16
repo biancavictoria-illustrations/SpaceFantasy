@@ -42,7 +42,6 @@ public class Shop : MonoBehaviour
             }
             else if(inventoryList[i] == RarityAssignmentTier.X_1){
                 inventory.Add( GenerateItem((ItemRarity)(tier+1)) );
-                // inventory.Add( GenerateItem((ItemRarity)tier) );    // TEMP: Only generates COMMON ITEMS (remove once data for other rarities is added)
             }
         }
     }

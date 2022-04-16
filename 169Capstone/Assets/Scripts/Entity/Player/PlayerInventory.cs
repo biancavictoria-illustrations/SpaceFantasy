@@ -99,7 +99,7 @@ public class PlayerInventory : MonoBehaviour
         for(int i = 0; i < (int)StatType.enumSize; i++){
             float bonusValue = itemData.GetValueFromStatType((StatType)i);
             if(bonusValue != 0){
-                Player.instance.stats.SetBonusForStat(this, (StatType)i, EntityStats.BonusType.flat, bonusValue);
+                Player.instance.stats.SetBonusForStat( itemData, (StatType)i, EntityStats.BonusType.flat, bonusValue );
             }
         }
     }
@@ -109,7 +109,7 @@ public class PlayerInventory : MonoBehaviour
         for(int i = 0; i < (int)StatType.enumSize; i++){
             float bonusValue = itemData.GetValueFromStatType((StatType)i);
             if(bonusValue != 0){
-                Player.instance.stats.SetBonusForStat(this, (StatType)i, EntityStats.BonusType.flat, 0);
+                Player.instance.stats.SetBonusForStat( itemData, (StatType)i, EntityStats.BonusType.flat, 0 );
             }
         }
     }
@@ -155,6 +155,11 @@ public class PlayerInventory : MonoBehaviour
     {
         gear[slot] = null;
         InGameUIManager.instance.ClearItemUI(slot);
+    }
+
+    public bool ItemSlotIsFull(InventoryItemSlot slot)
+    {
+        return gear[slot] != null;
     }
 
     // Called when you die

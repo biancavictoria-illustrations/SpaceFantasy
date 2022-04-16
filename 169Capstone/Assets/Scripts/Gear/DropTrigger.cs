@@ -19,8 +19,6 @@ public class DropTrigger : MonoBehaviour
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
             ActiveGearDrop = GetComponent<GeneratedEquipment>();
             AlertTextUI.instance.EnableItemPickupAlert();
-
-            Debug.Log("ITEM ACTIVE");
         }
     }
 
@@ -30,8 +28,6 @@ public class DropTrigger : MonoBehaviour
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
             ActiveGearDrop = null;
             AlertTextUI.instance.DisableAlert();
-
-            Debug.Log("ITEM INACTIVE (left radius)");
         }
     }
 

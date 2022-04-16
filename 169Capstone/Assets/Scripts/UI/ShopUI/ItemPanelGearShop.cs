@@ -22,6 +22,12 @@ public class ItemPanelGearShop : ItemPanelShopUI
 
     public void SetGearItemValues(GeneratedEquipment _item)
     {
+        if(!itemIsAvailable){
+            // descriptionText.text = "<b><color=red>SOLD";
+            // itemCardButton.interactable = false;
+            return;
+        }
+
         item = _item;
         EquipmentBaseData baseData = item.equipmentBaseData;
         rarity = item.rarity;
@@ -45,15 +51,12 @@ public class ItemPanelGearShop : ItemPanelShopUI
     {
         // Purchase the item
         base.PurchaseItem();
-
-        if(PlayerInventory.instance.tempCurrency - currentCostValue < 0){
-            return;
-        }
         
         // Generate the actual item object in the scene (from the item data)
         item.EquipGeneratedItem();
 
-        descriptionText.text = "<b><color=red>SOLD";    // TODO: Make this permanent (it's not at the moment)
+        descriptionText.text = "<b><color=red>SOLD";
         itemCardButton.interactable = false;
+        itemIsAvailable = false;
     }
 }
