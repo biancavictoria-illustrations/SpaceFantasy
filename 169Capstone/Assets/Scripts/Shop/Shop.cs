@@ -41,8 +41,8 @@ public class Shop : MonoBehaviour
                 inventory.Add( GenerateItem((ItemRarity)tier) );
             }
             else if(inventoryList[i] == RarityAssignmentTier.X_1){
-                // inventory.Add( GenerateItem((ItemRarity)(tier+1)) );
-                inventory.Add( GenerateItem((ItemRarity)tier) );    // TEMP: Only generates COMMON ITEMS (remove once data for other rarities is added)
+                inventory.Add( GenerateItem((ItemRarity)(tier+1)) );
+                // inventory.Add( GenerateItem((ItemRarity)tier) );    // TEMP: Only generates COMMON ITEMS (remove once data for other rarities is added)
             }
         }
     }
@@ -56,8 +56,8 @@ public class Shop : MonoBehaviour
         generatedEquipment.SetEquipmentBaseData( PickItemFromPool(), rarity );
 
         // TEMP: Only generates WEAPONS (remove once other gear is implemented)
-        if( generatedEquipment.data.equipmentBaseData.ItemSlot() == InventoryItemSlot.Weapon ){
-            int i = lines.ItemType().IndexOf(generatedEquipment.data.equipmentBaseData.ItemSlot());
+        if( generatedEquipment.equipmentBaseData.ItemSlot() == InventoryItemSlot.Weapon ){
+            int i = lines.ItemType().IndexOf(generatedEquipment.equipmentBaseData.ItemSlot());
             StatType primaryLine = lines.PrimaryWeaponLine()[i];
             float primaryLineTierScaling = 0.1f * (int)rarity;
 

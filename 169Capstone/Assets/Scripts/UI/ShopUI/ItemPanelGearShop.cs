@@ -23,15 +23,15 @@ public class ItemPanelGearShop : ItemPanelShopUI
     public void SetGearItemValues(GeneratedEquipment _item)
     {
         item = _item;
-        EquipmentBaseData data = item.data.equipmentBaseData;
-        rarity = item.data.rarity;
+        EquipmentBaseData baseData = item.equipmentBaseData;
+        rarity = item.rarity;
 
-        SetBaseShopItemValues(data.BaseCost(), data.ItemName(), data.ShortDescription());
+        SetBaseShopItemValues(baseData.BaseCost(), baseData.ItemName(), baseData.ShortDescription());
 
-        itemIcon.sprite = data.Icon();
-        itemSlot = data.ItemSlot();
-        itemSlotRarity.text = item.data.rarity.ToString() + "/" + itemSlot.ToString();
-        enhancementCount.text = "Enhancement Count - " + item.data.enhancementCount;
+        itemIcon.sprite = baseData.Icon();
+        itemSlot = baseData.ItemSlot();
+        itemSlotRarity.text = item.rarity.ToString() + "/" + itemSlot.ToString();
+        enhancementCount.text = "Enhancement Count - " + item.enhancementCount;
     }
 
     public void OnItemClicked()

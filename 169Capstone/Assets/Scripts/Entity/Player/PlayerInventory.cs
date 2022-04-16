@@ -94,7 +94,7 @@ public class PlayerInventory : MonoBehaviour
         SetStatBonusesFromItem(item.data);
     }
 
-    private void SetStatBonusesFromItem(SpawnedEquipmentData itemData)
+    private void SetStatBonusesFromItem(GeneratedEquipment itemData)
     {
         for(int i = 0; i < (int)StatType.enumSize; i++){
             float bonusValue = itemData.GetValueFromStatType((StatType)i);
@@ -104,7 +104,7 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
-    private void RemoveStatBonusesFromItem(SpawnedEquipmentData itemData)
+    private void RemoveStatBonusesFromItem(GeneratedEquipment itemData)
     {
         for(int i = 0; i < (int)StatType.enumSize; i++){
             float bonusValue = itemData.GetValueFromStatType((StatType)i);

@@ -7,10 +7,10 @@ using UnityEngine;
 public abstract class Equipment : MonoBehaviour
 {
     // Generated when the item is spawned by GeneratedEquipment, passed in when the ACTUAL item is created here
-    public SpawnedEquipmentData data {get; private set;}
+    public GeneratedEquipment data {get; private set;}
     protected GameObject itemModel;
     
-    public void SetEquipmentData(SpawnedEquipmentData _data)
+    public void SetEquipmentData(GeneratedEquipment _data)
     {
         data = _data;
     }

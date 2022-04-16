@@ -53,20 +53,20 @@ public class InventoryUIItemPanel : MonoBehaviour
 
     [SerializeField] private Toggle toggle;
 
-    public void SetItemPanelValues(SpawnedEquipmentData item)
+    public void SetItemPanelValues(GeneratedEquipment itemData)
     {
-        EquipmentBaseData data = item.equipmentBaseData;
+        EquipmentBaseData baseData = itemData.equipmentBaseData;
 
-        itemName.text = data.ItemName();
-        rarity = item.rarity;
+        itemName.text = baseData.ItemName();
+        rarity = itemData.rarity;
 
-        itemTypeRarity.text = rarity.ToString() + " " + data.ItemSlot().ToString();
+        itemTypeRarity.text = rarity.ToString() + " " + baseData.ItemSlot().ToString();
 
-        shortDescription = data.ShortDescription();
-        expandedDescription = GenerateExpandedDescription(item);
+        shortDescription = baseData.ShortDescription();
+        expandedDescription = GenerateExpandedDescription(itemData);
         itemDescription.text = shortDescription;
 
-        itemIcon.sprite = data.Icon();
+        itemIcon.sprite = baseData.Icon();
         itemIcon.preserveAspect = true;
         
         // Check bc compare item panel doesn't have a toggle
@@ -110,9 +110,9 @@ public class InventoryUIItemPanel : MonoBehaviour
     }
 
     // TODO: Currently happening EVERY TIME you open the thing; should change it to probably only be when your stats change...?
-    private string GenerateExpandedDescription(SpawnedEquipmentData data)
+    private string GenerateExpandedDescription(GeneratedEquipment itemData)
     {
-        string generatedDescription = data.equipmentBaseData.LongDescription();
+        string generatedDescription = itemData.equipmentBaseData.LongDescription();
 
         Regex rgx = new Regex(STAT_VARIABLE_PATTERN);
         foreach(Match match in rgx.Matches(generatedDescription)){
@@ -126,20 +126,20 @@ public class InventoryUIItemPanel : MonoBehaviour
             // Swap out that part of the string for the value
             generatedDescription = generatedDescription.Replace(matchString, newStringValue);
         }
-        generatedDescription += GetStatModifierDescription(data);
+        generatedDescription += GetStatModifierDescription(itemData);
 
         return generatedDescription;
     }
 
-    private string GetStatModifierDescription(SpawnedEquipmentData data)
+    private string GetStatModifierDescription(GeneratedEquipment itemData)
     {
         string s = "\n";
 
         for(int i = 0; i < (int)StatType.enumSize; i++){
-            float bonusValue = data.GetValueFromStatType((StatType)i);
+            float bonusValue = itemData.GetValueFromStatType((StatType)i);
             if(bonusValue != 0){
                 Debug.Log("ITEM HAS LINE: " + ((StatType)i).ToString());
-                s += "\n<b>" + data.GetPlayerFacingStatName((StatType)i) + ":</b> +" + GetColorModifierForStatValue(bonusValue, (StatType)i) + bonusValue + "</color>";
+                s += "\n<b>" + itemData.GetPlayerFacingStatName((StatType)i) + ":</b> +" + GetColorModifierForStatValue(bonusValue, (StatType)i) + bonusValue + "</color>";
             }
         }
 
