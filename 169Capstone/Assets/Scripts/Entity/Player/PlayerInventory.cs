@@ -96,20 +96,32 @@ public class PlayerInventory : MonoBehaviour
 
     private void SetStatBonusesFromItem(GeneratedEquipment itemData)
     {
-        for(int i = 0; i < (int)StatType.enumSize; i++){
-            float bonusValue = itemData.GetValueFromStatType((StatType)i);
+        // Primary line
+        if(itemData.primaryLineValue > 0){
+            Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, itemData.equipmentBaseData.PrimaryItemLine(), EntityStats.BonusType.flat, itemData.primaryLineValue );
+        }
+
+        // Secondary line
+        for(int i = 0; i < EntityStats.numberOfSecondaryLineOptions; i++){
+            float bonusValue = itemData.GetSecondaryLineValueFromStatType((StatType)i);
             if(bonusValue != 0){
-                Player.instance.stats.SetBonusForStat( itemData, (StatType)i, EntityStats.BonusType.flat, bonusValue );
+                Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, (StatType)i, EntityStats.BonusType.flat, bonusValue );
             }
         }
     }
 
     private void RemoveStatBonusesFromItem(GeneratedEquipment itemData)
     {
-        for(int i = 0; i < (int)StatType.enumSize; i++){
-            float bonusValue = itemData.GetValueFromStatType((StatType)i);
+        // Primary line
+        if(itemData.primaryLineValue > 0){
+            Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, itemData.equipmentBaseData.PrimaryItemLine(), EntityStats.BonusType.flat, 0 );
+        }
+
+        // Secondary line
+        for(int i = 0; i < EntityStats.numberOfSecondaryLineOptions; i++){
+            float bonusValue = itemData.GetSecondaryLineValueFromStatType((StatType)i);
             if(bonusValue != 0){
-                Player.instance.stats.SetBonusForStat( itemData, (StatType)i, EntityStats.BonusType.flat, 0 );
+                Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, (StatType)i, EntityStats.BonusType.flat, 0 );
             }
         }
     }
@@ -162,7 +174,7 @@ public class PlayerInventory : MonoBehaviour
         return gear[slot] != null;
     }
 
-    // Called when you die
+    // Called when you die or return to main menu
     public void ClearRunInventory()
     {
         if(weaponModel){

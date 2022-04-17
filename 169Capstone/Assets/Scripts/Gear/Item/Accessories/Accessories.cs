@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Accessories : Item
+public class Accessories : NonWeaponItem
 {
     [HideInInspector] public float damage = -1;
 

@@ -113,7 +113,6 @@ public class InventoryUIItemPanel : MonoBehaviour
         }
     }
 
-    // TODO: Currently happening EVERY TIME you open the thing; should change it to probably only be when your stats change...?
     private string GenerateExpandedDescription()
     {
         string generatedDescription = itemData.equipmentBaseData.LongDescription();
@@ -139,20 +138,37 @@ public class InventoryUIItemPanel : MonoBehaviour
     {
         string s = "\n";
 
-        for(int i = 0; i < (int)StatType.enumSize; i++){
-            float bonusValue = itemData.GetValueFromStatType((StatType)i);
-            if(bonusValue != 0){
-                s += "\n<b>" + itemData.GetPlayerFacingStatName((StatType)i) + ":</b> +" + GetColorModifierForStatValue(bonusValue, (StatType)i) + bonusValue + "</color>";
-            }
+        // Add primary line text
+        StatType primaryLine = itemData.equipmentBaseData.PrimaryItemLine();
+        float primaryLineValue = itemData.primaryLineValue;
+        if(primaryLineValue > 0){
+            s += SetStringForStatValue(primaryLine, primaryLineValue) + "\n";
         }
 
-        // TODO: Enhancements???
+        // Add secondary lines
+        s += "<size=70%>";
+        for(int i = 0; i < EntityStats.numberOfSecondaryLineOptions; i++){
+            float bonusValue = itemData.GetSecondaryLineValueFromStatType((StatType)i);
+            if(bonusValue != 0){
+                s += SetStringForStatValue((StatType)i, bonusValue);
+            }
+        }
 
         return s;
     }
 
+    private string SetStringForStatValue(StatType type, float bonusValue)
+    {
+        if(bonusValue < 1){
+            return "\n<b>" + itemData.GetPlayerFacingStatName(type) + ":</b> " + GetColorModForStatValue(bonusValue, type) + "+" + (bonusValue*100) + "%</color>";
+        }
+        else{
+            return "\n<b>" + itemData.GetPlayerFacingStatName(type) + ":</b> " + GetColorModForStatValue(bonusValue, type) + "+" + bonusValue + "</color>";
+        }
+    }
+
     // Returns green if increase in value, red if decrease
-    private string GetColorModifierForStatValue(float newBonusValue, StatType type)
+    private string GetColorModForStatValue(float newBonusValue, StatType type)
     {
         string colorMod = "<color=";
 

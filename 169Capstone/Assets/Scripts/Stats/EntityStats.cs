@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum StatType
 {
+    // Values that can be Secondary Line Values
     HitPoints,
     AttackSpeed,
     MoveSpeed,
@@ -11,16 +12,27 @@ public enum StatType
     DodgeChance,
     CritChance,
     CritDamage,
+    StatusEffectChance,
+    StatusResist,
+
+    // Specific Status Effects
     StunChance,
     BurnChance,
     SlowChance,
-    StatusResist,
+
+    // ONLY Primary Lines
+    STRDamage,
+    DEXDamage,
+    INTDamage,
+    WISDamage,
 
     enumSize
 }
 
 public abstract class EntityStats : MonoBehaviour
 {
+    public const int numberOfSecondaryLineOptions = 9;
+
     protected virtual void Awake()
     {
         statBonusFromSource = new Dictionary<Object, Dictionary<StatBonusType, float>>();
@@ -183,6 +195,31 @@ public abstract class EntityStats : MonoBehaviour
                     if(bonusType == BonusType.flat)
                         statusResistChanceFlatBonus = total;
                     break;
+                
+                case StatType.StatusEffectChance:
+                    if(bonusType == BonusType.flat)
+                        statusEffectChanceFlatBonus = total;
+                    break;
+
+                case StatType.STRDamage:
+                    if(bonusType == BonusType.flat)
+                        STRDamageFlatBonus = total;
+                    break;
+
+                case StatType.DEXDamage:
+                    if(bonusType == BonusType.flat)
+                        DEXDamageFlatBonus = total;
+                    break;
+
+                case StatType.WISDamage:
+                    if(bonusType == BonusType.flat)
+                        WISDamageFlatBonus = total;
+                    break;
+
+                case StatType.INTDamage:
+                    if(bonusType == BonusType.flat)
+                        INTDamageFlatBonus = total;
+                    break;
             }
         }
     #endregion
@@ -268,7 +305,11 @@ public abstract class EntityStats : MonoBehaviour
 
         public virtual float getStunChance()
         {
-            return stunChanceBase + stunChanceFlatBonus;
+            float value = stunChanceBase + stunChanceFlatBonus;
+            if(value > 0){
+                value += getStatusEffectChance();
+            }
+            return value;
         }
     #endregion
 
@@ -278,7 +319,11 @@ public abstract class EntityStats : MonoBehaviour
 
         public virtual float getBurnChance()
         {
-            return burnChanceBase + burnChanceFlatBonus;
+            float value =  burnChanceBase + burnChanceFlatBonus;
+            if(value > 0){
+                value += getStatusEffectChance();
+            }
+            return value;
         }
     #endregion
     
@@ -288,7 +333,21 @@ public abstract class EntityStats : MonoBehaviour
 
         public virtual float getSlowChance()
         {
-            return slowChanceBase + slowChanceFlatBonus;
+            float value = slowChanceBase + slowChanceFlatBonus;
+            if(value > 0){
+                value += getStatusEffectChance();
+            }
+            return value;
+        }
+    #endregion
+
+    #region Status Effect Chance
+        protected float statusEffectChanceBase;
+        protected float statusEffectChanceFlatBonus;
+
+        public virtual float getStatusEffectChance()
+        {
+            return statusEffectChanceBase + statusEffectChanceFlatBonus;
         }
     #endregion
     
@@ -299,6 +358,35 @@ public abstract class EntityStats : MonoBehaviour
         public virtual float getStatusResistChance()
         {
             return statusResistChanceBase + statusResistChanceFlatBonus;
+        }
+    #endregion
+
+    #region Damage Values
+        protected float baseDamage;
+
+        protected float STRDamageFlatBonus;
+        protected float DEXDamageFlatBonus;
+        protected float WISDamageFlatBonus;
+        protected float INTDamageFlatBonus;
+
+        public virtual float getSTRDamage()
+        {
+            return baseDamage + STRDamageFlatBonus;
+        }
+
+        public virtual float getDEXDamage()
+        {
+            return baseDamage + DEXDamageFlatBonus;
+        }
+
+        public virtual float getWISDamage()
+        {
+            return baseDamage + WISDamageFlatBonus;
+        }
+
+        public virtual float getINTDamage()
+        {
+            return baseDamage + INTDamageFlatBonus;
         }
     #endregion
 
@@ -323,42 +411,24 @@ public abstract class EntityStats : MonoBehaviour
                 return getSlowChance();
             case StatType.StatusResist:
                 return getStatusResistChance();
+            case StatType.StatusEffectChance:
+                return getStatusEffectChance();
             case StatType.DodgeChance:
                 return getDodgeChance();
             case StatType.HitPoints:
                 return getMaxHitPoints();
+
+            // Primary Lines ONLY
+            case StatType.STRDamage:
+                return getMaxHitPoints();
+            case StatType.DEXDamage:
+                return getMaxHitPoints();
+            case StatType.INTDamage:
+                return getMaxHitPoints();
+            case StatType.WISDamage:
+                return getMaxHitPoints();    
         }
         Debug.LogError("No current value found for stat type: " + type);
-        return -1;
-    }
-
-    public float GetBaseValueFromStatType(StatType type)
-    {
-        switch(type){
-            case StatType.CritChance:
-                return critChanceBase;
-            case StatType.CritDamage:
-                return critDamageBase;
-            case StatType.AttackSpeed:
-                return attackSpeedBase;
-            case StatType.Defense:
-                return defenseBase;
-            case StatType.MoveSpeed:
-                return moveSpeedBase;
-            case StatType.StunChance:
-                return stunChanceBase;
-            case StatType.BurnChance:
-                return burnChanceBase;
-            case StatType.SlowChance:
-                return slowChanceBase;
-            case StatType.StatusResist:
-                return statusResistChanceBase;
-            case StatType.DodgeChance:
-                return dodgeChanceBase;
-            case StatType.HitPoints:
-                return maxHitPointsBase;
-        }
-        Debug.LogError("No base value found for stat type: " + type);
         return -1;
     }
 }

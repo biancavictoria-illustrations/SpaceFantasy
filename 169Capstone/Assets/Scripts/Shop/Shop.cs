@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class Shop : MonoBehaviour
@@ -9,7 +8,7 @@ public class Shop : MonoBehaviour
     private List<RarityAssignmentTier> inventoryList;
     private HashSet<int> indexes;
 
-    [SerializeField] private LineTable lines;
+    [SerializeField] private LineTable shopLineTable;
     [SerializeField] private GameObject shopItemPrefab;
 
     public List<GeneratedEquipment> inventory {get; private set;}
@@ -49,51 +48,16 @@ public class Shop : MonoBehaviour
     private GeneratedEquipment GenerateItem(ItemRarity rarity)
     {
         // Generate a new (randomly selected) item with the determined rarity
-
         GameObject itemObject = Instantiate(shopItemPrefab);
         GeneratedEquipment generatedEquipment = itemObject.GetComponent<GeneratedEquipment>();
-        generatedEquipment.SetEquipmentBaseData( PickItemFromPool(), rarity );
 
-        // TEMP: Only generates WEAPONS (remove once other gear is implemented)
-        if( generatedEquipment.equipmentBaseData.ItemSlot() == InventoryItemSlot.Weapon ){
-            int i = lines.ItemType().IndexOf(generatedEquipment.equipmentBaseData.ItemSlot());
-            StatType primaryLine = lines.PrimaryWeaponLine()[i];
-            float primaryLineTierScaling = 0.1f * (int)rarity;
-
-            i = lines.ItemRarityTier().IndexOf(rarity);
-
-            // Generate a random number
-            System.Random r = new System.Random();
-            float chance = (float)r.NextDouble();
-            chance = (float)r.NextDouble();
-            
-            lines.Setup();
-
-            int secondaryLineNum = lines.SecondaryLineNumberRates()[i].IndexOf(lines.SecondaryLineNumberRates()[i].First(x => chance <= x));
-            chance = (float)r.NextDouble();
-            int secondaryLineEnhancementsNum = lines.LineEnhancementRates()[i].IndexOf(lines.LineEnhancementRates()[i].First(x => chance <= x));    // Is this used anywhere?
-            List<StatType> secondaryLines = GenerateSecondaryLines(secondaryLineNum);
-
-            // Set the data in the generatedEquipment
-            generatedEquipment.SetModifiers(primaryLine, primaryLineTierScaling, secondaryLines, (int)rarity);
-        }       
+        // Use the static item generator to generate the lines and stuff from here
+        GenericItemGenerator.GenerateItem(ref generatedEquipment, PickItemBaseDataFromPool(), rarity, shopLineTable);
 
         return generatedEquipment;
     }
 
-    private List<StatType> GenerateSecondaryLines(int size)
-    {
-        List<StatType> secondaryLines = new List<StatType>();
-        System.Random r = new System.Random();
-
-        for(int i = 0; i < size; i++){
-            secondaryLines.Add(lines.LinePool()[r.Next(0, lines.LinePool().Count)]);
-        }
-
-        return secondaryLines;
-    }
-
-    private EquipmentBaseData PickItemFromPool()
+    private EquipmentBaseData PickItemBaseDataFromPool()
     {
         if(shopKeeper.Items().Count < 5){
             Debug.LogError("Shop contains less than 5 possible items in ShopKeeperInventory Item pool!");

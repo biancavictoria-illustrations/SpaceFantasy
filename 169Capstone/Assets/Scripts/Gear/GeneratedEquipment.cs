@@ -8,17 +8,14 @@ using UnityEngine;
 */
 public class GeneratedEquipment : MonoBehaviour
 {
-    public StatType primaryLine = StatType.enumSize;
-    public float primaryModifier = 0f;
+    public float primaryLineValue = 0f;
     
     public float criticalChance = 0f;
     public float criticalDamage = 0f;
     public float attackSpeed = 0f;
     public int defense = 0;
     public float movementSpeed = 0f;
-    public float stunChance = 0f;
-    public float burnChance = 0f;
-    public float slowChance = 0f;
+    public float statusEffectChance = 0f;
     public float statusResist = 0f;
     public float dodgeChance = 0f;
     public int hp = 0;
@@ -30,17 +27,14 @@ public class GeneratedEquipment : MonoBehaviour
 
     public void SetAllEquipmentData(GeneratedEquipment _data)
     {
-        primaryLine = _data.primaryLine;
-        primaryModifier = _data.primaryModifier;
-        
+        primaryLineValue = _data.primaryLineValue;
+
         criticalChance = _data.criticalChance;
         criticalDamage = _data.criticalDamage;
         attackSpeed = _data.attackSpeed;
         defense = _data.defense;
         movementSpeed = _data.movementSpeed;
-        stunChance = _data.stunChance;
-        burnChance = _data.burnChance;
-        slowChance = _data.slowChance;
+        statusEffectChance = _data.statusEffectChance;
         statusResist = _data.statusResist;
         dodgeChance = _data.dodgeChance;
         hp = _data.hp;
@@ -57,56 +51,91 @@ public class GeneratedEquipment : MonoBehaviour
         rarity = _rarity;
     }
 
-    public void SetModifiers(StatType _primaryLine, float _primaryModifier, List<StatType> secondaryLines, int tier)
+    public void SetAllLineModifiers(List<StatType> secondaryLines, int _enhancementCount)
     {
+        enhancementCount = _enhancementCount;
 
-
-        primaryLine = _primaryLine;
-        primaryModifier = _primaryModifier;
+        SetPrimaryLineValueByRarityAndType();
 
         foreach (StatType line in secondaryLines){
-            switch (line){
-                case StatType.CritChance:
-                    criticalChance += 0.02f;
-                    continue;
-                case StatType.CritDamage:
-                    criticalDamage += 0.05f;
-                    continue;
-                case StatType.AttackSpeed:
-                    attackSpeed += 0.02f;
-                    continue;
-                case StatType.Defense:
-                    defense++;
-                    continue;
-                case StatType.MoveSpeed:
-                    movementSpeed += 0.1f;
-                    continue;
-                case StatType.StunChance:
-                    stunChance += 0.03f;       // TODO: How much should this be?
-                    continue;
-                case StatType.BurnChance:
-                    burnChance += 0.03f;       // TODO: How much should this be?
-                    continue;
-                case StatType.SlowChance:
-                    slowChance += 0.03f;       // TODO: How much should this be?
-                    continue;
-                case StatType.StatusResist:
-                    statusResist += 0.02f;
-                    continue;
-                case StatType.DodgeChance:
-                    dodgeChance += 0.02f;
-                    continue;
-                case StatType.HitPoints:
-                    hp += (2 * tier);
-                    continue;
-            }
+            UpgradeStatValue(line);
+        }
+
+        if(enhancementCount > 0 && secondaryLines.Count > 0){
+            AddEnhancements(secondaryLines, _enhancementCount);
         }
     }
 
-    public void AddEnhancements()
+    private void AddEnhancements(List<StatType> secondaryLines, int _count)
     {
-        // TODO
+        while(_count > 0){
+            // Randomly pick one of the lines to upgrade
+            int index = Random.Range(0, secondaryLines.Count);
+            UpgradeStatValue( secondaryLines[index] );
+            _count--;
+        }
     }
+
+    private void UpgradeStatValue(StatType type)
+    {
+        switch (type){
+            case StatType.CritChance:
+                criticalChance += 0.02f;
+                break;
+            case StatType.CritDamage:
+                criticalDamage += 0.05f;
+                break;
+            case StatType.AttackSpeed:
+                attackSpeed += 0.02f;
+                break;
+            case StatType.Defense:
+                defense++;
+                break;
+            case StatType.MoveSpeed:
+                movementSpeed += 0.1f;
+                break;
+            case StatType.StatusEffectChance:
+                statusEffectChance += 0.03f;
+                break;
+            case StatType.StatusResist:
+                statusResist += 0.02f;
+                break;
+            case StatType.DodgeChance:
+                dodgeChance += 0.02f;
+                break;
+            case StatType.HitPoints:
+                hp += (2 * (int)rarity);
+                break;
+        }
+    }
+
+    private void SetPrimaryLineValueByRarityAndType()
+    {
+        // If a common weapon, don't give it a primary line
+        if(equipmentBaseData.ItemSlot() == InventoryItemSlot.Weapon && rarity == ItemRarity.Common){
+            return;
+        }
+
+        InventoryItemSlot itemSlot = equipmentBaseData.ItemSlot();
+        
+        int rarityMultiplier = (int)rarity + 1; // Adds 1 to rarity so that it can start at Common (tier 0)
+
+        if( itemSlot == InventoryItemSlot.Weapon ){
+            primaryLineValue = 2f * (int)rarity; // +2 Damage Increase; does NOT add 1 to the rarity multipler cuz starts at Uncommon level instead
+        }
+        else if( itemSlot == InventoryItemSlot.Helmet ){
+            primaryLineValue = 0.1f * rarityMultiplier; // 10% Health Increase
+        }
+        else if( itemSlot == InventoryItemSlot.Accessory ){
+            primaryLineValue = 0.04f * rarityMultiplier; // 4% Effect Chance Increase
+        }
+        else if( itemSlot == InventoryItemSlot.Legs ){
+            primaryLineValue = 0.05f * rarityMultiplier; // 5% Move Speed Increase
+        }
+        else{
+            Debug.LogError("Cannot set primary line value for item type: " + itemSlot);
+        }
+    }    
 
     public void EquipGeneratedItem()
     {
@@ -134,7 +163,7 @@ public class GeneratedEquipment : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public float GetValueFromStatType(StatType type)
+    public float GetSecondaryLineValueFromStatType(StatType type)
     {
         switch(type){
             case StatType.CritChance:
@@ -147,12 +176,8 @@ public class GeneratedEquipment : MonoBehaviour
                 return defense;
             case StatType.MoveSpeed:
                 return movementSpeed;
-            case StatType.StunChance:
-                return stunChance;
-            case StatType.BurnChance:
-                return burnChance;
-            case StatType.SlowChance:
-                return slowChance;
+            case StatType.StatusEffectChance:
+                return statusEffectChance;
             case StatType.StatusResist:
                 return statusResist;
             case StatType.DodgeChance:
@@ -160,9 +185,11 @@ public class GeneratedEquipment : MonoBehaviour
             case StatType.HitPoints:
                 return hp;
         }
-        Debug.LogError("No value found for stat type: " + type);
+        Debug.LogError("No value found for stat type: " + type + "; invalid secondary line type.");
         return -1;
     }
+
+    #region UI Stuff
 
     public string GetPlayerFacingStatName(StatType type)
     {
@@ -185,12 +212,24 @@ public class GeneratedEquipment : MonoBehaviour
                 return "Slow Chance";
             case StatType.StatusResist:
                 return "Status Resist Chance";
+            case StatType.StatusEffectChance:
+                return "Status Effect Chance";
             case StatType.DodgeChance:
                 return "Dodge Chance";
             case StatType.HitPoints:
                 return "Hit Points";        // TODO: What do we want to call this???
+            case StatType.STRDamage:
+                return "STR Damage";
+            case StatType.DEXDamage:
+                return "DEX Damage";
+            case StatType.INTDamage:
+                return "INT Damage";
+            case StatType.WISDamage:
+                return "WIS Damage";
         }
-        Debug.LogError("No string found for stat type: " + type);
+        Debug.LogError("No stat string found for stat type: " + type);
         return "ERROR";
     }
+
+    #endregion
 }

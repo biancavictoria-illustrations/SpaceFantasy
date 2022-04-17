@@ -46,7 +46,6 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
         UpdateCurrentCost();
     }
 
-    // TODO: UI feedback about being too broke to buy an item
     public virtual void PurchaseItem()
     {
         if(PlayerInventory.instance.tempCurrency - currentCostValue < 0){
@@ -59,8 +58,6 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
 
     private void CalculateCurrentCost()
     {
-        // int charismaStat = Player.instance.stats.Charisma();    // TODO: Factor in CHA stat to price calculation
-
         float cost = baseCost;      // Set base cost
 
         // Set the rarity multiplier (rarity multiplier base to a power of the ItemRarity value)
@@ -77,6 +74,9 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
 
         cost = cost * coeff * rarityMultiplier;     // Multiply base cost by coeff and rarity multiplier
         currentCostValue = (int)Mathf.Floor(cost);       // Get int using Floor to round
+
+        // Factor in CHA stat
+        currentCostValue -= (int)Player.instance.stats.getShopPriceReduction();
     }
 
     // Updates both cost value and UI

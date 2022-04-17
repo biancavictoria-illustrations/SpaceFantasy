@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WristRocket : Item
+public class WristRocket : Accessories
 {
     private Player player;
-    private float damage;
     private Movement movement;
     private AnimationStateController anim;
     //private bool fire = false;
     [SerializeField] GameObject rocketPrefab;
+
     // Start is called before the first frame update
     void Start()
     {
         player = Player.instance;
         movement = player.GetComponentInChildren<Movement>();
         anim = player.GetComponentInChildren<AnimationStateController>();
-        damage = itemObject.damage * player.currentInt;
+        damage = itemData.Damage() * player.currentInt;
         anim.startAccessory.AddListener(LaunchRocket);
         anim.endAccessory.AddListener(ResetRocket);
     }
@@ -50,6 +50,6 @@ public class WristRocket : Item
     {
         GameObject rocket = Instantiate(rocketPrefab, player.transform.position + Vector3.up * 2, player.transform.rotation);
         Projectile projectileScript = rocket.GetComponent<Projectile>();
-        projectileScript.Initialize("Enemy", damage, InputManager.instance.cursorLookDirection, itemObject.radius, 30);
+        projectileScript.Initialize("Enemy", damage, InputManager.instance.cursorLookDirection, itemData.Radius(), 30);
     }
 }
