@@ -8,12 +8,22 @@ public class Robert : Enemy
     public GameObject projectilePrefab;
     public Transform projectileSpawnPoint;
 
+    private Material defaultMat;
+    private SpriteRenderer spriteRenderer;
+    //[SerializeField] private GameObject explosionObject;
+
     protected override void Start()
     {
         base.Start();
 
         if(player == null)
             player = GameObject.FindWithTag("Player").GetComponent<Transform>();
+
+        EntityHealth healthScript = GetComponent<EntityHealth>();
+        healthScript.OnHit.AddListener(FlashWhenHit);
+
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        defaultMat = spriteRenderer.material;
     }
 
     protected override IEnumerator EnemyLogic() //special
@@ -37,5 +47,24 @@ public class Robert : Enemy
         }
 
         projectileScript.Initialize(LayerMask.NameToLayer("Player"), logic.baseDamage * nextAttack.damageMultiplier, player.position + Vector3.up*2 - projectileSpawnPoint.position);
+    }
+
+    private void FlashWhenHit(EntityHealth health, float damage)
+    {
+        Material flash = new Material(defaultMat);
+        Material red = new Material(defaultMat);
+        red.color = Color.red;
+        spriteRenderer.material = flash;
+        flash.Lerp(defaultMat, red, 1);
+        Invoke("ResetMaterial", 0.05f);
+    }
+
+    private void ResetMaterial()
+    {
+        Material flash = spriteRenderer.material;
+        Material red = new Material(defaultMat);
+        red.color = Color.red;
+        flash.Lerp(red, defaultMat, 1);
+        spriteRenderer.material = defaultMat;
     }
 }

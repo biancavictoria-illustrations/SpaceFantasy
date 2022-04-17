@@ -6,7 +6,7 @@ public class Slime : Enemy
 {
     private Material defaultMat;
     private SpriteRenderer spriteRenderer;
-    public GameObject explosionObject;
+    [SerializeField] private GameObject explosionObject;
 
     protected override void Start()
     {
@@ -63,11 +63,11 @@ public class Slime : Enemy
 
     private void ResetMaterial()
     {
-        Material flash = new Material(defaultMat);
+        Material flash = spriteRenderer.material;
         Material red = new Material(defaultMat);
         red.color = Color.red;
-        spriteRenderer.material = flash;
         flash.Lerp(red, defaultMat, 1);
+        spriteRenderer.material = defaultMat;
     }
 
     private void DeathAnimation(EntityHealth health)
