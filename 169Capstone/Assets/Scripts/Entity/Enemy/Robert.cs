@@ -10,7 +10,7 @@ public class Robert : Enemy
 
     private Material defaultMat;
     private SpriteRenderer spriteRenderer;
-    //[SerializeField] private GameObject explosionObject;
+    [SerializeField] private GameObject explosionObject;
 
     protected override void Start()
     {
@@ -21,7 +21,7 @@ public class Robert : Enemy
 
         EntityHealth healthScript = GetComponent<EntityHealth>();
         healthScript.OnHit.AddListener(FlashWhenHit);
-
+        healthScript.OnDeath.AddListener(DeathAnimation);
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         defaultMat = spriteRenderer.material;
     }
@@ -66,5 +66,11 @@ public class Robert : Enemy
         red.color = Color.red;
         flash.Lerp(red, defaultMat, 1);
         spriteRenderer.material = defaultMat;
+    }
+
+    private void DeathAnimation(EntityHealth health)
+    {
+        GameObject explosion = Instantiate(explosionObject);
+        explosion.transform.position = new Vector3(transform.position.x, transform.position.y + 1.5f, transform.position.z);
     }
 }
