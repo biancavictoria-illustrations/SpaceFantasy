@@ -18,11 +18,16 @@ public class EnemyDropGenerator : ScriptableObject
         DropTable dropTable = dropTables[tier];
 
         // Generate a random number
-        System.Random r = new System.Random();
-        float chance = (float)r.NextDouble();
+        // float chance = Random.Range(0.0f, 1f);
 
         // Determine item type and rarity
-        int index = dropTable.DropChance().IndexOf(dropTable.DropChance().First(x => chance <= x));
+        // DOESN'T WORK for some reason
+        // int index = dropTable.DropChance().IndexOf(dropTable.DropChance().First(x => chance <= x));
+
+        // TEMP get a random thing (not based on drop chance values, just a random index)
+        // TODO: Drop chance
+        int index = Random.Range(0, dropTable.DropChance().Count);
+
         InventoryItemSlot itemType = dropTable.ItemType()[index];
         ItemRarity rarity = dropTable.ItemRarityTier()[index];
         
@@ -31,16 +36,16 @@ public class EnemyDropGenerator : ScriptableObject
         // Get the equipment data for the right type of equipment
         if(itemType == InventoryItemSlot.Weapon)
         {
-            itemBaseData = GameManager.instance.GearManager().Weapons()[r.Next(0, GameManager.instance.GearManager().Weapons().Count)];
+            itemBaseData = GameManager.instance.GearManager().Weapons()[Random.Range(0, GameManager.instance.GearManager().Weapons().Count)];
         }
         else if(itemType == InventoryItemSlot.Accessory){
-            itemBaseData = GameManager.instance.GearManager().Accessories()[r.Next(0, GameManager.instance.GearManager().Accessories().Count)];
+            itemBaseData = GameManager.instance.GearManager().Accessories()[Random.Range(0, GameManager.instance.GearManager().Accessories().Count)];
         }
         else if(itemType == InventoryItemSlot.Helmet){
-            itemBaseData = GameManager.instance.GearManager().Head()[r.Next(0, GameManager.instance.GearManager().Head().Count)];
+            itemBaseData = GameManager.instance.GearManager().Head()[Random.Range(0, GameManager.instance.GearManager().Head().Count)];
         }
         else{   // If boots/legs
-            itemBaseData = GameManager.instance.GearManager().Legs()[r.Next(0, GameManager.instance.GearManager().Legs().Count)];
+            itemBaseData = GameManager.instance.GearManager().Legs()[Random.Range(0, GameManager.instance.GearManager().Legs().Count)];
         }
 
         // Create item to drop in physical space from prefab
