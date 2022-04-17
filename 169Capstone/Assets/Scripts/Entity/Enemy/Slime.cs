@@ -6,12 +6,14 @@ public class Slime : Enemy
 {
     private Material defaultMat;
     private SpriteRenderer spriteRenderer;
+    public GameObject explosionObject;
 
     protected override void Start()
     {
         base.Start();
         EntityHealth healthScript = GetComponent<EntityHealth>();
         healthScript.OnHit.AddListener(flashWhenHit);
+        healthScript.OnDeath.AddListener(DeathAnimation);
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         defaultMat = spriteRenderer.material;
     }
@@ -66,5 +68,11 @@ public class Slime : Enemy
         red.color = Color.red;
         spriteRenderer.material = flash;
         flash.Lerp(red, defaultMat, 1);
+    }
+
+    private void DeathAnimation(EntityHealth health)
+    {
+        GameObject explosion = Instantiate(explosionObject);
+        explosion.transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
     }
 }
