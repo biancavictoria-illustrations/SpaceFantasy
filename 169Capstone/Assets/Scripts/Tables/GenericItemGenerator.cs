@@ -15,16 +15,14 @@ public static class GenericItemGenerator
         int rarityIndex = (int)rarity;
 
         // Generate a random number
-        System.Random r = new System.Random();
-        float chance = (float)r.NextDouble();
+        float chance = Random.Range(0.0f, 1f);
 
         // Get the number of secondary lines this item will have and the secondary lines from the random number
-        chance = (float)r.NextDouble();
         int secondaryLineNum = lines.SecondaryLineNumberRates()[rarityIndex].IndexOf(lines.SecondaryLineNumberRates()[rarityIndex].First(x => chance <= x));
         List<StatType> secondaryLines = GenerateSecondaryLines(secondaryLineNum, lines);
 
         // Get the number of enhancements those lines will have
-        chance = (float)r.NextDouble();
+        chance = Random.Range(0.0f, 1f);
         int secondaryLineEnhancementsNum = lines.LineEnhancementRates()[rarityIndex].IndexOf(lines.LineEnhancementRates()[rarityIndex].First(x => chance <= x));
 
         // Set the data in the generatedEquipment
@@ -34,10 +32,9 @@ public static class GenericItemGenerator
     private static List<StatType> GenerateSecondaryLines(int size, LineTable lines)
     {
         List<StatType> secondaryLines = new List<StatType>();
-        System.Random r = new System.Random();
 
         for(int i = 0; i < size; i++){
-            secondaryLines.Add(lines.LinePool()[r.Next(0, lines.LinePool().Count)]);
+            secondaryLines.Add(lines.LinePool()[Random.Range(0, lines.LinePool().Count)]);
         }
 
         return secondaryLines;
