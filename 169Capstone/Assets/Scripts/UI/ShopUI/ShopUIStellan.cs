@@ -55,6 +55,7 @@ public class ShopUIStellan : MonoBehaviour
     [SerializeField] private TMP_Text focusPanelDesc;
     [SerializeField] private TMP_Text focusPanelCost;
     [SerializeField] private Image focusPanelIcon;
+    [SerializeField] private Image focusPanelStarShardIcon;
     [SerializeField] private GameObject focusPanelToPurchaseMessage;
 
     public PlayerStats playerStats {get; private set;}
@@ -67,7 +68,8 @@ public class ShopUIStellan : MonoBehaviour
 
     [HideInInspector] public UpgradePanel activeUpgradeInFocus;
 
-    public bool giveCurrencyForTesting = false; // TEMP
+    public bool giveStarShardForTesting = false; // TEMP
+    public bool giveThousandStarShardsForTesting = false; // TEMP
 
     void Start()
     {
@@ -85,9 +87,13 @@ public class ShopUIStellan : MonoBehaviour
 
     void Update()
     {
-        if(giveCurrencyForTesting){
-            giveCurrencyForTesting = false;
+        if(giveStarShardForTesting){
+            giveStarShardForTesting = false;
             PlayerInventory.instance.SetPermanentCurrency( PlayerInventory.instance.permanentCurrency + 1 );
+        }
+        if(giveThousandStarShardsForTesting){
+            giveThousandStarShardsForTesting = false;
+            PlayerInventory.instance.SetPermanentCurrency( PlayerInventory.instance.permanentCurrency + 1000 );
         }
     }
 
@@ -119,6 +125,12 @@ public class ShopUIStellan : MonoBehaviour
 
         focusPanelCost.gameObject.SetActive(true);
         focusPanelCost.text = _cost;
+        if(_cost == ""){
+            focusPanelStarShardIcon.gameObject.SetActive(false);
+        }
+        else{
+            focusPanelStarShardIcon.gameObject.SetActive(true);
+        }
         
         focusPanelIcon.color = new Color(255,255,255,255);
         focusPanelIcon.sprite = _icon;
