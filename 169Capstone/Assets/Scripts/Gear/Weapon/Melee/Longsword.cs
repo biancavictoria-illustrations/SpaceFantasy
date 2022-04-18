@@ -71,7 +71,7 @@ public class Longsword : Equipment
                 if(attackSpeedRoutine != null)
                     StopCoroutine(attackSpeedRoutine);
                 
-                player.stats.SetBonusForStat(this, EntityStats.StatType.AttackSpeed, EntityStats.BonusType.multiplier, bonusStackCounter * attackSpeedModifierBonus);
+                player.stats.SetBonusForStat(this, StatType.AttackSpeed, EntityStats.BonusType.multiplier, bonusStackCounter * attackSpeedModifierBonus);
                 attackSpeedRoutine = StartCoroutine(bonusDecayRoutine());
             }
 
@@ -109,7 +109,7 @@ public class Longsword : Equipment
         yield return new WaitForSeconds(bonusDuration);
         
         --bonusStackCounter;
-        player.stats.SetBonusForStat(this, EntityStats.StatType.AttackSpeed, EntityStats.BonusType.multiplier, bonusStackCounter * attackSpeedModifierBonus);
+        player.stats.SetBonusForStat(this, StatType.AttackSpeed, EntityStats.BonusType.multiplier, bonusStackCounter * attackSpeedModifierBonus);
 
         if(bonusStackCounter > 0)
             attackSpeedRoutine = StartCoroutine(bonusDecayRoutine());

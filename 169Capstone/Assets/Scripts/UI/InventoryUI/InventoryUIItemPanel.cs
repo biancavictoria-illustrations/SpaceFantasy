@@ -51,22 +51,26 @@ public class InventoryUIItemPanel : MonoBehaviour
     public FlexibleGridLayout textGrid;
     public HorizontalLayoutGroup horizontalLayoutGroup;
 
+    private GeneratedEquipment itemData;
+
     [SerializeField] private Toggle toggle;
 
-    public void SetItemPanelValues(SpawnedEquipmentData item)
+    public void SetItemPanelValues(GeneratedEquipment _itemData)
     {
-        EquipmentBaseData data = item.equipmentBaseData;
+        itemData = _itemData;
 
-        itemName.text = data.ItemName();
-        rarity = item.rarity;
+        EquipmentBaseData baseData = itemData.equipmentBaseData;
 
-        itemTypeRarity.text = rarity.ToString() + " " + data.ItemSlot().ToString();
+        itemName.text = baseData.ItemName();
+        rarity = itemData.rarity;
 
-        shortDescription = data.ShortDescription();
-        expandedDescription = GenerateExpandedDescription(data.LongDescription());
+        itemTypeRarity.text = rarity.ToString() + " " + baseData.ItemSlot().ToString();
+
+        shortDescription = baseData.ShortDescription();
+        expandedDescription = GenerateExpandedDescription();
         itemDescription.text = shortDescription;
 
-        itemIcon.sprite = data.Icon();
+        itemIcon.sprite = baseData.Icon();
         itemIcon.preserveAspect = true;
         
         // Check bc compare item panel doesn't have a toggle
@@ -109,10 +113,9 @@ public class InventoryUIItemPanel : MonoBehaviour
         }
     }
 
-    // TODO: Currently happening EVERY TIME you open the thing; should change it to probably only be when your stats change...?
-    private string GenerateExpandedDescription(string baseDescription)
+    private string GenerateExpandedDescription()
     {
-        string generatedDescription = baseDescription;
+        string generatedDescription = itemData.equipmentBaseData.LongDescription();
 
         Regex rgx = new Regex(STAT_VARIABLE_PATTERN);
         foreach(Match match in rgx.Matches(generatedDescription)){
@@ -126,8 +129,68 @@ public class InventoryUIItemPanel : MonoBehaviour
             // Swap out that part of the string for the value
             generatedDescription = generatedDescription.Replace(matchString, newStringValue);
         }
+        generatedDescription += GetStatModifierDescription();
 
         return generatedDescription;
+    }
+
+    // TODO: Truncate the decimals if they're too long
+    private string GetStatModifierDescription()
+    {
+        string s = "\n";
+
+        // Add primary line text
+        StatType primaryLine = itemData.equipmentBaseData.PrimaryItemLine();
+        float primaryLineValue = itemData.primaryLineValue;
+        if(primaryLineValue > 0){
+            s += SetStringForStatValue(primaryLine, primaryLineValue) + "\n";
+        }
+
+        // Add secondary lines
+        s += "<size=70%>";
+        for(int i = 0; i < EntityStats.numberOfSecondaryLineOptions; i++){
+            float bonusValue = itemData.GetSecondaryLineValueFromStatType((StatType)i);
+            if(bonusValue != 0){
+                s += SetStringForStatValue((StatType)i, bonusValue);
+            }
+        }
+
+        return s;
+    }
+
+    private string SetStringForStatValue(StatType type, float bonusValue)
+    {
+        if(bonusValue < 1){
+            return "\n<b>" + itemData.GetPlayerFacingStatName(type) + ":</b> " + GetColorModForStatValue(bonusValue, type) + "+" + (bonusValue*100) + "%</color>";
+        }
+        else{
+            return "\n<b>" + itemData.GetPlayerFacingStatName(type) + ":</b> " + GetColorModForStatValue(bonusValue, type) + "+" + bonusValue + "</color>";
+        }
+    }
+
+    // Returns green if increase in value, red if decrease
+    private string GetColorModForStatValue(float newBonusValue, StatType type)
+    {
+        string colorMod = "<color=";
+
+        // If you currently have something in that slot, compare new value to that value
+        if(PlayerInventory.instance.ItemSlotIsFull(itemSlot)){
+            GeneratedEquipment currentlyEquippedItem = PlayerInventory.instance.gear[itemSlot].data;
+            float? currentValue = Player.instance.stats.GetBonusForStat( currentlyEquippedItem, type, EntityStats.BonusType.flat);
+
+            // If it gives a bonus for that stat and that bonus is higher than the new item's bonus
+            if(currentValue != null && newBonusValue < currentValue){
+                colorMod += "red";
+            }
+            else{
+                colorMod += "green";
+            }
+        }
+        else{
+            colorMod += "green";
+        }
+
+        return colorMod + ">";
     }
 
     private string GetStatVariableValue(string matchString)

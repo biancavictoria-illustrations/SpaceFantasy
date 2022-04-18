@@ -320,7 +320,7 @@ public class DialogueManager : MonoBehaviour
     // OR when we want to force dialogue when you walk into certain triggers at certain times (Time Lich, etc.)
     public void OnNPCInteracted()
     {
-        Debug.Log("On NPC interacted");
+        // Debug.Log("On NPC interacted");
         OnDialogueOpened();
 
         if(NPC.ActiveNPC){

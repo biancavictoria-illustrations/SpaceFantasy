@@ -35,6 +35,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     [SerializeField] private TMP_Text costText;
     [SerializeField] private TMP_Text skillLevelText;
     [SerializeField] private Image upgradeIcon;
+    [SerializeField] private Image starShardIcon;
 
     [SerializeField] private Button upgradeButton;
 
@@ -243,7 +244,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
         UpdateUIDisplayValues();
 
-        // shopUI.UpdateAllUpgradePanels();
+        shopUI.UpdateAllUpgradePanels();
     }
 
     private void SetMaxUpgradesReached(bool set)
@@ -255,10 +256,21 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
             costText.text = "";
         }
         else{
-            upgradeIcon.color = new Color(255,255,255,255);                
+            upgradeIcon.color = new Color(255,255,255,255);
         }
 
+        ToggleStarShardIconActive(!set);
         UpdateUIDisplayValues();
+    }
+
+    private void ToggleStarShardIconActive(bool set)
+    {
+        if(set){
+            starShardIcon.color = new Color(255,255,255,255);
+        }
+        else{
+            starShardIcon.color = new Color(255,255,255,0);
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -384,6 +396,13 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
                 costIncreasePerLevel = 10;
                 totalUpgradeLevels = PermanentUpgradeManager.maxPrecisionDriveLevels;
                 UpdateBaseDescriptionValues();
+                return;
+            case PermanentUpgradeType.StartingPotions:
+                upgradeName = "[POTIONS]";  // TODO: Update these values!
+                upgradeBaseCost = 10;
+                costIncreasePerLevel = 5;
+                totalUpgradeLevels = PermanentUpgradeManager.maxStartingHealthPotionQuantity;
+                baseDescription = "Increase your starting health potion quantity by 1.";
                 return;
             case PermanentUpgradeType.TimeLichKillerThing:
                 upgradeName = "Deus Ex Machina";

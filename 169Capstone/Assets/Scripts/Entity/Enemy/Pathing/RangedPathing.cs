@@ -65,7 +65,7 @@ public class RangedPathing : Pathing
             if(agent.remainingDistance < 0.5f) //If we haven't entered the valid attack range by the time we reach our destination, try again
             {
                 destination = Vector3.zero;
-                Debug.Log("Choose new destination");
+                // Debug.Log("Choose new destination");
             }
         }
         

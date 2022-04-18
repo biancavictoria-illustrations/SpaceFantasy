@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+#region Item Enums
 
 public enum InventoryItemSlot
 {
@@ -24,6 +25,38 @@ public enum ItemRarity
     enumSize    // Also "none"
 }
 
+// Every item has its own unique ID (name)
+public enum ItemID
+{
+    // Weapons
+    BerserkersZweihander,
+    BowAndArrows,
+    NanoKnuckles,
+    Rapier,
+    RayGun,
+
+    // Helmets
+    HelmOfTheRam,
+    HoloGlasses,
+
+    // Accessories
+    WristRocket,
+    RingOfSnowstorms,
+    MurphysClaw,
+    QuantumKunai,
+
+    // Boots
+    WingedBoots,
+    QuantumLeggings,
+    PropulsionHeels,
+    TrousersOfFortitude,
+
+    // Default
+    enumSize
+}
+
+#endregion
+
 [CreateAssetMenu(menuName = "Gear/EquipmentData")]
 public class EquipmentBaseData : ScriptableObject
 {
@@ -36,11 +69,11 @@ public class EquipmentBaseData : ScriptableObject
     [Tooltip("Just the model, for dropping on the ground")]
     [SerializeField] private GameObject itemDropModelPrefab;
 
-    [Tooltip("Just the model, sized and angled for attaching to the player. WEAPONS ONLY!")]
-    [SerializeField] private GameObject equippedWeaponModelPrefab;
-
     [Tooltip("Actual prefab of the item (no model) created once EQUIPPED")]
     [SerializeField] private GameObject equippedItemPrefab;
+
+    [Tooltip("Just the model, sized and angled for attaching to the player. WEAPONS ONLY!")]
+    [SerializeField] private GameObject equippedWeaponModelPrefab;
 
     [SerializeField] private InventoryItemSlot itemSlot;
     [SerializeField] private int baseCost = 10;
@@ -51,6 +84,8 @@ public class EquipmentBaseData : ScriptableObject
     [SerializeField] private string longDescription;
 
     [SerializeField] private Sprite icon;
+
+    [SerializeField] private StatType primaryItemLine;
 
 
     public string ItemName()
@@ -106,35 +141,9 @@ public class EquipmentBaseData : ScriptableObject
     {
         return icon;
     }
-}
 
-
-// Every item has its own unique ID (name)
-public enum ItemID
-{
-    // Weapons
-    BerserkersZweihander,
-    BowAndArrows,
-    NanoKnuckles,
-    Rapier,
-    RayGun,
-
-    // Helmets
-    HelmOfTheRam,
-    HoloGlasses,
-
-    // Accessories
-    WristRocket,
-    RingOfSnowstorms,
-    MurphysClaw,
-    QuantumKunai,
-
-    // Boots
-    WingedBoots,
-    QuantumLeggings,
-    PropulsionHeels,
-    TrousersOfFortitude,
-
-    // Default
-    enumSize
+    public StatType PrimaryItemLine()
+    {
+        return primaryItemLine;
+    }
 }

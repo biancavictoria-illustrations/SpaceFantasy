@@ -173,7 +173,9 @@ public class GameManager : MonoBehaviour
     public void SaveGame()
     {
         SaveDisplayValuesToPlayerPrefs();
-        SaveLoadManager.SaveGame(saveSlotNum, this, PlayerInventory.instance, DialogueManager.instance, StoryManager.instance, PermanentUpgradeManager.instance);
+        MarkSlotToDelete(false, saveSlotNum);
+        
+        SaveLoadManager.SaveGame(saveSlotNum, this, PlayerInventory.instance, DialogueManager.instance, StoryManager.instance, PermanentUpgradeManager.instance);        
     }
 
     // Called when you load your game in the Main Menu (and ONLY then)
@@ -355,6 +357,23 @@ public class GameManager : MonoBehaviour
             return -1;
         }
         return PlayerPrefs.GetFloat(s);
+    }
+
+    public string GetPlayerPrefsMarkedToDeleteFileKey(int _slot)
+    {
+        return GameManager.instance.GetSaveFilePlayerPrefsKey(_slot) + "Delete";
+    }
+
+    public void MarkSlotToDelete(bool set, int _slot)
+    {
+        // Save it to prefs so that we remember between play sessions in case it's not overwritten right now
+        if(set){
+            PlayerPrefs.SetInt(GetPlayerPrefsMarkedToDeleteFileKey(_slot), 1);
+        }
+        else{
+            PlayerPrefs.SetInt(GetPlayerPrefsMarkedToDeleteFileKey(_slot), 0);            
+        }
+        PlayerPrefs.Save();
     }
 
     #endregion

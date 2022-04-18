@@ -277,4 +277,24 @@ public class InGameUIManager : MonoBehaviour
             Debug.LogError("Failed to open shop for NPC " + shopkeeper.SpeakerID());
         }
     }
+
+    public void CloseNPCShop(SpeakerData shopkeeper)
+    {
+        AlertTextUI.instance.EnableShopAlert();
+        if(shopkeeper.SpeakerID() == SpeakerID.Bryn){
+            brynShopUI.CloseShopUI();
+        }
+        else if(shopkeeper.SpeakerID() == SpeakerID.Stellan){
+            stellanShopUI.CloseShopUI();
+        }
+        else if(shopkeeper.SpeakerID() == SpeakerID.Doctor){
+            doctorShopUI.CloseShopUI();
+        }
+        else if(shopkeeper.SpeakerID() == SpeakerID.Rhian){
+            weaponsShopUI.CloseShopUI();
+        }
+        else{
+            Debug.LogError("Failed to close shop for NPC " + shopkeeper.SpeakerID());
+        }
+    }
 }

@@ -167,6 +167,20 @@ public class InputManager : MonoBehaviour
             return;
         }
 
+        // If you're currently in a UI menu, CLOSE IT and return
+        if(inventoryIsOpen){
+            OnToggleInventory(input);
+            return;
+        }
+        else if(shopIsOpen){
+            InGameUIManager.instance.CloseNPCShop(NPC.ActiveNPC.SpeakerData());
+            return;
+        }
+        else if(compareItemIsOpen){
+            ToggleCompareItemUI(false, DropTrigger.ActiveGearDrop);
+            return;            
+        }
+        
         if(PauseMenu.GameIsPaused){
             InGameUIManager.instance.pauseMenu.ResumeGame();
 

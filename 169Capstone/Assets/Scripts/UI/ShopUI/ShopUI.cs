@@ -10,11 +10,9 @@ public class ShopUI : MonoBehaviour
     public GameObject shopInventoryPanel;
     [SerializeField] private GameObject fadedBackground;
     
-    [SerializeField] protected Button shopInventoryTopButton;
-    [SerializeField] private Button leaveShopButton;
+    [SerializeField] protected Button leaveShopButton;
 
     [SerializeField] protected List<ItemPanelShopUI> itemPanels = new List<ItemPanelShopUI>();
-
     [SerializeField] protected ShopHoverAlerts hoverAlerts;
 
     void Start()
@@ -32,8 +30,7 @@ public class ShopUI : MonoBehaviour
         fadedBackground.SetActive(true);
         hoverAlerts.DisableAllHoverAlerts();
 
-        shopInventoryTopButton.Select();
-        // shopInventoryTopButton.GetComponent<ItemPanelShopUI>().SetHoverAlertsActive(true);
+        leaveShopButton.Select();
     }
   
     public virtual void CloseShopUI()
@@ -54,8 +51,7 @@ public class ShopUI : MonoBehaviour
             panel.GetComponent<Button>().interactable = set;
         }
         if(set){
-            shopInventoryTopButton.Select();
-        // shopInventoryTopButton.GetComponent<ItemPanelShopUI>().SetHoverAlertsActive(true);
+            leaveShopButton.Select();
         }
     }
 }

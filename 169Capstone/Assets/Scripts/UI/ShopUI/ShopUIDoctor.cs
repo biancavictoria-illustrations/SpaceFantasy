@@ -28,4 +28,12 @@ public class ShopUIDoctor : ShopUI
             }
         }
     }
+
+    public void UpdateAllPanelsAfterPurchasing()
+    {
+        foreach(ItemPanelDoctor panel in itemPanels){
+            panel.UpdateCurrentCost(false);
+            panel.SetInteractableBasedOnAffordStatus();
+        }
+    }
 }

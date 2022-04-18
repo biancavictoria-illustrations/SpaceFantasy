@@ -24,16 +24,14 @@ public class ItemPanelDoctor : ItemPanelShopUI
 
     private PlayerStats stats;
 
-    void Start()
-    {
-        rarity = ItemRarity.Legendary;
-    }
+    [SerializeField] private ShopUIDoctor shopUI;
 
     // Called JUST first time you visit this shop per run
     public void GenerateNewDoctorUpgradeValues(int _baseCost)
     {
         stats = FindObjectsOfType<PlayerStats>()[0];
         baseCost = _baseCost;
+        rarity = ItemRarity.Legendary;
         GenerateNewPanelValues();
     }
 
@@ -68,6 +66,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
 
         // === Set the Initial Values ===
         SetBaseShopItemValues(baseCost, upgradeName, GenerateDescription());
+        SetInteractableBasedOnAffordStatus();
     }
 
     private string GenerateDescription()
@@ -85,12 +84,22 @@ public class ItemPanelDoctor : ItemPanelShopUI
         }
     }
 
+    public void SetInteractableBasedOnAffordStatus()
+    {
+        if(canAffordItem){
+            itemCardButton.interactable = true;
+        }
+        else{
+            itemCardButton.interactable = false;
+        }
+    }
+
     private void GetCurrentStatValue()
     {
         if(!stats){
             stats = FindObjectsOfType<PlayerStats>()[0];
         }
-
+    
         // If healing related thing
         if(category == UpgradeShopCategory.HealthPotion){
             currentStatValue = PlayerInventory.instance.healthPotionQuantity;
@@ -124,9 +133,6 @@ public class ItemPanelDoctor : ItemPanelShopUI
         if(currentStatValue >= 20){
             SetMaxStatReachedValues();
         }
-        else{
-            itemCardButton.interactable = true;
-        }
     }
 
     private void IncrementStatValue()
@@ -134,6 +140,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
         currentStatValue++;
         descriptionText.text = GenerateDescription();
         UpdateCurrentCost();
+        SetInteractableBasedOnAffordStatus();
     }
 
     private void IncrementHealingEfficacy()
@@ -141,15 +148,12 @@ public class ItemPanelDoctor : ItemPanelShopUI
         currentStatValue += healingBonusValue;
         descriptionText.text = GenerateDescription();
         UpdateCurrentCost();
+        SetInteractableBasedOnAffordStatus();
     }
 
     public override void PurchaseItem()
     {
         base.PurchaseItem();
-
-        if(PlayerInventory.instance.tempCurrency - currentCostValue < 0){
-            return;
-        }
 
         if(category == UpgradeShopCategory.HealthPotion){
             PlayerInventory.instance.IncrementHealthPotionQuantity();
@@ -189,6 +193,8 @@ public class ItemPanelDoctor : ItemPanelShopUI
                 SetMaxStatReachedValues();
             }
         }
+
+        shopUI.UpdateAllPanelsAfterPurchasing();
     }
 
     private void SetMaxStatReachedValues()
@@ -196,13 +202,16 @@ public class ItemPanelDoctor : ItemPanelShopUI
         costText.text = "";
         descriptionText.text = "<color=red>Max " + statName.ToString() + " value reached.";
         itemCardButton.interactable = false;
+        itemIsAvailable = false;
+        SetHoverAlertsActive(false);
     }
 
     // Update prices and descriptions if necessary but don't generate new stats for purchase
     public void UpdateValues()
     {
-        GetCurrentStatValue();
         descriptionText.text = GenerateDescription();
         UpdateCurrentCost();    // Updates cost value as well as UI
+        SetInteractableBasedOnAffordStatus();
+        GetCurrentStatValue();
     }
 }

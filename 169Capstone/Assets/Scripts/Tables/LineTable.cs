@@ -2,26 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ItemLine
-{
-    CritChance,
-    CritDamage,
-    AttackSpeed,
-    Defense,
-    MovementSpeed,
-    EffectChance,
-    EffectResist,
-    DodgeChance,
-    HPIncrease,
-
-    enumSize
-}
-
 [CreateAssetMenu(menuName = "Gear/LineTableObject")]
 public class LineTable : ScriptableObject
 {
-    [SerializeField] private List<ItemRarity> itemRarityTier;
-
     [SerializeField] private List<List<float>> secondaryLineNumberRates = new List<List<float>>();
     [SerializeField] private List<List<float>> lineEnhancementRates = new List<List<float>>();
 
@@ -36,9 +19,8 @@ public class LineTable : ScriptableObject
     [SerializeField] private List<float> EpicLineEnhancementRates;
     [SerializeField] private List<float> LegendaryLineEnhancementRates;
 
-    [SerializeField] private List<ItemLine> primaryWeaponLine;
-    [SerializeField] private List<InventoryItemSlot> itemType;
-    [SerializeField] private List<ItemLine> linePool;
+    [Tooltip("Only include values that can be rolled as secondary lines. DO NOT INCLUDE PRIMARY-LINE STAT-DAMAGE VALUES!!!")]
+    [SerializeField] private List<StatType> linePool;
 
     public void Setup()
     {
@@ -55,11 +37,6 @@ public class LineTable : ScriptableObject
         lineEnhancementRates.Add(LegendaryLineEnhancementRates);
     }
 
-    public List<ItemRarity> ItemRarityTier()
-    {
-        return itemRarityTier;
-    }
-
     public List<List<float>> SecondaryLineNumberRates()
     {
         return secondaryLineNumberRates;
@@ -70,17 +47,7 @@ public class LineTable : ScriptableObject
         return lineEnhancementRates;
     }
 
-    public List<ItemLine> PrimaryWeaponLine()
-    {
-        return primaryWeaponLine;
-    }
-
-    public List<InventoryItemSlot> ItemType()
-    {
-        return itemType;
-    }
-
-    public List<ItemLine> LinePool()
+    public List<StatType> LinePool()
     {
         return linePool;
     }
