@@ -26,8 +26,8 @@ public class ShopUIGear : ShopUI
   
     public override void CloseShopUI()
     {
+        ToggleShopInventoryOn();
         base.CloseShopUI();
-        shopCompareItemPanel.SetActive(false);
     }
 
     private void SetShopUIValues()

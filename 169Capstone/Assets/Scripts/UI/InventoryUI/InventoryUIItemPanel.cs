@@ -134,6 +134,7 @@ public class InventoryUIItemPanel : MonoBehaviour
         return generatedDescription;
     }
 
+    // TODO: Truncate the decimals if they're too long
     private string GetStatModifierDescription()
     {
         string s = "\n";
