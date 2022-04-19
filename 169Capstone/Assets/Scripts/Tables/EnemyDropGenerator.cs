@@ -16,6 +16,7 @@ public class EnemyDropGenerator : ScriptableObject
     {
         // Select the drop table that coordinates with the current tier
         DropTable dropTable = dropTables[tier];
+        List<DropTable.DropTableEntry> dropTableEntries = dropTable.DropTableEntries();
 
         // Generate a random number, 0 - 1, to determine item type and rarity
         float chance = Random.Range(0.0f, 1f);
@@ -23,16 +24,21 @@ public class EnemyDropGenerator : ScriptableObject
         float itemDropChanceValueFromTable = 0;  // The chance of this selected item dropping, as input in the drop table
         try{
             // TODO: Pick a random option from the pool instead of always taking the first match
-            itemDropChanceValueFromTable = dropTable.DropChance().First(x => chance <= x);
+            // itemDropChanceValueFromTable = dropTable.DropChance().First(x => chance <= x);
+            itemDropChanceValueFromTable = dropTableEntries[0].DropChance();  // TEMP
         }
         catch{
             return;     // If the drop chance value is > all possible drop chance values in the list, don't drop anything
         }
 
-        int index = dropTable.DropChance().IndexOf(itemDropChanceValueFromTable);
+        // int index = dropTable.DropChance().IndexOf(itemDropChanceValueFromTable);
+        int index = 0;  // TEMP
 
-        InventoryItemSlot itemType = dropTable.ItemType()[index];
-        ItemRarity rarity = dropTable.ItemRarityTier()[index];
+        // InventoryItemSlot itemType = dropTable.ItemType()[index];
+        // ItemRarity rarity = dropTable.ItemRarityTier()[index];
+
+        InventoryItemSlot itemType = InventoryItemSlot.Weapon;  // TEMP
+        ItemRarity rarity = ItemRarity.Common;  // TEMP
         
         EquipmentBaseData itemBaseData;
 

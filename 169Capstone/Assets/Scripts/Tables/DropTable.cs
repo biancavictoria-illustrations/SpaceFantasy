@@ -2,30 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Gear/DropTableObject")]
+[CreateAssetMenu(menuName = "Gear/DropTable")]
 public class DropTable : ScriptableObject
 {
-    [SerializeField] private List<InventoryItemSlot> itemType;
-    [SerializeField] private List<ItemRarity> itemRarityTier;
+    [System.Serializable]
+    public class DropTableEntry{
+        [SerializeField] private InventoryItemSlot itemType;
+        [SerializeField] private  ItemRarity rarity;
+        [Tooltip("% chance of item dropping, + all previous % entires. List of decimal values < 1, except the last value which must be 1 (cumulative total of all values).")]
+        [SerializeField] private float dropChance;
 
-    [Tooltip("% chance of item dropping, + all previous % entires. List of decimal values < 1, except the last value which must be 1 (cumulative total of all values).")]
-    [SerializeField] private List<float> dropChance;
+        public InventoryItemSlot ItemType(){return itemType;}
+        public ItemRarity Rarity(){return rarity;}
+        public float DropChance(){return dropChance;}
+    }
+
+    [SerializeField] private List<DropTableEntry> dropTableEntries;
 
     [SerializeField] private int bossesRequired;
     
 
-    public List<InventoryItemSlot> ItemType()
+    public List<DropTableEntry> DropTableEntries()
     {
-        return itemType;
+        return dropTableEntries;
     }
-
-    public List<ItemRarity> ItemRarityTier()
+    
+    public int BossesRequired()
     {
-        return itemRarityTier;
-    }
-
-    public List<float> DropChance()
-    {
-        return dropChance;
+        return bossesRequired;
     }
 }
