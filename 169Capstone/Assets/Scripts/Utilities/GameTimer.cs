@@ -61,19 +61,22 @@ public class GameTimer : MonoBehaviour
 
         // If it includes hours, account for that
         float hours = 0f;
-        if(minutes >=60){
+        if(minutes >= 60){
             hours = Mathf.FloorToInt(minutes / 60);
             minutes = Mathf.FloorToInt(minutes % 60);
         }
 
         float seconds = Mathf.FloorToInt(time % 60);
-
-        string timeString = minutes + ":" + seconds;
-
-        if(hours > 0){
-            timeString = hours + ":" + timeString;
+        string secondsString = "" + seconds;
+        if(seconds < 10){
+            secondsString = "0" + secondsString;
         }
 
-        return timeString;
+        string minString = "" + minutes;
+        if(minutes < 10){
+            minString = "0" + minString;
+        }
+
+        return hours + ":" + minString + ":" + secondsString;
     }
 }
