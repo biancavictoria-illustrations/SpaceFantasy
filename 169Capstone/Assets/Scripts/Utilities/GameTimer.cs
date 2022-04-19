@@ -50,8 +50,30 @@ public class GameTimer : MonoBehaviour
         totalTimePlayedOnThisSaveFile = 0;
     }
 
+    public void SetTotalTimeOnThisSaveFile(float time)
+    {
+        totalTimePlayedOnThisSaveFile = time;
+    }
+
     public string ConvertTimeFloatToReadableString(float time)
     {
-        return Mathf.FloorToInt(time / 60) + ":" + Mathf.FloorToInt(time % 60);
+        float minutes = Mathf.FloorToInt(time / 60);
+
+        // If it includes hours, account for that
+        float hours = 0f;
+        if(minutes >=60){
+            hours = Mathf.FloorToInt(minutes / 60);
+            minutes = Mathf.FloorToInt(minutes % 60);
+        }
+
+        float seconds = Mathf.FloorToInt(time % 60);
+
+        string timeString = minutes + ":" + seconds;
+
+        if(hours > 0){
+            timeString = hours + ":" + timeString;
+        }
+
+        return timeString;
     }
 }

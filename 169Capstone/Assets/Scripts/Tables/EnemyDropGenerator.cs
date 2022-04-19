@@ -17,16 +17,19 @@ public class EnemyDropGenerator : ScriptableObject
         // Select the drop table that coordinates with the current tier
         DropTable dropTable = dropTables[tier];
 
-        // Generate a random number
-        // float chance = Random.Range(0.0f, 1f);
+        // Generate a random number, 0 - 1, to determine item type and rarity
+        float chance = Random.Range(0.0f, 1f);
 
-        // Determine item type and rarity
-        // DOESN'T WORK for some reason
-        // int index = dropTable.DropChance().IndexOf(dropTable.DropChance().First(x => chance <= x));
+        float itemDropChanceValueFromTable = 0;  // The chance of this selected item dropping, as input in the drop table
+        try{
+            // TODO: Pick a random option from the pool instead of always taking the first match
+            itemDropChanceValueFromTable = dropTable.DropChance().First(x => chance <= x);
+        }
+        catch{
+            return;     // If the drop chance value is > all possible drop chance values in the list, don't drop anything
+        }
 
-        // TEMP get a random thing (not based on drop chance values, just a random index)
-        // TODO: Drop chance
-        int index = Random.Range(0, dropTable.DropChance().Count);
+        int index = dropTable.DropChance().IndexOf(itemDropChanceValueFromTable);
 
         InventoryItemSlot itemType = dropTable.ItemType()[index];
         ItemRarity rarity = dropTable.ItemRarityTier()[index];

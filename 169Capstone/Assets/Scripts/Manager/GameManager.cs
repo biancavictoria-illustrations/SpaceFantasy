@@ -182,7 +182,8 @@ public class GameManager : MonoBehaviour
     public void LoadGame(int _slot)
     {
         saveSlotNum = _slot;
-        Debug.Log("Loading Game... Save Slot Num in Game Manager set to: " + saveSlotNum);
+
+        gameTimer.SetTotalTimeOnThisSaveFile( GetTotalTimePlayedInSaveFile(_slot) );
 
         // Retrieve save data & set all values from there
         Save saveData = SaveLoadManager.LoadGame(saveSlotNum);
@@ -317,14 +318,7 @@ public class GameManager : MonoBehaviour
         // If we're calling this ONLY in Main Hub, it's current run num - 1
         PlayerPrefs.SetInt( s + "CompletedRunNum", currentRunNumber - 1 );
 
-        // If total time doesn't exist yet for this save file, set it for the first time; else, update it
-        float totalTimeFromPlayerPrefs = GetTotalTimePlayedInSaveFile(saveSlotNum);
-        if(totalTimeFromPlayerPrefs != -1){
-            PlayerPrefs.SetFloat( s + "TimePlayed", gameTimer.totalTimePlayedOnThisSaveFile + totalTimeFromPlayerPrefs );
-        }
-        else{
-            PlayerPrefs.SetFloat( s + "TimePlayed", gameTimer.totalTimePlayedOnThisSaveFile );
-        }
+        PlayerPrefs.SetFloat( s + "TimePlayed", gameTimer.totalTimePlayedOnThisSaveFile );
         
         PlayerPrefs.Save();
     }

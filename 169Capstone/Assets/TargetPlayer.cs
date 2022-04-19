@@ -7,7 +7,7 @@ public class TargetPlayer : MonoBehaviour
 
     public float damage = 0.2f;
     public float turnRate = 90.0f;
-    public Transform player;
+    public Transform playerTransform;
     public GameObject projectilePrefab;
     public Transform projectileSpawnPoint;
     public Transform projectileSpawnPoint2;
@@ -17,7 +17,7 @@ public class TargetPlayer : MonoBehaviour
 
     void Start()
     {
-        player = Player.instance.transform;
+        playerTransform = Player.instance.transform;
     }
 
     // Start is called before the first frame update
@@ -29,7 +29,7 @@ public class TargetPlayer : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector3 localTargetPos = transform.InverseTransformPoint(player.position);
+        Vector3 localTargetPos = transform.InverseTransformPoint(playerTransform.position);
         localTargetPos.y = 0.0f;
         Quaternion rotationGoal = Quaternion.LookRotation(localTargetPos);
         
@@ -41,13 +41,16 @@ public class TargetPlayer : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // If player transform is null at this point, set it
+        if(!playerTransform){
+            playerTransform = Player.instance.transform;
+        }
+
         timer = 5;
         if (other.tag == "Player")
         {
             ShootProjectile();
         }
-
-        
     }
 
     private void OnTriggerStay(Collider other)
@@ -70,7 +73,7 @@ public class TargetPlayer : MonoBehaviour
         int proSpawn = Random.Range(1, 5);
         if (proSpawn == 1)
         {
-            GameObject projectileObject = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.FromToRotation(transform.position, player.position));
+            GameObject projectileObject = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.FromToRotation(transform.position, playerTransform.position));
             Projectile projectileScript = projectileObject.GetComponent<Projectile>();
             if (!projectileScript)
             {
@@ -78,11 +81,11 @@ public class TargetPlayer : MonoBehaviour
                 Debug.LogError("Projectile prefab " + projectilePrefab + " did not contain a Projectile script.");
             }
 
-            projectileScript.Initialize(LayerMask.NameToLayer("Player"), 5, player.position + Vector3.up * 2 - projectileSpawnPoint.position);
+            projectileScript.Initialize(LayerMask.NameToLayer("Player"), 5, playerTransform.position + Vector3.up * 2 - projectileSpawnPoint.position);
         }
         else if (proSpawn == 2)
         {
-            GameObject projectileObject = Instantiate(projectilePrefab, projectileSpawnPoint2.position, Quaternion.FromToRotation(transform.position, player.position));
+            GameObject projectileObject = Instantiate(projectilePrefab, projectileSpawnPoint2.position, Quaternion.FromToRotation(transform.position, playerTransform.position));
             Projectile projectileScript = projectileObject.GetComponent<Projectile>();
             if (!projectileScript)
             {
@@ -90,11 +93,11 @@ public class TargetPlayer : MonoBehaviour
                 Debug.LogError("Projectile prefab " + projectilePrefab + " did not contain a Projectile script.");
             }
 
-            projectileScript.Initialize(LayerMask.NameToLayer("Player"), 5, player.position + Vector3.up * 2 - projectileSpawnPoint.position);
+            projectileScript.Initialize(LayerMask.NameToLayer("Player"), 5, playerTransform.position + Vector3.up * 2 - projectileSpawnPoint.position);
         }
         else if (proSpawn == 3)
         {
-            GameObject projectileObject = Instantiate(projectilePrefab, projectileSpawnPoint3.position, Quaternion.FromToRotation(transform.position, player.position));
+            GameObject projectileObject = Instantiate(projectilePrefab, projectileSpawnPoint3.position, Quaternion.FromToRotation(transform.position, playerTransform.position));
             Projectile projectileScript = projectileObject.GetComponent<Projectile>();
             if (!projectileScript)
             {
@@ -102,11 +105,11 @@ public class TargetPlayer : MonoBehaviour
                 Debug.LogError("Projectile prefab " + projectilePrefab + " did not contain a Projectile script.");
             }
 
-            projectileScript.Initialize(LayerMask.NameToLayer("Player"), 5, player.position + Vector3.up * 2 - projectileSpawnPoint.position);
+            projectileScript.Initialize(LayerMask.NameToLayer("Player"), 5, playerTransform.position + Vector3.up * 2 - projectileSpawnPoint.position);
         }
         else if (proSpawn == 4)
         {
-            GameObject projectileObject = Instantiate(projectilePrefab, projectileSpawnPoint4.position, Quaternion.FromToRotation(transform.position, player.position));
+            GameObject projectileObject = Instantiate(projectilePrefab, projectileSpawnPoint4.position, Quaternion.FromToRotation(transform.position, playerTransform.position));
             Projectile projectileScript = projectileObject.GetComponent<Projectile>();
             if (!projectileScript)
             {
@@ -114,7 +117,7 @@ public class TargetPlayer : MonoBehaviour
                 Debug.LogError("Projectile prefab " + projectilePrefab + " did not contain a Projectile script.");
             }
 
-            projectileScript.Initialize(LayerMask.NameToLayer("Player"), 5, player.position + Vector3.up * 2 - projectileSpawnPoint.position);
+            projectileScript.Initialize(LayerMask.NameToLayer("Player"), 5, playerTransform.position + Vector3.up * 2 - projectileSpawnPoint.position);
         }
         
         
