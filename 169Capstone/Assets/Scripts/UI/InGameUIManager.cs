@@ -34,6 +34,8 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private GameObject gearSwapUIPanel;
     public bool gearSwapIsOpen {get; private set;}
 
+    public StatRerollUI statRerollUI;
+
     public ShopUI brynShopUI;
     public ShopUIStellan stellanShopUI;
     public ShopUI doctorShopUI;
@@ -81,6 +83,16 @@ public class InGameUIManager : MonoBehaviour
         inGameUIPanel.SetActive(set);
     }
 
+    public void EnableRunStartStatRerollPopup(bool set)
+    {
+        if(set){
+            statRerollUI.EnableStatRerollUI();
+        }
+        else{
+            statRerollUI.DisableStatRerollUI();
+        }
+    }
+
     public void ToggleInGameGearIconPanel(bool set)
     {
         inGameUIGearIconPanel.SetActive(set);
@@ -96,6 +108,8 @@ public class InGameUIManager : MonoBehaviour
         InputManager.instance.RunGameTimer(setRunUIActive, setRunUIActive);
         GameManager.instance.gameTimer.ResetTimer();
     }
+
+    #region Item UI
 
     // Called when player input opens or closes the inventory
     public void SetInventoryUIActive(bool set)
@@ -217,6 +231,10 @@ public class InGameUIManager : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Currency UI
+
     public void SetPermanentCurrencyValue(int money)
     {
         permanentCurrencyValue.text = "" + money;
@@ -226,6 +244,10 @@ public class InGameUIManager : MonoBehaviour
     {
         tempCurrencyValue.text = "" + money;
     }
+
+    #endregion
+
+    #region Health UI
 
     public void SetCurrentHealthValue(float _NewCurrentHP)
     {
@@ -257,6 +279,10 @@ public class InGameUIManager : MonoBehaviour
     {
         healthPotionValue.text = "" + numPotions;
     }
+
+    #endregion  
+
+    #region NPC Shop Stuff
 
     public void OpenNPCShop(SpeakerData shopkeeper)
     {
@@ -297,4 +323,6 @@ public class InGameUIManager : MonoBehaviour
             Debug.LogError("Failed to close shop for NPC " + shopkeeper.SpeakerID());
         }
     }
+
+    #endregion
 }

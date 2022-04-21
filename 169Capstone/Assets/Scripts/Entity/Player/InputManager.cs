@@ -88,7 +88,7 @@ public class InputManager : MonoBehaviour
 
     public bool CanAcceptGameplayInput()
     {
-        if(isInDialogue || PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || isInMainMenu){
+        if(isInDialogue || PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || isInMainMenu || GameManager.instance.statRerollUIOpen){
             return false;
         }
         return true;
@@ -179,6 +179,10 @@ public class InputManager : MonoBehaviour
         else if(compareItemIsOpen){
             ToggleCompareItemUI(false, DropTrigger.ActiveGearDrop);
             return;            
+        }
+        else if(GameManager.instance.statRerollUIOpen){ // Should this one be here? if so probably also death UI
+            InGameUIManager.instance.statRerollUI.DisableStatRerollUI();
+            return;
         }
         
         if(PauseMenu.GameIsPaused){
