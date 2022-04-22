@@ -35,11 +35,14 @@ public class InGameUIManager : MonoBehaviour
     public bool gearSwapIsOpen {get; private set;}
 
     public StatRerollUI statRerollUI;
+    public JournalUI journalUI;
 
     public ShopUI brynShopUI;
     public ShopUIStellan stellanShopUI;
     public ShopUI doctorShopUI;
     public ShopUI weaponsShopUI;
+
+    [HideInInspector] public bool stellanShopIsOpen = false;
 
     [SerializeField] private TMP_Text permanentCurrencyValue;
     [SerializeField] private TMP_Text tempCurrencyValue;
@@ -107,6 +110,16 @@ public class InGameUIManager : MonoBehaviour
         // Reset timer
         InputManager.instance.RunGameTimer(setRunUIActive, setRunUIActive);
         GameManager.instance.gameTimer.ResetTimer();
+    }
+
+    public void OnStellanShopUIOpen(bool setOpen)
+    {
+        stellanShopIsOpen = setOpen;
+        permanentCurrencyValue.gameObject.SetActive(!setOpen);
+        
+        if(setOpen){
+            SetPermanentCurrencyValue(PlayerInventory.instance.permanentCurrency);
+        }
     }
 
     #region Item UI
@@ -238,6 +251,10 @@ public class InGameUIManager : MonoBehaviour
     public void SetPermanentCurrencyValue(int money)
     {
         permanentCurrencyValue.text = "" + money;
+
+        if(stellanShopIsOpen){
+            stellanShopUI.permanentCurrency.text = "" + money;
+        }
     }
 
     public void SetTempCurrencyValue(int money)

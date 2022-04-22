@@ -50,6 +50,8 @@ public class ShopUIStellan : MonoBehaviour
     [SerializeField] public List<UpgradePanel> upgradePanels = new List<UpgradePanel>();
     [SerializeField] private GameObject killTimeLichItem;
 
+    public TMP_Text permanentCurrency;
+
     [SerializeField] private TMP_Text focusPanelName;
     [SerializeField] private TMP_Text focusSkillLevel;
     [SerializeField] private TMP_Text focusPanelDesc;
@@ -170,6 +172,8 @@ public class ShopUIStellan : MonoBehaviour
         UpdateAllUpgradePanels();
 
         leaveShopButton.Select();
+
+        InGameUIManager.instance.OnStellanShopUIOpen(true);
     }
   
     public void CloseShopUI()
@@ -180,6 +184,8 @@ public class ShopUIStellan : MonoBehaviour
         ClearFocusPanel();
 
         AlertTextUI.instance.EnableShopAlert();
+
+        InGameUIManager.instance.OnStellanShopUIOpen(false);
     }
 
     public void ResetButtonClicked()

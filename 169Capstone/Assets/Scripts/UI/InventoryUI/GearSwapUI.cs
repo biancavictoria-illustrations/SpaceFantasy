@@ -62,7 +62,16 @@ public class GearSwapUI : MonoBehaviour
     {
         newItem.EquipGeneratedItem();
         CloseGearSwapUI();
-        AlertTextUI.instance.DisableAlert();
+        
+        // Deal with UI alerts
+        if(PlayerInventory.hasPickedSomethingUpThisRun){
+            AlertTextUI.instance.DisableAlert();
+        }        
+        else{
+            PlayerInventory.hasPickedSomethingUpThisRun = true;
+            AlertTextUI.instance.EnableOpenInventoryAlert();
+            StartCoroutine(AlertTextUI.instance.RemoveAlertAfterSeconds());
+        }
     }
 
     public void SetSwapUIInteractable(bool set)

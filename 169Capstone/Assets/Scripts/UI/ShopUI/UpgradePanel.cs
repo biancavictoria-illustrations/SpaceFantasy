@@ -72,6 +72,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
             else{
                 currentDescription = baseDescription;
             }
+            currentDescription += "\n\n" + GetStatValueDescriptionFromType();
         }
         // If skill
         else{            
@@ -273,38 +274,42 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         }
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        OnUpgradePanelSelect();
-    }
+    #region Selectable Handling
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        OnUpgradePanelDeselct();
-    }
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            OnUpgradePanelSelect();
+        }
 
-    public void OnSelect(BaseEventData eventData)
-    {
-        OnUpgradePanelSelect();
-    }
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            OnUpgradePanelDeselct();
+        }
 
-    public void OnDeselect(BaseEventData eventData)
-    {
-        OnUpgradePanelDeselct();
-    }
+        public void OnSelect(BaseEventData eventData)
+        {
+            OnUpgradePanelSelect();
+        }
 
-    private void OnUpgradePanelSelect()
-    {
-        shopUI.activeUpgradeInFocus = this;
-        UpdateUIDisplayValues();
-        shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, currentDescription, costText.text, upgradeIcon.sprite);
-    }
+        public void OnDeselect(BaseEventData eventData)
+        {
+            OnUpgradePanelDeselct();
+        }
 
-    private void OnUpgradePanelDeselct()
-    {
-        shopUI.activeUpgradeInFocus = null;
-        shopUI.ClearFocusPanel();
-    }
+        private void OnUpgradePanelSelect()
+        {
+            shopUI.activeUpgradeInFocus = this;
+            UpdateUIDisplayValues();
+            shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, currentDescription, costText.text, upgradeIcon.sprite);
+        }
+
+        private void OnUpgradePanelDeselct()
+        {
+            shopUI.activeUpgradeInFocus = null;
+            shopUI.ClearFocusPanel();
+        }
+
+    #endregion
 
     private void SetValuesByType()
     {
@@ -499,4 +504,47 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         }
         statMinEqualsMax = false;
     }
+
+    #region Stat Descriptions
+
+        private const string STR_DESCRIPTION = "[STR description]";
+        private const string DEX_DESCRIPTION = "[DEX description]";
+        private const string INT_DESCRIPTION = "[INT description]";
+        private const string WIS_DESCRIPTION = "[WIS description]";
+        private const string CON_DESCRIPTION = "[CON description]";
+        private const string CHA_DESCRIPTION = "[CHA description]";
+
+        private string GetStatValueDescriptionFromType()
+        {
+            switch(upgradeType){
+                case PermanentUpgradeType.STRMin:
+                    return STR_DESCRIPTION;
+                case PermanentUpgradeType.STRMax:
+                    return STR_DESCRIPTION;
+                case PermanentUpgradeType.DEXMin:
+                    return DEX_DESCRIPTION;
+                case PermanentUpgradeType.DEXMax:
+                    return DEX_DESCRIPTION;
+                case PermanentUpgradeType.INTMin:
+                    return INT_DESCRIPTION;
+                case PermanentUpgradeType.INTMax:
+                    return INT_DESCRIPTION;
+                case PermanentUpgradeType.WISMin:
+                    return WIS_DESCRIPTION;
+                case PermanentUpgradeType.WISMax:
+                    return WIS_DESCRIPTION;
+                case PermanentUpgradeType.CONMin:
+                    return CON_DESCRIPTION;
+                case PermanentUpgradeType.CONMax:
+                    return CON_DESCRIPTION;
+                case PermanentUpgradeType.CHAMin:
+                    return CHA_DESCRIPTION;
+                case PermanentUpgradeType.CHAMax:
+                    return CHA_DESCRIPTION;
+            }
+            Debug.LogError("No description found for upgrade type: " + upgradeType);
+            return "ERROR";
+        }
+
+    #endregion
 }
