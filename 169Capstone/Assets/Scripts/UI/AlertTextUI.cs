@@ -20,8 +20,14 @@ public class AlertTextUI : MonoBehaviour
 
     private Sprite interactControlIcon;
     private string interactControlString;
+    private bool interactAlertIsActive = false;
+
+    private Sprite openInventoryControlIcon;
+    private string openInventoryControlString;
+    private bool openInventoryAlertIsActive = false;
     
     [SerializeField] private InputActionReference interactAction;
+    [SerializeField] private InputActionReference toggleInventoryAction;
 
     void Awake()
     {
@@ -79,31 +85,61 @@ public class AlertTextUI : MonoBehaviour
     {
         SetAlertText(false);
         alertTextIsActive = false;
+        interactAlertIsActive = false;
+        openInventoryAlertIsActive = false;
     }
 
-    public void EnableInteractAlert()
+    public IEnumerator RemoveAlertAfterSeconds(float timeToWait = 2f)
     {
-        SetAlertText(true, interactControlIcon, interactControlString, "INTERACT");
-        alertTextIsActive = true;
+        yield return new WaitForSeconds(timeToWait);
+        DisableAlert();   
     }
 
-    public void EnableShopAlert()
-    {
-        SetAlertText(true, interactControlIcon, interactControlString, "SHOP");
-        alertTextIsActive = true;
-    }
+    #region Interact Alerts
+        public void EnableInteractAlert()
+        {
+            SetAlertText(true, interactControlIcon, interactControlString, "INTERACT");
+            alertTextIsActive = true;
+            interactAlertIsActive = true;
+        }
 
-    public void EnableProceedDoorAlert()
-    {
-        SetAlertText(true, interactControlIcon, interactControlString, "PROCEED");
-        alertTextIsActive = true;
-    }
+        public void EnableShopAlert()
+        {
+            SetAlertText(true, interactControlIcon, interactControlString, "SHOP");
+            alertTextIsActive = true;
+            interactAlertIsActive = true;
+        }
 
-    public void EnableItemPickupAlert()
-    {
-        SetAlertText(true, interactControlIcon, interactControlString, "EXAMINE");
-        alertTextIsActive = true;
-    }
+        public void EnableProceedDoorAlert()
+        {
+            SetAlertText(true, interactControlIcon, interactControlString, "PROCEED");
+            alertTextIsActive = true;
+            interactAlertIsActive = true;
+        }
+
+        public void EnableItemPickupAlert()
+        {
+            SetAlertText(true, interactControlIcon, interactControlString, "EXAMINE");
+            alertTextIsActive = true;
+            interactAlertIsActive = true;
+        }
+    #endregion
+
+    #region Inventory Alerts
+        public void EnableOpenInventoryAlert()
+        {
+            SetAlertText(true, openInventoryControlIcon, openInventoryControlString, "OPEN INVENTORY");
+            alertTextIsActive = true;
+            openInventoryAlertIsActive = true;
+        }
+
+        public void EnableViewStatsAlert()
+        {
+            SetAlertText(true, openInventoryControlIcon, openInventoryControlString, "VIEW STATS");
+            alertTextIsActive = true;
+            openInventoryAlertIsActive = true;
+        }
+    #endregion
 
     // If showing alerts for more than just interact, UPDATE this to include those as well
     public void UpdateAlertText()
@@ -111,13 +147,25 @@ public class AlertTextUI : MonoBehaviour
         interactControlIcon = GetIconForAction( ControlKeys.Interact );
         interactControlString = "";
 
+        openInventoryControlIcon = GetIconForAction(ControlKeys.ToggleInventory);
+        openInventoryControlString = "";
+
         // If it's null at this point, get the string for the control instead
         if(!interactControlIcon){
             interactControlString = GetActionString(interactAction);
             controlButtonText.text = interactControlString;
         }
+        if(!openInventoryControlIcon){
+            openInventoryControlString = GetActionString(toggleInventoryAction);
+            controlButtonText.text = openInventoryControlString;
+        }
 
-        SetAlertText(alertTextIsActive, interactControlIcon, interactControlString, alertText.text);
+        if(openInventoryAlertIsActive){
+            SetAlertText(alertTextIsActive, openInventoryControlIcon, openInventoryControlString, alertText.text);
+        }
+        else{
+            SetAlertText(alertTextIsActive, interactControlIcon, interactControlString, alertText.text);
+        }        
     }
 
     private string GetActionString(InputActionReference action)

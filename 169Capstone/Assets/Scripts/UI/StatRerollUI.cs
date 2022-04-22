@@ -37,8 +37,8 @@ public class StatRerollUI : MonoBehaviour
     public void DisableStatRerollUI()
     {
         ToggleActiveStatus(false);
-
-        // TODO: Set an alert like "<key> Open Inventory" that disappears after X seconds
+        AlertTextUI.instance.EnableViewStatsAlert();
+        StartCoroutine(AlertTextUI.instance.RemoveAlertAfterSeconds());
     }
 
     private void ToggleActiveStatus(bool set)

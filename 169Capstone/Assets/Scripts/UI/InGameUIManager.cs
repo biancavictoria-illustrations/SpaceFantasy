@@ -35,6 +35,7 @@ public class InGameUIManager : MonoBehaviour
     public bool gearSwapIsOpen {get; private set;}
 
     public StatRerollUI statRerollUI;
+    public JournalUI journalUI;
 
     public ShopUI brynShopUI;
     public ShopUIStellan stellanShopUI;
