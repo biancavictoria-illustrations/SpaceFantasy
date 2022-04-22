@@ -13,8 +13,8 @@ public class HelmOfTheRam : Head
     void Start()
     {
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        damage = itemData.Damage() * player.currentStr;
-        knockBack = 0.5f * player.currentStr;
+        damage = itemData.Damage() * player.stats.Strength();
+        knockBack = 0.5f * player.stats.Strength();
     }
 
     // Update is called once per frame

@@ -14,7 +14,7 @@ public class AlertTextUI : MonoBehaviour
     [SerializeField] private TMP_Text controlButtonText;
     [SerializeField] private TMP_Text alertText;
 
-    public bool alertTextIsActive = false;
+    [HideInInspector] public bool alertTextIsActive = false;
 
     public static bool inputDeviceChanged = false;
 
@@ -35,6 +35,7 @@ public class AlertTextUI : MonoBehaviour
 
     void Start()
     {
+        alertTextIsActive = false;
         UpdateAlertText();
     }
 

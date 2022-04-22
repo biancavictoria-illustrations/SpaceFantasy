@@ -16,7 +16,7 @@ public class WristRocket : Accessories
         player = Player.instance;
         movement = player.GetComponentInChildren<Movement>();
         anim = player.GetComponentInChildren<AnimationStateController>();
-        damage = itemData.Damage() * player.currentInt;
+        damage = itemData.Damage() * player.stats.Intelligence();
         anim.startAccessory.AddListener(LaunchRocket);
         anim.endAccessory.AddListener(ResetRocket);
     }

@@ -9,14 +9,6 @@ public class Player : MonoBehaviour
     public PlayerStats stats {get; private set;}
     public EntityHealth health {get; private set;}
 
-    // Do we need these??? they're not being updated with the doctor shop upgrades i don't think so we should probably get rid of them cuz they're redundant with normal stats...?
-    public int currentStr;
-    public int currentDex;
-    public int currentCon;
-    public int currentInt;
-    public int currentWis;
-    public int currentCha;
-
     [SerializeField] public Transform handPos;
 
     //public Timer timer;
@@ -45,13 +37,6 @@ public class Player : MonoBehaviour
         //health.maxHitpoints = stats.getMaxHitPoints();
         //health.currentHitpoints = stats.getMaxHitPoints();
         health.SetStartingHealthUI();
-
-        currentStr = stats.Strength();
-        currentDex = stats.Dexterity();
-        currentCon = stats.Constitution();
-        currentInt = stats.Intelligence();
-        currentWis = stats.Wisdom();
-        currentCha = stats.Charisma();
 
         StartCoroutine(DetectFall());
 

@@ -79,6 +79,7 @@ public class PermanentUpgradeManager : MonoBehaviour
         levelsInNatural20 = 0;
         levelsInPrecisionDrive = 0;
         levelsInTimeLichKillerThing = 0;
+        startingHealthPotionQuantity = 0;
     }
 
     public void SetSkillLevel(PermanentUpgradeType upgradeType, int level)
