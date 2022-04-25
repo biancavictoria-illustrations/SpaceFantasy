@@ -507,12 +507,12 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
     #region Stat Descriptions
 
-        private const string STR_DESCRIPTION = "[STR description]";
-        private const string DEX_DESCRIPTION = "[DEX description]";
-        private const string INT_DESCRIPTION = "[INT description]";
-        private const string WIS_DESCRIPTION = "[WIS description]";
-        private const string CON_DESCRIPTION = "[CON description]";
-        private const string CHA_DESCRIPTION = "[CHA description]";
+        private const string STR_DESCRIPTION = "Increases the damage dealt by Strength-based weapons and abilities. Also increases Defense.";
+        private const string DEX_DESCRIPTION = "Increases the damage dealt by Dexterity-based weapons and abilities. Also increases Dodge Chance.";
+        private const string INT_DESCRIPTION = "Increases the damage dealt by Intelligence-based weapons and abilities. Also increases Critical Hit Chance.";
+        private const string WIS_DESCRIPTION = "Increases the damage dealt by Wisdom-based weapons and abilities. Also reduces the length of ability cooldowns.";
+        private const string CON_DESCRIPTION = "Increases Max Health and Status Resist Chance.";
+        private const string CHA_DESCRIPTION = "Reduces the prices of items in shops and increases Luck.";
 
         private string GetStatValueDescriptionFromType()
         {
