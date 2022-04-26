@@ -8,6 +8,10 @@ public class InGameUIManager : MonoBehaviour
 {
     public static InGameUIManager instance;
 
+    public const string slimeGreenColor = "#05d806";
+    public const string magentaColor = "#FF49C7";
+    public const string turquoiseColor = "#1bc7b2";
+
     [SerializeField] private GameObject inGameUIPanel;
     [SerializeField] private GameObject inGameUIGearIconPanel;  // Sometimes toggled separately from the rest of the in game UI
 

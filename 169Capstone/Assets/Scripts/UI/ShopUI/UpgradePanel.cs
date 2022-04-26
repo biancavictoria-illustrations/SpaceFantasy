@@ -161,18 +161,18 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     {
         // If stat
         if((int)upgradeType <= 11){
-            baseDescription = "Increase <b>" + upgradeName + "</b> from <b>" + currentUpgradeLevel + "</b> to <color=green>" + (currentUpgradeLevel+1) + "</color>.";
+            baseDescription = "Increase <b>" + upgradeName + "</b> from <b>" + currentUpgradeLevel + "</b> to <color=" + InGameUIManager.slimeGreenColor + ">" + (currentUpgradeLevel+1) + "</color>.";
         }
         // If update-able skill
         else{
             switch(upgradeType){
                 case PermanentUpgradeType.ArmorPlating:
                     float defense = PermanentUpgradeManager.instance.GetCurrentSkillValue(upgradeType);
-                    baseDescription = "Increase base <b>Defense</b> from <b>" + defense + "</b> to <color=green>" + (defense + PermanentUpgradeManager.instance.armorPlatingBonusPerLevel) + "</color>.";
+                    baseDescription = "Increase base <b>Defense</b> from <b>" + defense + "</b> to <color=" + InGameUIManager.slimeGreenColor + ">" + (defense + PermanentUpgradeManager.instance.armorPlatingBonusPerLevel) + "</color>.";
                     return;
                 case PermanentUpgradeType.ExtensiveTraining:
                     float attackSpeed = PermanentUpgradeManager.instance.GetCurrentSkillValue(upgradeType) * 100;
-                    baseDescription = "Increase base <b>Attack Speed</b> from <b>" + attackSpeed + "%</b> to <color=green>" + (attackSpeed + PermanentUpgradeManager.instance.extensiveTrainingBonusPerLevel*100) + "%</color>.";
+                    baseDescription = "Increase base <b>Attack Speed</b> from <b>" + attackSpeed + "%</b> to <color=" + InGameUIManager.slimeGreenColor + ">" + (attackSpeed + PermanentUpgradeManager.instance.extensiveTrainingBonusPerLevel*100) + "%</color>.";
                     return;
                 case PermanentUpgradeType.PrecisionDrive:
                     float critDamage = PermanentUpgradeManager.instance.GetCurrentSkillValue(upgradeType) * 100;
@@ -188,7 +188,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
                             newCritDamage = PermanentUpgradeManager.instance.precisionDriveBonusPerLevel[3] * 100;
                             break;
                     }
-                    baseDescription = "Increase base <b>Critical Hit Damage</b> from <b>+" + critDamage + "%</b> to <color=green>+" + newCritDamage + "%</color>.";
+                    baseDescription = "Increase base <b>Critical Hit Damage</b> from <b>+" + critDamage + "%</b> to <color=" + InGameUIManager.slimeGreenColor + ">+" + newCritDamage + "%</color>.";
                     return;
             }
         }
@@ -393,7 +393,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
                 upgradeBaseCost = 20;
                 costIncreasePerLevel = 0;
                 totalUpgradeLevels = PermanentUpgradeManager.maxNatural20Levels;
-                baseDescription = "Increase base Critical Hit Chance to <color=green>" + PermanentUpgradeManager.instance.natural20BonusPerLevel*100 + "%</color>.";
+                baseDescription = "Increase base Critical Hit Chance to <color=" + InGameUIManager.slimeGreenColor + ">" + PermanentUpgradeManager.instance.natural20BonusPerLevel*100 + "%</color>.";
                 return;
             case PermanentUpgradeType.PrecisionDrive:
                 upgradeName = "Precision Drive";
