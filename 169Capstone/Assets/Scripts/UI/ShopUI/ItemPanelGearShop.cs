@@ -23,7 +23,7 @@ public class ItemPanelGearShop : ItemPanelShopUI
     public void SetGearItemValues(GeneratedEquipment _item)
     {
         if(!itemIsAvailable){
-            // descriptionText.text = "<b><color=red>SOLD";
+            // descriptionText.text = "<b><color=" + InGameUIManager.magentaColor + ">SOLD";
             // itemCardButton.interactable = false;
             return;
         }
@@ -55,7 +55,7 @@ public class ItemPanelGearShop : ItemPanelShopUI
         // Generate the actual item object in the scene (from the item data)
         item.EquipGeneratedItem();
 
-        descriptionText.text = "<b><color=red>SOLD";
+        descriptionText.text = "<b><color=" + InGameUIManager.magentaColor + ">SOLD";
         itemCardButton.interactable = false;
         itemIsAvailable = false;
     }

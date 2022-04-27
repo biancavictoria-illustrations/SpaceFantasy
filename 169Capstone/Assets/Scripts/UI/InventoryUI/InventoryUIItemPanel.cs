@@ -180,14 +180,14 @@ public class InventoryUIItemPanel : MonoBehaviour
 
             // If it gives a bonus for that stat and that bonus is higher than the new item's bonus
             if(currentValue != null && newBonusValue < currentValue){
-                colorMod += "red";
+                colorMod += InGameUIManager.magentaColor;
             }
             else{
-                colorMod += "green";
+                colorMod += InGameUIManager.slimeGreenColor;
             }
         }
         else{
-            colorMod += "green";
+            colorMod += InGameUIManager.slimeGreenColor;
         }
 
         return colorMod + ">";
@@ -262,10 +262,10 @@ public class InventoryUIItemPanel : MonoBehaviour
         string startColor = "";
         string endColor = "</color>";
         if(totalValue > 0){
-            startColor = "<color=green>";
+            startColor = "<color=" + InGameUIManager.slimeGreenColor + ">";
         }
         else{
-            startColor = "<color=red>";
+            startColor = "<color=" + InGameUIManager.magentaColor + ">";
         }
 
         return startColor + Mathf.Abs(totalValue) + endColor;

@@ -27,7 +27,7 @@ public class OrbyBartenderChat : MonoBehaviour
     
     public const string annoyedOrbyDialogue1 = "<i>*fan whirring*</i>";
     public const string annoyedOrbyDialogue2 = "WHAAAAAAAA";
-    public const string angryOrbyDialogue = "<i><color=red>BEEP BEEP</color></i>";
+    public const string angryOrbyDialogue = "<i><color=" + InGameUIManager.magentaColor + ">BEEP BEEP</color></i>";
 
     private int numberOfInteracts = 0;
 
