@@ -17,12 +17,12 @@ public class StatRerollUI : MonoBehaviour
 
     [SerializeField] private Button continueButton;
 
-    [Tooltip("The number of seconds a given number stays on the screen during the reroll animation.")]
-    [SerializeField] private float statAnimationNumberDuration = 1f;
-    [Tooltip("The counter that ticks down to completing the animation for the first stat (each die completes one after the next). Total duration in sec is statAnimationNumberDuration*this value")]
-    [SerializeField] private int numberOfRollAnimations = 20;
+    // [Tooltip("The number of seconds a given number stays on the screen during the reroll animation.")]
+    private float statAnimationNumberDuration = 0.1f;
+    // [Tooltip("The counter that ticks down to completing the animation for the first stat (each die completes one after the next). Total duration in sec is statAnimationNumberDuration*this value")]
+    private int numberOfRollAnimations = 20;
     // [Tooltip("")]
-    [SerializeField] private int addedToEachNextDuration = 5;
+    private int addedToEachNextDuration = 4;
 
     private PlayerStats stats;
     private PermanentUpgradeManager upgradeManager;
@@ -70,19 +70,35 @@ public class StatRerollUI : MonoBehaviour
     }
 
     // Called once the animation is complete to set the actual value you rolled
-    private void SetActualStatValues()
+    private void SetActualStatValues(PlayerFacingStatName stat)
     {
-        STRText.text = "" + stats.Strength();
-        DEXText.text = "" + stats.Dexterity();
-        INTText.text = "" + stats.Intelligence();
-        WISText.text = "" + stats.Wisdom();
-        CONText.text = "" + stats.Constitution();
-        CHAText.text = "" + stats.Charisma();
+        string stringMod = "<color=" + InGameUIManager.medTurquoiseColor + "><b>";
+        string endStringMod = "</color></b>";
+
+        switch(stat){
+            case PlayerFacingStatName.STR:
+                STRText.text = stringMod + stats.Strength() + endStringMod;
+                break;
+            case PlayerFacingStatName.DEX:
+                DEXText.text = stringMod + stats.Dexterity() + endStringMod;
+                break;
+            case PlayerFacingStatName.INT:
+                INTText.text = stringMod + stats.Intelligence() + endStringMod;
+                break;
+            case PlayerFacingStatName.WIS:
+                WISText.text = stringMod + stats.Wisdom() + endStringMod;
+                break;
+            case PlayerFacingStatName.CON:
+                CONText.text = stringMod + stats.Constitution() + endStringMod;
+                break;
+            case PlayerFacingStatName.CHA:
+                CHAText.text = stringMod + stats.Charisma() + endStringMod;
+                continueButton.interactable = true;
+                continueButton.Select();
+                break;
+        }
 
         // TODO: Flourish
-
-        continueButton.interactable = true;
-        continueButton.Select();
     }
 
     private IEnumerator RerollAnimationRoutine( PlayerFacingStatName stat, int counter )
@@ -111,7 +127,7 @@ public class StatRerollUI : MonoBehaviour
                     break;
             }
         }
-        SetActualStatValues();
+        SetActualStatValues(stat);
     }
 
     private int RandomNumberInStatRange(int min, int max)
