@@ -15,8 +15,7 @@ public class GeneratedEquipment : MonoBehaviour
     public float attackSpeed = 0f;
     public int defense = 0;
     public float movementSpeed = 0f;
-    public float statusEffectChance = 0f;
-    public float statusResist = 0f;
+    public float trapDamageResist = 0f;
     public float dodgeChance = 0f;
     public int hp = 0;
 
@@ -34,8 +33,7 @@ public class GeneratedEquipment : MonoBehaviour
         attackSpeed = _data.attackSpeed;
         defense = _data.defense;
         movementSpeed = _data.movementSpeed;
-        statusEffectChance = _data.statusEffectChance;
-        statusResist = _data.statusResist;
+        trapDamageResist = _data.trapDamageResist;
         dodgeChance = _data.dodgeChance;
         hp = _data.hp;
 
@@ -94,11 +92,8 @@ public class GeneratedEquipment : MonoBehaviour
             case StatType.MoveSpeed:
                 movementSpeed += 0.1f;
                 break;
-            case StatType.StatusEffectChance:
-                statusEffectChance += 0.03f;
-                break;
-            case StatType.StatusResist:
-                statusResist += 0.02f;
+            case StatType.TrapDamageResist:
+                trapDamageResist += 0.02f;
                 break;
             case StatType.DodgeChance:
                 dodgeChance += 0.02f;
@@ -176,10 +171,8 @@ public class GeneratedEquipment : MonoBehaviour
                 return defense;
             case StatType.MoveSpeed:
                 return movementSpeed;
-            case StatType.StatusEffectChance:
-                return statusEffectChance;
-            case StatType.StatusResist:
-                return statusResist;
+            case StatType.TrapDamageResist:
+                return trapDamageResist;
             case StatType.DodgeChance:
                 return dodgeChance;
             case StatType.HitPoints:
@@ -204,16 +197,8 @@ public class GeneratedEquipment : MonoBehaviour
                 return "Defense";
             case StatType.MoveSpeed:
                 return "Movement Speed";
-            case StatType.StunChance:
-                return "Stun Chance";
-            case StatType.BurnChance:
-                return "Burn Chance";
-            case StatType.SlowChance:
-                return "Slow Chance";
-            case StatType.StatusResist:
-                return "Status Resist Chance";
-            case StatType.StatusEffectChance:
-                return "Status Effect Chance";
+            case StatType.TrapDamageResist:
+                return "Trap Damage Resist";
             case StatType.DodgeChance:
                 return "Dodge Chance";
             case StatType.HitPoints:

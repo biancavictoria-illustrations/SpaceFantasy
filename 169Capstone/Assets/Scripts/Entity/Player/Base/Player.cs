@@ -32,10 +32,8 @@ public class Player : MonoBehaviour
         stats = GetComponent<PlayerStats>();
 
         health = gameObject.GetComponent<EntityHealth>();
-        health.maxHitpoints = 30;
-        health.currentHitpoints = 30;        
-        //health.maxHitpoints = stats.getMaxHitPoints();
-        //health.currentHitpoints = stats.getMaxHitPoints();
+        health.maxHitpoints = stats.getMaxHitPoints();
+        health.currentHitpoints = stats.getMaxHitPoints();
         health.SetStartingHealthUI();
 
         StartCoroutine(DetectFall());
