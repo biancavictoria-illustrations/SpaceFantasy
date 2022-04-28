@@ -420,13 +420,13 @@ public abstract class EntityStats : MonoBehaviour
 
             // Primary Lines ONLY
             case StatType.STRDamage:
-                return getMaxHitPoints();
+                return getSTRDamage();
             case StatType.DEXDamage:
-                return getMaxHitPoints();
+                return getDEXDamage();
             case StatType.INTDamage:
-                return getMaxHitPoints();
+                return getINTDamage();
             case StatType.WISDamage:
-                return getMaxHitPoints();    
+                return getWISDamage();    
         }
         Debug.LogError("No current value found for stat type: " + type);
         return -1;
