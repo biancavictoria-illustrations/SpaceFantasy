@@ -24,17 +24,12 @@ public class InventoryUIItemPanel : MonoBehaviour
         DOC,    // Dodge Chance
         CRC,    // Crit Chance
         CRD,    // Crit Damage
-        STUC,    // Stun Chance
-        STURC,   // Stun Resist Chance
-        BUC,    // Burn Chance
-        BURC,   // Burn Resist Chance
-        SLC,    // Slow Chance
-        SLRC,   // Slow Resist Chance
+        TDR,    // Trap Damage Resist
 
         enumSize
     }
 
-    public const string STAT_VARIABLE_PATTERN = @"({(STR|DEX|INT|WIS|CHA|CON|ATS|MOS|DEF|DOC|CRC|CRD|STUC|STURC|BUC|BURC|SLC|SLRC)(:\d+)?(,(\*|\+|-)(\d?.)?\d+(,(\*|\+|-)(\d?.)?\d+)?)?})";
+    public const string STAT_VARIABLE_PATTERN = @"({(STR|DEX|INT|WIS|CHA|CON|ATS|MOS|DEF|DOC|CRC|CRD|TDR)(:\d+)?(,(\*|\+|-)(\d?.)?\d+(,(\*|\+|-)(\d?.)?\d+)?)?})";
 
     [SerializeField] private InventoryItemSlot itemSlot;
     [HideInInspector] public ItemRarity rarity;
@@ -324,18 +319,8 @@ public class InventoryUIItemPanel : MonoBehaviour
                 return Player.instance.stats.getCritChance();
             case DescriptionVariableCode.CRD:
                 return Player.instance.stats.getCritDamage();
-            case DescriptionVariableCode.STUC:
-                return Player.instance.stats.getStunChance();
-            case DescriptionVariableCode.STURC:
-                return Player.instance.stats.getStatusResistChance(); // TODO: ??????
-            case DescriptionVariableCode.BUC:
-                return Player.instance.stats.getBurnChance();
-            case DescriptionVariableCode.BURC:
-                return Player.instance.stats.getStatusResistChance(); // TODO: ??????
-            case DescriptionVariableCode.SLC:
-                return Player.instance.stats.getSlowChance();
-            case DescriptionVariableCode.SLRC:
-                return Player.instance.stats.getStatusResistChance(); // TODO: ??????
+            case DescriptionVariableCode.TDR:
+                return Player.instance.stats.getTrapDamageResist();
         }
         Debug.LogError("No stat found for: " + code);
         return -1;

@@ -160,7 +160,7 @@ public class PlayerStats : EntityStats
             private int constitution;
 
             const float maxHitPointBonusPerConstitutionPoint = 3f;
-            const float statusResistBonusPerConstitutionPoint = 1f;
+            const float trapDamageResistBonusPerConstitutionPoint = 1f;
 
             public int Constitution()
             {
@@ -295,25 +295,10 @@ public class PlayerStats : EntityStats
             return base.getCritDamage(); //No differences from the base as of yet
         }
 
-        public override float getStunChance()
+        public override float getTrapDamageResist()
         {
-            return base.getStunChance(); //No differences from the base as of yet
-        }
-
-        public override float getBurnChance()
-        {
-            return base.getBurnChance(); //No differences from the base as of yet
-        }
-
-        public override float getSlowChance()
-        {
-            return base.getSlowChance(); //No differences from the base as of yet
-        }
-
-        public override float getStatusResistChance()
-        {
-            return statusResistChanceBase + statusResistChanceFlatBonus
-                    + (constitution * statusResistBonusPerConstitutionPoint);
+            return trapDamageResistBase + trapDamageResistFlatBonus
+                    + (constitution * trapDamageResistBonusPerConstitutionPoint);
         }
 
     #endregion

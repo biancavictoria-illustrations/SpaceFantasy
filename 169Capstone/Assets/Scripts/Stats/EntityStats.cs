@@ -12,13 +12,7 @@ public enum StatType
     DodgeChance,
     CritChance,
     CritDamage,
-    StatusEffectChance,
-    StatusResist,
-
-    // Specific Status Effects
-    StunChance,
-    BurnChance,
-    SlowChance,
+    TrapDamageResist,
 
     // ONLY Primary Lines
     STRDamage,
@@ -31,7 +25,7 @@ public enum StatType
 
 public abstract class EntityStats : MonoBehaviour
 {
-    public const int numberOfSecondaryLineOptions = 9;
+    public const int numberOfSecondaryLineOptions = 8;
 
     protected virtual void Awake()
     {
@@ -176,29 +170,11 @@ public abstract class EntityStats : MonoBehaviour
                         critDamageMultiplier = total;
                     break;
 
-                case StatType.StunChance:
+                case StatType.TrapDamageResist:
                     if(bonusType == BonusType.flat)
-                        stunChanceFlatBonus = total;
-                    break;
-
-                case StatType.BurnChance:
-                    if(bonusType == BonusType.flat)
-                        burnChanceFlatBonus = total;
-                    break;
-
-                case StatType.SlowChance:
-                    if(bonusType == BonusType.flat)
-                        slowChanceFlatBonus = total;
-                    break;
-
-                case StatType.StatusResist:
-                    if(bonusType == BonusType.flat)
-                        statusResistChanceFlatBonus = total;
-                    break;
-                
-                case StatType.StatusEffectChance:
-                    if(bonusType == BonusType.flat)
-                        statusEffectChanceFlatBonus = total;
+                        trapDamageResistFlatBonus = total;
+                    else
+                        trapDamageResistMultiplier = total;
                     break;
 
                 case StatType.STRDamage:
@@ -298,66 +274,15 @@ public abstract class EntityStats : MonoBehaviour
             return critDamageBase * critDamageMultiplier + critDamageFlatBonus;
         }
     #endregion
-
-    #region Stun Chance
-        protected float stunChanceBase;
-        protected float stunChanceFlatBonus;
-
-        public virtual float getStunChance()
-        {
-            float value = stunChanceBase + stunChanceFlatBonus;
-            if(value > 0){
-                value += getStatusEffectChance();
-            }
-            return value;
-        }
-    #endregion
-
-    #region Burn Chance
-        protected float burnChanceBase;
-        protected float burnChanceFlatBonus;
-
-        public virtual float getBurnChance()
-        {
-            float value =  burnChanceBase + burnChanceFlatBonus;
-            if(value > 0){
-                value += getStatusEffectChance();
-            }
-            return value;
-        }
-    #endregion
     
-    #region Slow Chance
-        protected float slowChanceBase;
-        protected float slowChanceFlatBonus;
+    #region Trap Damage Resist
+        protected float trapDamageResistBase;
+        protected float trapDamageResistMultiplier;
+        protected float trapDamageResistFlatBonus;
 
-        public virtual float getSlowChance()
+        public virtual float getTrapDamageResist()
         {
-            float value = slowChanceBase + slowChanceFlatBonus;
-            if(value > 0){
-                value += getStatusEffectChance();
-            }
-            return value;
-        }
-    #endregion
-
-    #region Status Effect Chance
-        protected float statusEffectChanceBase;
-        protected float statusEffectChanceFlatBonus;
-
-        public virtual float getStatusEffectChance()
-        {
-            return statusEffectChanceBase + statusEffectChanceFlatBonus;
-        }
-    #endregion
-    
-    #region Status Resist Chance
-        protected float statusResistChanceBase;
-        protected float statusResistChanceFlatBonus;
-
-        public virtual float getStatusResistChance()
-        {
-            return statusResistChanceBase + statusResistChanceFlatBonus;
+            return trapDamageResistBase * trapDamageResistMultiplier + trapDamageResistFlatBonus;
         }
     #endregion
 
@@ -403,16 +328,8 @@ public abstract class EntityStats : MonoBehaviour
                 return getDefense();
             case StatType.MoveSpeed:
                 return getMoveSpeed();
-            case StatType.StunChance:
-                return getStunChance();
-            case StatType.BurnChance:
-                return getBurnChance();
-            case StatType.SlowChance:
-                return getSlowChance();
-            case StatType.StatusResist:
-                return getStatusResistChance();
-            case StatType.StatusEffectChance:
-                return getStatusEffectChance();
+            case StatType.TrapDamageResist:
+                return getTrapDamageResist();
             case StatType.DodgeChance:
                 return getDodgeChance();
             case StatType.HitPoints:

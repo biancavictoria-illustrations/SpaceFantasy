@@ -10,18 +10,17 @@ public class StatRerollUI : MonoBehaviour
 
     [SerializeField] private TMP_Text STRText;
     [SerializeField] private TMP_Text DEXText;
+    [SerializeField] private TMP_Text CONText;
     [SerializeField] private TMP_Text INTText;
     [SerializeField] private TMP_Text WISText;
-    [SerializeField] private TMP_Text CONText;
     [SerializeField] private TMP_Text CHAText;
 
     [SerializeField] private Button continueButton;
 
-    // [Tooltip("The number of seconds a given number stays on the screen during the reroll animation.")]
+    // The number of seconds a given number stays on the screen during the reroll animation
     private float statAnimationNumberDuration = 0.1f;
-    // [Tooltip("The counter that ticks down to completing the animation for the first stat (each die completes one after the next). Total duration in sec is statAnimationNumberDuration*this value")]
+    // The counter that ticks down to completing the animation for the first stat (each die completes one after the next); total duration in sec is statAnimationNumberDuration*this value
     private int numberOfRollAnimations = 20;
-    // [Tooltip("")]
     private int addedToEachNextDuration = 4;
 
     private PlayerStats stats;
@@ -49,9 +48,9 @@ public class StatRerollUI : MonoBehaviour
         // Start the couroutines for everything
         StartCoroutine(RerollAnimationRoutine(PlayerFacingStatName.STR, numberOfRollAnimations));
         StartCoroutine(RerollAnimationRoutine(PlayerFacingStatName.DEX, numberOfRollAnimations + addedToEachNextDuration));
-        StartCoroutine(RerollAnimationRoutine(PlayerFacingStatName.INT, numberOfRollAnimations + addedToEachNextDuration*2));
-        StartCoroutine(RerollAnimationRoutine(PlayerFacingStatName.WIS, numberOfRollAnimations + addedToEachNextDuration*3));
-        StartCoroutine(RerollAnimationRoutine(PlayerFacingStatName.CON, numberOfRollAnimations + addedToEachNextDuration*4));
+        StartCoroutine(RerollAnimationRoutine(PlayerFacingStatName.CON, numberOfRollAnimations + addedToEachNextDuration*2));
+        StartCoroutine(RerollAnimationRoutine(PlayerFacingStatName.INT, numberOfRollAnimations + addedToEachNextDuration*3));
+        StartCoroutine(RerollAnimationRoutine(PlayerFacingStatName.WIS, numberOfRollAnimations + addedToEachNextDuration*4));
         StartCoroutine(RerollAnimationRoutine(PlayerFacingStatName.CHA, numberOfRollAnimations + addedToEachNextDuration*5));
     }
 
