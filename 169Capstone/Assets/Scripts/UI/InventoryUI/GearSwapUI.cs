@@ -10,14 +10,14 @@ public class GearSwapUI : MonoBehaviour
     public Button keepCurrentItemButton;
 
     private GeneratedEquipment newItem;
-    [SerializeField] private InventoryUIItemPanel newItemPanel;
+    [SerializeField] public InventoryUIItemPanel newItemPanel;
 
     public void OnGearSwapUIOpen(GeneratedEquipment item)
     {
         gearSwapInventoryUI.SetInventoryItemValues();   // Only set item values, no stat values
 
         newItem = item;
-        newItemPanel.SetItemPanelValues(item.data);
+        newItemPanel.SetItemPanelValues(item);
         newItemPanel.SetExpandedDescription(true);
         
         if(gearSwapInventoryUI.itemPanels.Count == 0){
@@ -26,14 +26,14 @@ public class GearSwapUI : MonoBehaviour
         gearSwapInventoryUI.OnInventoryOpen();
 
         // If you have an item equipped in that slot, expand that one on open
-        if(PlayerInventory.instance.gear[item.data.equipmentBaseData.ItemSlot()] != null){
+        if(PlayerInventory.instance.gear[item.equipmentBaseData.ItemSlot()] != null){
             ExpandItemOfSameType();
         }
     }
 
     private void ExpandItemOfSameType()
     {
-        InventoryItemSlot slot = newItem.data.equipmentBaseData.ItemSlot();
+        InventoryItemSlot slot = newItem.equipmentBaseData.ItemSlot();
 
         if(!PlayerInventory.instance.gear[slot]){
             Debug.Log("No item of slot type " + slot.ToString() + " equipped; not expanding item panel.");
@@ -62,6 +62,16 @@ public class GearSwapUI : MonoBehaviour
     {
         newItem.EquipGeneratedItem();
         CloseGearSwapUI();
+        
+        // Deal with UI alerts
+        if(PlayerInventory.hasPickedSomethingUpThisRun){
+            AlertTextUI.instance.DisableAlert();
+        }        
+        else{
+            PlayerInventory.hasPickedSomethingUpThisRun = true;
+            AlertTextUI.instance.EnableOpenInventoryAlert();
+            StartCoroutine(AlertTextUI.instance.RemoveAlertAfterSeconds());
+        }
     }
 
     public void SetSwapUIInteractable(bool set)

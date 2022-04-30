@@ -25,6 +25,7 @@ public enum PermanentUpgradeType{
     ExtensiveTraining,
     Natural20,
     PrecisionDrive,
+    StartingPotions,
 
     TimeLichKillerThing,
 
@@ -49,11 +50,14 @@ public class ShopUIStellan : MonoBehaviour
     [SerializeField] public List<UpgradePanel> upgradePanels = new List<UpgradePanel>();
     [SerializeField] private GameObject killTimeLichItem;
 
+    public TMP_Text permanentCurrency;
+
     [SerializeField] private TMP_Text focusPanelName;
     [SerializeField] private TMP_Text focusSkillLevel;
     [SerializeField] private TMP_Text focusPanelDesc;
     [SerializeField] private TMP_Text focusPanelCost;
     [SerializeField] private Image focusPanelIcon;
+    [SerializeField] private Image focusPanelStarShardIcon;
     [SerializeField] private GameObject focusPanelToPurchaseMessage;
 
     public PlayerStats playerStats {get; private set;}
@@ -66,7 +70,8 @@ public class ShopUIStellan : MonoBehaviour
 
     [HideInInspector] public UpgradePanel activeUpgradeInFocus;
 
-    public bool giveCurrencyForTesting = false; // TEMP
+    public bool giveStarShardForTesting = false; // TEMP
+    public bool giveThousandStarShardsForTesting = false; // TEMP
 
     void Start()
     {
@@ -84,8 +89,12 @@ public class ShopUIStellan : MonoBehaviour
 
     void Update()
     {
-        if(giveCurrencyForTesting){
-            giveCurrencyForTesting = false;
+        if(giveStarShardForTesting){
+            giveStarShardForTesting = false;
+            PlayerInventory.instance.SetPermanentCurrency( PlayerInventory.instance.permanentCurrency + 1 );
+        }
+        if(giveThousandStarShardsForTesting){
+            giveThousandStarShardsForTesting = false;
             PlayerInventory.instance.SetPermanentCurrency( PlayerInventory.instance.permanentCurrency + 1000 );
         }
     }
@@ -118,6 +127,12 @@ public class ShopUIStellan : MonoBehaviour
 
         focusPanelCost.gameObject.SetActive(true);
         focusPanelCost.text = _cost;
+        if(_cost == ""){
+            focusPanelStarShardIcon.gameObject.SetActive(false);
+        }
+        else{
+            focusPanelStarShardIcon.gameObject.SetActive(true);
+        }
         
         focusPanelIcon.color = new Color(255,255,255,255);
         focusPanelIcon.sprite = _icon;
@@ -157,6 +172,8 @@ public class ShopUIStellan : MonoBehaviour
         UpdateAllUpgradePanels();
 
         leaveShopButton.Select();
+
+        InGameUIManager.instance.OnStellanShopUIOpen(true);
     }
   
     public void CloseShopUI()
@@ -167,6 +184,8 @@ public class ShopUIStellan : MonoBehaviour
         ClearFocusPanel();
 
         AlertTextUI.instance.EnableShopAlert();
+
+        InGameUIManager.instance.OnStellanShopUIOpen(false);
     }
 
     public void ResetButtonClicked()

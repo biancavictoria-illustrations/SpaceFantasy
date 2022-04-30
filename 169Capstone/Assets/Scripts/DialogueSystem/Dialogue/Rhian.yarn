@@ -29,6 +29,8 @@ tags:
     [[RhianDefaultDialogue]]
 <<elseif $headNode is "Repeatable">>
     [[RhianRepeatable]]
+<<elseif $headNode is "NumRuns">>
+    [[RhianNumRuns]]
 
 <<else>>
     [[RhianRepeatable]]
@@ -415,4 +417,13 @@ Hey, Atlan, check this out! It’s a laser scope you can shine directly into the
 You sure you can <i>reach</i> their eyes?
 <<SetSpeaker Rhian>>
 Oh, I get it. Because I’m short. Well, JOKES ON YOU. I’m raising my prices JUST FOR TALL JERKS LIKE YOU. Ha. Take that.
+===
+
+
+
+title: RhianNumRuns
+tags:
+---
+<<SetSpeaker Rhian>><<BranchComplete NumRuns NumRuns>>
+Temp dialogue! Ignore this :)
 ===

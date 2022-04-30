@@ -19,6 +19,8 @@ public class PlayerInventory : MonoBehaviour
     public int tempCurrency {get; private set;}
     public int permanentCurrency {get; private set;}
 
+    [HideInInspector] public static bool hasPickedSomethingUpThisRun = false;
+
     void Awake()
     {
         if( instance ){
@@ -79,8 +81,6 @@ public class PlayerInventory : MonoBehaviour
 
     public void EquipItem(InventoryItemSlot slot, Equipment item)
     {
-        AlertTextUI.instance.DisableAlert();
-
         // If necessary, drop the PREVIOUS item on the ground
         UnequipItemSlot(slot);
 
@@ -89,6 +89,41 @@ public class PlayerInventory : MonoBehaviour
         
         // Update UI accordingly
         InGameUIManager.instance.SetGearItemUI(slot, item.data.equipmentBaseData.Icon());
+
+        // Add your new passive upgrades
+        SetStatBonusesFromItem(item.data);
+    }
+
+    private void SetStatBonusesFromItem(GeneratedEquipment itemData)
+    {
+        // Primary line
+        if(itemData.primaryLineValue > 0){
+            Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, itemData.equipmentBaseData.PrimaryItemLine(), EntityStats.BonusType.flat, itemData.primaryLineValue );
+        }
+
+        // Secondary line
+        for(int i = 0; i < EntityStats.numberOfSecondaryLineOptions; i++){
+            float bonusValue = itemData.GetSecondaryLineValueFromStatType((StatType)i);
+            if(bonusValue != 0){
+                Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, (StatType)i, EntityStats.BonusType.flat, bonusValue );
+            }
+        }
+    }
+
+    private void RemoveStatBonusesFromItem(GeneratedEquipment itemData)
+    {
+        // Primary line
+        if(itemData.primaryLineValue > 0){
+            Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, itemData.equipmentBaseData.PrimaryItemLine(), EntityStats.BonusType.flat, 0 );
+        }
+
+        // Secondary line
+        for(int i = 0; i < EntityStats.numberOfSecondaryLineOptions; i++){
+            float bonusValue = itemData.GetSecondaryLineValueFromStatType((StatType)i);
+            if(bonusValue != 0){
+                Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, (StatType)i, EntityStats.BonusType.flat, 0 );
+            }
+        }
     }
 
     public void UnequipItemSlot(InventoryItemSlot slot)
@@ -97,6 +132,9 @@ public class PlayerInventory : MonoBehaviour
         if( !gear[slot] ){
             return;
         }
+
+        // Remove your passive upgrades from that item
+        RemoveStatBonusesFromItem(gear[slot].data);
 
         // Instantiate the item to drop on the ground
         GameObject dropItem = Instantiate(dropItemPrefab, Player.instance.transform.position, Quaternion.identity);
@@ -117,7 +155,7 @@ public class PlayerInventory : MonoBehaviour
 
         // Set value to null in the dictionary and clear the UI
         ClearItemSlot(slot);
-        AlertTextUI.instance.EnableItemPickupAlert();
+        AlertTextUI.instance.EnableItemPickupAlert();        
     }
 
     private void RemoveEquippedWeaponModel()
@@ -131,7 +169,12 @@ public class PlayerInventory : MonoBehaviour
         InGameUIManager.instance.ClearItemUI(slot);
     }
 
-    // Called when you die
+    public bool ItemSlotIsFull(InventoryItemSlot slot)
+    {
+        return gear[slot] != null;
+    }
+
+    // Called when you die or return to main menu
     public void ClearRunInventory()
     {
         if(weaponModel){
@@ -141,24 +184,26 @@ public class PlayerInventory : MonoBehaviour
         // Delete each item object and clear the inventory slot
         // (Can't loop because can't delete the things while iterating, stuff gets mad)
         if(gear[InventoryItemSlot.Weapon]){
-            Destroy(gear[InventoryItemSlot.Weapon]);
+            Destroy(gear[InventoryItemSlot.Weapon].gameObject);
             ClearItemSlot(InventoryItemSlot.Weapon);
         }
         if(gear[InventoryItemSlot.Accessory]){
-            Destroy(gear[InventoryItemSlot.Accessory]);
+            Destroy(gear[InventoryItemSlot.Accessory].gameObject);
             ClearItemSlot(InventoryItemSlot.Accessory);
         }
         if(gear[InventoryItemSlot.Legs]){
-            Destroy(gear[InventoryItemSlot.Legs]);
+            Destroy(gear[InventoryItemSlot.Legs].gameObject);
             ClearItemSlot(InventoryItemSlot.Legs);
         }
         if(gear[InventoryItemSlot.Helmet]){
-            Destroy(gear[InventoryItemSlot.Helmet]);
+            Destroy(gear[InventoryItemSlot.Helmet].gameObject);
             ClearItemSlot(InventoryItemSlot.Helmet);
         }
 
         SetTempCurrency(0);
         ClearHealthPotions();
+
+        hasPickedSomethingUpThisRun = false;
     }
 
     public void SetTempCurrency(int value)

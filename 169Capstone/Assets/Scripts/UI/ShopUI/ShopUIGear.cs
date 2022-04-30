@@ -11,6 +11,7 @@ public class ShopUIGear : ShopUI
     [HideInInspector] public ItemPanelGearShop activeCompareItem;
 
     [SerializeField] private Button compareCancelButton;
+    [SerializeField] private Button purchaseButton;
     [SerializeField] private TMP_Text purchaseButtonText;
 
     [SerializeField] private Shop shopInventory;
@@ -25,8 +26,8 @@ public class ShopUIGear : ShopUI
   
     public override void CloseShopUI()
     {
+        ToggleShopInventoryOn();
         base.CloseShopUI();
-        shopCompareItemPanel.SetActive(false);
     }
 
     private void SetShopUIValues()
@@ -50,10 +51,10 @@ public class ShopUIGear : ShopUI
         shopCompareItemPanel.SetActive(false);
         InGameUIManager.instance.ToggleInGameGearIconPanel(true);
 
-        shopInventoryTopButton.Select();
+        leaveShopButton.Select();
     }
 
-    public void ToggleShopCompareOn()
+    public void ToggleShopCompareOn(bool canAfford)
     {
         shopInventoryPanel.SetActive(false);
         shopCompareItemPanel.SetActive(true);
@@ -67,6 +68,13 @@ public class ShopUIGear : ShopUI
         }
         else{
             Debug.LogError("Tried to open compare UI without an active shop item to compare to!");
+        }
+
+        if(canAfford){
+            purchaseButton.interactable = true;
+        }
+        else{
+            purchaseButton.interactable = false;
         }
     }
 

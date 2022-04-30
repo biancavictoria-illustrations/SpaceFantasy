@@ -27,40 +27,78 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
 
     [SerializeField] protected ItemPanelPos panelPos;   // Set in the inspector
     [HideInInspector] public ShopHoverAlerts hoverAlerts;
+
+    private const float costPowerValue = 1.25f;
+    private const float timeFactor = 0.0606f;
+    private const float rarityMultiplierBase = 1.2f;
+
+    public ItemRarity rarity {get; protected set;}
+
+    protected bool itemIsAvailable = true;
+    protected bool canAffordItem = false;
     
     protected void SetBaseShopItemValues(int iBaseCost, string iName, string iDesc)
     {
         baseCost = iBaseCost;
-        UpdateCurrentCost();
         itemName.text = iName;
         descriptionText.text = iDesc;
+        
+        UpdateCurrentCost();
     }
 
     public virtual void PurchaseItem()
     {
-        // if(PlayerInventory.instance.tempCurrency - currentCostValue < 0){
-            // TODO: UI feedback about being too broke to buy an item (don't do this yet cuz inconvenient for testing)
-        //     return;      // If we return here, does it still do the child version of the function? that's bad
-        // }
+        if(PlayerInventory.instance.tempCurrency - currentCostValue < 0){
+            Debug.LogError("Can't afford! UI Button should NOT be interactable!!! :(");
+            return;
+        }
 
         PlayerInventory.instance.SetTempCurrency(PlayerInventory.instance.tempCurrency - currentCostValue);
     }
 
-    protected virtual void CalculateCurrentCost()
+    private void CalculateCurrentCost()
     {
-        // Implemented uniquely in children
+        float cost = baseCost;      // Set base cost
+
+        // Set the rarity multiplier (rarity multiplier base to a power of the ItemRarity value)
+        float rarityMultiplier = Mathf.Pow(rarityMultiplierBase, (int)rarity);
+
+        // Set coeff to (time factor * time in min) * stage factor
+        int playerFactor = 1;
+        float timeInMin = GameManager.instance.gameTimer.minutes;
+        float stageFactor = 1f;     // TODO: Set to stage factor
+        float coeff = (playerFactor + timeInMin * timeFactor) * stageFactor;
+
+        // Raise coeff to the power of the costPowerValue
+        coeff = Mathf.Pow(coeff,costPowerValue);
+
+        cost = cost * coeff * rarityMultiplier;     // Multiply base cost by coeff and rarity multiplier
+        currentCostValue = (int)Mathf.Floor(cost);       // Get int using Floor to round
+
+        // Factor in CHA stat
+        currentCostValue -= (int)Player.instance.stats.getShopPriceReduction();
     }
 
     // Updates both cost value and UI
-    public void UpdateCurrentCost()
+    public void UpdateCurrentCost(bool recalculateCost=true)
     {
-        CalculateCurrentCost();
-        costText.text = "" + currentCostValue;
+        if(recalculateCost){
+            CalculateCurrentCost();
+        }        
+
+        if(PlayerInventory.instance.tempCurrency - currentCostValue >= 0){
+            costText.text = "" + currentCostValue;
+            canAffordItem = true;
+        }
+        else{
+            costText.text = "<color=" + InGameUIManager.magentaColor + ">" + currentCostValue + "</color>";
+            canAffordItem = false;
+        }
     }
 
     public void SetHoverAlertsActive(bool set)
     {
-        if(itemCardButton.interactable){
+        if(itemCardButton.interactable || !set){
             hoverAlerts.EnableAlert(panelPos, set);
         }
     }

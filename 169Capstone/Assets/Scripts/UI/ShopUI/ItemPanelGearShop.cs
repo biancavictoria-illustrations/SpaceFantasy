@@ -22,22 +22,29 @@ public class ItemPanelGearShop : ItemPanelShopUI
 
     public void SetGearItemValues(GeneratedEquipment _item)
     {
+        if(!itemIsAvailable){
+            // descriptionText.text = "<b><color=" + InGameUIManager.magentaColor + ">SOLD";
+            // itemCardButton.interactable = false;
+            return;
+        }
+
         item = _item;
-        EquipmentBaseData data = item.data.equipmentBaseData;
+        EquipmentBaseData baseData = item.equipmentBaseData;
+        rarity = item.rarity;
 
-        SetBaseShopItemValues(data.BaseCost(), data.ItemName(), data.ShortDescription());
+        SetBaseShopItemValues(baseData.BaseCost(), baseData.ItemName(), baseData.ShortDescription());
 
-        itemIcon.sprite = data.Icon();
-        itemSlot = data.ItemSlot();
-        itemSlotRarity.text = item.data.rarity.ToString() + "/" + itemSlot.ToString();
-        enhancementCount.text = "Enhancement Count - " + item.data.enhancementCount;
+        itemIcon.sprite = baseData.Icon();
+        itemSlot = baseData.ItemSlot();
+        itemSlotRarity.text = item.rarity.ToString() + "/" + itemSlot.ToString();
+        enhancementCount.text = "Enhancement Count - " + item.enhancementCount;
     }
 
     public void OnItemClicked()
     {
         shopUI.activeCompareItem = this;
         hoverAlerts.EnableAlert(panelPos, false);
-        shopUI.ToggleShopCompareOn();
+        shopUI.ToggleShopCompareOn(PlayerInventory.instance.tempCurrency - currentCostValue > 0);
     }
 
     public override void PurchaseItem()
@@ -48,27 +55,8 @@ public class ItemPanelGearShop : ItemPanelShopUI
         // Generate the actual item object in the scene (from the item data)
         item.EquipGeneratedItem();
 
-        descriptionText.text = "<b><color=red>SOLD";    // TODO: Make this permanent (it's not at the moment)
+        descriptionText.text = "<b><color=" + InGameUIManager.magentaColor + ">SOLD";
         itemCardButton.interactable = false;
-    }
-
-    protected override void CalculateCurrentCost()
-    {
-        float cost = baseCost;      // Set base cost
-
-        // Set the rarity multiplier (rarity multiplier base to a power of the ItemRarity value)
-        float rarityMultiplier = Mathf.Pow(rarityMultiplierBase, (int)item.data.rarity);
-
-        // Set coeff to (time factor * time in min) * stage factor
-        int playerFactor = 1;
-        float timeInMin = 0;        // TODO: Set to time in min
-        float stageFactor = 1f;     // TODO: Set to stage factor
-        float coeff = (playerFactor + timeInMin * timeFactor) * stageFactor;
-
-        // Raise coeff to the power of the costPowerValue
-        coeff = Mathf.Pow(coeff,costPowerValue);
-
-        cost = cost * coeff * rarityMultiplier;     // Multiply base cost by coeff and rarity multiplier
-        currentCostValue = (int)Mathf.Floor(cost);  // Get int using Floor to round
+        itemIsAvailable = false;
     }
 }
