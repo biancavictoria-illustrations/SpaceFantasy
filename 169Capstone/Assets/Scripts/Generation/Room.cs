@@ -29,6 +29,8 @@ public class Room : MonoBehaviour
 
     public void AddEnemy(EntityHealth enemy)
     {
+        Debug.Log("Enemy Added");
+
         if(enemies == null)
         {
             enemies = new HashSet<EntityHealth>();
