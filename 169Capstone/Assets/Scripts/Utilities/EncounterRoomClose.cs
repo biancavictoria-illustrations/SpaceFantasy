@@ -33,6 +33,7 @@ public class EncounterRoomClose : MonoBehaviour
                 if( isBossRoom && e.isBossEnemy ){
                     InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(true, e.enemyID);
                 }
+                Debug.Log("Enemy Added");
             }
 
             if(isBossRoom)
@@ -49,6 +50,7 @@ public class EncounterRoomClose : MonoBehaviour
 
     private void RoomOpen(EntityHealth _)
     {
+        Debug.Log("Enemy Died");
         if (!room.hasEnemies())
         {
             foreach(GameObject ff in forceFields)
