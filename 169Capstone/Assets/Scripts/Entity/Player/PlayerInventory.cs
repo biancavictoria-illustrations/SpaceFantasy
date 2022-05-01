@@ -19,6 +19,8 @@ public class PlayerInventory : MonoBehaviour
     public int tempCurrency {get; private set;}
     public int permanentCurrency {get; private set;}
 
+    [HideInInspector] public static bool hasPickedSomethingUpThisRun = false;
+
     void Awake()
     {
         if( instance ){
@@ -79,8 +81,6 @@ public class PlayerInventory : MonoBehaviour
 
     public void EquipItem(InventoryItemSlot slot, Equipment item)
     {
-        AlertTextUI.instance.DisableAlert();
-
         // If necessary, drop the PREVIOUS item on the ground
         UnequipItemSlot(slot);
 
@@ -202,6 +202,8 @@ public class PlayerInventory : MonoBehaviour
 
         SetTempCurrency(0);
         ClearHealthPotions();
+
+        hasPickedSomethingUpThisRun = false;
     }
 
     public void SetTempCurrency(int value)

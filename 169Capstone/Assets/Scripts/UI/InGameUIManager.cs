@@ -8,6 +8,12 @@ public class InGameUIManager : MonoBehaviour
 {
     public static InGameUIManager instance;
 
+    public const string slimeGreenColor = "#05d806";
+    public const string magentaColor = "#FF49C7";
+    public const string turquoiseColor = "#1bc7b2";
+    public const string medTurquoiseColor = "#017C6D";
+    public const string darkTurquoiseColor = "#02141e";
+
     [SerializeField] private GameObject inGameUIPanel;
     [SerializeField] private GameObject inGameUIGearIconPanel;  // Sometimes toggled separately from the rest of the in game UI
 
@@ -34,10 +40,15 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private GameObject gearSwapUIPanel;
     public bool gearSwapIsOpen {get; private set;}
 
+    public StatRerollUI statRerollUI;
+    public JournalUI journalUI;
+
     public ShopUI brynShopUI;
     public ShopUIStellan stellanShopUI;
     public ShopUI doctorShopUI;
     public ShopUI weaponsShopUI;
+
+    [HideInInspector] public bool stellanShopIsOpen = false;
 
     [SerializeField] private TMP_Text permanentCurrencyValue;
     [SerializeField] private TMP_Text tempCurrencyValue;
@@ -81,6 +92,16 @@ public class InGameUIManager : MonoBehaviour
         inGameUIPanel.SetActive(set);
     }
 
+    public void EnableRunStartStatRerollPopup(bool set)
+    {
+        if(set){
+            statRerollUI.EnableStatRerollUI();
+        }
+        else{
+            statRerollUI.DisableStatRerollUI();
+        }
+    }
+
     public void ToggleInGameGearIconPanel(bool set)
     {
         inGameUIGearIconPanel.SetActive(set);
@@ -96,6 +117,18 @@ public class InGameUIManager : MonoBehaviour
         InputManager.instance.RunGameTimer(setRunUIActive, setRunUIActive);
         GameManager.instance.gameTimer.ResetTimer();
     }
+
+    public void OnStellanShopUIOpen(bool setOpen)
+    {
+        stellanShopIsOpen = setOpen;
+        permanentCurrencyValue.gameObject.SetActive(!setOpen);
+        
+        if(setOpen){
+            SetPermanentCurrencyValue(PlayerInventory.instance.permanentCurrency);
+        }
+    }
+
+    #region Item UI
 
     // Called when player input opens or closes the inventory
     public void SetInventoryUIActive(bool set)
@@ -217,15 +250,27 @@ public class InGameUIManager : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Currency UI
+
     public void SetPermanentCurrencyValue(int money)
     {
         permanentCurrencyValue.text = "" + money;
+
+        if(stellanShopIsOpen){
+            stellanShopUI.permanentCurrency.text = "" + money;
+        }
     }
 
     public void SetTempCurrencyValue(int money)
     {
         tempCurrencyValue.text = "" + money;
     }
+
+    #endregion
+
+    #region Health UI
 
     public void SetCurrentHealthValue(float _NewCurrentHP)
     {
@@ -257,6 +302,10 @@ public class InGameUIManager : MonoBehaviour
     {
         healthPotionValue.text = "" + numPotions;
     }
+
+    #endregion  
+
+    #region NPC Shop Stuff
 
     public void OpenNPCShop(SpeakerData shopkeeper)
     {
@@ -297,4 +346,6 @@ public class InGameUIManager : MonoBehaviour
             Debug.LogError("Failed to close shop for NPC " + shopkeeper.SpeakerID());
         }
     }
+
+    #endregion
 }

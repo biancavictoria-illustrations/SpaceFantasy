@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     public bool hitStop {get; private set;}
     [HideInInspector] public bool deathMenuOpen;
     [HideInInspector] public bool pauseMenuOpen;
+    [HideInInspector] public bool statRerollUIOpen;
 
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform playerTransform; // TODO: set this at runtime if game manager starts in main menu???
@@ -90,7 +91,7 @@ public class GameManager : MonoBehaviour
             Debug.LogError("No dialogue/UI manager found!");
         }
 
-        if(hitStop || DialogueManager.instance.stopTime || pauseMenuOpen || deathMenuOpen || InputManager.instance.shopIsOpen || InGameUIManager.instance.inventoryIsOpen || InGameUIManager.instance.gearSwapIsOpen)
+        if(hitStop || DialogueManager.instance.stopTime || pauseMenuOpen || deathMenuOpen || InputManager.instance.shopIsOpen || InGameUIManager.instance.inventoryIsOpen || InGameUIManager.instance.gearSwapIsOpen || statRerollUIOpen)
             Time.timeScale = 0;
         else
             Time.timeScale = 1;
@@ -130,6 +131,7 @@ public class GameManager : MonoBehaviour
             PlayerInventory.instance.SetRunStartHealthPotionQuantity();
             InGameUIManager.instance.ToggleRunUI(true);
             AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, false);
+            InGameUIManager.instance.EnableRunStartStatRerollPopup(true);
         }
         else if(currentSceneName == LICH_ARENA_STRING_NAME){
             // TODO: Play lich fight music
@@ -182,7 +184,8 @@ public class GameManager : MonoBehaviour
     public void LoadGame(int _slot)
     {
         saveSlotNum = _slot;
-        Debug.Log("Loading Game... Save Slot Num in Game Manager set to: " + saveSlotNum);
+
+        gameTimer.SetTotalTimeOnThisSaveFile( GetTotalTimePlayedInSaveFile(_slot) );
 
         // Retrieve save data & set all values from there
         Save saveData = SaveLoadManager.LoadGame(saveSlotNum);
@@ -317,14 +320,7 @@ public class GameManager : MonoBehaviour
         // If we're calling this ONLY in Main Hub, it's current run num - 1
         PlayerPrefs.SetInt( s + "CompletedRunNum", currentRunNumber - 1 );
 
-        // If total time doesn't exist yet for this save file, set it for the first time; else, update it
-        float totalTimeFromPlayerPrefs = GetTotalTimePlayedInSaveFile(saveSlotNum);
-        if(totalTimeFromPlayerPrefs != -1){
-            PlayerPrefs.SetFloat( s + "TimePlayed", gameTimer.totalTimePlayedOnThisSaveFile + totalTimeFromPlayerPrefs );
-        }
-        else{
-            PlayerPrefs.SetFloat( s + "TimePlayed", gameTimer.totalTimePlayedOnThisSaveFile );
-        }
+        PlayerPrefs.SetFloat( s + "TimePlayed", gameTimer.totalTimePlayedOnThisSaveFile );
         
         PlayerPrefs.Save();
     }

@@ -41,10 +41,7 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private TMP_Text dodgeChance;
     [SerializeField] private TMP_Text critChance;
     [SerializeField] private TMP_Text critDamage;
-    [SerializeField] private TMP_Text stunChance;
-    [SerializeField] private TMP_Text burnChance;
-    [SerializeField] private TMP_Text slowChance;
-    [SerializeField] private TMP_Text statusResistChance;
+    [SerializeField] private TMP_Text trapDamageResist;
 
     void Start()
     {
@@ -110,10 +107,7 @@ public class InventoryUI : MonoBehaviour
         dodgeChance.text = "Dodge Chance: " + stats.getDodgeChance();
         critChance.text = "Crit Chance: " + stats.getCritChance();
         critDamage.text = "Crit Damage: " + stats.getCritDamage();
-        stunChance.text = "Stun Chance: " + stats.getStunChance();
-        burnChance.text = "Burn Chance: " + stats.getBurnChance();
-        slowChance.text = "Slow Chance: " + stats.getSlowChance();
-        statusResistChance.text = "Status Resist Chance: " + stats.getStatusResistChance();
+        trapDamageResist.text = "Trap Damage Resist: " + stats.getTrapDamageResist();
     }
 
     // Called when you click on a panel

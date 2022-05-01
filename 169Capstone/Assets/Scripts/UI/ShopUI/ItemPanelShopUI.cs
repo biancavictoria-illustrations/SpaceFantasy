@@ -91,7 +91,7 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
             canAffordItem = true;
         }
         else{
-            costText.text = "<color=red>" + currentCostValue + "</color>";
+            costText.text = "<color=" + InGameUIManager.magentaColor + ">" + currentCostValue + "</color>";
             canAffordItem = false;
         }
     }

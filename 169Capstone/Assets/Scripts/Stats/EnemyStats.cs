@@ -16,10 +16,7 @@ public class EnemyStats : EntityStats
         dodgeChanceBase = stats.DodgeChance();
         critChanceBase = stats.CritChance();
         critDamageBase = stats.CritDamage();
-        stunChanceBase = stats.StunChance();
-        burnChanceBase = stats.BurnChance();
-        slowChanceBase = stats.SlowChance();
-        statusResistChanceBase = stats.StatusResistChance();
+        trapDamageResistBase = stats.TrapDamageResist();
 
         maxHitPointsMultiplier = 1;
         attackSpeedMultiplier = 1;

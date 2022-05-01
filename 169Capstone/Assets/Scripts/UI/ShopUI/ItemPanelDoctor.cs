@@ -73,14 +73,14 @@ public class ItemPanelDoctor : ItemPanelShopUI
     {
         // === Generate Description Text ===
         if( category == UpgradeShopCategory.HealthPotion ){
-            return "Increases <b>Health Potion</b> quantity by 1.\n\n<b>Potions:</b>   " + currentStatValue + "  ->  <color=green>" + (currentStatValue+1);
+            return "Increases <b>Health Potion</b> quantity by 1.\n\n<b>Potions:</b>   " + currentStatValue + "  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue+1);
         }
         else if( category == UpgradeShopCategory.PotionEfficacy ){
-            return "Increases <b>Health Potion</b> efficacy by " + healingBonusValue + "%.\n\n<b>Healing:</b>   " + currentStatValue + "%  ->  <color=green>" + (currentStatValue + healingBonusValue) + "%";
+            return "Increases <b>Health Potion</b> efficacy by " + healingBonusValue + "%.\n\n<b>Healing:</b>   " + currentStatValue + "%  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue + healingBonusValue) + "%";
         }
         else{
             string s = statName.ToString();
-            return "Increases <b>" + s + "</b> by 1.\n\n<b>" + s + ":</b>   " + currentStatValue + "  ->  <color=green>" + (currentStatValue+1);
+            return "Increases <b>" + s + "</b> by 1.\n\n<b>" + s + ":</b>   " + currentStatValue + "  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue+1);
         }
     }
 
@@ -200,7 +200,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
     private void SetMaxStatReachedValues()
     {
         costText.text = "";
-        descriptionText.text = "<color=red>Max " + statName.ToString() + " value reached.";
+        descriptionText.text = "<color=" + InGameUIManager.magentaColor + ">Max " + statName.ToString() + " value reached.";
         itemCardButton.interactable = false;
         itemIsAvailable = false;
         SetHoverAlertsActive(false);

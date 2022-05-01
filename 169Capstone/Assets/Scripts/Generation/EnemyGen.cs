@@ -13,8 +13,7 @@ public class EnemyGen : MonoBehaviour
     private int slimeCount;
     private int robertCount;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         spawnEnemies();
     }
