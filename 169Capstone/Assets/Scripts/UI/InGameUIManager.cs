@@ -57,6 +57,8 @@ public class InGameUIManager : MonoBehaviour
 
     public BossHealthBar bossHealthBar;
     public TimerUI timerUI;
+
+    public FloatingTextManager floatingTextManager;
     
 
     void Awake()
@@ -120,6 +122,11 @@ public class InGameUIManager : MonoBehaviour
         if(setOpen){
             SetPermanentCurrencyValue(PlayerInventory.instance.permanentCurrency);
         }
+    }
+
+    public void ShowFloatingText(string msg, int fontSize, Color color, Vector3 position, Vector3 motion, float duration)
+    {
+        floatingTextManager.Show(msg, fontSize, color, position, motion, duration);
     }
 
     #region Item UI
