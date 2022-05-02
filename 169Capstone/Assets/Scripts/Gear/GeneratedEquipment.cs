@@ -18,6 +18,7 @@ public class GeneratedEquipment : MonoBehaviour
     public float trapDamageResist = 0f;
     public float dodgeChance = 0f;
     public int hp = 0;
+    public float haste = 0f;
 
     public EquipmentBaseData equipmentBaseData;
 
@@ -36,6 +37,7 @@ public class GeneratedEquipment : MonoBehaviour
         trapDamageResist = _data.trapDamageResist;
         dodgeChance = _data.dodgeChance;
         hp = _data.hp;
+        haste = _data.haste;
 
         equipmentBaseData = _data.equipmentBaseData;
 
@@ -99,7 +101,10 @@ public class GeneratedEquipment : MonoBehaviour
                 dodgeChance += 0.02f;
                 break;
             case StatType.HitPoints:
-                hp += (2 * (int)rarity);
+                hp += (2 * ((int)rarity+1));    // +1 so that common items can roll this
+                break;
+            case StatType.Haste:
+                haste += 0.05f;
                 break;
         }
     }
@@ -116,16 +121,16 @@ public class GeneratedEquipment : MonoBehaviour
         int rarityMultiplier = (int)rarity + 1; // Adds 1 to rarity so that it can start at Common (tier 0)
 
         if( itemSlot == InventoryItemSlot.Weapon ){
-            primaryLineValue = 2f * (int)rarity; // +2 Damage Increase; does NOT add 1 to the rarity multipler cuz starts at Uncommon level instead
+            primaryLineValue = 0.1f * (int)rarity; // +10% Damage Increase per tier; does NOT add 1 to the rarity multipler cuz starts at Uncommon level instead
         }
         else if( itemSlot == InventoryItemSlot.Helmet ){
-            primaryLineValue = 0.1f * rarityMultiplier; // 10% Health Increase
+            primaryLineValue = 0.1f * rarityMultiplier; // +10% Health Increase per tier
         }
         else if( itemSlot == InventoryItemSlot.Accessory ){
-            primaryLineValue = 0.04f * rarityMultiplier; // 4% Effect Chance Increase
+            primaryLineValue = 0.04f * rarityMultiplier; // +4% Attack Speed per tier
         }
         else if( itemSlot == InventoryItemSlot.Legs ){
-            primaryLineValue = 0.05f * rarityMultiplier; // 5% Move Speed Increase
+            primaryLineValue = 0.05f * rarityMultiplier; // +5% Move Speed Increase per tier
         }
         else{
             Debug.LogError("Cannot set primary line value for item type: " + itemSlot);
@@ -177,6 +182,8 @@ public class GeneratedEquipment : MonoBehaviour
                 return dodgeChance;
             case StatType.HitPoints:
                 return hp;
+            case StatType.Haste:
+                return haste;
         }
         Debug.LogError("No value found for stat type: " + type + "; invalid secondary line type.");
         return -1;
@@ -203,6 +210,9 @@ public class GeneratedEquipment : MonoBehaviour
                 return "Dodge Chance";
             case StatType.HitPoints:
                 return "Hit Points";        // TODO: What do we want to call this???
+            case StatType.Haste:
+                return "Haste";
+
             case StatType.STRDamage:
                 return "STR Damage";
             case StatType.DEXDamage:
