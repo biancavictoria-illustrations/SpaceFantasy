@@ -457,6 +457,9 @@ public class FloorGenerator : MonoBehaviour
 
             IEnumerator CreateHallwayBetweenRoomsRoutine(GameObject startRoom, GameObject destRoom, float previousDistance, CallbackDelegate callback)
             {
+                //Failsafe to prevent too many attempts to connect
+                bool hasFailed = false;
+
                 //Get the list of active exits on startRoom
                 List<Transform> startRoomExits = new List<Transform>(startRoom.GetComponentInChildren<Room>().roomExits.Where((Transform t) => t.gameObject.activeSelf));
 
@@ -464,8 +467,6 @@ public class FloorGenerator : MonoBehaviour
                 if(startRoomExits.Count == 0) 
                 {
                     Debug.LogWarning("No exits on startRoom");
-                    returnValue = false;
-                    yield break;
                 }
 
                 //Try to connect to destRoom with each of startRoom's exits, in order of which exit is closest
@@ -478,8 +479,7 @@ public class FloorGenerator : MonoBehaviour
                     if(destRoomExits.Count == 0) 
                     {
                         Debug.LogWarning("No exits on destRoom");
-                        returnValue = false;
-                        yield break;
+                        break;
                     }
 
                     //Find the closest pair of exits and start with those
@@ -487,8 +487,7 @@ public class FloorGenerator : MonoBehaviour
                     if(transformPair.Key == null || transformPair.Value == null) //If the result is invalid for some reason, abort
                     {
                         Debug.LogWarning("No valid exit pairs");
-                        returnValue = false;
-                        yield break;
+                        break;
                     }
                     
                     //Assign exit values
@@ -532,7 +531,7 @@ public class FloorGenerator : MonoBehaviour
                             hallwayPrefabs.RemoveAt(index);
                             GameObject hallwayPiece = Instantiate(prefab, Vector3.zero, Quaternion.identity);
 
-                            HashSet<BoxCollider> roomBoundsList = new HashSet<BoxCollider>();
+                            List<BoxCollider> roomBoundsList = new List<BoxCollider>();
 
                             //Try each orientation of the hallway until we find one that gets us closer to destExit
                             List<Transform> hallwayExits = hallwayPiece.GetComponentInChildren<Room>().roomExits;
@@ -549,14 +548,20 @@ public class FloorGenerator : MonoBehaviour
                                 Quaternion orientation = Quaternion.FromToRotation(hallwayStartExit.up, -startExit.up);
                                 hallwayPiece.transform.rotation = orientation * hallwayPiece.transform.rotation;
 
+                                //Make sure the hallway piece is oriented upright
+                                if(hallwayPiece.transform.up != Vector3.up)
+                                {
+                                    hallwayPiece.transform.rotation = Quaternion.AngleAxis(180, hallwayStartExit.up) * hallwayPiece.transform.rotation;
+                                }
+
                                 //Move the hallway so exit matches startExit
                                 Vector3 exitToCenter = hallwayPiece.transform.position - hallwayStartExit.position;
                                 hallwayPiece.transform.position = startExit.position + exitToCenter;
 
                                 //Check if the hallway piece overlaps another room
                                 Room roomScript = hallwayPiece.GetComponentInChildren<Room>();
-                                roomBoundsList = new HashSet<BoxCollider>(roomScript.GetComponents<BoxCollider>());
-                                bool intersects = false;
+                                roomBoundsList = new List<BoxCollider>(roomScript.GetComponents<BoxCollider>());
+                                Room intersectingRoom = null;
                                 foreach(BoxCollider roomBounds in roomBoundsList)
                                 {
                                     foreach(BoxCollider room in Physics.OverlapBox(roomBounds.transform.position + roomBounds.center, 
@@ -567,20 +572,59 @@ public class FloorGenerator : MonoBehaviour
                                         //If the box overlaps a collider that doesn't belong to this room, it intersects something else
                                         if(!roomBoundsList.Contains(room))
                                         {
-                                            Debug.LogWarning(hallwayPiece + " intersects " + room.transform.parent.gameObject);
-                                            intersects = true;
-                                            break;
+                                            intersectingRoom = room.GetComponent<Room>();
+                                            if(intersectingRoom != null)
+                                            {
+                                                Debug.LogWarning(hallwayPiece + " intersects " + room.transform.parent.gameObject);
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                Debug.LogWarning(hallwayPiece + " intersects " + room.transform.parent.gameObject + " but " + room.transform.parent.gameObject + " has no room script!?");
+                                            }
                                         }
                                     }
 
-                                    if(intersects)
+                                    if(intersectingRoom != null)
                                         break;
                                 }
 
-                                //If the room overlaps another room, try a different orientation. 
+                                //If the room overlaps another room, try to connect to it. If that fails, try a different orientation. 
                                 //If we run out of possible orientations the algorithm will move on to a new hallway prefab
-                                if(intersects)
+                                if(intersectingRoom != null)
                                 {
+                                    //Get the list of active exits on the intersecting room and try to connect to one
+                                    List<Transform> intersectExits = new List<Transform>(intersectingRoom.roomExits.Where((Transform t) => t.gameObject.activeSelf));
+                                    Transform exit = FindClosestTransformToDestination(intersectExits, startExit);
+
+                                    //If the two exits are touching, connect them and consider this hallway a success
+                                    if(exit != null && Vector3.Distance(startExit.position, exit.position) < 0.01f)
+                                    {
+                                        //Remove the walls between startRoom and intersectingRoom
+                                        startExit.gameObject.SetActive(false);
+                                        exit.gameObject.SetActive(false);
+
+                                        //Disable the colliders and destroy the hallway piece since we didn't need it
+                                        foreach(BoxCollider roomBounds in roomBoundsList)
+                                        {
+                                            roomBounds.enabled = false;
+                                        }
+                                        Debug.LogWarning("Could not place hallway " + hallwayPiece + " connected to " + startRoom);
+                                        Destroy(hallwayPiece);
+
+                                        Debug.LogWarning("Hallway succeeded early");
+
+                                        //COROUTINE STUFF
+                                        yield return null;
+                                        returnValue = true;
+                                        callback();
+                                        yield break;
+                                        //COROUTINE STUFF
+
+                                        //return true;
+                                    }
+
+                                    //Otherwise, try a new orientation of the same hallwayPiece
                                     Debug.LogWarning("Intersected a room, trying new orientation.");
                                     continue;
                                 }
@@ -663,6 +707,7 @@ public class FloorGenerator : MonoBehaviour
                                     if(successfulHallway)
                                     {
                                         //COROUTINE STUFF
+                                        returnValue = true;
                                         callback();
                                         yield break;
                                         //COROUTINE STUFF
@@ -674,6 +719,32 @@ public class FloorGenerator : MonoBehaviour
                                         //The hallway was unsuccessful, so we re-enable the walls between startRoom and hallwayPiece
                                         hallwayStartExit.gameObject.SetActive(true);
                                         startExit.gameObject.SetActive(true);
+
+                                        //If this is the second recursive failure, return unsuccessful
+                                        if(hasFailed)
+                                        {
+                                            //Disable the colliders and destroy the hallway piece
+                                            foreach(BoxCollider roomBounds in roomBoundsList)
+                                            {
+                                                roomBounds.enabled = false;
+                                            }
+                                            Destroy(hallwayPiece);
+
+                                            //COROUTINE STUFF
+                                            yield return null;
+                                            returnValue = false;
+                                            callback();
+                                            //COROUTINE STUFF
+
+                                            Debug.LogWarning("Recursive call failed twice, cut off early");
+                                            //return false;
+                                            
+                                            yield break;
+                                        }
+                                        else
+                                        {
+                                            hasFailed = true;
+                                        }
                                     }
                                 }
                             }
@@ -807,7 +878,8 @@ public class FloorGenerator : MonoBehaviour
                     coroutineIsRunning = true;
                     StartCoroutine(CreateHallwayBetweenRoomsRoutine(startRoom, destRoom, Vector3.Distance(startRoom.transform.position, destRoom.transform.position), () => coroutineIsRunning = false));
                     yield return new WaitWhile(() => coroutineIsRunning);
-                    RemoveKeyValuePairReflexively<GameObject, HashSet<GameObject>>(roomsWithinRange, ref startRoom, ref destRoom);
+                    // RemoveKeyValuePairReflexively<GameObject, HashSet<GameObject>>(roomsWithinRange, ref startRoom, ref destRoom);
+                    roomsWithinRange[startRoom].Remove(destRoom);
 
                     if(!returnValue)
                         Debug.LogWarning("Failed to create hallway between " + startRoom + " and " + destRoom);
