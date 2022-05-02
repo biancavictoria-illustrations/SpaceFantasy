@@ -23,13 +23,12 @@ public class FloatingTextManager : MonoBehaviour
             txt.UpdateFloatingText();
     }
 
-    public void Show(string msg, int fontSize, Color color, Vector3 position, Vector3 motion, float duration)
+    public void Show(string msg, int fontSize, Vector3 position, Vector3 motion, float duration)
     {
         FloatingText floatingText = GetFloatingText();
 
         floatingText.txt.text = msg;
         floatingText.txt.fontSize = fontSize;
-        floatingText.txt.color = color;
 
         floatingText.go.transform.position = Camera.main.WorldToScreenPoint(position);
         floatingText.motion = motion;
