@@ -80,6 +80,9 @@ public class ShopUIGear : ShopUI
 
     public void OnCancelClicked()
     {
+        // Deselect active inventory panel, if necessary
+        shopCompareUI.gearSwapInventoryUI.OnInventoryClose();
+        
         ToggleShopInventoryOn();
         activeCompareItem = null;
     }

@@ -86,6 +86,8 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
             CalculateCurrentCost();
         }        
 
+        Debug.Log("Current Electrum: " + PlayerInventory.instance.tempCurrency + "\nItem Cost: " + currentCostValue);
+
         if(PlayerInventory.instance.tempCurrency - currentCostValue >= 0){
             costText.text = "" + currentCostValue;
             canAffordItem = true;
