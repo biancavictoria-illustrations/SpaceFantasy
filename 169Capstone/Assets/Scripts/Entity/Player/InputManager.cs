@@ -19,6 +19,8 @@ public class InputManager : MonoBehaviour
     [HideInInspector] public bool useHead = false;
     [HideInInspector] public bool useLegs = false;
 
+    [HideInInspector] public bool isInMainMenu = false;
+
     public bool latestInputIsController {get; private set;}
     public InputDevice currentDevice {get; private set;}
 
@@ -41,16 +43,26 @@ public class InputManager : MonoBehaviour
 
     void Start()
     {
-        InputActionAsset controls = GetComponent<PlayerInput>().actions;
+        if(Player.instance){
+            player = Player.instance;
+        }
 
-        player = Player.instance;
-
-        // Add STOPPING when you're no longer holding the button
-        controls.FindAction("AttackPrimary").canceled += x => OnAttackPrimaryCanceled();
+        if(GameManager.instance.currentSceneName == GameManager.TITLE_SCREEN_STRING_NAME){
+            isInMainMenu = true;
+        }
+        else{
+            InputActionAsset controls = GetComponent<PlayerInput>().actions;
+            // Add STOPPING when you're no longer holding the button
+            controls.FindAction("AttackPrimary").canceled += x => OnAttackPrimaryCanceled();
+        }
     }
 
     void Update()
     {
+        if(isInMainMenu){
+            return;
+        }
+
         Vector2 playerPositionOnScreen = (Vector2)Camera.main.WorldToScreenPoint(player.transform.position); //Get Player's position on the screen
         Vector2 cursorLookDirection2D = (mousePos - playerPositionOnScreen).normalized;                      //Get the vector from the player position to the cursor position 
         Vector3 lookDirectionRelativeToCamera = Camera.main.transform.right * cursorLookDirection2D.x + Camera.main.transform.up * cursorLookDirection2D.y; //Create the look vector in 3D space relative to the camera
@@ -76,7 +88,7 @@ public class InputManager : MonoBehaviour
 
     public bool CanAcceptGameplayInput()
     {
-        if(isInDialogue || PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen){
+        if(isInDialogue || PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || isInMainMenu || GameManager.instance.statRerollUIOpen){
             return false;
         }
         return true;
@@ -151,6 +163,28 @@ public class InputManager : MonoBehaviour
 
     public void OnPause(InputValue input)
     {
+        if(isInMainMenu){
+            return;
+        }
+
+        // If you're currently in a UI menu, CLOSE IT and return
+        if(inventoryIsOpen){
+            OnToggleInventory(input);
+            return;
+        }
+        else if(shopIsOpen){
+            InGameUIManager.instance.CloseNPCShop(NPC.ActiveNPC.SpeakerData());
+            return;
+        }
+        else if(compareItemIsOpen){
+            ToggleCompareItemUI(false, DropTrigger.ActiveGearDrop);
+            return;            
+        }
+        else if(GameManager.instance.statRerollUIOpen){ // Should this one be here? if so probably also death UI
+            InGameUIManager.instance.statRerollUI.DisableStatRerollUI();
+            return;
+        }
+        
         if(PauseMenu.GameIsPaused){
             InGameUIManager.instance.pauseMenu.ResumeGame();
 
@@ -169,7 +203,7 @@ public class InputManager : MonoBehaviour
 
     public void OnToggleInventory(InputValue input)
     {
-        if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || GameManager.instance.currentSceneName == GameManager.MAIN_HUB_STRING_NAME){
+        if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || GameManager.instance.currentSceneName == GameManager.MAIN_HUB_STRING_NAME || isInMainMenu){
             return;
         }
         

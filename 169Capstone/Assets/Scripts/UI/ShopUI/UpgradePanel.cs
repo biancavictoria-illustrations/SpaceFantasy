@@ -35,6 +35,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     [SerializeField] private TMP_Text costText;
     [SerializeField] private TMP_Text skillLevelText;
     [SerializeField] private Image upgradeIcon;
+    [SerializeField] private Image starShardIcon;
 
     [SerializeField] private Button upgradeButton;
 
@@ -71,6 +72,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
             else{
                 currentDescription = baseDescription;
             }
+            currentDescription += "\n\n" + GetStatValueDescriptionFromType();
         }
         // If skill
         else{            
@@ -159,18 +161,18 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     {
         // If stat
         if((int)upgradeType <= 11){
-            baseDescription = "Increase <b>" + upgradeName + "</b> from <b>" + currentUpgradeLevel + "</b> to <color=green>" + (currentUpgradeLevel+1) + "</color>.";
+            baseDescription = "Increase <b>" + upgradeName + "</b> from <b>" + currentUpgradeLevel + "</b> to <color=" + InGameUIManager.slimeGreenColor + ">" + (currentUpgradeLevel+1) + "</color>.";
         }
         // If update-able skill
         else{
             switch(upgradeType){
                 case PermanentUpgradeType.ArmorPlating:
                     float defense = PermanentUpgradeManager.instance.GetCurrentSkillValue(upgradeType);
-                    baseDescription = "Increase base <b>Defense</b> from <b>" + defense + "</b> to <color=green>" + (defense + PermanentUpgradeManager.instance.armorPlatingBonusPerLevel) + "</color>.";
+                    baseDescription = "Increase base <b>Defense</b> from <b>" + defense + "</b> to <color=" + InGameUIManager.slimeGreenColor + ">" + (defense + PermanentUpgradeManager.instance.armorPlatingBonusPerLevel) + "</color>.";
                     return;
                 case PermanentUpgradeType.ExtensiveTraining:
                     float attackSpeed = PermanentUpgradeManager.instance.GetCurrentSkillValue(upgradeType) * 100;
-                    baseDescription = "Increase base <b>Attack Speed</b> from <b>" + attackSpeed + "%</b> to <color=green>" + (attackSpeed + PermanentUpgradeManager.instance.extensiveTrainingBonusPerLevel*100) + "%</color>.";
+                    baseDescription = "Increase base <b>Attack Speed</b> from <b>" + attackSpeed + "%</b> to <color=" + InGameUIManager.slimeGreenColor + ">" + (attackSpeed + PermanentUpgradeManager.instance.extensiveTrainingBonusPerLevel*100) + "%</color>.";
                     return;
                 case PermanentUpgradeType.PrecisionDrive:
                     float critDamage = PermanentUpgradeManager.instance.GetCurrentSkillValue(upgradeType) * 100;
@@ -186,7 +188,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
                             newCritDamage = PermanentUpgradeManager.instance.precisionDriveBonusPerLevel[3] * 100;
                             break;
                     }
-                    baseDescription = "Increase base <b>Critical Hit Damage</b> from <b>+" + critDamage + "%</b> to <color=green>+" + newCritDamage + "%</color>.";
+                    baseDescription = "Increase base <b>Critical Hit Damage</b> from <b>+" + critDamage + "%</b> to <color=" + InGameUIManager.slimeGreenColor + ">+" + newCritDamage + "%</color>.";
                     return;
             }
         }
@@ -243,7 +245,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
         UpdateUIDisplayValues();
 
-        // shopUI.UpdateAllUpgradePanels();
+        shopUI.UpdateAllUpgradePanels();
     }
 
     private void SetMaxUpgradesReached(bool set)
@@ -255,44 +257,59 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
             costText.text = "";
         }
         else{
-            upgradeIcon.color = new Color(255,255,255,255);                
+            upgradeIcon.color = new Color(255,255,255,255);
         }
 
+        ToggleStarShardIconActive(!set);
         UpdateUIDisplayValues();
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
+    private void ToggleStarShardIconActive(bool set)
     {
-        OnUpgradePanelSelect();
+        if(set){
+            starShardIcon.color = new Color(255,255,255,255);
+        }
+        else{
+            starShardIcon.color = new Color(255,255,255,0);
+        }
     }
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        OnUpgradePanelDeselct();
-    }
+    #region Selectable Handling
 
-    public void OnSelect(BaseEventData eventData)
-    {
-        OnUpgradePanelSelect();
-    }
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            OnUpgradePanelSelect();
+        }
 
-    public void OnDeselect(BaseEventData eventData)
-    {
-        OnUpgradePanelDeselct();
-    }
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            OnUpgradePanelDeselct();
+        }
 
-    private void OnUpgradePanelSelect()
-    {
-        shopUI.activeUpgradeInFocus = this;
-        UpdateUIDisplayValues();
-        shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, currentDescription, costText.text, upgradeIcon.sprite);
-    }
+        public void OnSelect(BaseEventData eventData)
+        {
+            OnUpgradePanelSelect();
+        }
 
-    private void OnUpgradePanelDeselct()
-    {
-        shopUI.activeUpgradeInFocus = null;
-        shopUI.ClearFocusPanel();
-    }
+        public void OnDeselect(BaseEventData eventData)
+        {
+            OnUpgradePanelDeselct();
+        }
+
+        private void OnUpgradePanelSelect()
+        {
+            shopUI.activeUpgradeInFocus = this;
+            UpdateUIDisplayValues();
+            shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, currentDescription, costText.text, upgradeIcon.sprite);
+        }
+
+        private void OnUpgradePanelDeselct()
+        {
+            shopUI.activeUpgradeInFocus = null;
+            shopUI.ClearFocusPanel();
+        }
+
+    #endregion
 
     private void SetValuesByType()
     {
@@ -376,7 +393,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
                 upgradeBaseCost = 20;
                 costIncreasePerLevel = 0;
                 totalUpgradeLevels = PermanentUpgradeManager.maxNatural20Levels;
-                baseDescription = "Increase base Critical Hit Chance to <color=green>" + PermanentUpgradeManager.instance.natural20BonusPerLevel*100 + "%</color>.";
+                baseDescription = "Increase base Critical Hit Chance to <color=" + InGameUIManager.slimeGreenColor + ">" + PermanentUpgradeManager.instance.natural20BonusPerLevel*100 + "%</color>.";
                 return;
             case PermanentUpgradeType.PrecisionDrive:
                 upgradeName = "Precision Drive";
@@ -384,6 +401,13 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
                 costIncreasePerLevel = 10;
                 totalUpgradeLevels = PermanentUpgradeManager.maxPrecisionDriveLevels;
                 UpdateBaseDescriptionValues();
+                return;
+            case PermanentUpgradeType.StartingPotions:
+                upgradeName = "[POTIONS]";  // TODO: Update these values!
+                upgradeBaseCost = 10;
+                costIncreasePerLevel = 5;
+                totalUpgradeLevels = PermanentUpgradeManager.maxStartingHealthPotionQuantity;
+                baseDescription = "Increase your starting health potion quantity by 1.";
                 return;
             case PermanentUpgradeType.TimeLichKillerThing:
                 upgradeName = "Deus Ex Machina";
@@ -480,4 +504,47 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         }
         statMinEqualsMax = false;
     }
+
+    #region Stat Descriptions
+
+        private const string STR_DESCRIPTION = "Increases the damage dealt by Strength-based weapons and abilities. Also increases Defense.";
+        private const string DEX_DESCRIPTION = "Increases the damage dealt by Dexterity-based weapons and abilities. Also increases Dodge Chance.";
+        private const string INT_DESCRIPTION = "Increases the damage dealt by Intelligence-based weapons and abilities. Also increases Critical Hit Chance.";
+        private const string WIS_DESCRIPTION = "Increases the damage dealt by Wisdom-based weapons and abilities. Also reduces the length of ability cooldowns.";
+        private const string CON_DESCRIPTION = "Increases Max Health and Status Resist Chance.";
+        private const string CHA_DESCRIPTION = "Reduces the prices of items in shops and increases Luck.";
+
+        private string GetStatValueDescriptionFromType()
+        {
+            switch(upgradeType){
+                case PermanentUpgradeType.STRMin:
+                    return STR_DESCRIPTION;
+                case PermanentUpgradeType.STRMax:
+                    return STR_DESCRIPTION;
+                case PermanentUpgradeType.DEXMin:
+                    return DEX_DESCRIPTION;
+                case PermanentUpgradeType.DEXMax:
+                    return DEX_DESCRIPTION;
+                case PermanentUpgradeType.INTMin:
+                    return INT_DESCRIPTION;
+                case PermanentUpgradeType.INTMax:
+                    return INT_DESCRIPTION;
+                case PermanentUpgradeType.WISMin:
+                    return WIS_DESCRIPTION;
+                case PermanentUpgradeType.WISMax:
+                    return WIS_DESCRIPTION;
+                case PermanentUpgradeType.CONMin:
+                    return CON_DESCRIPTION;
+                case PermanentUpgradeType.CONMax:
+                    return CON_DESCRIPTION;
+                case PermanentUpgradeType.CHAMin:
+                    return CHA_DESCRIPTION;
+                case PermanentUpgradeType.CHAMax:
+                    return CHA_DESCRIPTION;
+            }
+            Debug.LogError("No description found for upgrade type: " + upgradeType);
+            return "ERROR";
+        }
+
+    #endregion
 }

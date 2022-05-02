@@ -9,24 +9,12 @@ public class Player : MonoBehaviour
     public PlayerStats stats {get; private set;}
     public EntityHealth health {get; private set;}
 
-    // Do we need these??? they're not being updated with the doctor shop upgrades i don't think so we should probably get rid of them cuz they're redundant with normal stats...?
-    public int currentStr;
-    public int currentDex;
-    public int currentCon;
-    public int currentInt;
-    public int currentWis;
-    public int currentCha;
-
     [SerializeField] public Transform handPos;
 
     //public Timer timer;
     //public bool test = true;
 
     [SerializeField] private SpeakerData speakerData;
-
-    // TEMP for testing purposes
-    public GameObject dropItemPrefab;
-    public EquipmentBaseData swordData;
 
     void Awake()
     {
@@ -44,27 +32,11 @@ public class Player : MonoBehaviour
         stats = GetComponent<PlayerStats>();
 
         health = gameObject.GetComponent<EntityHealth>();
-        health.maxHitpoints = 30;
-        health.currentHitpoints = 30;        
-        //health.maxHitpoints = stats.getMaxHitPoints();
-        //health.currentHitpoints = stats.getMaxHitPoints();
+        health.maxHitpoints = stats.getMaxHitPoints();
+        health.currentHitpoints = stats.getMaxHitPoints();
         health.SetStartingHealthUI();
 
-        currentStr = stats.Strength();
-        currentDex = stats.Dexterity();
-        currentCon = stats.Constitution();
-        currentInt = stats.Intelligence();
-        currentWis = stats.Wisdom();
-        currentCha = stats.Charisma();
-
         StartCoroutine(DetectFall());
-
-        // TEMP drop the sword on start so the player has a working weapon (for testing purposes)
-        if(GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME){
-            GameObject itemObject = Instantiate(dropItemPrefab, transform.position, Quaternion.identity);
-            itemObject.GetComponent<GeneratedEquipment>().SetEquipmentBaseData( swordData, ItemRarity.Common );
-            itemObject.GetComponent<DropTrigger>().DropItemModelIn3DSpace();
-        }
 
         // If your first run, auto trigger starting dialogue
         if(GameManager.instance.currentRunNumber == 1){

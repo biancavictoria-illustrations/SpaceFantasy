@@ -27,12 +27,19 @@ public class TabGroup : MonoBehaviour
         tabButtons.Add(button);
     }
 
+    void Start()
+    {
+        if(selectedTab){
+            OnTabSelected(selectedTab);
+        }
+    }
+
     public void OnTabEnter(TabButton button)
     {
         ResetTabs();
         if( selectedTab == null || button != selectedTab ){
             button.background.color = tabHover;
-        }        
+        }
     }
 
     public void OnTabExit(TabButton button)
@@ -44,12 +51,12 @@ public class TabGroup : MonoBehaviour
     {
         // If there already is a selected tab, deselect it
         if(selectedTab != null){
-            selectedTab.Deselect();
+            selectedTab.DeselectTabButton();
         }
 
         // Select the new tab
         selectedTab = button;
-        selectedTab.Select();
+        selectedTab.SelectTabButton();
 
         // Reset all the other tabs and set this tab to the active appearance
         ResetTabs();

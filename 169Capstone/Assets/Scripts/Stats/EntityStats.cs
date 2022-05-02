@@ -2,31 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum StatType
+{
+    // Values that can be Secondary Line Values
+    HitPoints,
+    AttackSpeed,
+    MoveSpeed,
+    Defense,
+    DodgeChance,
+    CritChance,
+    CritDamage,
+    TrapDamageResist,
+
+    // ONLY Primary Lines
+    STRDamage,
+    DEXDamage,
+    INTDamage,
+    WISDamage,
+
+    enumSize
+}
+
 public abstract class EntityStats : MonoBehaviour
 {
+    public const int numberOfSecondaryLineOptions = 8;
+
     protected virtual void Awake()
     {
         statBonusFromSource = new Dictionary<Object, Dictionary<StatBonusType, float>>();
     }
 
     #region Bonus Management
-        public enum StatType
-        {
-            HitPoints,
-            AttackSpeed,
-            MoveSpeed,
-            Defense,
-            DodgeChance,
-            CritChance,
-            CritDamage,
-            StunChance,
-            BurnChance,
-            SlowChance,
-            StatusResist,
-
-            enumSize
-        }
-
+        
         public enum BonusType
         {
             flat,
@@ -163,24 +170,31 @@ public abstract class EntityStats : MonoBehaviour
                         critDamageMultiplier = total;
                     break;
 
-                case StatType.StunChance:
+                case StatType.TrapDamageResist:
                     if(bonusType == BonusType.flat)
-                        stunChanceFlatBonus = total;
+                        trapDamageResistFlatBonus = total;
+                    else
+                        trapDamageResistMultiplier = total;
                     break;
 
-                case StatType.BurnChance:
+                case StatType.STRDamage:
                     if(bonusType == BonusType.flat)
-                        burnChanceFlatBonus = total;
+                        STRDamageFlatBonus = total;
                     break;
 
-                case StatType.SlowChance:
+                case StatType.DEXDamage:
                     if(bonusType == BonusType.flat)
-                        slowChanceFlatBonus = total;
+                        DEXDamageFlatBonus = total;
                     break;
 
-                case StatType.StatusResist:
+                case StatType.WISDamage:
                     if(bonusType == BonusType.flat)
-                        statusResistChanceFlatBonus = total;
+                        WISDamageFlatBonus = total;
+                    break;
+
+                case StatType.INTDamage:
+                    if(bonusType == BonusType.flat)
+                        INTDamageFlatBonus = total;
                     break;
             }
         }
@@ -260,45 +274,78 @@ public abstract class EntityStats : MonoBehaviour
             return critDamageBase * critDamageMultiplier + critDamageFlatBonus;
         }
     #endregion
-
-    #region Stun Chance
-        protected float stunChanceBase;
-        protected float stunChanceFlatBonus;
-
-        public virtual float getStunChance()
-        {
-            return stunChanceBase + stunChanceFlatBonus;
-        }
-    #endregion
-
-    #region Burn Chance
-        protected float burnChanceBase;
-        protected float burnChanceFlatBonus;
-
-        public virtual float getBurnChance()
-        {
-            return burnChanceBase + burnChanceFlatBonus;
-        }
-    #endregion
     
-    #region Slow Chance
-        protected float slowChanceBase;
-        protected float slowChanceFlatBonus;
+    #region Trap Damage Resist
+        protected float trapDamageResistBase;
+        protected float trapDamageResistMultiplier;
+        protected float trapDamageResistFlatBonus;
 
-        public virtual float getSlowChance()
+        public virtual float getTrapDamageResist()
         {
-            return slowChanceBase + slowChanceFlatBonus;
-        }
-    #endregion
-    
-    #region Status Resist Chance
-        protected float statusResistChanceBase;
-        protected float statusResistChanceFlatBonus;
-
-        public virtual float getStatusResistChance()
-        {
-            return statusResistChanceBase + statusResistChanceFlatBonus;
+            return trapDamageResistBase * trapDamageResistMultiplier + trapDamageResistFlatBonus;
         }
     #endregion
 
+    #region Damage Values
+        protected float baseDamage;
+
+        protected float STRDamageFlatBonus;
+        protected float DEXDamageFlatBonus;
+        protected float WISDamageFlatBonus;
+        protected float INTDamageFlatBonus;
+
+        public virtual float getSTRDamage()
+        {
+            return baseDamage + STRDamageFlatBonus;
+        }
+
+        public virtual float getDEXDamage()
+        {
+            return baseDamage + DEXDamageFlatBonus;
+        }
+
+        public virtual float getWISDamage()
+        {
+            return baseDamage + WISDamageFlatBonus;
+        }
+
+        public virtual float getINTDamage()
+        {
+            return baseDamage + INTDamageFlatBonus;
+        }
+    #endregion
+
+    public float GetCurrentValueFromStatType(StatType type)
+    {
+        switch(type){
+            case StatType.CritChance:
+                return getCritChance();
+            case StatType.CritDamage:
+                return getCritDamage();
+            case StatType.AttackSpeed:
+                return getAttackSpeed();
+            case StatType.Defense:
+                return getDefense();
+            case StatType.MoveSpeed:
+                return getMoveSpeed();
+            case StatType.TrapDamageResist:
+                return getTrapDamageResist();
+            case StatType.DodgeChance:
+                return getDodgeChance();
+            case StatType.HitPoints:
+                return getMaxHitPoints();
+
+            // Primary Lines ONLY
+            case StatType.STRDamage:
+                return getSTRDamage();
+            case StatType.DEXDamage:
+                return getDEXDamage();
+            case StatType.INTDamage:
+                return getINTDamage();
+            case StatType.WISDamage:
+                return getWISDamage();    
+        }
+        Debug.LogError("No current value found for stat type: " + type);
+        return -1;
+    }
 }

@@ -320,7 +320,7 @@ public class DialogueManager : MonoBehaviour
     // OR when we want to force dialogue when you walk into certain triggers at certain times (Time Lich, etc.)
     public void OnNPCInteracted()
     {
-        Debug.Log("On NPC interacted");
+        // Debug.Log("On NPC interacted");
         OnDialogueOpened();
 
         if(NPC.ActiveNPC){
@@ -354,9 +354,9 @@ public class DialogueManager : MonoBehaviour
             if(NPC.ActiveNPC.SpeakerData().IsShopkeeper()){
                 InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.SpeakerData());
             }
-            // TODO: If time lich, start the fight here?
             else if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.TimeLich){
-                // TODO
+                FindObjectOfType<Lich>().canAttack = true;
+                InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(true, EnemyID.TimeLich);
             }
         }
     }

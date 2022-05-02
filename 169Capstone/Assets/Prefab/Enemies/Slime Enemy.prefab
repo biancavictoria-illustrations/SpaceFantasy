@@ -48,10 +48,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.6
-  m_Height: 3.408618
+  m_Radius: 1.2215452
+  m_Height: 3.4917626
   m_Direction: 1
-  m_Center: {x: 0, y: 1.704309, z: 0}
+  m_Center: {x: 0.40082946, y: 1.7458813, z: 0.13896996}
 --- !u!195 &4941471536871962130
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -91,6 +91,7 @@ MonoBehaviour:
   attackRadius: 0
   speed: 1
   attacking: 0
+  canMove: 1
 --- !u!95 &3600193942701055031
 Animator:
   serializedVersion: 3
@@ -129,6 +130,8 @@ MonoBehaviour:
   canAttack: 1
   coroutineRunning: 0
   animator: {fileID: 3600193942701055031}
+  explosionObject: {fileID: 6054285448684224349, guid: c47d463046d835d4d86308119119eb62,
+    type: 3}
 --- !u!114 &1509965831
 MonoBehaviour:
   m_ObjectHideFlags: 0

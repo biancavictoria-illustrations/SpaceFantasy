@@ -21,7 +21,7 @@ public abstract class Enemy : MonoBehaviour
 
     protected abstract IEnumerator EnemyLogic(); 
 
-    void Awake()
+    protected virtual void Awake()
     {
         stats = GetComponent<EnemyStats>();
         health = GetComponent<EntityHealth>();

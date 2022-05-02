@@ -14,8 +14,7 @@ public class EnemyGen : MonoBehaviour
     private int slimeCount;
     private int robertCount;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         if(spawnOnStart)
             spawnEnemies();
@@ -43,13 +42,13 @@ public class EnemyGen : MonoBehaviour
         {
             Transform spawnPoint = spawnPoints[r.Next(0, spawnPoints.Count)];
             GameObject enemy = Instantiate(slimePrefab, spawnPoint.position + new Vector3(r.Next(-1 * offsetRadius, offsetRadius), 0, r.Next(-1 * offsetRadius, offsetRadius)), slimePrefab.transform.rotation);
-            roomScript.enemies.Add(enemy.GetComponent<EntityHealth>());
+            roomScript.AddEnemy(enemy.GetComponent<EntityHealth>());
         }
         for (int i = 0; i < robertCount; i++)
         {
             Transform spawnPoint = spawnPoints[r.Next(0, spawnPoints.Count)];
-            GameObject enemy = Instantiate(robertPrefab, spawnPoint.position + new Vector3(r.Next(-1 * offsetRadius), 0, r.Next(-1 * offsetRadius, offsetRadius)), robertPrefab.transform.rotation);
-            roomScript.enemies.Add(enemy.GetComponent<EntityHealth>());
+            GameObject enemy = Instantiate(robertPrefab, spawnPoint.position + new Vector3(r.Next(-1 * offsetRadius, offsetRadius), 0, r.Next(-1 * offsetRadius, offsetRadius)), robertPrefab.transform.rotation);
+            roomScript.AddEnemy(enemy.GetComponent<EntityHealth>());
         }
     }
 }

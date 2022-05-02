@@ -7,10 +7,11 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    // TODO: Make sure these are all correct and up to date
     public const string TITLE_SCREEN_STRING_NAME = "MainMenu";
     public const string MAIN_HUB_STRING_NAME = "Main Hub";
     public const string GAME_LEVEL1_STRING_NAME = "GenerationSetup";
-    public const string LICH_ARENA_STRING_NAME = "LichArena";   // TODO: Update this!!!
+    public const string LICH_ARENA_STRING_NAME = "LichArena";
 
     private const float hitStopDuration = 0.1f;
 
@@ -23,6 +24,7 @@ public class GameManager : MonoBehaviour
     public bool hitStop {get; private set;}
     [HideInInspector] public bool deathMenuOpen;
     [HideInInspector] public bool pauseMenuOpen;
+    [HideInInspector] public bool statRerollUIOpen;
 
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform playerTransform; // TODO: set this at runtime if game manager starts in main menu???
@@ -89,7 +91,7 @@ public class GameManager : MonoBehaviour
             Debug.LogError("No dialogue/UI manager found!");
         }
 
-        if(hitStop || DialogueManager.instance.stopTime || pauseMenuOpen || deathMenuOpen || InputManager.instance.shopIsOpen || InGameUIManager.instance.inventoryIsOpen || InGameUIManager.instance.gearSwapIsOpen)
+        if(hitStop || DialogueManager.instance.stopTime || pauseMenuOpen || deathMenuOpen || InputManager.instance.shopIsOpen || InGameUIManager.instance.inventoryIsOpen || InGameUIManager.instance.gearSwapIsOpen || statRerollUIOpen)
             Time.timeScale = 0;
         else
             Time.timeScale = 1;
@@ -129,6 +131,7 @@ public class GameManager : MonoBehaviour
             PlayerInventory.instance.SetRunStartHealthPotionQuantity();
             InGameUIManager.instance.ToggleRunUI(true);
             AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, false);
+            InGameUIManager.instance.EnableRunStartStatRerollPopup(true);
         }
         else if(currentSceneName == LICH_ARENA_STRING_NAME){
             // TODO: Play lich fight music
@@ -171,19 +174,18 @@ public class GameManager : MonoBehaviour
 
     public void SaveGame()
     {
-        Debug.Log("Save slot num before saving: " + saveSlotNum);
-
         SaveDisplayValuesToPlayerPrefs();
-        SaveLoadManager.SaveGame(saveSlotNum, this, PlayerInventory.instance, DialogueManager.instance, StoryManager.instance, PermanentUpgradeManager.instance);
-
-        Debug.Log("Save slot num after saving: " + saveSlotNum);
+        MarkSlotToDelete(false, saveSlotNum);
+        
+        SaveLoadManager.SaveGame(saveSlotNum, this, PlayerInventory.instance, DialogueManager.instance, StoryManager.instance, PermanentUpgradeManager.instance);        
     }
 
     // Called when you load your game in the Main Menu (and ONLY then)
     public void LoadGame(int _slot)
     {
         saveSlotNum = _slot;
-        Debug.Log("Loading Game... Save Slot Num in Game Manager set to: " + saveSlotNum);
+
+        gameTimer.SetTotalTimeOnThisSaveFile( GetTotalTimePlayedInSaveFile(_slot) );
 
         // Retrieve save data & set all values from there
         Save saveData = SaveLoadManager.LoadGame(saveSlotNum);
@@ -234,6 +236,7 @@ public class GameManager : MonoBehaviour
         sm.stellanListInitialized = saveData.stellanListInitialized;
         sm.doctorListInitialized = saveData.doctorListInitialized;
         sm.lichListInitialized = saveData.lichListInitialized;
+        sm.rhianListInitialized = saveData.rhianListInitialized;
 
         for(int i = 0; i < saveData.brynNumRunDialogueList.Length; i++){
             sm.brynNumRunDialogueList.Add(saveData.brynNumRunDialogueList[i]);
@@ -246,6 +249,9 @@ public class GameManager : MonoBehaviour
         }
         for(int i = 0; i < saveData.timeLichNumRunDialogueList.Length; i++){
             sm.timeLichNumRunDialogueList.Add(saveData.timeLichNumRunDialogueList[i]);
+        }
+        for(int i = 0; i < saveData.rhianNumRunDialogueList.Length; i++){
+            sm.rhianNumRunDialogueList.Add(saveData.rhianNumRunDialogueList[i]);
         }
 
         // Story Beat Status Values
@@ -314,8 +320,8 @@ public class GameManager : MonoBehaviour
         // If we're calling this ONLY in Main Hub, it's current run num - 1
         PlayerPrefs.SetInt( s + "CompletedRunNum", currentRunNumber - 1 );
 
-        PlayerPrefs.SetString( s + "TimePlayed", gameTimer.ConvertTotalTimeToReadableString() );
-
+        PlayerPrefs.SetFloat( s + "TimePlayed", gameTimer.totalTimePlayedOnThisSaveFile );
+        
         PlayerPrefs.Save();
     }
 
@@ -339,14 +345,31 @@ public class GameManager : MonoBehaviour
         return PlayerPrefs.GetInt(s);
     }
 
-    public string GetTotalTimePlayedInSaveFile(int _slot)
+    public float GetTotalTimePlayedInSaveFile(int _slot)
     {
         string s = GetSaveFilePlayerPrefsKey(_slot) + "TimePlayed";
         if(!PlayerPrefs.HasKey(s)){
-            Debug.LogError("No value found for key " + s + " in PlayerPrefs");
-            return "";
+            Debug.LogWarning("No value found for key " + s + " in PlayerPrefs; okay if checking in SaveDisplayValuesToPlayerPrefs");
+            return -1;
         }
-        return PlayerPrefs.GetString(s);
+        return PlayerPrefs.GetFloat(s);
+    }
+
+    public string GetPlayerPrefsMarkedToDeleteFileKey(int _slot)
+    {
+        return GameManager.instance.GetSaveFilePlayerPrefsKey(_slot) + "Delete";
+    }
+
+    public void MarkSlotToDelete(bool set, int _slot)
+    {
+        // Save it to prefs so that we remember between play sessions in case it's not overwritten right now
+        if(set){
+            PlayerPrefs.SetInt(GetPlayerPrefsMarkedToDeleteFileKey(_slot), 1);
+        }
+        else{
+            PlayerPrefs.SetInt(GetPlayerPrefsMarkedToDeleteFileKey(_slot), 0);            
+        }
+        PlayerPrefs.Save();
     }
 
     #endregion

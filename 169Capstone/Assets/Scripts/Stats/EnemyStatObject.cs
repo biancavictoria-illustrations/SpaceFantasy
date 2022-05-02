@@ -29,11 +29,8 @@ public class EnemyStatObject : ScriptableObject
     [SerializeField] private float defense; 
     [SerializeField] private float dodgeChance; 
     [SerializeField] private float critChance;  
-    [SerializeField] private float critDamage;  
-    [SerializeField] private float stunChance;  
-    [SerializeField] private float burnChance;
-    [SerializeField] private float slowChance; 
-    [SerializeField] private float statusResistChance;
+    [SerializeField] private float critDamage;
+    [SerializeField] private float trapDamageResist;
 
     public EnemyID EnemyID()
     {
@@ -75,23 +72,8 @@ public class EnemyStatObject : ScriptableObject
         return critDamage;
     }
 
-    public float StunChance()
+    public float TrapDamageResist()
     {
-        return stunChance;
-    }
-
-    public float BurnChance()
-    {
-        return burnChance;
-    }
-
-    public float SlowChance()
-    {
-        return slowChance;
-    }
-
-    public float StatusResistChance()
-    {
-        return statusResistChance;
+        return trapDamageResist;
     }
 }

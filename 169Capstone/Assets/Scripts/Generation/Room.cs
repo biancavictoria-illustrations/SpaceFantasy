@@ -18,6 +18,9 @@ public class Room : MonoBehaviour
 
     void Start()
     {
+        if(enemies == null)
+            return;
+
         foreach(EntityHealth enemy in enemies)
         {
             if(!enemy.CompareTag("Player"))
@@ -33,10 +36,31 @@ public class Room : MonoBehaviour
         Debug.Log("Enemy Update");
     }
 
+    public void AddEnemy(EntityHealth enemy)
+    {
+        Debug.Log("Enemy Added");
+
+        if(enemies == null)
+        {
+            enemies = new HashSet<EntityHealth>();
+        }
+
+        enemies.Add(enemy);
+    }
+
+    public HashSet<EntityHealth> GetEnemyList()
+    {
+        if(enemies == null)
+            return new HashSet<EntityHealth>();
+
+        return enemies;
+    }
+
     public bool hasEnemies()
     {
+        if(enemies == null)
+            return false;
+            
         return enemies.Count > 0;
     }
-    
-    
 }

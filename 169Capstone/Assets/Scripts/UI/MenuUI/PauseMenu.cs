@@ -19,6 +19,8 @@ public class PauseMenu : MonoBehaviour
     public Button controlsButton;
     public Button quitButton;
 
+    public Button areYouSureNoButton;
+
     public void ResumeGame()
     {
         ResetPauseUI();
@@ -53,10 +55,7 @@ public class PauseMenu : MonoBehaviour
         pauseMenuPanel.SetActive(true);
 
         // In case we click escape to leave while the "are you sure you want to quit" panel is open
-        continueButton.interactable = true;
-        settingsButton.interactable = true;
-        controlsButton.interactable = true;
-        quitButton.interactable = true;
+        TogglePauseMenuButtonInteractability(true);
         
         pauseMenuUI.SetActive(false);
     }
@@ -107,6 +106,8 @@ public class PauseMenu : MonoBehaviour
 
     public void LoadMenu()
     {
+        PlayerInventory.instance.ClearRunInventory();
+        
         GameManager.instance.pauseMenuOpen = false;
         GameIsPaused = false;
 
@@ -116,7 +117,31 @@ public class PauseMenu : MonoBehaviour
 
         SceneManager.LoadScene("MainMenu");
     }
+
+    private void TogglePauseMenuButtonInteractability(bool set)
+    {
+        continueButton.interactable = set;
+        settingsButton.interactable = set;
+        controlsButton.interactable = set;
+        quitButton.interactable = set;
+    }
+
+    public void ToggleAreYouSurePanelOn(bool set)
+    {
+        areYouSurePanel.SetActive(set);
+        TogglePauseMenuButtonInteractability(!set);
+        
+        if(set){
+            areYouSureNoButton.Select();
+        }
+        else{
+            continueButton.Select();
+        }
+    }
+
+    public void AreYouSureQuitButtonClicked()
+    {
+        ResetPauseUI();
+        LoadMenu();
+    }
 }
-
-
-// TODO: fix pause menu now that dialogue pauses (if you open pause menu while dialogue open)

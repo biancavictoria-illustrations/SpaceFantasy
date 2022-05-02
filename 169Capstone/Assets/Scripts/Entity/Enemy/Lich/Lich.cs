@@ -33,6 +33,7 @@ public class Lich : Enemy
         canAttack = false;
 
         player = FindObjectOfType<Player>();
+        health.OnDeath.AddListener((EntityHealth _) => player.health.Damage(9999999999999999));
 
         EntityHealth healthScript = GetComponent<EntityHealth>();
         healthScript.OnHit.AddListener(checkForHalfHealth);

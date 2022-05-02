@@ -24,16 +24,14 @@ public class ItemPanelDoctor : ItemPanelShopUI
 
     private PlayerStats stats;
 
-    private int upgradeBaseCost;
-    private const float costPowerValue = 1.25f;
-    private const float timeFactor = 0.0606f;
-
+    [SerializeField] private ShopUIDoctor shopUI;
 
     // Called JUST first time you visit this shop per run
     public void GenerateNewDoctorUpgradeValues(int _baseCost)
     {
         stats = FindObjectsOfType<PlayerStats>()[0];
-        upgradeBaseCost = _baseCost;
+        baseCost = _baseCost;
+        rarity = ItemRarity.Legendary;
         GenerateNewPanelValues();
     }
 
@@ -45,15 +43,15 @@ public class ItemPanelDoctor : ItemPanelShopUI
             int r = Random.Range(0,2);
             if(category == UpgradeShopCategory.STROrDEX){
                 statName = r == 0 ? PlayerFacingStatName.STR : PlayerFacingStatName.DEX;
-                upgradeName = statName == PlayerFacingStatName.STR ? "STR FLAVOR NAME" : "DEX FLAVOR NAME";
+                upgradeName = statName == PlayerFacingStatName.STR ? "Muscle Enhancement" : "Reflex Enhancement";
             }
             else if(category == UpgradeShopCategory.INTOrWIS){
                 statName = r == 0 ? PlayerFacingStatName.INT : PlayerFacingStatName.WIS;
-                upgradeName = statName == PlayerFacingStatName.INT ? "INT FLAVOR NAME" : "WIS FLAVOR NAME";
+                upgradeName = statName == PlayerFacingStatName.INT ? "Brain Function" : "Willpower";
             }
             else{       // CHAorCON
                 statName = r == 0 ? PlayerFacingStatName.CHA : PlayerFacingStatName.CON;
-                upgradeName = statName == PlayerFacingStatName.CHA ? "CHA FLAVOR NAME" : "CON FLAVOR NAME";
+                upgradeName = statName == PlayerFacingStatName.CHA ? "Bone Structure" : "Bone Fortitude";
             }
         }
         else if(category == UpgradeShopCategory.HealthPotion){
@@ -67,21 +65,32 @@ public class ItemPanelDoctor : ItemPanelShopUI
         GetCurrentStatValue();
 
         // === Set the Initial Values ===
-        SetBaseShopItemValues(upgradeBaseCost, upgradeName, GenerateDescription());
+        SetBaseShopItemValues(baseCost, upgradeName, GenerateDescription());
+        SetInteractableBasedOnAffordStatus();
     }
 
     private string GenerateDescription()
     {
         // === Generate Description Text ===
         if( category == UpgradeShopCategory.HealthPotion ){
-            return "Increases <b>Health Potion</b> quantity by 1.\n\n<b>Potions:</b>   " + currentStatValue + "  ->  <color=green>" + (currentStatValue+1);
+            return "Increases <b>Health Potion</b> quantity by 1.\n\n<b>Potions:</b>   " + currentStatValue + "  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue+1);
         }
         else if( category == UpgradeShopCategory.PotionEfficacy ){
-            return "Increases <b>Health Potion</b> efficacy by " + healingBonusValue + "%.\n\n<b>Healing:</b>   " + currentStatValue + "%  ->  <color=green>" + (currentStatValue + healingBonusValue) + "%";
+            return "Increases <b>Health Potion</b> efficacy by " + healingBonusValue + "%.\n\n<b>Healing:</b>   " + currentStatValue + "%  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue + healingBonusValue) + "%";
         }
         else{
             string s = statName.ToString();
-            return "Increases <b>" + s + "</b> by 1.\n\n<b>" + s + ":</b>   " + currentStatValue + "  ->  <color=green>" + (currentStatValue+1);
+            return "Increases <b>" + s + "</b> by 1.\n\n<b>" + s + ":</b>   " + currentStatValue + "  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue+1);
+        }
+    }
+
+    public void SetInteractableBasedOnAffordStatus()
+    {
+        if(canAffordItem){
+            itemCardButton.interactable = true;
+        }
+        else{
+            itemCardButton.interactable = false;
         }
     }
 
@@ -90,7 +99,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
         if(!stats){
             stats = FindObjectsOfType<PlayerStats>()[0];
         }
-
+    
         // If healing related thing
         if(category == UpgradeShopCategory.HealthPotion){
             currentStatValue = PlayerInventory.instance.healthPotionQuantity;
@@ -124,9 +133,6 @@ public class ItemPanelDoctor : ItemPanelShopUI
         if(currentStatValue >= 20){
             SetMaxStatReachedValues();
         }
-        else{
-            itemCardButton.interactable = true;
-        }
     }
 
     private void IncrementStatValue()
@@ -134,6 +140,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
         currentStatValue++;
         descriptionText.text = GenerateDescription();
         UpdateCurrentCost();
+        SetInteractableBasedOnAffordStatus();
     }
 
     private void IncrementHealingEfficacy()
@@ -141,6 +148,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
         currentStatValue += healingBonusValue;
         descriptionText.text = GenerateDescription();
         UpdateCurrentCost();
+        SetInteractableBasedOnAffordStatus();
     }
 
     public override void PurchaseItem()
@@ -185,37 +193,25 @@ public class ItemPanelDoctor : ItemPanelShopUI
                 SetMaxStatReachedValues();
             }
         }
+
+        shopUI.UpdateAllPanelsAfterPurchasing();
     }
 
     private void SetMaxStatReachedValues()
     {
         costText.text = "";
-        descriptionText.text = "<color=red>Max " + statName.ToString() + " value reached.";
+        descriptionText.text = "<color=" + InGameUIManager.magentaColor + ">Max " + statName.ToString() + " value reached.";
         itemCardButton.interactable = false;
+        itemIsAvailable = false;
+        SetHoverAlertsActive(false);
     }
 
     // Update prices and descriptions if necessary but don't generate new stats for purchase
     public void UpdateValues()
     {
-        GetCurrentStatValue();
         descriptionText.text = GenerateDescription();
         UpdateCurrentCost();    // Updates cost value as well as UI
-    }
-
-    // TODO: Update according to Salil's actual equation
-    protected override void CalculateCurrentCost()
-    {
-        float cost = upgradeBaseCost;      // Set base cost
-
-        // Set coeff to (time factor * time in min) * stage factor
-        int playerFactor = 1;
-        float timeInMin = 0;        // TODO: Set to time in min
-        float stageFactor = 1f;     // TODO: Set to stage factor
-        float coeff = (playerFactor + timeInMin * timeFactor) * stageFactor;
-
-        // Raise coeff to the power of the costPowerValue
-        coeff = Mathf.Pow(coeff,costPowerValue);
-
-        currentCostValue = (int)Mathf.Floor(cost);       // Get int using Floor to round
+        SetInteractableBasedOnAffordStatus();
+        GetCurrentStatValue();
     }
 }
