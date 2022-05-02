@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.AI;
 
 public class FloorGenerator : MonoBehaviour
 {
@@ -29,12 +30,16 @@ public class FloorGenerator : MonoBehaviour
     public float maxHallwayLength = 3;
 
     [Header("Asset References")]
-    [Tooltip("The material to be applied to the force fields that trap players inside an encounter room.")]
-    public Material forceFieldMat;
-
+    [Tooltip("The prefab for the room that the player starts in.")]
     public GameObject spawnRoomPrefab;
+    [Tooltip("The prefab for the beetle boss fight.")]
     public GameObject bossRoomPrefab;
+    [Tooltip("The prefab for the three shops.")]
     public GameObject shopRoomPrefab;
+    [Tooltip("The prefab for the force fields that trap players inside an encounter room.")]
+    public GameObject forceFieldPrefab;
+    [Tooltip("The prefab that contains a navmesh and the necessary settings for combat.")]
+    public GameObject navMeshPrefab;
 
     [Tooltip("A list of all room prefabs which will trap the player inside until they defeat all enemies.")]
     public List<GameObject> encounterRoomPrefabs;
@@ -70,6 +75,7 @@ public class FloorGenerator : MonoBehaviour
     {   
         //Declare a list of encounter rooms
         List<GameObject> encounterRooms = new List<GameObject>();
+        List<GameObject> hallwayRooms = new List<GameObject>();
 
 #region Preliminary Room Placement
 
@@ -81,6 +87,7 @@ public class FloorGenerator : MonoBehaviour
         GameObject zShop = Instantiate(shopRoomPrefab, new Vector3(-0.5f, 0, -gridBounds.y + 0.5f) * gridCellSizeInUnits, Quaternion.identity);
 
         GameObject bossRoom = Instantiate(bossRoomPrefab, new Vector3(-gridBounds.x + 0.5f, 0, -gridBounds.y + 0.5f) * gridCellSizeInUnits, Quaternion.identity);
+        bossRoom.GetComponentInChildren<Beetle>().gameObject.SetActive(false);
 
 #endregion
 
@@ -105,7 +112,7 @@ public class FloorGenerator : MonoBehaviour
                 //Instantiate the room at the chosen coordinates and grab its Room script and its bounds colliders
                 GameObject currentRoom = Instantiate(prefab, position, rotation);
                 Room roomScript = currentRoom.GetComponentInChildren<Room>();
-                HashSet<BoxCollider> roomBoundsList = new HashSet<BoxCollider>(roomScript.GetComponents<BoxCollider>());
+                List<BoxCollider> roomBoundsList = new List<BoxCollider>(roomScript.GetComponents<BoxCollider>());
 
                 //If any of the colliders intersect another room, try again
                 bool intersects = false;
@@ -140,7 +147,7 @@ public class FloorGenerator : MonoBehaviour
                     Destroy(currentRoom);
                     ++tries;
 
-                    Debug.Log("Room intersects existing room, attempt number " + tries);
+                    // Debug.Log("Room intersects existing room, attempt number " + tries);
                     continue;
                 }
                 else //We successfully placed a room down. Add it to the list and update our progress
@@ -151,8 +158,8 @@ public class FloorGenerator : MonoBehaviour
                 }
             }
         }
-        if(tries == maxNumberOfPlacementAttempts)
-            Debug.Log("Ran out of attempts to place a room");
+        // if(tries == maxNumberOfPlacementAttempts)
+        //     Debug.Log("Ran out of attempts to place a room");
 
 #endregion
 
@@ -190,218 +197,286 @@ public class FloorGenerator : MonoBehaviour
 
     #region Hallway Generation Methods
 
-        //The bulk of hallway generation
-        bool CreateHallwayBetweenRooms(GameObject startRoom, GameObject destRoom)
+        bool CreateHallwayBetweenRooms(GameObject startRoom, GameObject destRoom, float previousDistance)
         {
-            //Get the exit on destRoom that is closest to startRoom
-            List<Transform> destRoomExits = new List<Transform>(destRoom.GetComponentInChildren<Room>().roomExits);
-            if(destRoomExits.Count <= 0) return false;
+            //Failsafe to prevent too many attempts to connect
+            bool hasFailed = false;
 
-            Transform destExit = destRoomExits[0];
-            float shortestDistance = Vector3.Distance(destExit.position, startRoom.transform.position);
-            foreach(Transform exit in destRoomExits)
+            //Get the list of active exits on startRoom
+            List<Transform> startRoomExits = new List<Transform>(startRoom.GetComponentInChildren<Room>().roomExits.Where((Transform t) => t.gameObject.activeSelf));
+
+            //If there are no active exits on startRoom, a connection is impossible
+            if(startRoomExits.Count == 0) 
             {
-                if(!exit.gameObject.activeSelf) continue;
-
-                float distance = Vector3.Distance(exit.position, startRoom.transform.position);
-                if(distance < shortestDistance)
-                {
-                    destExit = exit;
-                    shortestDistance = distance;
-                }
+                Debug.LogWarning("No exits on startRoom");
             }
 
-            //If all of the exits are already taken, give up
-            if(!destExit.gameObject.activeSelf) return false;
-
-            //Get the list of exits on startRoom
-            List<Transform> roomExits = new List<Transform>(startRoom.GetComponentInChildren<Room>().roomExits);
-            bool successfulHallway = false;
-
-            //Try to connect to destExit with each of startRoom's exits, in order of which exit is closest
-            do
+            //Try to connect to destRoom with each of startRoom's exits, in order of which exit is closest
+            while(startRoomExits.Count > 0)
             {
-                if(roomExits.Count <= 0) break;
+                //Get a list of all active exits on destRoom
+                List<Transform> destRoomExits = new List<Transform>(destRoom.GetComponentInChildren<Room>().roomExits.Where((Transform t) => t.gameObject.activeSelf));
 
-                //Find the closest exit to destExit
-                Transform closestExit = roomExits[0];
-                shortestDistance = Vector3.Distance(closestExit.position, destExit.position);
-                foreach(Transform exit in roomExits)
+                //If there are no active exits on destRoom, a connection is impossible
+                if(destRoomExits.Count == 0) 
                 {
-                    if(!exit.gameObject.activeSelf) continue;
-
-                    float distance = Vector3.Distance(exit.position, destExit.position);
-                    if(distance < shortestDistance)
-                    {
-                        closestExit = exit;
-                        shortestDistance = distance;
-                    }
+                    Debug.LogWarning("No exits on destRoom");
+                    break;
                 }
 
-                //If all of the exits are already taken, give up
-                if(!closestExit.gameObject.activeSelf) return false;
-
-                roomExits.Remove(closestExit);
-
-                //Keep picking hallway pieces until we find one that connects to destExit
-                List<GameObject> hallwayPrefabs = new List<GameObject>(hallwayRoomPrefabs);
-                do
+                //Find the closest pair of exits and start with those
+                var transformPair = FindClosestTransformPair(startRoomExits, destRoomExits, Vector3.up, 5);
+                if(transformPair.Key == null || transformPair.Value == null) //If the result is invalid for some reason, abort
                 {
-                    //Pick and instantiate a random hallway piece
-                    int index = Random.Range(0, hallwayPrefabs.Count);
-                    GameObject prefab = hallwayPrefabs[index];
-                    hallwayPrefabs.RemoveAt(index);
-                    GameObject hallwayPiece = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+                    Debug.LogWarning("No valid exit pairs");
+                    break;
+                }
+                
+                //Assign exit values
+                Transform startExit = transformPair.Key;
+                Transform destExit = null;
 
-                    HashSet<BoxCollider> roomBoundsList = new HashSet<BoxCollider>();
+                //Remove startExit from the list of options
+                startRoomExits.Remove(startExit);
 
-                    //Try each orientation of the hallway until we find one that gets us closer to destExit
-                    List<Transform> hallwayExits = hallwayPiece.GetComponentInChildren<Room>().roomExits;
-                    for(int i = 0; i < hallwayExits.Count; ++i)
+                //Try to connect to startExit with each of destRoom's exits, in order of which exit is closest
+                while(destRoomExits.Count > 0)
+                {
+                    if(destExit == null)
                     {
-                        Transform hallwayExit = hallwayExits[i];
+                        destExit = transformPair.Value;
+                    }
+                    else
+                    {
+                        destExit = FindClosestTransformToDestination(destRoomExits, startExit, Vector3.up, 5);
+                    }
+                    destRoomExits.Remove(destExit);
+                    
+                    float distanceBetweenStartAndDest = Vector3.Distance(startExit.position, destExit.position);
 
-                        //ADD TO ALGORITHM
-                        if(!hallwayExit.gameObject.activeSelf)
-                            continue;
+                    // Debug.Log("Picked Exits: " + startExit + " and " + destExit);
+                    // Debug.Log("startExit active: " + startExit.gameObject.activeSelf);
+                    // Debug.Log("destExit active: " + destExit.gameObject.activeSelf);
+                    // Debug.Log("Distance between exits: " + distanceBetweenStartAndDest);
 
-                        //Rotate the hallway to match closestExit
-                        Quaternion orientation = Quaternion.FromToRotation(hallwayExit.up, -closestExit.up);
-                        hallwayPiece.transform.rotation = orientation * hallwayPiece.transform.rotation;
+                    //Keep picking hallway pieces until we find one that connects to destExit
+                    List<GameObject> hallwayPrefabs = new List<GameObject>(hallwayRoomPrefabs);
+                    int startingListSize = hallwayPrefabs.Count;
+                    while(hallwayPrefabs.Count > startingListSize/2)
+                    {
+                        //Pick and instantiate a random hallway piece
+                        int index = Random.Range(0, hallwayPrefabs.Count);
+                        GameObject prefab = hallwayPrefabs[index];
+                        hallwayPrefabs.RemoveAt(index);
+                        GameObject hallwayPiece = Instantiate(prefab, Vector3.zero, Quaternion.identity);
 
-                        //Move the hallway so exit matches closestExit
-                        Vector3 exitToCenter = hallwayPiece.transform.position - hallwayExit.position;
-                        hallwayPiece.transform.position = closestExit.position + exitToCenter;
+                        List<BoxCollider> roomBoundsList = new List<BoxCollider>();
 
-                        //Check if the hallway piece overlaps another room
-                        Room roomScript = hallwayPiece.GetComponentInChildren<Room>();
-                        roomBoundsList = new HashSet<BoxCollider>(roomScript.GetComponents<BoxCollider>());
-
-                        //If any of the colliders intersect another room, try again
-                        bool intersects = false;
-                        foreach(BoxCollider roomBounds in roomBoundsList)
+                        //Try each orientation of the hallway until we find one that gets us closer to destExit
+                        List<Transform> hallwayExits = hallwayPiece.GetComponentInChildren<Room>().roomExits;
+                        foreach(Transform hallwayStartExit in hallwayExits)
                         {
-                            foreach(BoxCollider room in Physics.OverlapBox(roomBounds.transform.position + roomBounds.center, 
-                                                                            roomBounds.bounds.extents - (Vector3.one * 0.1f), 
-                                                                            roomBounds.transform.rotation, 
-                                                                            LayerMask.GetMask("RoomBounds")))
+                            //If the exit is already taken, log an error cause that shouldn't happen
+                            if(!hallwayStartExit.gameObject.activeSelf)
                             {
-                                //If the box overlaps a collider that doesn't belong to this room, it intersects something else
-                                if(!roomBoundsList.Contains(room))
+                                Debug.LogError("Hallway piece had disabled exit, this shouldn't be possible.");
+                                continue;
+                            }
+
+                            //Rotate the hallway to match startExit
+                            Quaternion orientation = Quaternion.FromToRotation(hallwayStartExit.up, -startExit.up);
+                            hallwayPiece.transform.rotation = orientation * hallwayPiece.transform.rotation;
+
+                            //Make sure the hallway piece is oriented upright
+                            if(hallwayPiece.transform.up != Vector3.up)
+                            {
+                                hallwayPiece.transform.rotation = Quaternion.AngleAxis(180, hallwayStartExit.up) * hallwayPiece.transform.rotation;
+                            }
+
+                            //Move the hallway so exit matches startExit
+                            Vector3 exitToCenter = hallwayPiece.transform.position - hallwayStartExit.position;
+                            hallwayPiece.transform.position = startExit.position + exitToCenter;
+
+                            //Check if the hallway piece overlaps another room
+                            Room roomScript = hallwayPiece.GetComponentInChildren<Room>();
+                            roomBoundsList = new List<BoxCollider>(roomScript.GetComponents<BoxCollider>());
+                            Room intersectingRoom = null;
+                            foreach(BoxCollider roomBounds in roomBoundsList)
+                            {
+                                foreach(BoxCollider room in Physics.OverlapBox(roomBounds.transform.position + roomBounds.center, 
+                                                                                roomBounds.bounds.extents - (Vector3.one * 0.1f), 
+                                                                                roomBounds.transform.rotation, 
+                                                                                LayerMask.GetMask("RoomBounds")))
                                 {
-                                    Debug.Log(hallwayPiece + " intersects " + room.transform.parent.gameObject);
-                                    intersects = true;
-                                    break;
+                                    //If the box overlaps a collider that doesn't belong to this room, it intersects something else
+                                    if(!roomBoundsList.Contains(room))
+                                    {
+                                        intersectingRoom = room.GetComponent<Room>();
+                                        if(intersectingRoom != null)
+                                        {
+                                            // Debug.Log(hallwayPiece + " intersects " + room.transform.parent.gameObject);
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            Debug.LogWarning(hallwayPiece + " intersects " + room.transform.parent.gameObject + " but " + room.transform.parent.gameObject + " has no room script!?");
+                                        }
+                                    }
                                 }
+
+                                if(intersectingRoom != null)
+                                    break;
                             }
 
-                            if(intersects)
-                                break;
-                        }
-
-                        //If the room overlaps another room, try a different orientation. 
-                        //If we run out of possible orientations the algorithm will move on to a new hallway prefab
-                        if(intersects)
-                        {
-                            continue;
-                        }
-
-                        //Find the closest exit from the hallway to destExit (can't be exit since that's connected to)
-                        Transform hallwayDestExit = hallwayExits[0];
-                        if(hallwayDestExit == hallwayExit)
-                            hallwayDestExit = hallwayExits[1];
-
-                        float hallwayDistance = Vector3.Distance(hallwayDestExit.position, destExit.position);
-                        foreach(Transform otherExit in hallwayPiece.GetComponentInChildren<Room>().roomExits)
-                        {
-                            if(otherExit == hallwayDestExit || !otherExit.gameObject.activeSelf) continue;
-
-                            float distance = Vector3.Distance(otherExit.position, destExit.position);
-                            if(distance < hallwayDistance)
+                            //If the room overlaps another room, try to connect to it. If that fails, try a different orientation. 
+                            //If we run out of possible orientations the algorithm will move on to a new hallway prefab
+                            if(intersectingRoom != null)
                             {
-                                hallwayDestExit = otherExit;
-                                hallwayDistance = distance;
+                                //Get the list of active exits on the intersecting room and try to connect to one
+                                List<Transform> intersectExits = new List<Transform>(intersectingRoom.roomExits.Where((Transform t) => t.gameObject.activeSelf));
+                                Transform exit = FindClosestTransformToDestination(intersectExits, startExit);
+
+                                //If the two exits are touching, connect them and consider this hallway a success
+                                if(exit != null && Vector3.Distance(startExit.position, exit.position) < 0.01f)
+                                {
+                                    //Remove the walls between startRoom and intersectingRoom
+                                    startExit.gameObject.SetActive(false);
+                                    exit.gameObject.SetActive(false);
+
+                                    //Disable the colliders and destroy the hallway piece since we didn't need it
+                                    foreach(BoxCollider roomBounds in roomBoundsList)
+                                    {
+                                        roomBounds.enabled = false;
+                                    }
+                                    Destroy(hallwayPiece);
+
+                                    Debug.LogWarning("Hallway succeeded early");
+
+                                    return true;
+                                }
+
+                                //Otherwise, try a new orientation of the same hallwayPiece
+                                // Debug.LogWarning("Intersected a room, trying new orientation.");
+                                continue;
                             }
-                        }
 
-                        if(!hallwayDestExit.gameObject.activeSelf) 
-                        {
-                            continue;
-                        }
+                            //Find the closest active exit from hallwayPiece to destExit that isn't hallwayStartExit
+                            List<Transform> otherExits = new List<Transform>(hallwayExits.Where((Transform t) => t.gameObject.activeSelf && t != hallwayStartExit));
+                            Transform hallwayDestExit = FindClosestTransformToDestination(otherExits, destExit, Vector3.up, 5);
 
-                        //Re-evaluate the exit that is closest to the hallwayDestExit
-                        float newShortestDistance = Vector3.Distance(destExit.position, hallwayDestExit.position);
-                        foreach(Transform exit in destRoomExits)
-                        {
-                            if(!exit.gameObject.activeSelf) continue;
-
-                            float distance = Vector3.Distance(exit.position, hallwayDestExit.position);
-                            if(distance < newShortestDistance)
+                            if(hallwayDestExit == null) 
                             {
-                                destExit = exit;
-                                newShortestDistance = distance;
+                                Debug.LogWarning("Couldn't find a valid second exit on hallwayPiece " + hallwayPiece);
+                                continue;
                             }
-                        }
 
-                        hallwayDistance = Vector3.Distance(hallwayDestExit.position, destExit.position);
+                            float distanceFromHallwayToDest = Vector3.Distance(hallwayDestExit.position, destRoom.transform.position);
 
-                        //If the distance is negligible we finally created a working hallway
-                        if(hallwayDistance < 0.1f)
-                        {
-                            
-                            //Remove the walls at the exits
-                            closestExit.gameObject.SetActive(false); 
-                            hallwayExit.gameObject.SetActive(false);
-                            hallwayDestExit.gameObject.SetActive(false);
-                            destExit.gameObject.SetActive(false); 
-                            Debug.Log("Successfully connected " + startRoom + " to " + destRoom);
-                            return true;
-                        }
-                        else if(hallwayDistance < shortestDistance) //Only continue the hallway if hallwayExit is closer to destExit than closestExit
-                        {
-                            hallwayExit.gameObject.SetActive(false); 
-                            closestExit.gameObject.SetActive(false); 
-                            successfulHallway = CreateHallwayBetweenRooms(hallwayPiece, destRoom);
-                            Debug.Log("Successful recursive call: " + successfulHallway);
+                            //Check if there is a different combination of exits that causes hallwayPiece to connect to destRoom
+                            List<Transform> destRoomExitsPlusCurrentDestExit = new List<Transform>(destRoomExits);
+                            destRoomExitsPlusCurrentDestExit.Add(destExit);
+                            var kvp = FindClosestTransformPair(otherExits, destRoomExitsPlusCurrentDestExit, Vector3.up, 5);
 
-                            if(successfulHallway)
+                            //If there is a combination of exits that completes the hallway, choose those instead
+                            if(Vector3.Distance(kvp.Key.position, kvp.Value.position) <= 0.1f)
                             {
+                                // Debug.Log("Previous hallwayDistance: " + distanceFromHallwayToDest);
+                                // Debug.Log("Previous hallwayDestExit: " + hallwayDestExit);
+                                // Debug.Log("Previous destExit: " + destExit);
+
+                                hallwayDestExit = kvp.Key;
+                                destExit = kvp.Value;
+                                distanceFromHallwayToDest = Vector3.Distance(hallwayDestExit.position, destExit.position);
+
+                                // Debug.Log("New hallwayDistance: " + distanceFromHallwayToDest);
+                                // Debug.Log("New hallwayDestExit: " + hallwayDestExit);
+                                // Debug.Log("New destExit: " + destExit);
+                            }
+
+                            //If the distance between hallwayPiece and destRoom is negligible we finally created a working hallway
+                            if(distanceFromHallwayToDest < 0.1f)
+                            {
+                                //Remove the walls between startRoom and hallwayPiece, as well as between hallwayPiece and destRoom
+                                startExit.gameObject.SetActive(false);
+                                hallwayStartExit.gameObject.SetActive(false);
+                                hallwayDestExit.gameObject.SetActive(false);
+                                destExit.gameObject.SetActive(false);
+
+                                Debug.LogWarning("Successful Hallway");
+
                                 return true;
                             }
-                            else
+                            else if(distanceFromHallwayToDest < previousDistance) //Only continue the hallway if hallwayExit is closer to destExit than closestExit
                             {
-                                hallwayExit.gameObject.SetActive(true);
-                                closestExit.gameObject.SetActive(true);
+                                //Remove the walls between startRoom and hallwayPiece
+                                hallwayStartExit.gameObject.SetActive(false);
+                                startExit.gameObject.SetActive(false);
+                                // Debug.Log("Case distanceFromHallwayToDest < distanceBetweenStartAndDest. Hallway distance = " + distanceFromHallwayToDest);
+
+                                bool successfulHallway = CreateHallwayBetweenRooms(hallwayPiece, destRoom, distanceFromHallwayToDest);
+
+                                //bool successfulHallway = CreateHallwayBetweenRooms(hallwayPiece, destRoom);
+                                Debug.LogWarning("Recursive call was successful: " + successfulHallway);
+
+                                //If the hallway was successful, return true
+                                if(successfulHallway)
+                                {
+                                    //Add the hallway to the list of all hallways
+                                    hallwayRooms.Add(hallwayPiece);
+
+                                    return true;
+                                }
+                                else
+                                {
+                                    //The hallway was unsuccessful, so we re-enable the walls between startRoom and hallwayPiece
+                                    hallwayStartExit.gameObject.SetActive(true);
+                                    startExit.gameObject.SetActive(true);
+
+                                    //If this is the second recursive failure, return unsuccessful
+                                    if(hasFailed)
+                                    {
+                                        //Disable the colliders and destroy the hallway piece
+                                        foreach(BoxCollider roomBounds in roomBoundsList)
+                                        {
+                                            roomBounds.enabled = false;
+                                        }
+                                        Destroy(hallwayPiece);
+
+                                        Debug.Log("Recursive call failed twice, cut off early");
+
+                                        return false;
+                                    }
+                                    else
+                                    {
+                                        hasFailed = true;
+                                    }
+                                }
                             }
                         }
-                    }
-                    
-                    if(!successfulHallway)
-                    {
+                        
+                        //This code is only reachable if this hallway piece was unsuccessful
+                        //Disable the colliders and destroy the hallway piece
                         foreach(BoxCollider roomBounds in roomBoundsList)
                         {
                             roomBounds.enabled = false;
                         }
-
-                        Debug.Log("Could not place hallway " + hallwayPiece + " connected to " + startRoom);
+                        Debug.LogWarning("Could not place hallway " + hallwayPiece + " connected to " + startRoom);
                         Destroy(hallwayPiece);
                     }
                 }
-                while(!successfulHallway && hallwayPrefabs.Count > 0);
             }
-            while(!successfulHallway && roomExits.Count > 0);
 
-            return successfulHallway;
+            Debug.LogWarning("Reached end of recursive call, hallway could not be created");
+            return false;
         }
-
+    
         bool CreateChainOfHallwaysBetweenRooms(GameObject startRoom, GameObject destRoom)
         {
             if(roomsWithinRange[startRoom].Contains(destRoom))
             {
                 //If startRoom and destRoom can be connected by a hallway, try to connect them
-                bool temp = CreateHallwayBetweenRooms(startRoom, destRoom);
-                Debug.Log("Successfully connected " + startRoom + " to " + destRoom + ": " + temp);
-                return temp;
+                return CreateHallwayBetweenRooms(startRoom, destRoom, Vector3.Distance(startRoom.transform.position, destRoom.transform.position));
+                //Debug.Log("Successfully connected " + startRoom + " to " + destRoom + ": " + returnValue);
             }
             else
             {
@@ -409,40 +484,25 @@ public class FloorGenerator : MonoBehaviour
                 GameObject nextClosestRoom = null;
                 bool connectionSuccessful = false;
 
-                do
+                while(!connectionSuccessful && roomsWithinRange[startRoom].Count > 0)
                 {
-                    if(roomsWithinRange[startRoom].Count == 0)
-                        break;
-
-                    //Pick an arbitrary room from the set of valid rooms
-                    nextClosestRoom = roomsWithinRange[startRoom].ElementAt(0);
-                    float shortestDistance = Vector3.Distance(nextClosestRoom.transform.position, destRoom.transform.position);
-
-                    //Find the closest valid room to destRoom
-                    foreach(GameObject room in roomsWithinRange[startRoom])
-                    {
-                        float distance = Vector3.Distance(room.transform.position, destRoom.transform.position);
-                        if(distance < shortestDistance)
-                        {
-                            nextClosestRoom = room;
-                            shortestDistance = distance;
-                        }
-                    }
+                    //Fring the closest room to destRoom
+                    nextClosestRoom = FindClosestTransformToDestination(new List<Transform>(roomsWithinRange[startRoom].Select((GameObject original) => original.transform)), destRoom.transform).gameObject;
 
                     //Whether it succeeds or not, we want to remove the rooms from each other's sets of valid rooms so we know not to try to connect them again later
                     RemoveKeyValuePairReflexively<GameObject, HashSet<GameObject>>(roomsWithinRange, ref startRoom, ref nextClosestRoom);
 
                     //Attempt to create a chain between this room and destRoom
                     connectionSuccessful = CreateChainOfHallwaysBetweenRooms(nextClosestRoom, destRoom);
-                    Debug.Log("Successfully chained from " + nextClosestRoom + " to " + destRoom + ": " + connectionSuccessful);
+                    //Debug.LogWarning("Successfully chained from " + nextClosestRoom + " to " + destRoom + ": " + connectionSuccessful);
                 } 
-                while(!connectionSuccessful && roomsWithinRange[startRoom].Count > 0);
 
                 if(connectionSuccessful && nextClosestRoom != null)
-                    connectionSuccessful = CreateHallwayBetweenRooms(startRoom, nextClosestRoom);
+                {
+                    connectionSuccessful = CreateHallwayBetweenRooms(startRoom, nextClosestRoom, Vector3.Distance(nextClosestRoom.transform.position, destRoom.transform.position));
+                    //Debug.LogWarning("Successfully connected " + startRoom + " to " + nextClosestRoom + ": " + connectionSuccessful);
+                }
 
-                Debug.Log("Successfully connected " + startRoom + " to " + nextClosestRoom + ": " + connectionSuccessful);
-                
                 return connectionSuccessful;
             }
         }
@@ -511,14 +571,11 @@ public class FloorGenerator : MonoBehaviour
                         destRoomExits.Remove(destExit);
                         
                         float distanceBetweenStartAndDest = Vector3.Distance(startExit.position, destExit.position);
-                        
-                        //COROUTINE STUFF
-                        Debug.LogWarning("Picked Exits: " + startExit + " and " + destExit);
-                        Debug.LogWarning("startExit active: " + startExit.gameObject.activeSelf);
-                        Debug.LogWarning("destExit active: " + destExit.gameObject.activeSelf);
-                        Debug.LogWarning("Distance between exits: " + distanceBetweenStartAndDest);
-                        yield return null;
-                        //COROUTINE STUFF
+
+                        // Debug.LogWarning("Picked Exits: " + startExit + " and " + destExit);
+                        // Debug.LogWarning("startExit active: " + startExit.gameObject.activeSelf);
+                        // Debug.LogWarning("destExit active: " + destExit.gameObject.activeSelf);
+                        // Debug.LogWarning("Distance between exits: " + distanceBetweenStartAndDest);
 
                         //Keep picking hallway pieces until we find one that connects to destExit
                         List<GameObject> hallwayPrefabs = new List<GameObject>(hallwayRoomPrefabs);
@@ -575,7 +632,7 @@ public class FloorGenerator : MonoBehaviour
                                             intersectingRoom = room.GetComponent<Room>();
                                             if(intersectingRoom != null)
                                             {
-                                                Debug.LogWarning(hallwayPiece + " intersects " + room.transform.parent.gameObject);
+                                                // Debug.LogWarning(hallwayPiece + " intersects " + room.transform.parent.gameObject);
                                                 break;
                                             }
                                             else
@@ -609,7 +666,6 @@ public class FloorGenerator : MonoBehaviour
                                         {
                                             roomBounds.enabled = false;
                                         }
-                                        Debug.LogWarning("Could not place hallway " + hallwayPiece + " connected to " + startRoom);
                                         Destroy(hallwayPiece);
 
                                         Debug.LogWarning("Hallway succeeded early");
@@ -625,7 +681,7 @@ public class FloorGenerator : MonoBehaviour
                                     }
 
                                     //Otherwise, try a new orientation of the same hallwayPiece
-                                    Debug.LogWarning("Intersected a room, trying new orientation.");
+                                    // Debug.LogWarning("Intersected a room, trying new orientation.");
                                     continue;
                                 }
 
@@ -646,20 +702,20 @@ public class FloorGenerator : MonoBehaviour
                                 destRoomExitsPlusCurrentDestExit.Add(destExit);
                                 var kvp = FindClosestTransformPair(otherExits, destRoomExitsPlusCurrentDestExit, Vector3.up, 5);
 
-                                //If there is a combination of exits completes the hallway, choose those instead
+                                //If there is a combination of exits that completes the hallway, choose those instead
                                 if(Vector3.Distance(kvp.Key.position, kvp.Value.position) <= 0.1f)
                                 {
-                                    Debug.LogWarning("Previous hallwayDistance: " + distanceFromHallwayToDest);
-                                    Debug.LogWarning("Previous hallwayDestExit: " + hallwayDestExit);
-                                    Debug.LogWarning("Previous destExit: " + destExit);
+                                    // Debug.LogWarning("Previous hallwayDistance: " + distanceFromHallwayToDest);
+                                    // Debug.LogWarning("Previous hallwayDestExit: " + hallwayDestExit);
+                                    // Debug.LogWarning("Previous destExit: " + destExit);
 
                                     hallwayDestExit = kvp.Key;
                                     destExit = kvp.Value;
                                     distanceFromHallwayToDest = Vector3.Distance(hallwayDestExit.position, destExit.position);
 
-                                    Debug.LogWarning("New hallwayDistance: " + distanceFromHallwayToDest);
-                                    Debug.LogWarning("New hallwayDestExit: " + hallwayDestExit);
-                                    Debug.LogWarning("New destExit: " + destExit);
+                                    // Debug.LogWarning("New hallwayDistance: " + distanceFromHallwayToDest);
+                                    // Debug.LogWarning("New hallwayDestExit: " + hallwayDestExit);
+                                    // Debug.LogWarning("New destExit: " + destExit);
                                 }
 
                                 //If the distance between hallwayPiece and destRoom is negligible we finally created a working hallway
@@ -687,7 +743,7 @@ public class FloorGenerator : MonoBehaviour
                                     //Remove the walls between startRoom and hallwayPiece
                                     hallwayStartExit.gameObject.SetActive(false);
                                     startExit.gameObject.SetActive(false);
-                                    Debug.LogWarning("Case distanceFromHallwayToDest < distanceBetweenStartAndDest. Hallway distance = " + distanceFromHallwayToDest);
+                                    // Debug.LogWarning("Case distanceFromHallwayToDest < distanceBetweenStartAndDest. Hallway distance = " + distanceFromHallwayToDest);
 
                                     //COROUTINE STUFF
                                     bool isRunning = true;
@@ -696,7 +752,6 @@ public class FloorGenerator : MonoBehaviour
                                     StartCoroutine(CreateHallwayBetweenRoomsRoutine(hallwayPiece, destRoom, distanceFromHallwayToDest, () => {isRunning = false;}));
                                     yield return new WaitWhile(() => isRunning);
 
-                                    yield return null;
                                     bool successfulHallway = returnValue;
                                     //COROUTINE STUFF
 
@@ -706,6 +761,9 @@ public class FloorGenerator : MonoBehaviour
                                     //If the hallway was successful, return true
                                     if(successfulHallway)
                                     {
+                                        //Add the hallway to the list of all hallways
+                                        hallwayRooms.Add(hallwayPiece);
+
                                         //COROUTINE STUFF
                                         returnValue = true;
                                         callback();
@@ -730,13 +788,14 @@ public class FloorGenerator : MonoBehaviour
                                             }
                                             Destroy(hallwayPiece);
 
+                                            Debug.LogWarning("Recursive call failed twice, cut off early");
+
                                             //COROUTINE STUFF
                                             yield return null;
                                             returnValue = false;
                                             callback();
                                             //COROUTINE STUFF
-
-                                            Debug.LogWarning("Recursive call failed twice, cut off early");
+                                            
                                             //return false;
                                             
                                             yield break;
@@ -757,10 +816,6 @@ public class FloorGenerator : MonoBehaviour
                             }
                             Debug.LogWarning("Could not place hallway " + hallwayPiece + " connected to " + startRoom);
                             Destroy(hallwayPiece);
-
-                            //COROUTINE STUFF
-                            yield return null;
-                            //COROUTINE STUFF
                         }
                     }
                 }
@@ -783,7 +838,7 @@ public class FloorGenerator : MonoBehaviour
                     bool isRunning = true;
                     StartCoroutine(CreateHallwayBetweenRoomsRoutine(startRoom, destRoom, Vector3.Distance(startRoom.transform.position, destRoom.transform.position), () => {isRunning = false;}));
                     yield return new WaitWhile(() => isRunning);
-                    Debug.Log("Successfully connected " + startRoom + " to " + destRoom + ": " + returnValue);
+                    //Debug.LogWarning("Successfully connected " + startRoom + " to " + destRoom + ": " + returnValue);
                 }
                 else
                 {
@@ -804,7 +859,7 @@ public class FloorGenerator : MonoBehaviour
                         StartCoroutine(CreateChainOfHallwaysBetweenRoomsRoutine(nextClosestRoom, destRoom, () => {isRunning = false;}));
                         yield return new WaitWhile(() => isRunning);
                         connectionSuccessful = returnValue;
-                        Debug.Log("Successfully chained from " + nextClosestRoom + " to " + destRoom + ": " + connectionSuccessful);
+                        //Debug.LogWarning("Successfully chained from " + nextClosestRoom + " to " + destRoom + ": " + connectionSuccessful);
                     } 
 
                     if(connectionSuccessful && nextClosestRoom != null)
@@ -813,7 +868,7 @@ public class FloorGenerator : MonoBehaviour
                         StartCoroutine(CreateHallwayBetweenRoomsRoutine(startRoom, nextClosestRoom, Vector3.Distance(nextClosestRoom.transform.position, destRoom.transform.position), () => {isRunning = false;}));
                         yield return new WaitWhile(() => isRunning);
                         connectionSuccessful = returnValue;
-                        Debug.Log("Successfully connected " + startRoom + " to " + nextClosestRoom + ": " + connectionSuccessful);
+                        //Debug.LogWarning("Successfully connected " + startRoom + " to " + nextClosestRoom + ": " + connectionSuccessful);
                     }
 
                     returnValue = connectionSuccessful;
@@ -832,7 +887,7 @@ public class FloorGenerator : MonoBehaviour
             }
 
             coroutineIsRunning = true;
-            StartCoroutine(CreateChainOfHallwaysBetweenRoomsRoutine(centerShop, xShop, () => coroutineIsRunning = false));
+            StartCoroutine(CreateChainOfHallwaysBetweenRoomsRoutine(xShop, centerShop, () => coroutineIsRunning = false));
             yield return new WaitWhile(() => coroutineIsRunning);
             if(!returnValue)
             {
@@ -840,7 +895,7 @@ public class FloorGenerator : MonoBehaviour
             }
 
             coroutineIsRunning = true;
-            StartCoroutine(CreateChainOfHallwaysBetweenRoomsRoutine(centerShop, zShop, () => coroutineIsRunning = false));
+            StartCoroutine(CreateChainOfHallwaysBetweenRoomsRoutine(zShop, centerShop, () => coroutineIsRunning = false));
             yield return new WaitWhile(() => coroutineIsRunning);
             if(!returnValue)
             {
@@ -848,7 +903,7 @@ public class FloorGenerator : MonoBehaviour
             }
             
             coroutineIsRunning = true;
-            StartCoroutine(CreateChainOfHallwaysBetweenRoomsRoutine(centerShop, bossRoom, () => coroutineIsRunning = false));
+            StartCoroutine(CreateChainOfHallwaysBetweenRoomsRoutine(bossRoom, centerShop, () => coroutineIsRunning = false));
             yield return new WaitWhile(() => coroutineIsRunning);
             if(!returnValue)
             {
@@ -883,6 +938,60 @@ public class FloorGenerator : MonoBehaviour
 
                     if(!returnValue)
                         Debug.LogWarning("Failed to create hallway between " + startRoom + " and " + destRoom);
+                }
+            }
+
+            //Create and bake NavMesh
+            GameObject navMeshObject = Instantiate(navMeshPrefab, Vector3.zero, Quaternion.identity);
+            foreach(NavMeshSurface surface in navMeshObject.GetComponents<NavMeshSurface>())
+            {
+                surface.BuildNavMesh();
+            }
+
+            //Create organizational gameObjects
+            GameObject encounterRoomOrganizer = new GameObject("Encounter Rooms");
+            GameObject hallwayRoomOrganizer = new GameObject("Hallway Rooms");
+
+            //Spawn hallway enemies and group hallways into a parent object
+            foreach(GameObject hallway in hallwayRooms)
+            {
+                EnemyGen gen = hallway.GetComponentInChildren<EnemyGen>();
+                if(gen != null)
+                    gen.spawnEnemies();
+
+                hallway.transform.parent = hallwayRoomOrganizer.transform;
+            }
+
+            //Hook up encounter rooms with the correct forcefield exits
+            foreach(GameObject encounterRoom in encounterRooms)
+            {
+                Room room = encounterRoom.GetComponentInChildren<Room>();
+                EncounterRoomClose roomClose = encounterRoom.GetComponentInChildren<EncounterRoomClose>();
+                for(int i = 0; i < room.roomExits.Count; ++i)
+                {
+                    Transform exit = room.roomExits[i];
+                    if(!exit.gameObject.activeSelf)
+                    {
+                        GameObject forceField = Instantiate(forceFieldPrefab, exit.position, exit.rotation, exit.parent);
+                        roomClose.forceFields.Add(forceField);
+                        forceField.SetActive(false);
+                        Destroy(exit.gameObject);
+                    }
+                }
+                encounterRoom.transform.parent = encounterRoomOrganizer.transform;
+            }
+
+            //Hook up boss room with the correct forcefield exit
+            Room bossRoomScript = bossRoom.GetComponentInChildren<Room>();
+            EncounterRoomClose bossRoomClose = bossRoom.GetComponentInChildren<EncounterRoomClose>();
+            for(int i = 0; i < bossRoomScript.roomExits.Count; ++i)
+            {
+                Transform exit = bossRoomScript.roomExits[i];
+                if(!exit.gameObject.activeSelf)
+                {
+                    GameObject forceField = Instantiate(forceFieldPrefab, exit.position, exit.rotation, exit.parent);
+                    bossRoomClose.forceFields.Add(forceField);
+                    Destroy(exit.gameObject);
                 }
             }
         }
@@ -944,7 +1053,7 @@ public class FloorGenerator : MonoBehaviour
                     continue;
 
                 //Try to connect the rooms and whether or not we succeed, we remove them from the dictionary
-                bool connect = CreateHallwayBetweenRooms(startRoom, destRoom);
+                bool connect = CreateChainOfHallwaysBetweenRooms(startRoom, destRoom);
                 RemoveKeyValuePairReflexively<GameObject, HashSet<GameObject>>(roomsWithinRange, ref startRoom, ref destRoom);
 
                 if(!connect)

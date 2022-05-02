@@ -46,6 +46,7 @@ public class Room : MonoBehaviour
         }
 
         enemies.Add(enemy);
+        enemy.OnDeath.AddListener(updateEnemies);
     }
 
     public HashSet<EntityHealth> GetEnemyList()

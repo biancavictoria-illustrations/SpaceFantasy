@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class EncounterRoomClose : MonoBehaviour
 {
+    public List<GameObject> forceFields;
+
     [SerializeField] private Room room;
+    [SerializeField] private EnemyGen enemyGen;
     [SerializeField] private Color newColor;
     [SerializeField] private Light sceneLight;
     [SerializeField] private bool isBossRoom;
-    [SerializeField] private List<GameObject> forceFields;
 
     private Color oldColor;
     private GameObject elevator;
@@ -26,15 +28,6 @@ public class EncounterRoomClose : MonoBehaviour
             // Enables the force field object
             foreach(GameObject ff in forceFields)
                 ff.SetActive(true);
-            
-            foreach(EntityHealth e in room.GetEnemyList())
-            {
-                e.OnDeath.AddListener(RoomOpen);
-                if( isBossRoom && e.isBossEnemy ){
-                    InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(true, e.enemyID);
-                }
-                Debug.Log("Enemy Added");
-            }
 
             if(isBossRoom)
             {
@@ -43,7 +36,23 @@ public class EncounterRoomClose : MonoBehaviour
 
                 Beetle boi = FindObjectOfType<Beetle>();
                 if(boi != null)
+                {
+                    boi.gameObject.SetActive(true);
                     boi.canAttack = true;
+                }
+            }
+            else
+            {
+                enemyGen.spawnEnemies();
+            }
+
+            foreach(EntityHealth e in room.GetEnemyList())
+            {
+                e.OnDeath.AddListener(RoomOpen);
+                if( isBossRoom && e.isBossEnemy ){
+                    InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(true, e.enemyID);
+                }
+                Debug.Log("Enemy Added");
             }
         }
     }
