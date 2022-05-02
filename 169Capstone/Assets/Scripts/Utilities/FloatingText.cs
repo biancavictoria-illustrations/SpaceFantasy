@@ -9,6 +9,8 @@ public class FloatingText
     public Vector3 motion;
     public float duration;
     public float lastShown;
+    public GameObject parent;
+    public float stat = 0;
 
     public void Show()
     {
@@ -20,6 +22,7 @@ public class FloatingText
     public void Hide()
     {
         active = false;
+        stat = 0;
         go.SetActive(active);
     }
 

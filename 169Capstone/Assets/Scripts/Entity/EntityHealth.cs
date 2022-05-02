@@ -95,7 +95,7 @@ public class EntityHealth : MonoBehaviour
     {
         currentHitpoints -= damage;
         OnHit.Invoke(this, damage);
-        InGameUIManager.instance.ShowFloatingText("<color=" + InGameUIManager.magentaColor + ">-" + damage.ToString() + "</color>", 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f);
+        InGameUIManager.instance.ShowFloatingText(damage.ToString(), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "damage");
         // Debug.Log("Hitpoints");
         // Debug.Log(currentHitpoints);
         
