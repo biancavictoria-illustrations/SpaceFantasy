@@ -17,6 +17,12 @@ public class InventoryUIItemPanel : MonoBehaviour
         CHA,
         CON,
 
+        // Damage Values
+        SD,     // STR Damage
+        DD,     // DEX Damage
+        WD,     // WIS Damage
+        ID,     // INT Damage
+
         // Secondary Stats
         ATS,    // Attack Speed
         MOS,    // Move Speed
@@ -25,11 +31,12 @@ public class InventoryUIItemPanel : MonoBehaviour
         CRC,    // Crit Chance
         CRD,    // Crit Damage
         TDR,    // Trap Damage Resist
+        HAS,    // Haste (Cooldown Reduction)
 
         enumSize
     }
 
-    public const string STAT_VARIABLE_PATTERN = @"({(STR|DEX|INT|WIS|CHA|CON|ATS|MOS|DEF|DOC|CRC|CRD|TDR)(:\d+)?(,(\*|\+|-)(\d?.)?\d+(,(\*|\+|-)(\d?.)?\d+)?)?})";
+    public const string STAT_VARIABLE_PATTERN = @"({(STR|DEX|INT|WIS|CHA|CON|SD|DD|WD|ID|ATS|MOS|DEF|DOC|CRC|CRD|TDR|HAS)(:\d+)?(,(\*|\+|-)(\d?.)?\d+(,(\*|\+|-)(\d?.)?\d+)?)?})";
 
     [SerializeField] private InventoryItemSlot itemSlot;
     [HideInInspector] public ItemRarity rarity;
@@ -145,22 +152,34 @@ public class InventoryUIItemPanel : MonoBehaviour
         s += "<size=70%>";
         for(int i = 0; i < EntityStats.numberOfSecondaryLineOptions; i++){
             float bonusValue = itemData.GetSecondaryLineValueFromStatType((StatType)i);
+
+            bool percent = true;
+            if((StatType)i == StatType.HitPoints || (StatType)i == StatType.Defense){
+                percent = false;
+            }
+
             if(bonusValue != 0){
-                s += SetStringForStatValue((StatType)i, bonusValue);
+                s += SetStringForStatValue((StatType)i, bonusValue, percent);
             }
         }
 
         return s;
     }
 
-    private string SetStringForStatValue(StatType type, float bonusValue)
+    private string SetStringForStatValue(StatType type, float bonusValue, bool percent=true)
     {
-        if(bonusValue < 1){
-            return "\n<b>" + itemData.GetPlayerFacingStatName(type) + ":</b> " + GetColorModForStatValue(bonusValue, type) + "+" + (bonusValue*100) + "%</color>";
+        string returnString = "\n<b>" + itemData.GetPlayerFacingStatName(type) + ":</b> " + GetColorModForStatValue(bonusValue, type) + "+";
+
+        // If %
+        if(percent){
+            returnString += (bonusValue*100) + "%";
         }
+        // If flat
         else{
-            return "\n<b>" + itemData.GetPlayerFacingStatName(type) + ":</b> " + GetColorModForStatValue(bonusValue, type) + "+" + bonusValue + "</color>";
+            returnString += bonusValue;
         }
+
+        return returnString + "</color>";
     }
 
     // Returns green if increase in value, red if decrease
@@ -306,6 +325,16 @@ public class InventoryUIItemPanel : MonoBehaviour
             case DescriptionVariableCode.CON:
                 return Player.instance.stats.Constitution();
 
+            // Damage Values
+            case DescriptionVariableCode.SD:
+                return Player.instance.stats.getSTRDamage();
+            case DescriptionVariableCode.DD:
+                return Player.instance.stats.getDEXDamage();
+            case DescriptionVariableCode.ID:
+                return Player.instance.stats.getINTDamage();
+            case DescriptionVariableCode.WD:
+                return Player.instance.stats.getWISDamage();
+
             // Secondary Stats
             case DescriptionVariableCode.ATS:
                 return Player.instance.stats.getAttackSpeed();
@@ -321,12 +350,19 @@ public class InventoryUIItemPanel : MonoBehaviour
                 return Player.instance.stats.getCritDamage();
             case DescriptionVariableCode.TDR:
                 return Player.instance.stats.getTrapDamageResist();
+            case DescriptionVariableCode.HAS:
+                return Player.instance.stats.getHaste();
         }
         Debug.LogError("No stat found for: " + code);
         return -1;
     }
 }
 
+/*
+    TODO:
+    - include the primary line from THAT item (i.e., if STR sword w/ primary line of +10% STR Damage, factor in that primary line to the sword damage description)
+    - do NOT factor in your CURRENT buff from that item slot (if currently using a STR sword, don't factor in that buff)
+*/
 
 
 /*

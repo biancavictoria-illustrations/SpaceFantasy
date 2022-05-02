@@ -42,6 +42,8 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private TMP_Text critChance;
     [SerializeField] private TMP_Text critDamage;
     [SerializeField] private TMP_Text trapDamageResist;
+    [SerializeField] private TMP_Text haste;
+    [SerializeField] private TMP_Text healingEfficacy;
 
     void Start()
     {
@@ -101,13 +103,15 @@ public class InventoryUI : MonoBehaviour
 
         FindPlayerStats();
 
-        attackSpeed.text = "Attack Speed: " + stats.getAttackSpeed();
-        moveSpeed.text = "Move Speed: " + stats.getMoveSpeed();
-        defense.text = "Defense: " + stats.getDefense();
-        dodgeChance.text = "Dodge Chance: " + stats.getDodgeChance();
-        critChance.text = "Crit Chance: " + stats.getCritChance();
-        critDamage.text = "Crit Damage: " + stats.getCritDamage();
-        trapDamageResist.text = "Trap Damage Resist: " + stats.getTrapDamageResist();
+        attackSpeed.text = "Attack Speed: " + (stats.getAttackSpeed()*100) + "%";
+        moveSpeed.text = "Move Speed: " + (stats.getMoveSpeed()*100) + "%";
+        defense.text = "Defense: " + stats.getDefense()*100;
+        dodgeChance.text = "Dodge Chance: " + (stats.getDodgeChance()*100) + "%";
+        critChance.text = "Crit Chance: " + (stats.getCritChance()*100) + "%";
+        critDamage.text = "Crit Damage: " + (stats.getCritDamage()*100) + "%";
+        trapDamageResist.text = "Trap Damage Resist: " + (stats.getTrapDamageResist()*100) + "%";
+        haste.text = "Haste: " + (stats.getHaste()*100) + "%";
+        healingEfficacy.text = "Healing Efficacy: " + (stats.getHealingEfficacy()*100) + "%";
     }
 
     // Called when you click on a panel

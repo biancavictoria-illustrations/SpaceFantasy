@@ -106,7 +106,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
             return;
         }
         else if(category == UpgradeShopCategory.PotionEfficacy){
-            currentStatValue = stats.getHealingEfficacy();
+            currentStatValue = (int)(stats.getHealingEfficacy()*100);
             return;
         }
 
@@ -160,7 +160,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
             IncrementStatValue();
         }
         else if(category == UpgradeShopCategory.PotionEfficacy){
-            stats.SetHealingEfficacyFlatBonus(currentStatValue + healingBonusValue);
+            stats.SetHealingEfficacyFlatBonus((currentStatValue + healingBonusValue)/100f);
             IncrementHealingEfficacy();
         }
         else{
