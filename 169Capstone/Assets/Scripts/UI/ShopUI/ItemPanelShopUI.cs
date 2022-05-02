@@ -76,7 +76,7 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
         currentCostValue = (int)Mathf.Floor(cost);       // Get int using Floor to round
 
         // Factor in CHA stat
-        currentCostValue -= (int)Player.instance.stats.getShopPriceReduction();
+        currentCostValue = (int)(currentCostValue*(1 - Player.instance.stats.getShopPriceReduction()));
     }
 
     // Updates both cost value and UI

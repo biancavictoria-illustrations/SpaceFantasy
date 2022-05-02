@@ -121,6 +121,20 @@ public class EntityHealth : MonoBehaviour
         SetCurrentHealthUI();
     }
 
+    public void UpdateHealthOnItemEquip()
+    {
+        float oldMax = maxHitpoints;
+
+        // Calculate new max from bonuses
+        maxHitpoints = Player.instance.stats.getMaxHitPoints();
+
+        // Calculate new current by adding the same amount you gained or lost
+        currentHitpoints += maxHitpoints - oldMax;
+
+        SetMaxHealthUI();
+        SetCurrentHealthUI();
+    }
+    
     public void SetCurrentHealthUI()
     {
         if(gameObject.tag == "Player"){

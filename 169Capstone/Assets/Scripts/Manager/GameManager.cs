@@ -128,10 +128,16 @@ public class GameManager : MonoBehaviour
             SaveGame();
         }
         else if(currentSceneName == GAME_LEVEL1_STRING_NAME){
-            PlayerInventory.instance.SetRunStartHealthPotionQuantity();
-            InGameUIManager.instance.ToggleRunUI(true);
+            PlayerInventory.instance.SetRunStartHealthPotionQuantity();            
             AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, false);
-            InGameUIManager.instance.EnableRunStartStatRerollPopup(true);
+            if(currentRunNumber != 1){
+                InGameUIManager.instance.ToggleRunUI(false);
+                InGameUIManager.instance.TogglePermanentCurrencyUI(false);
+                InGameUIManager.instance.EnableRunStartStatRerollPopup(true);
+            }
+            else{
+                InGameUIManager.instance.ToggleRunUI(true);
+            }
         }
         else if(currentSceneName == LICH_ARENA_STRING_NAME){
             // TODO: Play lich fight music
@@ -339,7 +345,7 @@ public class GameManager : MonoBehaviour
     {
         string s = GetSaveFilePlayerPrefsKey(_slot) + "CompletedRunNum";
         if(!PlayerPrefs.HasKey(s)){
-            Debug.LogError("No value found for key " + s + " in PlayerPrefs");
+            Debug.LogWarning("No value found for key " + s + " in PlayerPrefs; okay if checking for completed runs > 0");
             return -1;
         }
         return PlayerPrefs.GetInt(s);
