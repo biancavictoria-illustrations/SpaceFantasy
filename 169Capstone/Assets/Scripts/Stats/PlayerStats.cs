@@ -437,6 +437,7 @@ public class PlayerStats : EntityStats
     public void SetConstitution(int value)
     {
         constitution = value;
+        Player.instance.health.UpdateHealthOnUpgrade();
     }
 
     public void SetHealingEfficacyFlatBonus(float value)

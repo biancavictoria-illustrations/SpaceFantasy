@@ -132,7 +132,7 @@ public class PlayerInventory : MonoBehaviour
     private void CheckForHealthBarUpdate(StatType type)
     {
         if( type == StatType.HitPoints ){
-            Player.instance.health.UpdateHealthOnItemEquip();
+            Player.instance.health.UpdateHealthOnUpgrade();
         }
     }
 

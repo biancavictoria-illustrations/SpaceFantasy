@@ -22,6 +22,7 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
     [SerializeField] protected TMP_Text costText;
     [SerializeField] protected TMP_Text itemName;
     [SerializeField] protected TMP_Text descriptionText;
+    [SerializeField] protected Image currencyIcon;
 
     [SerializeField] protected Button itemCardButton;
 
@@ -84,9 +85,7 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
     {
         if(recalculateCost){
             CalculateCurrentCost();
-        }        
-
-        Debug.Log("Current Electrum: " + PlayerInventory.instance.tempCurrency + "\nItem Cost: " + currentCostValue);
+        }
 
         if(PlayerInventory.instance.tempCurrency - currentCostValue >= 0){
             costText.text = "" + currentCostValue;
@@ -95,6 +94,17 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
         else{
             costText.text = "<color=" + InGameUIManager.magentaColor + ">" + currentCostValue + "</color>";
             canAffordItem = false;
+        }
+    }
+
+    protected void ToggleElectrumIconActive(bool set)
+    {
+        if(set){
+            currencyIcon.color = new Color(255,255,255,255);
+        }
+        else{
+            currencyIcon.color = new Color(255,255,255,0);
+            costText.text = "";
         }
     }
 
