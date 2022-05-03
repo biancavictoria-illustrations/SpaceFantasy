@@ -12,8 +12,7 @@ public class FloatingTextManager : MonoBehaviour
 
     private void Start()
     {
-        GameObject player = GameObject.FindWithTag("Player");
-        EntityHealth healthScript = player.GetComponent<EntityHealth>();
+        EntityHealth healthScript = Player.instance.GetComponent<EntityHealth>();
         healthScript.OnDeath.AddListener(Hide);
     }
 
