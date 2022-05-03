@@ -44,7 +44,7 @@ public class ItemPanelGearShop : ItemPanelShopUI
     {
         shopUI.activeCompareItem = this;
         hoverAlerts.EnableAlert(panelPos, false);
-        shopUI.ToggleShopCompareOn(PlayerInventory.instance.tempCurrency - currentCostValue > 0);
+        shopUI.ToggleShopCompareOn(PlayerInventory.instance.tempCurrency - currentCostValue >= 0);
     }
 
     public override void PurchaseItem()

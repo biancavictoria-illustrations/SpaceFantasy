@@ -274,24 +274,50 @@ public class PlayerStats : EntityStats
     #endregion
 
     #region Damage Values
-        public virtual float getSTRDamage()
+        public virtual float getSTRDamage(bool enableCrit = true)
         {
-            return strength * STRDamageMultiplier + STRDamageFlatBonus;
+            float damage = strength * STRDamageMultiplier + STRDamageFlatBonus;
+            if(enableCrit){
+                damage += CalculateCritValue(damage);
+            }
+            return damage;
         }
 
-        public virtual float getDEXDamage()
+        public virtual float getDEXDamage(bool enableCrit = true)
         {
-            return dexterity * DEXDamageMultiplier + DEXDamageFlatBonus;
+            float damage = dexterity * DEXDamageMultiplier + DEXDamageFlatBonus;
+            if(enableCrit){
+                damage += CalculateCritValue(damage);
+            }
+            return damage;
         }
 
-        public virtual float getWISDamage()
+        public virtual float getWISDamage(bool enableCrit = true)
         {
-            return wisdom * WISDamageMultiplier + WISDamageFlatBonus;
+            float damage = wisdom * WISDamageMultiplier + WISDamageFlatBonus;
+            if(enableCrit){
+                damage += CalculateCritValue(damage);
+            }
+            return damage;
         }
 
-        public virtual float getINTDamage()
+        public virtual float getINTDamage(bool enableCrit = true)
         {
-            return intelligence * INTDamageMultiplier + INTDamageFlatBonus;
+            float damage = intelligence * INTDamageMultiplier + INTDamageFlatBonus;
+            if(enableCrit){
+                damage += CalculateCritValue(damage);
+            }
+            return damage;
+        }
+
+        private float CalculateCritValue(float baseDamage)
+        {
+            float chance = Random.Range(0.0f, 1f);
+            if(chance <= getCritChance()){
+                // TODO: Alert damage number effects that we crit so this one should be displayed special
+                return baseDamage * getCritDamage();
+            }
+            return 0f;
         }
     #endregion
 
@@ -440,13 +466,13 @@ public class PlayerStats : EntityStats
 
             // Primary Lines ONLY
             case StatType.STRDamage:
-                return getSTRDamage();
+                return getSTRDamage(false);
             case StatType.DEXDamage:
-                return getDEXDamage();
+                return getDEXDamage(false);
             case StatType.INTDamage:
-                return getINTDamage();
+                return getINTDamage(false);
             case StatType.WISDamage:
-                return getWISDamage();    
+                return getWISDamage(false);    
         }
         Debug.LogError("No current value found for stat type: " + type);
         return -1;
