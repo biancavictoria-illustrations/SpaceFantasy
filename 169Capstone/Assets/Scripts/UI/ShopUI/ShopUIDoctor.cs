@@ -33,7 +33,7 @@ public class ShopUIDoctor : ShopUI
     {
         foreach(ItemPanelDoctor panel in itemPanels){
             panel.UpdateCurrentCost(false);
-            panel.SetInteractableBasedOnAffordStatus();
+            panel.SetInteractableAndCostDisplayValuesBasedOnStatus();
         }
     }
 }

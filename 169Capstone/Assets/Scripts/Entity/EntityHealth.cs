@@ -122,7 +122,7 @@ public class EntityHealth : MonoBehaviour
         SetCurrentHealthUI();
     }
 
-    public void UpdateHealthOnItemEquip()
+    public void UpdateHealthOnUpgrade()
     {
         float oldMax = maxHitpoints;
 

@@ -511,8 +511,8 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         private const string DEX_DESCRIPTION = "Increases the damage dealt by Dexterity-based weapons and abilities. Also increases Dodge Chance.";
         private const string INT_DESCRIPTION = "Increases the damage dealt by Intelligence-based weapons and abilities. Also increases Critical Hit Chance.";
         private const string WIS_DESCRIPTION = "Increases the damage dealt by Wisdom-based weapons and abilities. Also reduces the length of ability cooldowns.";
-        private const string CON_DESCRIPTION = "Increases Max Health and Status Resist Chance.";
-        private const string CHA_DESCRIPTION = "Reduces the prices of items in shops and increases Luck.";
+        private const string CON_DESCRIPTION = "Increases Max Health and Trap Damage Resist.";
+        private const string CHA_DESCRIPTION = "Reduces the prices of items in shops.";
 
         private string GetStatValueDescriptionFromType()
         {

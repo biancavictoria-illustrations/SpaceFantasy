@@ -54,8 +54,8 @@ public class GearSwapUI : MonoBehaviour
         if( InGameUIManager.instance.gearSwapIsOpen ){
             gearSwapInventoryUI.OnInventoryClose();
             InputManager.instance.ToggleCompareItemUI(false, null);
+            InputManager.instance.RunGameTimer(true);
         }
-        InputManager.instance.RunGameTimer(true);
     }
 
     public void OnNewItemSelect()

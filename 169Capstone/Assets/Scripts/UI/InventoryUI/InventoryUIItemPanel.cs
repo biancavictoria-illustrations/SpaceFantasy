@@ -327,13 +327,13 @@ public class InventoryUIItemPanel : MonoBehaviour
 
             // Damage Values
             case DescriptionVariableCode.SD:
-                return Player.instance.stats.getSTRDamage();
+                return Player.instance.stats.getSTRDamage(false);
             case DescriptionVariableCode.DD:
-                return Player.instance.stats.getDEXDamage();
+                return Player.instance.stats.getDEXDamage(false);
             case DescriptionVariableCode.ID:
-                return Player.instance.stats.getINTDamage();
+                return Player.instance.stats.getINTDamage(false);
             case DescriptionVariableCode.WD:
-                return Player.instance.stats.getWISDamage();
+                return Player.instance.stats.getWISDamage(false);
 
             // Secondary Stats
             case DescriptionVariableCode.ATS:
