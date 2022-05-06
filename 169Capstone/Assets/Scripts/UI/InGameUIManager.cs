@@ -63,6 +63,8 @@ public class InGameUIManager : MonoBehaviour
 
     public BossHealthBar bossHealthBar;
     public TimerUI timerUI;
+
+    public FloatingTextManager floatingTextManager;
     
 
     void Awake()
@@ -121,11 +123,16 @@ public class InGameUIManager : MonoBehaviour
     public void OnStellanShopUIOpen(bool setOpen)
     {
         stellanShopIsOpen = setOpen;
-        permanentCurrencyValue.gameObject.SetActive(!setOpen);
+        TogglePermanentCurrencyUI(!setOpen);
         
         if(setOpen){
             SetPermanentCurrencyValue(PlayerInventory.instance.permanentCurrency);
         }
+    }
+
+    public void ShowFloatingText(string msg, int fontSize, Vector3 position, Vector3 motion, float duration, GameObject parent, string type)
+    {
+        floatingTextManager.Show(msg, fontSize, position, motion, duration, parent, type);
     }
 
     #region Item UI
@@ -268,6 +275,11 @@ public class InGameUIManager : MonoBehaviour
         tempCurrencyValue.text = "" + money;
     }
 
+    public void TogglePermanentCurrencyUI(bool set)
+    {
+        permanentCurrencyValue.gameObject.SetActive(set);
+    }
+
     #endregion
 
     #region Health UI
@@ -277,11 +289,11 @@ public class InGameUIManager : MonoBehaviour
         currentHPValue = _NewCurrentHP;
 
         if( _NewCurrentHP > maxHealthValue ){
-            Debug.LogError("Current HP set greater than max HP!");
+            Debug.LogWarning("Current HP set greater than max HP!");
             currentHPValue = maxHealthValue;
         }
 
-        healthText.text = Mathf.FloorToInt(currentHPValue) + " / " + Mathf.FloorToInt(maxHealthValue);
+        healthText.text = Mathf.CeilToInt(currentHPValue) + " / " + Mathf.CeilToInt(maxHealthValue);
 
         healthSlider.value = currentHPValue;        
     }
@@ -291,7 +303,7 @@ public class InGameUIManager : MonoBehaviour
         maxHealthValue = _NewMaxHP;
         healthSlider.maxValue = _NewMaxHP;
 
-        healthText.text = Mathf.FloorToInt(currentHPValue) + " / " + Mathf.FloorToInt(maxHealthValue);
+        healthText.text = Mathf.CeilToInt(currentHPValue) + " / " + Mathf.CeilToInt(maxHealthValue);
 
         if(currentHPValue != 0){
             SetCurrentHealthValue(currentHPValue);

@@ -13,7 +13,7 @@ public class HelmOfTheRam : Head
     void Start()
     {
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        damage = itemData.Damage() * player.stats.Strength();
+        damage = itemData.Damage() * player.stats.getSTRDamage();
         knockBack = 0.5f * player.stats.Strength();
     }
 

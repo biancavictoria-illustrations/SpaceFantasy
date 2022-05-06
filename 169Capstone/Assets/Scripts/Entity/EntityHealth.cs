@@ -95,6 +95,7 @@ public class EntityHealth : MonoBehaviour
     {
         currentHitpoints -= damage;
         OnHit.Invoke(this, damage);
+        InGameUIManager.instance.ShowFloatingText(damage.ToString(), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "damage");
         // Debug.Log("Hitpoints");
         // Debug.Log(currentHitpoints);
         
@@ -121,6 +122,20 @@ public class EntityHealth : MonoBehaviour
         SetCurrentHealthUI();
     }
 
+    public void UpdateHealthOnUpgrade()
+    {
+        float oldMax = maxHitpoints;
+
+        // Calculate new max from bonuses
+        maxHitpoints = Player.instance.stats.getMaxHitPoints();
+
+        // Calculate new current by adding the same amount you gained or lost
+        currentHitpoints += maxHitpoints - oldMax;
+
+        SetMaxHealthUI();
+        SetCurrentHealthUI();
+    }
+    
     public void SetCurrentHealthUI()
     {
         if(gameObject.tag == "Player"){

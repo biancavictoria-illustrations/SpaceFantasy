@@ -8,7 +8,6 @@ public class ShopUI : MonoBehaviour
 {
     [Tooltip("The part that actually gets toggled on and off; a child of this object.")]
     public GameObject shopInventoryPanel;
-    [SerializeField] private GameObject fadedBackground;
     
     [SerializeField] protected Button leaveShopButton;
 
@@ -27,7 +26,6 @@ public class ShopUI : MonoBehaviour
         InputManager.instance.ToggleShopOpenStatus(true);
 
         shopInventoryPanel.SetActive(true);
-        fadedBackground.SetActive(true);
         hoverAlerts.DisableAllHoverAlerts();
 
         leaveShopButton.Select();
@@ -38,7 +36,6 @@ public class ShopUI : MonoBehaviour
         InputManager.instance.ToggleShopOpenStatus(false);
 
         shopInventoryPanel.SetActive(false);
-        fadedBackground.SetActive(false);
         hoverAlerts.DisableAllHoverAlerts();
 
         AlertTextUI.instance.EnableShopAlert();

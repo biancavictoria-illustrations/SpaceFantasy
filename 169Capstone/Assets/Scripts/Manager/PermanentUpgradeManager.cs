@@ -14,7 +14,7 @@ public class PermanentUpgradeManager : MonoBehaviour
     // Skills
     [HideInInspector] public int levelsInArmorPlating;
     public const int maxArmorPlatingLevels = 5;
-    public readonly float armorPlatingBonusPerLevel = 2f;
+    public readonly float armorPlatingBonusPerLevel = 0.02f;
     
     [HideInInspector] public int levelsInExtensiveTraining;
     public const int maxExtensiveTrainingLevels = 5;
@@ -133,7 +133,7 @@ public class PermanentUpgradeManager : MonoBehaviour
             case PermanentUpgradeType.ArmorPlating:
                 return levelsInArmorPlating * armorPlatingBonusPerLevel;
             case PermanentUpgradeType.ExtensiveTraining:
-                return 1 + levelsInExtensiveTraining * extensiveTrainingBonusPerLevel;
+                return levelsInExtensiveTraining * extensiveTrainingBonusPerLevel;
             case PermanentUpgradeType.Natural20:
                 return levelsInNatural20 * natural20BonusPerLevel;
             case PermanentUpgradeType.PrecisionDrive:

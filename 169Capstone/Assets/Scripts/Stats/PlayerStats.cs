@@ -18,9 +18,7 @@ public class PlayerStats : EntityStats
     #region Bonus Management
         public enum PlayerStatType
         {
-            CooldownReduction,
             ShopPriceReduction,
-            Luck,
             HealingEfficacy,
 
             enumSize
@@ -105,21 +103,9 @@ public class PlayerStats : EntityStats
 
             switch(stat)
             {
-                case PlayerStatType.CooldownReduction:
-                    if(bonusType == BonusType.flat)
-                        cooldownReductionFlatBonus = total;
-                    break;
-
                 case PlayerStatType.ShopPriceReduction:
                     if(bonusType == BonusType.flat)
                         shopPriceReductionFlatBonus = total;
-                    break;
-                    
-                case PlayerStatType.Luck:
-                    if(bonusType == BonusType.flat)
-                        luckFlatBonus = total;
-                    else
-                        luckMultiplier = total;
                     break;
                     
                 case PlayerStatType.HealingEfficacy:
@@ -136,7 +122,7 @@ public class PlayerStats : EntityStats
             private int strength;
 
             const float strengthDamagePerStrengthPoint = 1f;
-            const float defenseBonusPerStrengthPoint = 0.1f;
+            const float defenseBonusPerStrengthPoint = 0.01f;
 
             public int Strength()
             {
@@ -148,7 +134,7 @@ public class PlayerStats : EntityStats
             private int dexterity;
 
             const float dexterityDamagePerDexterityPoint = 1f;
-            const float dodgeBonusPerDexterityPoint = 0.1f;
+            const float dodgeBonusPerDexterityPoint = 0.01f;
 
             public int Dexterity()
             {
@@ -160,7 +146,7 @@ public class PlayerStats : EntityStats
             private int constitution;
 
             const float maxHitPointBonusPerConstitutionPoint = 3f;
-            const float trapDamageResistBonusPerConstitutionPoint = 1f;
+            const float trapDamageResistBonusPerConstitutionPoint = 0.01f;
 
             public int Constitution()
             {
@@ -172,7 +158,7 @@ public class PlayerStats : EntityStats
             private int intelligence;
 
             const float intelligenceDamagePerIntelligencePoint = 1f;
-            const float critChanceBonusPerIntelligencePoint = 0.5f;
+            const float critChanceBonusPerIntelligencePoint = 0.01f;
 
             public int Intelligence()
             {
@@ -184,7 +170,7 @@ public class PlayerStats : EntityStats
             private int wisdom;
 
             const float wisdomDamagePerWisdomPoint = 1f;
-            const float cooldownReductionPerWisdomPoint = 1f;
+            const float hastePerWisdomPoint = 0.01f;
 
             public int Wisdom()
             {
@@ -195,8 +181,7 @@ public class PlayerStats : EntityStats
         #region Charisma
             private int charisma;
 
-            const float shopPriceReductionPerCharismaPoint = 0.5f;
-            const float luckPerCharismaPoint = 0.1f;
+            const float shopPriceReductionPerCharismaPoint = 0.01f;
 
             public int Charisma()
             {
@@ -208,14 +193,12 @@ public class PlayerStats : EntityStats
 
     #region Player Specific Stats
 
-        #region Cooldown Reduction
-            private float cooldownReductionBase;
-            private float cooldownReductionFlatBonus;
-
-            public virtual float getCooldownReduction()
+        #region Haste
+            // Haste = Cooldown Reduction
+            public virtual float getHaste()
             {
-                return cooldownReductionBase + cooldownReductionFlatBonus 
-                        + (wisdom * cooldownReductionPerWisdomPoint);
+                return hasteBase + hasteFlatBonus 
+                        + (wisdom * hastePerWisdomPoint);
             }
         #endregion
 
@@ -230,23 +213,11 @@ public class PlayerStats : EntityStats
             }
         #endregion
 
-        #region Luck
-            private float luckBase;
-            private float luckMultiplier;
-            private float luckFlatBonus;
-
-            public virtual float getLuck()
-            {
-                return luckBase * luckMultiplier + luckFlatBonus 
-                        + (charisma * luckPerCharismaPoint);
-            }
-        #endregion
-
         #region Healing Efficacy
-            private int healingEfficacyBase;
-            private int healingEfficacyFlatBonus;
+            private float healingEfficacyBase;
+            private float healingEfficacyFlatBonus;
 
-            public virtual int getHealingEfficacy()
+            public virtual float getHealingEfficacy()
             {
                 return healingEfficacyBase + healingEfficacyFlatBonus;
             }
@@ -258,8 +229,7 @@ public class PlayerStats : EntityStats
 
         public override float getMaxHitPoints()
         {
-            return maxHitPointsBase * maxHitPointsMultiplier + maxHitPointsFlatBonus
-                    + (constitution * maxHitPointBonusPerConstitutionPoint);
+            return (constitution * maxHitPointBonusPerConstitutionPoint) * maxHitPointsMultiplier + maxHitPointsFlatBonus;
         }
 
         public override float getAttackSpeed()
@@ -303,6 +273,54 @@ public class PlayerStats : EntityStats
 
     #endregion
 
+    #region Damage Values
+        public virtual float getSTRDamage(bool enableCrit = true)
+        {
+            float damage = strength * STRDamageMultiplier + STRDamageFlatBonus;
+            if(enableCrit){
+                damage += CalculateCritValue(damage);
+            }
+            return damage;
+        }
+
+        public virtual float getDEXDamage(bool enableCrit = true)
+        {
+            float damage = dexterity * DEXDamageMultiplier + DEXDamageFlatBonus;
+            if(enableCrit){
+                damage += CalculateCritValue(damage);
+            }
+            return damage;
+        }
+
+        public virtual float getWISDamage(bool enableCrit = true)
+        {
+            float damage = wisdom * WISDamageMultiplier + WISDamageFlatBonus;
+            if(enableCrit){
+                damage += CalculateCritValue(damage);
+            }
+            return damage;
+        }
+
+        public virtual float getINTDamage(bool enableCrit = true)
+        {
+            float damage = intelligence * INTDamageMultiplier + INTDamageFlatBonus;
+            if(enableCrit){
+                damage += CalculateCritValue(damage);
+            }
+            return damage;
+        }
+
+        private float CalculateCritValue(float baseDamage)
+        {
+            float chance = Random.Range(0.0f, 1f);
+            if(chance <= getCritChance()){
+                // TODO: Alert damage number effects that we crit so this one should be displayed special
+                return baseDamage * getCritDamage();
+            }
+            return 0f;
+        }
+    #endregion
+
     protected override void Awake()
     {
         base.Awake();
@@ -313,32 +331,53 @@ public class PlayerStats : EntityStats
     {
         PermanentUpgradeManager pum = PermanentUpgradeManager.instance;
 
-        attackSpeedBase = pum.GetCurrentSkillValue(PermanentUpgradeType.ExtensiveTraining);
+        attackSpeedBase = 1 + pum.GetCurrentSkillValue(PermanentUpgradeType.ExtensiveTraining);
         defenseBase = pum.GetCurrentSkillValue(PermanentUpgradeType.ArmorPlating);
         critChanceBase = pum.GetCurrentSkillValue(PermanentUpgradeType.Natural20);
-        critDamageBase = pum.GetCurrentSkillValue(PermanentUpgradeType.PrecisionDrive);
+        critDamageBase = 1 + pum.GetCurrentSkillValue(PermanentUpgradeType.PrecisionDrive);
         
         moveSpeedBase = 1;
+        hasteBase = 1;
 
+        critDamageMultiplier = 1;
         maxHitPointsMultiplier = 1;
         attackSpeedMultiplier = 1;
         moveSpeedMultiplier = 1;
         defenseMultiplier = 1;
-        luckMultiplier = 1;
+
+        STRDamageMultiplier = 1;
+        DEXDamageMultiplier = 1;
+        WISDamageMultiplier = 1;
+        INTDamageMultiplier = 1;
 
         float relativeWeight = 2;
 
         //TODO implement skill point "pool"
 
-        strength = randomOnCurve(pum.strMin, pum.strMax, relativeWeight);
-        dexterity = randomOnCurve(pum.dexMin, pum.dexMax, relativeWeight);
-        constitution = randomOnCurve(pum.conMin, pum.conMax, relativeWeight);
-        intelligence = randomOnCurve(pum.intMin, pum.intMax, relativeWeight);
-        wisdom = randomOnCurve(pum.wisMin, pum.wisMax, relativeWeight);
-        charisma = randomOnCurve(pum.charismaMin, pum.charismaMax, relativeWeight);
+        if( GameManager.instance.currentRunNumber == 1 ){
+            SetFirstRunStatValues();
+        }
+        else{
+            strength = randomOnCurve(pum.strMin, pum.strMax, relativeWeight);
+            dexterity = randomOnCurve(pum.dexMin, pum.dexMax, relativeWeight);
+            constitution = randomOnCurve(pum.conMin, pum.conMax, relativeWeight);
+            intelligence = randomOnCurve(pum.intMin, pum.intMax, relativeWeight);
+            wisdom = randomOnCurve(pum.wisMin, pum.wisMax, relativeWeight);
+            charisma = randomOnCurve(pum.charismaMin, pum.charismaMax, relativeWeight);
+        }
 
-        healingEfficacyBase = 25;
+        healingEfficacyBase = 0.25f;
         healingEfficacyFlatBonus = 0;
+    }
+
+    private void SetFirstRunStatValues()
+    {
+        strength = 10;
+        dexterity = 10;
+        constitution = 10;
+        intelligence = 10;
+        wisdom = 10;
+        charisma = 10;
     }
 
     private int randomOnCurve(int min, int max, float relativeWeight)
@@ -398,10 +437,45 @@ public class PlayerStats : EntityStats
     public void SetConstitution(int value)
     {
         constitution = value;
+        Player.instance.health.UpdateHealthOnUpgrade();
     }
 
-    public void SetHealingEfficacyFlatBonus(int value)
+    public void SetHealingEfficacyFlatBonus(float value)
     {
         healingEfficacyFlatBonus = value;
+    }
+
+    public float GetCurrentValueFromStatType(StatType type)
+    {
+        switch(type){
+            case StatType.CritChance:
+                return getCritChance();
+            case StatType.CritDamage:
+                return getCritDamage();
+            case StatType.AttackSpeed:
+                return getAttackSpeed();
+            case StatType.Defense:
+                return getDefense();
+            case StatType.MoveSpeed:
+                return getMoveSpeed();
+            case StatType.TrapDamageResist:
+                return getTrapDamageResist();
+            case StatType.DodgeChance:
+                return getDodgeChance();
+            case StatType.HitPoints:
+                return getMaxHitPoints();
+
+            // Primary Lines ONLY
+            case StatType.STRDamage:
+                return getSTRDamage(false);
+            case StatType.DEXDamage:
+                return getDEXDamage(false);
+            case StatType.INTDamage:
+                return getINTDamage(false);
+            case StatType.WISDamage:
+                return getWISDamage(false);    
+        }
+        Debug.LogError("No current value found for stat type: " + type);
+        return -1;
     }
 }
