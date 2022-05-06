@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
- using UnityEngine.Events;
- using UnityEngine.EventSystems;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public enum ItemPanelPos{
     upperLeft,
