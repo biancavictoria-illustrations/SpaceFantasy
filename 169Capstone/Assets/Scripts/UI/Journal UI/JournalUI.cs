@@ -17,6 +17,5 @@ public class JournalUI : MonoBehaviour
 /*
     TODO:
     =====
-    - use tabs for each section header
-    - and then tabs for what's displaying as well?
+    - make a tab variant that swaps out content instead of panels for the sidebar tabs
 */

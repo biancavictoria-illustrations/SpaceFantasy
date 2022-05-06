@@ -14,6 +14,8 @@ public class InputManager : MonoBehaviour
     [HideInInspector] public bool inventoryIsOpen = false;
     [HideInInspector] public bool shopIsOpen = false;
     [HideInInspector] public bool compareItemIsOpen = false;
+    [HideInInspector] public bool journalIsOpen = false;
+
     [HideInInspector] public bool isAttacking = false;
     [HideInInspector] public bool useAccessory = false;
     [HideInInspector] public bool useHead = false;
@@ -88,7 +90,7 @@ public class InputManager : MonoBehaviour
 
     public bool CanAcceptGameplayInput()
     {
-        if(isInDialogue || PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || isInMainMenu || GameManager.instance.statRerollUIOpen){
+        if(isInDialogue || PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || journalIsOpen || isInMainMenu || GameManager.instance.statRerollUIOpen){
             return false;
         }
         return true;
@@ -184,6 +186,10 @@ public class InputManager : MonoBehaviour
             InGameUIManager.instance.statRerollUI.DisableStatRerollUI();
             return;
         }
+        else if(journalIsOpen){
+            OnToggleJournal(input);
+            return;
+        }
         
         if(PauseMenu.GameIsPaused){
             InGameUIManager.instance.pauseMenu.ResumeGame();
@@ -198,6 +204,17 @@ public class InputManager : MonoBehaviour
             if(GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME){
                 RunGameTimer(false);
             }            
+        }
+    }
+
+    public void OnToggleJournal(InputValue input)
+    {
+        InGameUIManager.instance.journalUI.ToggleJournalActive(!journalIsOpen);
+        journalIsOpen = !journalIsOpen;
+
+        RunGameTimer(!journalIsOpen);
+        if(AlertTextUI.instance.alertTextIsActive){
+            AlertTextUI.instance.ToggleAlertText(!journalIsOpen);
         }
     }
 
