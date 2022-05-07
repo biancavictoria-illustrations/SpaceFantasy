@@ -360,4 +360,13 @@ public class InGameUIManager : MonoBehaviour
     }
 
     #endregion
+
+    public void TempOpenCaptainsLogFromInventory()
+    {
+        SetInventoryUIActive(false);
+        inventoryIsOpen = false;
+        InputManager.instance.inventoryIsOpen = false;
+
+        journalUI.ToggleJournalActive(true);
+    }
 }
