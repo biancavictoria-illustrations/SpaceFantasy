@@ -11,6 +11,7 @@ public class FloatingText
     public float lastShown;
     public GameObject parent;
     public float stat = 0;
+    public string type;
 
     public void Show()
     {

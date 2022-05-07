@@ -42,6 +42,24 @@ public class EntityHealth : MonoBehaviour
         private OnHitEvent onHit;
     #endregion
 
+    #region OnCrit
+        public class OnCritEvent : UnityEvent<EntityHealth, float> {}
+
+        public OnCritEvent OnCrit
+        {
+            get
+            {
+                if (onCrit == null)
+                    onCrit = new OnCritEvent();
+
+                return onCrit;
+            }
+
+            set { onCrit = value; }
+        }
+        private OnCritEvent onCrit;
+    #endregion
+
     public float maxHitpoints;
     public float currentHitpoints;
 
@@ -59,6 +77,7 @@ public class EntityHealth : MonoBehaviour
     void Start()
     {
         OnDeath.AddListener(onEntityDeath);
+        OnCrit.AddListener(onPlayerCrit);
         isBossEnemy = false;
         enemyID = EnemyID.enumSize;
         
@@ -214,5 +233,10 @@ public class EntityHealth : MonoBehaviour
             Destroy(gameObject);
         }
         
+    }
+
+    private void onPlayerCrit(EntityHealth health, float critDamage)
+    {
+        InGameUIManager.instance.ShowFloatingText(critDamage.ToString(), 35, transform.position + (Vector3.up * 3), Vector3.up * 25, 1.5f, gameObject, "crit");
     }
 }

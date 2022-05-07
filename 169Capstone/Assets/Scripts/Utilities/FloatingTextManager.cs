@@ -24,21 +24,23 @@ public class FloatingTextManager : MonoBehaviour
 
     public void Show(string msg, int fontSize, Vector3 position, Vector3 motion, float duration, GameObject parent, string type)
     {
-        FloatingText floatingText = GetFloatingText(parent);
+        FloatingText floatingText = GetFloatingText(parent, type);
 
         switch(type)
         {
             case "damage":
-                float stat = float.Parse(msg);
-                floatingText.stat += stat;
+                floatingText.stat += float.Parse(msg);
                 floatingText.txt.text = "<color=" + InGameUIManager.magentaColor + ">-" + floatingText.stat.ToString() + "</color>";
+                break;
+            case "crit":
+                floatingText.stat += float.Parse(msg);
+                floatingText.txt.text = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.yellow) + ">x" + floatingText.stat.ToString() + " Crit Bonus</color>";
                 break;
             default:
                 floatingText.txt.text = msg;
                 break;
         }
 
-        //floatingText.txt.text = msg;
         floatingText.txt.fontSize = fontSize;
 
         floatingText.go.transform.position = Camera.main.WorldToScreenPoint(position);
@@ -48,9 +50,9 @@ public class FloatingTextManager : MonoBehaviour
         floatingText.Show();
     }
 
-    private FloatingText GetFloatingText(GameObject parent)
+    private FloatingText GetFloatingText(GameObject parent, string type)
     {
-        FloatingText txt = floatingTexts.Find(t => t.active && t.parent == parent);
+        FloatingText txt = floatingTexts.Find(t => t.active && t.parent == parent && t.type == type);
 
         if(txt == null)
             txt = floatingTexts.Find(t => !t.active);
@@ -62,8 +64,14 @@ public class FloatingTextManager : MonoBehaviour
             txt.go.transform.SetParent(textContainer.transform);
             txt.txt = txt.go.GetComponent<TMP_Text>();
             txt.parent = parent;
+            txt.type = type;
 
             floatingTexts.Add(txt);
+        }
+        else
+        {
+            txt.parent = parent;
+            txt.type = type;
         }
 
         return txt;
