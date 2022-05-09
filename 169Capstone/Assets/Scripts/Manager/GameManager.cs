@@ -97,6 +97,11 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 1;
     }
 
+    public bool InSceneWithRandomGeneration()
+    {
+        return currentSceneName == GAME_LEVEL1_STRING_NAME;
+    }
+
     // Add any other reset stuff here too (called when player goes from death screen -> main hub)
     public void EndRun()
     {

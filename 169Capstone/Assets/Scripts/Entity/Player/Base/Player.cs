@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     void Awake()
     {
         if( instance ){
+            Debug.Log(instance);
             Destroy(gameObject);
         }
         else{
@@ -28,6 +29,16 @@ public class Player : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
+    {
+        if(GameManager.instance.InSceneWithRandomGeneration()){
+            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(StartOnGenerationComplete);
+        }
+        else{
+            StartOnGenerationComplete();
+        }        
+    }
+
+    private void StartOnGenerationComplete()
     {
         stats = GetComponent<PlayerStats>();
 

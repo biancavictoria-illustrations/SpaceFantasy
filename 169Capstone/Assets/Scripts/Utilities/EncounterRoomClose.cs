@@ -17,6 +17,16 @@ public class EncounterRoomClose : MonoBehaviour
    
     void Start()
     {
+        if(GameManager.instance.InSceneWithRandomGeneration()){
+            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(StartOnGenerationComplete);
+        }
+        else{
+            StartOnGenerationComplete();
+        }
+    }
+
+    private void StartOnGenerationComplete()
+    {
         if(isBossRoom)
             elevator = FindObjectOfType<SceneTransitionDoor>().gameObject;
     }
