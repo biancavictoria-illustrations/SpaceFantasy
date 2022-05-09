@@ -10,7 +10,7 @@ public class StartWeaponSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameObject itemObject = Instantiate(dropItemPrefab, transform.position, Quaternion.identity);
+        GameObject itemObject = Instantiate(dropItemPrefab, transform.position, Quaternion.identity, transform);
         itemObject.GetComponent<GeneratedEquipment>().SetEquipmentBaseData( weaponData, ItemRarity.Common );
         itemObject.GetComponent<DropTrigger>().DropItemModelIn3DSpace();
     }
