@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 public class FloorGenerator : MonoBehaviour
 {
+    public class OnGenerationCompleteEvent : UnityEvent {};
+
     private const int maxNumberOfPlacementAttempts = 100;
     
     public delegate void CallbackBoolDelegate(bool success);
@@ -44,6 +47,12 @@ public class FloorGenerator : MonoBehaviour
     [Tooltip("A list of all room prefabs which will connect encounter rooms together.")]
     public List<GameObject> hallwayRoomPrefabs;
 
+    public OnGenerationCompleteEvent OnGenerationComplete;
+
+    void Awake()
+    {
+        OnGenerationComplete = new OnGenerationCompleteEvent();
+    }
 
     void Start()
     {
@@ -1114,6 +1123,8 @@ public class FloorGenerator : MonoBehaviour
                 yield return null;
             }
         }
+
+        OnGenerationComplete.Invoke();
     }
 
     private HashSet<GameObject> FindRoomsWithinSphere(GameObject room, float radius)
