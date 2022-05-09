@@ -145,6 +145,7 @@ public class InventoryUI : MonoBehaviour
 
                 // Reveal additional info
                 panel.SetExpandedDescription(true);
+                panel.statIcon.gameObject.SetActive(true);
 
                 // Formatting!!!
                 panel.horizontalLayoutGroup.childAlignment = TextAnchor.UpperLeft;
@@ -160,6 +161,7 @@ public class InventoryUI : MonoBehaviour
                 // Hide icon and description
                 panel.itemIcon.gameObject.SetActive(false);
                 panel.descriptionPanel.SetActive(false);
+                panel.statIcon.gameObject.SetActive(false);
 
                 // Set padding so that the text lines up nicely
                 panel.textGrid.padding.top = shrunkItemTextGridTopPadding;
@@ -175,11 +177,7 @@ public class InventoryUI : MonoBehaviour
         if(deselectedPanel.GetComponent<Toggle>().isOn){
             deselectedPanel.GetComponent<Toggle>().isOn = false;
         }
-
-        // TODO: Set the background color to the normal color
-        // can't do the following because it changes the actual image color which messes up the color tint stuff...
-        // deselectedPanel.GetComponent<Image>().color = deselectedPanel.GetComponent<Toggle>().colors.normalColor;
-
+        
         verticalLayoutGroup.childControlHeight = true;
         foreach( InventoryUIItemPanel panel in itemPanels ){
             if(panel == deselectedPanel){
@@ -196,6 +194,7 @@ public class InventoryUI : MonoBehaviour
                 // Reveal icon and description
                 panel.itemIcon.gameObject.SetActive(true);
                 panel.descriptionPanel.SetActive(true);
+                panel.statIcon.gameObject.SetActive(true);
                 
                 // Reset the padding
                 panel.textGrid.padding.top = 0;

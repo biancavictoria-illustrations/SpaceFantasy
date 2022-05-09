@@ -339,20 +339,20 @@ public class InGameUIManager : MonoBehaviour
         }
     }
 
-    public void CloseNPCShop(SpeakerData shopkeeper)
+    public void CloseNPCShop(SpeakerData shopkeeper, bool closeWithESCKey = false)
     {
         AlertTextUI.instance.EnableShopAlert();
         if(shopkeeper.SpeakerID() == SpeakerID.Bryn){
-            brynShopUI.CloseShopUI();
+            brynShopUI.CloseShopUI(closeWithESCKey);
         }
         else if(shopkeeper.SpeakerID() == SpeakerID.Stellan){
             stellanShopUI.CloseShopUI();
         }
         else if(shopkeeper.SpeakerID() == SpeakerID.Doctor){
-            doctorShopUI.CloseShopUI();
+            doctorShopUI.CloseShopUI(closeWithESCKey);
         }
         else if(shopkeeper.SpeakerID() == SpeakerID.Rhian){
-            weaponsShopUI.CloseShopUI();
+            weaponsShopUI.CloseShopUI(closeWithESCKey);
         }
         else{
             Debug.LogError("Failed to close shop for NPC " + shopkeeper.SpeakerID());
@@ -360,13 +360,4 @@ public class InGameUIManager : MonoBehaviour
     }
 
     #endregion
-
-    public void TempOpenCaptainsLogFromInventory()
-    {
-        SetInventoryUIActive(false);
-        inventoryIsOpen = false;
-        InputManager.instance.inventoryIsOpen = false;
-
-        journalUI.ToggleJournalActive(true);
-    }
 }

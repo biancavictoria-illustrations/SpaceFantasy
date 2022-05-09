@@ -22,6 +22,7 @@ public enum ControlKeys
     AccessoryAbility,
     HelmetAbility,
     BootsAbility,
+    ToggleJournal,
 
     enumSize
 }
@@ -66,6 +67,7 @@ public class ControlsMenu : MonoBehaviour
     [SerializeField] private ControlRebindButton useHealthPotion;
     [SerializeField] private ControlRebindButton interact;
     [SerializeField] private ControlRebindButton toggleInventory;
+    [SerializeField] private ControlRebindButton toggleJournal;
     [SerializeField] private ControlRebindButton pause;
 
 
@@ -87,6 +89,7 @@ public class ControlsMenu : MonoBehaviour
         buttons.Add(useHealthPotion);
         buttons.Add(interact);
         buttons.Add(toggleInventory);
+        buttons.Add(toggleJournal);
         buttons.Add(pause);
 
         saveLoadControls.controls = controls;
@@ -141,7 +144,7 @@ public class ControlsMenu : MonoBehaviour
     {
         currentlyRebinding = true;
 
-        if((int)key > 13){
+        if((int)key > 14){
             Debug.LogError("Cannot rebind setting: " + key.ToString());
             return;
         }
@@ -356,6 +359,8 @@ public class ControlsMenu : MonoBehaviour
                 return pause;
             case ControlKeys.ToggleInventory:
                 return toggleInventory;
+            case ControlKeys.ToggleJournal:
+                return toggleJournal;
 
             case ControlKeys.UseHealthPotion:
                 return useHealthPotion;

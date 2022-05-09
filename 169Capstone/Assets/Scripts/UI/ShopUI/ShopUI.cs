@@ -31,7 +31,7 @@ public class ShopUI : MonoBehaviour
         leaveShopButton.Select();
     }
   
-    public virtual void CloseShopUI()
+    public virtual void CloseShopUI( bool closeWithESCKey = false )
     {
         InputManager.instance.ToggleShopOpenStatus(false);
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public enum UpgradeShopCategory
@@ -19,6 +20,10 @@ public class ItemPanelDoctor : ItemPanelShopUI
 
     private PlayerFacingStatName statName;
     [SerializeField] private UpgradeShopCategory category;
+    [SerializeField] private Image statIcon;
+
+    [SerializeField] private GameObject secondaryDescriptionHolder;
+    [SerializeField] private TMP_Text secondaryDescription;
 
     [SerializeField] private int healingBonusValue = 25;    // Amount it's incremented each time you purchase
 
@@ -53,6 +58,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
                 statName = r == 0 ? PlayerFacingStatName.CHA : PlayerFacingStatName.CON;
                 upgradeName = statName == PlayerFacingStatName.CHA ? "Bone Structure" : "Bone Fortitude";
             }
+            statIcon.sprite = shopUI.GetSpriteFromStatType(statName);
         }
         else if(category == UpgradeShopCategory.HealthPotion){
             upgradeName = "Health Potion";
@@ -78,14 +84,17 @@ public class ItemPanelDoctor : ItemPanelShopUI
     {
         // === Generate Description Text ===
         if( category == UpgradeShopCategory.HealthPotion ){
-            return "Increases <b>Health Potion</b> quantity by 1.\n\n<b>Potions:</b>   " + currentStatValue + "  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue+1);
+            secondaryDescription.text = "<b>Potions:</b>   " + currentStatValue + "  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue+1);
+            return "Increases <b>Health Potion</b> quantity by 1.";
         }
         else if( category == UpgradeShopCategory.PotionEfficacy ){
-            return "Increases <b>Health Potion</b> efficacy by " + healingBonusValue + "%.\n\n<b>Healing:</b>   " + currentStatValue + "%  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue + healingBonusValue) + "%";
+            secondaryDescription.text = "<b>Healing:</b>   " + currentStatValue + "%  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue + healingBonusValue) + "%";
+            return "Increases <b>Health Potion</b> efficacy by " + healingBonusValue + "%.";
         }
         else{
             string s = statName.ToString();
-            return "Increases <b>" + s + "</b> by 1.\n\n<b>" + s + ":</b>   " + currentStatValue + "  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue+1);
+            secondaryDescription.text = "<b>" + s + ":</b>   " + currentStatValue + "  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue+1);
+            return "Increases <b>" + s + "</b> by 1.";
         }
     }
 
@@ -98,9 +107,17 @@ public class ItemPanelDoctor : ItemPanelShopUI
         if(!itemIsAvailable){
             costText.text = "";
             ToggleElectrumIconActive(false);
+            if(statIcon){
+                statIcon.color = new Color(255,255,255,0);
+            }
+            secondaryDescriptionHolder.SetActive(false);
         }
         else{
             ToggleElectrumIconActive(true);
+            if(statIcon){
+                statIcon.color = new Color(255,255,255,255);
+            }
+            secondaryDescriptionHolder.SetActive(true);
         }
     }
 
