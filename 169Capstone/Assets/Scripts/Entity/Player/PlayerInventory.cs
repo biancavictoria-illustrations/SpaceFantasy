@@ -21,6 +21,8 @@ public class PlayerInventory : MonoBehaviour
 
     [HideInInspector] public static bool hasPickedSomethingUpThisRun = false;
 
+    public bool giveElectrumForTesting = false; // TEMP - REMOVE THIS
+
     void Awake()
     {
         if( instance ){
@@ -42,6 +44,14 @@ public class PlayerInventory : MonoBehaviour
         gear[InventoryItemSlot.Legs] = null;
     }
 
+    void Update()
+    {
+        if(giveElectrumForTesting){
+            giveElectrumForTesting = false;
+            SetTempCurrency(tempCurrency + 1);
+        }
+    }
+
     public void InitializeInventoryValuesOnNewGame()
     {        
         permanentCurrency = 0;
@@ -55,7 +65,7 @@ public class PlayerInventory : MonoBehaviour
         }
 
         EntityHealth playerHealth = Player.instance.health;
-        float healedHitPoints = playerHealth.maxHitpoints * (0.01f * Player.instance.stats.getHealingEfficacy());
+        float healedHitPoints = playerHealth.maxHitpoints * Player.instance.stats.getHealingEfficacy();
         playerHealth.Heal(healedHitPoints);
 
         healthPotionQuantity--;
@@ -98,7 +108,15 @@ public class PlayerInventory : MonoBehaviour
     {
         // Primary line
         if(itemData.primaryLineValue > 0){
-            Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, itemData.equipmentBaseData.PrimaryItemLine(), EntityStats.BonusType.flat, itemData.primaryLineValue );
+            // If %
+            if(itemData.equipmentBaseData.PrimaryItemLine() == StatType.HitPoints){
+                Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, itemData.equipmentBaseData.PrimaryItemLine(), EntityStats.BonusType.multiplier, itemData.primaryLineValue );
+                CheckForHealthBarUpdate(itemData.equipmentBaseData.PrimaryItemLine());
+            }
+            // If flat
+            else{
+                Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, itemData.equipmentBaseData.PrimaryItemLine(), EntityStats.BonusType.flat, itemData.primaryLineValue );
+            }
         }
 
         // Secondary line
@@ -106,7 +124,15 @@ public class PlayerInventory : MonoBehaviour
             float bonusValue = itemData.GetSecondaryLineValueFromStatType((StatType)i);
             if(bonusValue != 0){
                 Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, (StatType)i, EntityStats.BonusType.flat, bonusValue );
+                CheckForHealthBarUpdate((StatType)i);
             }
+        }
+    }
+
+    private void CheckForHealthBarUpdate(StatType type)
+    {
+        if( type == StatType.HitPoints ){
+            Player.instance.health.UpdateHealthOnUpgrade();
         }
     }
 
@@ -114,7 +140,15 @@ public class PlayerInventory : MonoBehaviour
     {
         // Primary line
         if(itemData.primaryLineValue > 0){
-            Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, itemData.equipmentBaseData.PrimaryItemLine(), EntityStats.BonusType.flat, 0 );
+            // If %
+            if(itemData.equipmentBaseData.PrimaryItemLine() == StatType.HitPoints){
+                Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, itemData.equipmentBaseData.PrimaryItemLine(), EntityStats.BonusType.multiplier, 0 );
+                CheckForHealthBarUpdate(itemData.equipmentBaseData.PrimaryItemLine());
+            }
+            // If flat
+            else{
+                Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, itemData.equipmentBaseData.PrimaryItemLine(), EntityStats.BonusType.flat, 0 );
+            }
         }
 
         // Secondary line
@@ -122,6 +156,7 @@ public class PlayerInventory : MonoBehaviour
             float bonusValue = itemData.GetSecondaryLineValueFromStatType((StatType)i);
             if(bonusValue != 0){
                 Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, (StatType)i, EntityStats.BonusType.flat, 0 );
+                CheckForHealthBarUpdate((StatType)i);
             }
         }
     }

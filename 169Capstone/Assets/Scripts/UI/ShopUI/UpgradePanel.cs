@@ -37,6 +37,8 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     [SerializeField] private Image upgradeIcon;
     [SerializeField] private Image starShardIcon;
 
+    private Sprite upgradeIconSprite;
+
     [SerializeField] private Button upgradeButton;
 
     private bool soldOut = false;
@@ -44,6 +46,16 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     private bool cannotAffordUpgrade = false;
 
     private ShopUIStellan shopUI;
+
+    void Start()
+    {
+        if(IsStatUpgrade()){
+            upgradeIconSprite = InGameUIManager.instance.GetSpriteFromStatType(GetStatFromUpgradeType());
+        }
+        else{
+            upgradeIconSprite = upgradeIcon.sprite;
+        }
+    }
 
     public void SetShopUI(ShopUIStellan _shop)
     {
@@ -55,6 +67,11 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         return upgradeType;
     }
 
+    public bool IsStatUpgrade()
+    {
+        return (int)upgradeType < 12;
+    }
+
     public void UpdateUIDisplayValues()
     {
         SetCurrentCost();
@@ -63,7 +80,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         UpdateBaseDescriptionValues();
 
         // If stat upgrade
-        if( (int)upgradeType < 12 ){            
+        if( IsStatUpgrade() ){            
             skillLevelText.text = "" + currentUpgradeLevel;            
             // Update description
             if(soldOut){
@@ -84,13 +101,13 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
         // If this is the currently active hover panel, update the focus panel values
         if(shopUI.activeUpgradeInFocus && shopUI.activeUpgradeInFocus == this){
-            shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, currentDescription, costText.text, upgradeIcon.sprite);
+            shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, currentDescription, costText.text, upgradeIconSprite, IsStatUpgrade());
         }
     }
 
     private void SetCurrentCost()
     {
-        if((int)upgradeType < 12){
+        if(IsStatUpgrade()){
             SetStatCurrentCost();
         }
         else{
@@ -106,7 +123,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         }
 
         // If a stat and not sold out, set UI based on Min/Max status 
-        if((int)upgradeType <= 11 && !soldOut && !cannotAffordUpgrade){
+        if(IsStatUpgrade() && !soldOut && !cannotAffordUpgrade){
             SetStatValuesBasedOnMinMaxStatus();
         }
 
@@ -123,7 +140,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
     private void SetStatValuesBasedOnMinMaxStatus()
     {
-        if( (int)upgradeType > 11 ){
+        if( !IsStatUpgrade() ){
             return;
         }
 
@@ -160,7 +177,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     private void UpdateBaseDescriptionValues()
     {
         // If stat
-        if((int)upgradeType <= 11){
+        if(IsStatUpgrade()){
             baseDescription = "Increase <b>" + upgradeName + "</b> from <b>" + currentUpgradeLevel + "</b> to <color=" + InGameUIManager.slimeGreenColor + ">" + (currentUpgradeLevel+1) + "</color>.";
         }
         // If update-able skill
@@ -198,7 +215,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     public void InitializeUpgradeValues()
     {
         SetValuesByType();        
-        if( (int)upgradeType < 12 ){    // If stat upgrade
+        if( IsStatUpgrade() ){    // If stat upgrade
             currentUpgradeLevel = PermanentUpgradeManager.instance.GetStatGenerationValueFromUpgradeType(upgradeType);
             upgradeBaseCost = STAT_BASE_COST;
             SetStatCurrentCost();
@@ -231,7 +248,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         currentUpgradeLevel++;
 
         // If stat upgrade
-        if( (int)upgradeType < 12 ){
+        if( IsStatUpgrade() ){
             UpgradeAssociatedStatValue();
         }
         // If skill
@@ -300,7 +317,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         {
             shopUI.activeUpgradeInFocus = this;
             UpdateUIDisplayValues();
-            shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, currentDescription, costText.text, upgradeIcon.sprite);
+            shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, currentDescription, costText.text, upgradeIconSprite, IsStatUpgrade());
         }
 
         private void OnUpgradePanelDeselct()
@@ -422,11 +439,19 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
     private void SetSkillCurrentCost()
     {
+        if(IsStatUpgrade()){
+            return;
+        }
+
         currentCost = upgradeBaseCost + (currentUpgradeLevel * costIncreasePerLevel);
     }
 
     private void SetStatCurrentCost()
     {
+        if(!IsStatUpgrade()){
+            return;
+        }
+
         // If Stat MIN
         if( (int)upgradeType < 6 ){
             currentCost = upgradeBaseCost + Mathf.FloorToInt((MIN_STAT_NUM_TIMES_PURCHASABLE - (totalUpgradeLevels - currentUpgradeLevel)) * STAT_MIN_COST_INCREASE);
@@ -511,8 +536,8 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         private const string DEX_DESCRIPTION = "Increases the damage dealt by Dexterity-based weapons and abilities. Also increases Dodge Chance.";
         private const string INT_DESCRIPTION = "Increases the damage dealt by Intelligence-based weapons and abilities. Also increases Critical Hit Chance.";
         private const string WIS_DESCRIPTION = "Increases the damage dealt by Wisdom-based weapons and abilities. Also reduces the length of ability cooldowns.";
-        private const string CON_DESCRIPTION = "Increases Max Health and Status Resist Chance.";
-        private const string CHA_DESCRIPTION = "Reduces the prices of items in shops and increases Luck.";
+        private const string CON_DESCRIPTION = "Increases Max Health and Trap Damage Resist.";
+        private const string CHA_DESCRIPTION = "Reduces the prices of items in shops.";
 
         private string GetStatValueDescriptionFromType()
         {
@@ -547,4 +572,35 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         }
 
     #endregion
+
+    private PlayerFacingStatName GetStatFromUpgradeType()
+    {
+        switch(upgradeType){
+            case PermanentUpgradeType.STRMin:
+            case PermanentUpgradeType.STRMax:
+                return PlayerFacingStatName.STR;
+
+            case PermanentUpgradeType.DEXMin:
+            case PermanentUpgradeType.DEXMax:
+                return PlayerFacingStatName.DEX;
+
+            case PermanentUpgradeType.INTMin:
+            case PermanentUpgradeType.INTMax:
+                return PlayerFacingStatName.INT;
+
+            case PermanentUpgradeType.WISMin:
+            case PermanentUpgradeType.WISMax:
+                return PlayerFacingStatName.WIS;
+
+            case PermanentUpgradeType.CONMin:
+            case PermanentUpgradeType.CONMax:
+                return PlayerFacingStatName.CON;
+
+            case PermanentUpgradeType.CHAMin:
+            case PermanentUpgradeType.CHAMax:
+                return PlayerFacingStatName.CHA;
+        }
+        Debug.LogWarning("Cannot get player facing stat name for upgrade type: " + upgradeType);
+        return PlayerFacingStatName.size;
+    }
 }

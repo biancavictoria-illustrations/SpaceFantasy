@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public enum UpgradeShopCategory
@@ -19,6 +20,10 @@ public class ItemPanelDoctor : ItemPanelShopUI
 
     private PlayerFacingStatName statName;
     [SerializeField] private UpgradeShopCategory category;
+    [SerializeField] private Image statIcon;
+
+    [SerializeField] private GameObject secondaryDescriptionHolder;
+    [SerializeField] private TMP_Text secondaryDescription;
 
     [SerializeField] private int healingBonusValue = 25;    // Amount it's incremented each time you purchase
 
@@ -53,6 +58,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
                 statName = r == 0 ? PlayerFacingStatName.CHA : PlayerFacingStatName.CON;
                 upgradeName = statName == PlayerFacingStatName.CHA ? "Bone Structure" : "Bone Fortitude";
             }
+            statIcon.sprite = InGameUIManager.instance.GetSpriteFromStatType(statName);
         }
         else if(category == UpgradeShopCategory.HealthPotion){
             upgradeName = "Health Potion";
@@ -66,31 +72,52 @@ public class ItemPanelDoctor : ItemPanelShopUI
 
         // === Set the Initial Values ===
         SetBaseShopItemValues(baseCost, upgradeName, GenerateDescription());
-        SetInteractableBasedOnAffordStatus();
+        SetInteractableAndCostDisplayValuesBasedOnStatus();
+
+        // If we started this run w/ 20 in a /stat/, at this point make sure we show that that upgrade is not available
+        if(category != UpgradeShopCategory.HealthPotion && category != UpgradeShopCategory.PotionEfficacy && currentStatValue >= 20){
+            SetMaxStatReachedValues();
+        }
     }
 
     private string GenerateDescription()
     {
         // === Generate Description Text ===
         if( category == UpgradeShopCategory.HealthPotion ){
-            return "Increases <b>Health Potion</b> quantity by 1.\n\n<b>Potions:</b>   " + currentStatValue + "  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue+1);
+            secondaryDescription.text = "<b>Potions:</b>   " + currentStatValue + "  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue+1);
+            return "Increases <b>Health Potion</b> quantity by 1.";
         }
         else if( category == UpgradeShopCategory.PotionEfficacy ){
-            return "Increases <b>Health Potion</b> efficacy by " + healingBonusValue + "%.\n\n<b>Healing:</b>   " + currentStatValue + "%  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue + healingBonusValue) + "%";
+            secondaryDescription.text = "<b>Healing:</b>   " + currentStatValue + "%  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue + healingBonusValue) + "%";
+            return "Increases <b>Health Potion</b> efficacy by " + healingBonusValue + "%.";
         }
         else{
             string s = statName.ToString();
-            return "Increases <b>" + s + "</b> by 1.\n\n<b>" + s + ":</b>   " + currentStatValue + "  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue+1);
+            secondaryDescription.text = "<b>" + s + ":</b>   " + currentStatValue + "  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue+1);
+            return "Increases <b>" + s + "</b> by 1.";
         }
     }
 
-    public void SetInteractableBasedOnAffordStatus()
+    public void SetInteractableAndCostDisplayValuesBasedOnStatus()
     {
-        if(canAffordItem){
-            itemCardButton.interactable = true;
+        // Only interactable if we can BOTH afford it AND it's available
+        itemCardButton.interactable = canAffordItem && itemIsAvailable;
+
+        // If the item is not available, remove cost stuff (regardless of afford status)
+        if(!itemIsAvailable){
+            costText.text = "";
+            ToggleElectrumIconActive(false);
+            if(statIcon){
+                statIcon.color = new Color(255,255,255,0);
+            }
+            secondaryDescriptionHolder.SetActive(false);
         }
         else{
-            itemCardButton.interactable = false;
+            ToggleElectrumIconActive(true);
+            if(statIcon){
+                statIcon.color = new Color(255,255,255,255);
+            }
+            secondaryDescriptionHolder.SetActive(true);
         }
     }
 
@@ -106,7 +133,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
             return;
         }
         else if(category == UpgradeShopCategory.PotionEfficacy){
-            currentStatValue = stats.getHealingEfficacy();
+            currentStatValue = (int)(stats.getHealingEfficacy()*100);
             return;
         }
 
@@ -126,7 +153,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
         else if(statName == PlayerFacingStatName.CHA){
             currentStatValue = stats.Charisma();
         }
-        else{
+        else if(statName == PlayerFacingStatName.CON){
             currentStatValue = stats.Constitution();
         }
 
@@ -140,7 +167,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
         currentStatValue++;
         descriptionText.text = GenerateDescription();
         UpdateCurrentCost();
-        SetInteractableBasedOnAffordStatus();
+        SetInteractableAndCostDisplayValuesBasedOnStatus();
     }
 
     private void IncrementHealingEfficacy()
@@ -148,7 +175,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
         currentStatValue += healingBonusValue;
         descriptionText.text = GenerateDescription();
         UpdateCurrentCost();
-        SetInteractableBasedOnAffordStatus();
+        SetInteractableAndCostDisplayValuesBasedOnStatus();
     }
 
     public override void PurchaseItem()
@@ -160,7 +187,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
             IncrementStatValue();
         }
         else if(category == UpgradeShopCategory.PotionEfficacy){
-            stats.SetHealingEfficacyFlatBonus(currentStatValue + healingBonusValue);
+            stats.SetHealingEfficacyFlatBonus((currentStatValue + healingBonusValue)/100f);
             IncrementHealingEfficacy();
         }
         else{
@@ -199,11 +226,10 @@ public class ItemPanelDoctor : ItemPanelShopUI
 
     private void SetMaxStatReachedValues()
     {
-        costText.text = "";
         descriptionText.text = "<color=" + InGameUIManager.magentaColor + ">Max " + statName.ToString() + " value reached.";
-        itemCardButton.interactable = false;
         itemIsAvailable = false;
         SetHoverAlertsActive(false);
+        SetInteractableAndCostDisplayValuesBasedOnStatus();
     }
 
     // Update prices and descriptions if necessary but don't generate new stats for purchase
@@ -211,7 +237,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
     {
         descriptionText.text = GenerateDescription();
         UpdateCurrentCost();    // Updates cost value as well as UI
-        SetInteractableBasedOnAffordStatus();
         GetCurrentStatValue();
+        SetInteractableAndCostDisplayValuesBasedOnStatus();
     }
 }

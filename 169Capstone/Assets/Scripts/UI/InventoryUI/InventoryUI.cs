@@ -42,6 +42,8 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private TMP_Text critChance;
     [SerializeField] private TMP_Text critDamage;
     [SerializeField] private TMP_Text trapDamageResist;
+    [SerializeField] private TMP_Text haste;
+    [SerializeField] private TMP_Text healingEfficacy;
 
     void Start()
     {
@@ -101,13 +103,15 @@ public class InventoryUI : MonoBehaviour
 
         FindPlayerStats();
 
-        attackSpeed.text = "Attack Speed: " + stats.getAttackSpeed();
-        moveSpeed.text = "Move Speed: " + stats.getMoveSpeed();
-        defense.text = "Defense: " + stats.getDefense();
-        dodgeChance.text = "Dodge Chance: " + stats.getDodgeChance();
-        critChance.text = "Crit Chance: " + stats.getCritChance();
-        critDamage.text = "Crit Damage: " + stats.getCritDamage();
-        trapDamageResist.text = "Trap Damage Resist: " + stats.getTrapDamageResist();
+        attackSpeed.text = "Attack Speed: " + (stats.getAttackSpeed()*100) + "%";
+        moveSpeed.text = "Move Speed: " + (stats.getMoveSpeed()*100) + "%";
+        defense.text = "Defense: " + stats.getDefense()*100;
+        dodgeChance.text = "Dodge Chance: " + (stats.getDodgeChance()*100) + "%";
+        critChance.text = "Crit Chance: " + (stats.getCritChance()*100) + "%";
+        critDamage.text = "Crit Damage: " + (stats.getCritDamage()*100) + "%";
+        trapDamageResist.text = "Trap Damage Resist: " + (stats.getTrapDamageResist()*100) + "%";
+        haste.text = "Haste: " + (stats.getHaste()*100) + "%";
+        healingEfficacy.text = "Healing Efficacy: " + (stats.getHealingEfficacy()*100) + "%";
     }
 
     // Called when you click on a panel
@@ -141,6 +145,7 @@ public class InventoryUI : MonoBehaviour
 
                 // Reveal additional info
                 panel.SetExpandedDescription(true);
+                panel.statIcon.gameObject.SetActive(true);
 
                 // Formatting!!!
                 panel.horizontalLayoutGroup.childAlignment = TextAnchor.UpperLeft;
@@ -156,6 +161,7 @@ public class InventoryUI : MonoBehaviour
                 // Hide icon and description
                 panel.itemIcon.gameObject.SetActive(false);
                 panel.descriptionPanel.SetActive(false);
+                panel.statIcon.gameObject.SetActive(false);
 
                 // Set padding so that the text lines up nicely
                 panel.textGrid.padding.top = shrunkItemTextGridTopPadding;
@@ -171,11 +177,7 @@ public class InventoryUI : MonoBehaviour
         if(deselectedPanel.GetComponent<Toggle>().isOn){
             deselectedPanel.GetComponent<Toggle>().isOn = false;
         }
-
-        // TODO: Set the background color to the normal color
-        // can't do the following because it changes the actual image color which messes up the color tint stuff...
-        // deselectedPanel.GetComponent<Image>().color = deselectedPanel.GetComponent<Toggle>().colors.normalColor;
-
+        
         verticalLayoutGroup.childControlHeight = true;
         foreach( InventoryUIItemPanel panel in itemPanels ){
             if(panel == deselectedPanel){
@@ -192,6 +194,7 @@ public class InventoryUI : MonoBehaviour
                 // Reveal icon and description
                 panel.itemIcon.gameObject.SetActive(true);
                 panel.descriptionPanel.SetActive(true);
+                panel.statIcon.gameObject.SetActive(true);
                 
                 // Reset the padding
                 panel.textGrid.padding.top = 0;

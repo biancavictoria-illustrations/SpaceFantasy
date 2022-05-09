@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
- using UnityEngine.Events;
- using UnityEngine.EventSystems;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public enum ItemPanelPos{
     upperLeft,
@@ -22,6 +22,7 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
     [SerializeField] protected TMP_Text costText;
     [SerializeField] protected TMP_Text itemName;
     [SerializeField] protected TMP_Text descriptionText;
+    [SerializeField] protected Image currencyIcon;
 
     [SerializeField] protected Button itemCardButton;
 
@@ -76,7 +77,7 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
         currentCostValue = (int)Mathf.Floor(cost);       // Get int using Floor to round
 
         // Factor in CHA stat
-        currentCostValue -= (int)Player.instance.stats.getShopPriceReduction();
+        currentCostValue = (int)(currentCostValue*(1 - Player.instance.stats.getShopPriceReduction()));
     }
 
     // Updates both cost value and UI
@@ -84,7 +85,7 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
     {
         if(recalculateCost){
             CalculateCurrentCost();
-        }        
+        }
 
         if(PlayerInventory.instance.tempCurrency - currentCostValue >= 0){
             costText.text = "" + currentCostValue;
@@ -93,6 +94,17 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
         else{
             costText.text = "<color=" + InGameUIManager.magentaColor + ">" + currentCostValue + "</color>";
             canAffordItem = false;
+        }
+    }
+
+    protected void ToggleElectrumIconActive(bool set)
+    {
+        if(set){
+            currencyIcon.color = new Color(255,255,255,255);
+        }
+        else{
+            currencyIcon.color = new Color(255,255,255,0);
+            costText.text = "";
         }
     }
 

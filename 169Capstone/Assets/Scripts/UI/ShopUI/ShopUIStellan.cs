@@ -119,7 +119,7 @@ public class ShopUIStellan : MonoBehaviour
         return maxUpgradesReachedIconColor;
     }
 
-    public void SetFocusPanelValues(string _name, string _skillLevel, string _desc, string _cost, Sprite _icon)
+    public void SetFocusPanelValues(string _name, string _skillLevel, string _desc, string _cost, Sprite _icon, bool isStatUpgrade)
     {
         focusPanelName.text = _name;
         focusSkillLevel.text = _skillLevel;
@@ -136,6 +136,13 @@ public class ShopUIStellan : MonoBehaviour
         
         focusPanelIcon.color = new Color(255,255,255,255);
         focusPanelIcon.sprite = _icon;
+        focusPanelIcon.preserveAspect = true;
+        if(isStatUpgrade){
+            // TODO: Make the image smaller
+        }
+        else{
+            // TODO: Make it normal
+        }
 
         focusPanelToPurchaseMessage.SetActive(true);
         SetPurchaseMessageButton(InputManager.instance.latestInputIsController, _cost=="");

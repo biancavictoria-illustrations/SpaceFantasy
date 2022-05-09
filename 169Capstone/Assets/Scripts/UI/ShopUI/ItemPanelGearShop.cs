@@ -22,9 +22,8 @@ public class ItemPanelGearShop : ItemPanelShopUI
 
     public void SetGearItemValues(GeneratedEquipment _item)
     {
+        ToggleElectrumIconActive(itemIsAvailable);
         if(!itemIsAvailable){
-            // descriptionText.text = "<b><color=" + InGameUIManager.magentaColor + ">SOLD";
-            // itemCardButton.interactable = false;
             return;
         }
 
@@ -44,7 +43,7 @@ public class ItemPanelGearShop : ItemPanelShopUI
     {
         shopUI.activeCompareItem = this;
         hoverAlerts.EnableAlert(panelPos, false);
-        shopUI.ToggleShopCompareOn(PlayerInventory.instance.tempCurrency - currentCostValue > 0);
+        shopUI.ToggleShopCompareOn(PlayerInventory.instance.tempCurrency - currentCostValue >= 0);
     }
 
     public override void PurchaseItem()
@@ -58,5 +57,6 @@ public class ItemPanelGearShop : ItemPanelShopUI
         descriptionText.text = "<b><color=" + InGameUIManager.magentaColor + ">SOLD";
         itemCardButton.interactable = false;
         itemIsAvailable = false;
+        ToggleElectrumIconActive(false);
     }
 }

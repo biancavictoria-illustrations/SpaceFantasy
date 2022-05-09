@@ -13,6 +13,7 @@ public enum StatType
     CritChance,
     CritDamage,
     TrapDamageResist,
+    Haste,
 
     // ONLY Primary Lines
     STRDamage,
@@ -25,7 +26,7 @@ public enum StatType
 
 public abstract class EntityStats : MonoBehaviour
 {
-    public const int numberOfSecondaryLineOptions = 8;
+    public const int numberOfSecondaryLineOptions = 9;
 
     protected virtual void Awake()
     {
@@ -177,27 +178,58 @@ public abstract class EntityStats : MonoBehaviour
                         trapDamageResistMultiplier = total;
                     break;
 
+                case StatType.Haste:
+                    if(bonusType == BonusType.flat)
+                        hasteFlatBonus = total;
+                    break;
+
                 case StatType.STRDamage:
                     if(bonusType == BonusType.flat)
                         STRDamageFlatBonus = total;
+                    else
+                        STRDamageMultiplier = total;
                     break;
 
                 case StatType.DEXDamage:
                     if(bonusType == BonusType.flat)
                         DEXDamageFlatBonus = total;
+                    else
+                        DEXDamageMultiplier = total;
                     break;
 
                 case StatType.WISDamage:
                     if(bonusType == BonusType.flat)
                         WISDamageFlatBonus = total;
+                    else
+                        WISDamageMultiplier = total;
                     break;
 
                 case StatType.INTDamage:
                     if(bonusType == BonusType.flat)
                         INTDamageFlatBonus = total;
+                    else
+                        INTDamageMultiplier = total;
                     break;
             }
         }
+    #endregion
+
+    #region Player Stat Values
+        // Need to be stored here due to enum & bonus management reasons
+        protected float hasteBase;
+        protected float hasteFlatBonus;
+
+        protected float STRDamageFlatBonus;
+        protected float STRDamageMultiplier;
+
+        protected float DEXDamageFlatBonus;
+        protected float DEXDamageMultiplier;
+        
+        protected float WISDamageFlatBonus;
+        protected float WISDamageMultiplier;
+        
+        protected float INTDamageFlatBonus;
+        protected float INTDamageMultiplier;        
     #endregion
 
     #region Hit Points
@@ -286,66 +318,4 @@ public abstract class EntityStats : MonoBehaviour
         }
     #endregion
 
-    #region Damage Values
-        protected float baseDamage;
-
-        protected float STRDamageFlatBonus;
-        protected float DEXDamageFlatBonus;
-        protected float WISDamageFlatBonus;
-        protected float INTDamageFlatBonus;
-
-        public virtual float getSTRDamage()
-        {
-            return baseDamage + STRDamageFlatBonus;
-        }
-
-        public virtual float getDEXDamage()
-        {
-            return baseDamage + DEXDamageFlatBonus;
-        }
-
-        public virtual float getWISDamage()
-        {
-            return baseDamage + WISDamageFlatBonus;
-        }
-
-        public virtual float getINTDamage()
-        {
-            return baseDamage + INTDamageFlatBonus;
-        }
-    #endregion
-
-    public float GetCurrentValueFromStatType(StatType type)
-    {
-        switch(type){
-            case StatType.CritChance:
-                return getCritChance();
-            case StatType.CritDamage:
-                return getCritDamage();
-            case StatType.AttackSpeed:
-                return getAttackSpeed();
-            case StatType.Defense:
-                return getDefense();
-            case StatType.MoveSpeed:
-                return getMoveSpeed();
-            case StatType.TrapDamageResist:
-                return getTrapDamageResist();
-            case StatType.DodgeChance:
-                return getDodgeChance();
-            case StatType.HitPoints:
-                return getMaxHitPoints();
-
-            // Primary Lines ONLY
-            case StatType.STRDamage:
-                return getSTRDamage();
-            case StatType.DEXDamage:
-                return getDEXDamage();
-            case StatType.INTDamage:
-                return getINTDamage();
-            case StatType.WISDamage:
-                return getWISDamage();    
-        }
-        Debug.LogError("No current value found for stat type: " + type);
-        return -1;
-    }
 }

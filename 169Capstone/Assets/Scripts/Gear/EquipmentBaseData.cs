@@ -85,6 +85,8 @@ public class EquipmentBaseData : ScriptableObject
 
     [SerializeField] private Sprite icon;
 
+    [SerializeField] private PlayerFacingStatName primaryStat;
+
     [SerializeField] private StatType primaryItemLine;
 
 
@@ -140,6 +142,11 @@ public class EquipmentBaseData : ScriptableObject
     public Sprite Icon()
     {
         return icon;
+    }
+
+    public PlayerFacingStatName PrimaryStat()
+    {
+        return primaryStat;
     }
 
     public StatType PrimaryItemLine()

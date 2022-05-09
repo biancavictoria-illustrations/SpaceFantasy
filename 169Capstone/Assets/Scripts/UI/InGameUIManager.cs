@@ -27,6 +27,13 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private Sprite emptySlotHelmetIcon;
     [SerializeField] private Sprite emptySlotBootsIcon;
 
+    [SerializeField] private Sprite strSprite;
+    [SerializeField] private Sprite dexSprite;
+    [SerializeField] private Sprite intSprite;
+    [SerializeField] private Sprite wisSprite;
+    [SerializeField] private Sprite conSprite;
+    [SerializeField] private Sprite chaSprite;
+
     [SerializeField] private GameObject darkBackgroundPanel;
 
     public DeathScreenUI deathScreen;
@@ -63,6 +70,8 @@ public class InGameUIManager : MonoBehaviour
 
     public BossHealthBar bossHealthBar;
     public TimerUI timerUI;
+
+    public FloatingTextManager floatingTextManager;
     
 
     void Awake()
@@ -121,11 +130,16 @@ public class InGameUIManager : MonoBehaviour
     public void OnStellanShopUIOpen(bool setOpen)
     {
         stellanShopIsOpen = setOpen;
-        permanentCurrencyValue.gameObject.SetActive(!setOpen);
+        TogglePermanentCurrencyUI(!setOpen);
         
         if(setOpen){
             SetPermanentCurrencyValue(PlayerInventory.instance.permanentCurrency);
         }
+    }
+
+    public void ShowFloatingText(string msg, int fontSize, Vector3 position, Vector3 motion, float duration, GameObject parent, string type)
+    {
+        floatingTextManager.Show(msg, fontSize, position, motion, duration, parent, type);
     }
 
     #region Item UI
@@ -268,6 +282,11 @@ public class InGameUIManager : MonoBehaviour
         tempCurrencyValue.text = "" + money;
     }
 
+    public void TogglePermanentCurrencyUI(bool set)
+    {
+        permanentCurrencyValue.gameObject.SetActive(set);
+    }
+
     #endregion
 
     #region Health UI
@@ -277,11 +296,11 @@ public class InGameUIManager : MonoBehaviour
         currentHPValue = _NewCurrentHP;
 
         if( _NewCurrentHP > maxHealthValue ){
-            Debug.LogError("Current HP set greater than max HP!");
+            Debug.LogWarning("Current HP set greater than max HP!");
             currentHPValue = maxHealthValue;
         }
 
-        healthText.text = Mathf.FloorToInt(currentHPValue) + " / " + Mathf.FloorToInt(maxHealthValue);
+        healthText.text = Mathf.CeilToInt(currentHPValue) + " / " + Mathf.CeilToInt(maxHealthValue);
 
         healthSlider.value = currentHPValue;        
     }
@@ -291,7 +310,7 @@ public class InGameUIManager : MonoBehaviour
         maxHealthValue = _NewMaxHP;
         healthSlider.maxValue = _NewMaxHP;
 
-        healthText.text = Mathf.FloorToInt(currentHPValue) + " / " + Mathf.FloorToInt(maxHealthValue);
+        healthText.text = Mathf.CeilToInt(currentHPValue) + " / " + Mathf.CeilToInt(maxHealthValue);
 
         if(currentHPValue != 0){
             SetCurrentHealthValue(currentHPValue);
@@ -327,20 +346,20 @@ public class InGameUIManager : MonoBehaviour
         }
     }
 
-    public void CloseNPCShop(SpeakerData shopkeeper)
+    public void CloseNPCShop(SpeakerData shopkeeper, bool closeWithESCKey = false)
     {
         AlertTextUI.instance.EnableShopAlert();
         if(shopkeeper.SpeakerID() == SpeakerID.Bryn){
-            brynShopUI.CloseShopUI();
+            brynShopUI.CloseShopUI(closeWithESCKey);
         }
         else if(shopkeeper.SpeakerID() == SpeakerID.Stellan){
             stellanShopUI.CloseShopUI();
         }
         else if(shopkeeper.SpeakerID() == SpeakerID.Doctor){
-            doctorShopUI.CloseShopUI();
+            doctorShopUI.CloseShopUI(closeWithESCKey);
         }
         else if(shopkeeper.SpeakerID() == SpeakerID.Rhian){
-            weaponsShopUI.CloseShopUI();
+            weaponsShopUI.CloseShopUI(closeWithESCKey);
         }
         else{
             Debug.LogError("Failed to close shop for NPC " + shopkeeper.SpeakerID());
@@ -348,4 +367,24 @@ public class InGameUIManager : MonoBehaviour
     }
 
     #endregion
+
+    public Sprite GetSpriteFromStatType( PlayerFacingStatName statName )
+    {
+        switch(statName){
+            case PlayerFacingStatName.STR:
+                return strSprite;
+            case PlayerFacingStatName.DEX:
+                return dexSprite;
+            case PlayerFacingStatName.INT:
+                return intSprite;
+            case PlayerFacingStatName.WIS:
+                return wisSprite;
+            case PlayerFacingStatName.CON:
+                return conSprite;
+            case PlayerFacingStatName.CHA:
+                return chaSprite;
+        }
+        Debug.LogError("No sprite found for stat: " + statName);
+        return null;
+    }
 }
