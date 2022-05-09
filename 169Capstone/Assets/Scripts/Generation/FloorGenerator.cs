@@ -41,6 +41,8 @@ public class FloorGenerator : MonoBehaviour
     public GameObject forceFieldPrefab;
     [Tooltip("The prefab that contains a navmesh and the necessary settings for combat.")]
     public GameObject navMeshPrefab;
+    [Tooltip("The player prefab.")]
+    public GameObject playerPrefab;
 
     [Tooltip("A list of all room prefabs which will trap the player inside until they defeat all enemies.")]
     public List<GameObject> encounterRoomPrefabs;
@@ -52,6 +54,11 @@ public class FloorGenerator : MonoBehaviour
     void Awake()
     {
         OnGenerationComplete = new OnGenerationCompleteEvent();
+
+        OnGenerationComplete.AddListener( () => {
+            Transform spawnPoint = GameObject.Find("SpawnPoint").transform;
+            Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation);
+        } );
     }
 
     void Start()
