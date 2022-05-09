@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -150,11 +150,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ebbe9680d4055c4a8b9824a10bbd5f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  generate: 0
   generateOnStart: 1
   gridCellSizeInUnits: 20
   gridBounds: {x: 15, y: 15}
-  encounterRoomRatio: 0.5
+  encounterRoomRatio: 1
   encounterRoomBuffer: 1
   maxHallwayLength: 4
   spawnRoomPrefab: {fileID: 1892864578746242103, guid: ab71b20157cdfb143aa03f6a42f2ff14,

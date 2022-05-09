@@ -8,10 +8,8 @@ public class FloorGenerator : MonoBehaviour
 {
     private const int maxNumberOfPlacementAttempts = 100;
     
+    public delegate void CallbackBoolDelegate(bool success);
     private delegate void CallbackDelegate();
-
-    [Tooltip("Generate a floor during the next Update (FOR TESTING ONLY)")]
-    public bool generate = false;
 
     [Tooltip("Whether to generate the floor in the script's Start function.")]
     public bool generateOnStart = false;
@@ -50,18 +48,10 @@ public class FloorGenerator : MonoBehaviour
     void Start()
     {
         if(generateOnStart)
-            Generate();
-    }
-
-    void Update()
-    {
-        if(generate)
         {
-            Generate();
-            generate = false;
+            StartCoroutine(GenerateUntilSuccessful());
         }
     }
-
 
     public void Configure(float? encounterRoomRatio = null, Vector2Int? gridBounds = null)
     {
@@ -71,7 +61,7 @@ public class FloorGenerator : MonoBehaviour
             this.gridBounds = gridBounds.Value;
     }
 
-    public void Generate()
+    public void Generate(CallbackBoolDelegate successCallback)
     {   
         //Declare a list of encounter rooms
         List<GameObject> encounterRooms = new List<GameObject>();
@@ -729,6 +719,9 @@ public class FloorGenerator : MonoBehaviour
 
                                     Debug.LogWarning("Successful Hallway");
 
+                                    //Add the hallway to the list of all hallways
+                                    hallwayRooms.Add(hallwayPiece);
+
                                     //COROUTINE STUFF
                                     yield return null;
                                     returnValue = true;
@@ -876,7 +869,25 @@ public class FloorGenerator : MonoBehaviour
 
                 callback();
             }
-        
+
+            void UndoGeneration()
+            {
+                foreach(GameObject room in encounterRooms)
+                {
+                    Destroy(room);
+                }
+                foreach(GameObject room in hallwayRooms)
+                {
+                    Destroy(room);
+                }
+
+                Destroy(spawnRoom);
+                Destroy(xShop);
+                Destroy(zShop);
+                Destroy(centerShop);
+                Destroy(bossRoom);
+            }
+
             //Start by ensuring there's one guaranteed path from spawn to center shop, and then from center shop to edge shops and boss room
             bool coroutineIsRunning = true;
             StartCoroutine(CreateChainOfHallwaysBetweenRoomsRoutine(spawnRoom, centerShop, () => coroutineIsRunning = false));
@@ -884,6 +895,10 @@ public class FloorGenerator : MonoBehaviour
             if(!returnValue)
             {
                 Debug.LogError("Procedural Generation Failed: Could not create a path from spawn room to center shop.");
+                UndoGeneration();
+                yield return null;
+                successCallback(false);
+                yield break;
             }
 
             coroutineIsRunning = true;
@@ -892,6 +907,10 @@ public class FloorGenerator : MonoBehaviour
             if(!returnValue)
             {
                 Debug.LogError("Procedural Generation Failed: Could not create a path from center shop to secondary shop.");
+                UndoGeneration();
+                yield return null;
+                successCallback(false);
+                yield break;
             }
 
             coroutineIsRunning = true;
@@ -900,6 +919,10 @@ public class FloorGenerator : MonoBehaviour
             if(!returnValue)
             {
                 Debug.LogError("Procedural Generation Failed: Could not create a path from center shop to secondary shop.");
+                UndoGeneration();
+                yield return null;
+                successCallback(false);
+                yield break;
             }
             
             coroutineIsRunning = true;
@@ -908,6 +931,10 @@ public class FloorGenerator : MonoBehaviour
             if(!returnValue)
             {
                 Debug.LogError("Procedural Generation Failed: Could not create a path from center shop to boss room.");
+                UndoGeneration();
+                yield return null;
+                successCallback(false);
+                yield break;
             }
 
             //Iterate through pairs of nearby rooms and connect them with hallways
@@ -991,9 +1018,12 @@ public class FloorGenerator : MonoBehaviour
                 {
                     GameObject forceField = Instantiate(forceFieldPrefab, exit.position, exit.rotation, exit.parent);
                     bossRoomClose.forceFields.Add(forceField);
+                    forceField.SetActive(false);
                     Destroy(exit.gameObject);
                 }
             }
+
+            successCallback(true);
         }
 
         StartCoroutine(PleaseDeleteThisCoroutine());
@@ -1065,6 +1095,25 @@ public class FloorGenerator : MonoBehaviour
 
 #endregion
     
+    }
+
+    public IEnumerator GenerateUntilSuccessful()
+    {
+        bool success = false;
+        
+        while(!success)
+        {
+            bool waiting = true;
+            Generate((bool generationSuccess) => {
+                waiting = false;
+                success = generationSuccess;
+            });
+
+            while(waiting)
+            {
+                yield return null;
+            }
+        }
     }
 
     private HashSet<GameObject> FindRoomsWithinSphere(GameObject room, float radius)
