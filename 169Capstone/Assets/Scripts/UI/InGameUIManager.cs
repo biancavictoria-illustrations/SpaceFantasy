@@ -27,6 +27,13 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private Sprite emptySlotHelmetIcon;
     [SerializeField] private Sprite emptySlotBootsIcon;
 
+    [SerializeField] private Sprite strSprite;
+    [SerializeField] private Sprite dexSprite;
+    [SerializeField] private Sprite intSprite;
+    [SerializeField] private Sprite wisSprite;
+    [SerializeField] private Sprite conSprite;
+    [SerializeField] private Sprite chaSprite;
+
     [SerializeField] private GameObject darkBackgroundPanel;
 
     public DeathScreenUI deathScreen;
@@ -360,4 +367,24 @@ public class InGameUIManager : MonoBehaviour
     }
 
     #endregion
+
+    public Sprite GetSpriteFromStatType( PlayerFacingStatName statName )
+    {
+        switch(statName){
+            case PlayerFacingStatName.STR:
+                return strSprite;
+            case PlayerFacingStatName.DEX:
+                return dexSprite;
+            case PlayerFacingStatName.INT:
+                return intSprite;
+            case PlayerFacingStatName.WIS:
+                return wisSprite;
+            case PlayerFacingStatName.CON:
+                return conSprite;
+            case PlayerFacingStatName.CHA:
+                return chaSprite;
+        }
+        Debug.LogError("No sprite found for stat: " + statName);
+        return null;
+    }
 }

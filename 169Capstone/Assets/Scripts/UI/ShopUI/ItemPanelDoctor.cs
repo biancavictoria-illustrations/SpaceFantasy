@@ -58,7 +58,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
                 statName = r == 0 ? PlayerFacingStatName.CHA : PlayerFacingStatName.CON;
                 upgradeName = statName == PlayerFacingStatName.CHA ? "Bone Structure" : "Bone Fortitude";
             }
-            statIcon.sprite = shopUI.GetSpriteFromStatType(statName);
+            statIcon.sprite = InGameUIManager.instance.GetSpriteFromStatType(statName);
         }
         else if(category == UpgradeShopCategory.HealthPotion){
             upgradeName = "Health Potion";

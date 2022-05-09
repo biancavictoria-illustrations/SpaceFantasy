@@ -83,10 +83,9 @@ public class EquipmentBaseData : ScriptableObject
     [TextArea(15,20)]
     [SerializeField] private string longDescription;
 
-    [Tooltip("The actual ITEM icon itself")]
     [SerializeField] private Sprite icon;
-    [Tooltip("For convenience, add the primary stat icon here")]
-    [SerializeField] private Sprite primaryStatIcon;
+
+    [SerializeField] private PlayerFacingStatName primaryStat;
 
     [SerializeField] private StatType primaryItemLine;
 
@@ -145,9 +144,9 @@ public class EquipmentBaseData : ScriptableObject
         return icon;
     }
 
-    public Sprite PrimaryStatIcon()
+    public PlayerFacingStatName PrimaryStat()
     {
-        return primaryStatIcon;
+        return primaryStat;
     }
 
     public StatType PrimaryItemLine()
