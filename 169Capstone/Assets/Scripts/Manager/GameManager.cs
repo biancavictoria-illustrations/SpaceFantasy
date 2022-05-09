@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     private const float hitStopDuration = 0.1f;
 
     public string currentSceneName {get; private set;}
+    public static bool generationComplete = true;
 
     public const float DEFAULT_AUTO_DIALOGUE_WAIT_TIME = 1.1f;
 
@@ -88,13 +89,19 @@ public class GameManager : MonoBehaviour
             return;
         }
         else if(!DialogueManager.instance || !InGameUIManager.instance){
-            Debug.LogError("No dialogue/UI manager found!");
+            Debug.LogWarning("No dialogue/UI manager found!");
+            return;
         }
 
-        if(hitStop || DialogueManager.instance.stopTime || pauseMenuOpen || deathMenuOpen || InputManager.instance.shopIsOpen || InGameUIManager.instance.inventoryIsOpen || InGameUIManager.instance.gearSwapIsOpen || statRerollUIOpen)
+        if( generationComplete && GetPausedStateFromAllPauseConditions() )
             Time.timeScale = 0;
         else
             Time.timeScale = 1;
+    }
+
+    private bool GetPausedStateFromAllPauseConditions()
+    {
+        return hitStop || DialogueManager.instance.stopTime || pauseMenuOpen || deathMenuOpen || InputManager.instance.shopIsOpen || InGameUIManager.instance.inventoryIsOpen || InGameUIManager.instance.gearSwapIsOpen || statRerollUIOpen;
     }
 
     public bool InSceneWithRandomGeneration()

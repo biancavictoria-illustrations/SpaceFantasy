@@ -35,6 +35,10 @@ public class EncounterRoomClose : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
+            if(!GameManager.generationComplete){
+                return;
+            }
+
             // Enables the force field object
             foreach(GameObject ff in forceFields)
                 ff.SetActive(true);
