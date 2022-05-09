@@ -27,6 +27,13 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private Sprite emptySlotHelmetIcon;
     [SerializeField] private Sprite emptySlotBootsIcon;
 
+    [SerializeField] private Sprite strSprite;
+    [SerializeField] private Sprite dexSprite;
+    [SerializeField] private Sprite intSprite;
+    [SerializeField] private Sprite wisSprite;
+    [SerializeField] private Sprite conSprite;
+    [SerializeField] private Sprite chaSprite;
+
     [SerializeField] private GameObject darkBackgroundPanel;
 
     public DeathScreenUI deathScreen;
@@ -339,20 +346,20 @@ public class InGameUIManager : MonoBehaviour
         }
     }
 
-    public void CloseNPCShop(SpeakerData shopkeeper)
+    public void CloseNPCShop(SpeakerData shopkeeper, bool closeWithESCKey = false)
     {
         AlertTextUI.instance.EnableShopAlert();
         if(shopkeeper.SpeakerID() == SpeakerID.Bryn){
-            brynShopUI.CloseShopUI();
+            brynShopUI.CloseShopUI(closeWithESCKey);
         }
         else if(shopkeeper.SpeakerID() == SpeakerID.Stellan){
             stellanShopUI.CloseShopUI();
         }
         else if(shopkeeper.SpeakerID() == SpeakerID.Doctor){
-            doctorShopUI.CloseShopUI();
+            doctorShopUI.CloseShopUI(closeWithESCKey);
         }
         else if(shopkeeper.SpeakerID() == SpeakerID.Rhian){
-            weaponsShopUI.CloseShopUI();
+            weaponsShopUI.CloseShopUI(closeWithESCKey);
         }
         else{
             Debug.LogError("Failed to close shop for NPC " + shopkeeper.SpeakerID());
@@ -361,12 +368,23 @@ public class InGameUIManager : MonoBehaviour
 
     #endregion
 
-    public void TempOpenCaptainsLogFromInventory()
+    public Sprite GetSpriteFromStatType( PlayerFacingStatName statName )
     {
-        SetInventoryUIActive(false);
-        inventoryIsOpen = false;
-        InputManager.instance.inventoryIsOpen = false;
-
-        journalUI.ToggleJournalActive(true);
+        switch(statName){
+            case PlayerFacingStatName.STR:
+                return strSprite;
+            case PlayerFacingStatName.DEX:
+                return dexSprite;
+            case PlayerFacingStatName.INT:
+                return intSprite;
+            case PlayerFacingStatName.WIS:
+                return wisSprite;
+            case PlayerFacingStatName.CON:
+                return conSprite;
+            case PlayerFacingStatName.CHA:
+                return chaSprite;
+        }
+        Debug.LogError("No sprite found for stat: " + statName);
+        return null;
     }
 }

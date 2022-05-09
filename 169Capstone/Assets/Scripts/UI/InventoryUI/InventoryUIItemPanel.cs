@@ -46,6 +46,8 @@ public class InventoryUIItemPanel : MonoBehaviour
     public TMP_Text itemTypeRarity;
     public TMP_Text itemDescription;
 
+    public Image statIcon;
+
     private string shortDescription = "";    // 1-2 lines
     private string expandedDescription = ""; // Detailed additions
 
@@ -74,6 +76,14 @@ public class InventoryUIItemPanel : MonoBehaviour
 
         itemIcon.sprite = baseData.Icon();
         itemIcon.preserveAspect = true;
+
+        if( baseData.PrimaryStat() != PlayerFacingStatName.size ){
+            statIcon.color = new Color(255,255,255,255);
+            statIcon.sprite = InGameUIManager.instance.GetSpriteFromStatType( baseData.PrimaryStat() );
+        }
+        else{
+            statIcon.color = new Color(255,255,255,0);
+        }
         
         // Check bc compare item panel doesn't have a toggle
         if(toggle){
@@ -94,6 +104,8 @@ public class InventoryUIItemPanel : MonoBehaviour
 
         itemIcon.sprite = InGameUIManager.instance.GetDefaultItemIconForSlot(itemSlot);
         itemIcon.preserveAspect = true;
+
+        statIcon.color = new Color(255,255,255,0);
 
         if(toggle){
             toggle.interactable = false;
