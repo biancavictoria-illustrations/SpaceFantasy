@@ -352,6 +352,10 @@ public class DialogueManager : MonoBehaviour
         if(NPC.ActiveNPC){
             NPC.ActiveNPC.TalkedToNPC();
             if(NPC.ActiveNPC.SpeakerData().IsShopkeeper()){
+                // If you've only completed ONE run and this is Stellan, don't open his shop this time
+                if(GameManager.instance.currentRunNumber == 2 && NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Stellan){
+                    return;
+                }
                 InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.SpeakerData());
             }
             else if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.TimeLich){

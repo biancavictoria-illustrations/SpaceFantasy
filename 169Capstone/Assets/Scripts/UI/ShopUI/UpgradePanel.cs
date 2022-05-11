@@ -72,6 +72,29 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         return (int)upgradeType < 12;
     }
 
+    public bool IsStatMinimum()
+    {
+        switch(upgradeType){
+            case PermanentUpgradeType.STRMin:
+            case PermanentUpgradeType.DEXMin:
+            case PermanentUpgradeType.INTMin:
+            case PermanentUpgradeType.WISMin:
+            case PermanentUpgradeType.CONMin:
+            case PermanentUpgradeType.CHAMin:
+                return true;
+
+            case PermanentUpgradeType.STRMax:
+            case PermanentUpgradeType.DEXMax:
+            case PermanentUpgradeType.INTMax:
+            case PermanentUpgradeType.WISMax:
+            case PermanentUpgradeType.CONMax:
+            case PermanentUpgradeType.CHAMax:
+                return false;
+        }
+        Debug.LogWarning("Cannot determine if stat min for upgrade type: " + upgradeType);
+        return false;
+    }
+
     public void UpdateUIDisplayValues()
     {
         SetCurrentCost();
@@ -101,7 +124,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
         // If this is the currently active hover panel, update the focus panel values
         if(shopUI.activeUpgradeInFocus && shopUI.activeUpgradeInFocus == this){
-            shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, currentDescription, costText.text, upgradeIconSprite, IsStatUpgrade());
+            shopUI.SetFocusPanelValues(upgradeName, GetFocusPanelSkillLevelString(), currentDescription, costText.text, upgradeIconSprite, IsStatUpgrade());
         }
     }
 
@@ -317,7 +340,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         {
             shopUI.activeUpgradeInFocus = this;
             UpdateUIDisplayValues();
-            shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, currentDescription, costText.text, upgradeIconSprite, IsStatUpgrade());
+            shopUI.SetFocusPanelValues(upgradeName, GetFocusPanelSkillLevelString(), currentDescription, costText.text, upgradeIconSprite, IsStatUpgrade());
         }
 
         private void OnUpgradePanelDeselct()
@@ -327,6 +350,21 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         }
 
     #endregion
+
+    private string GetFocusPanelSkillLevelString()
+    {
+        string skillLevel = "";
+        if(IsStatUpgrade()){
+            if(IsStatMinimum()){
+                skillLevel = "Min";
+            }
+            else{
+                skillLevel = "Max";
+            }
+            skillLevel += " Reroll Value: ";
+        }
+        return skillLevel + skillLevelText.text;
+    }
 
     private void SetValuesByType()
     {
