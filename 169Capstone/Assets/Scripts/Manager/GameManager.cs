@@ -142,14 +142,18 @@ public class GameManager : MonoBehaviour
         else if(currentSceneName == GAME_LEVEL1_STRING_NAME){
             PlayerInventory.instance.SetRunStartHealthPotionQuantity();            
             AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, false);
-            if(currentRunNumber != 1){
-                InGameUIManager.instance.ToggleRunUI(false);
-                InGameUIManager.instance.TogglePermanentCurrencyUI(false);
-                InGameUIManager.instance.EnableRunStartStatRerollPopup(true);
-            }
-            else{
-                InGameUIManager.instance.ToggleRunUI(true);
-            }
+
+            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener( () =>
+            {
+                if(currentRunNumber != 1){
+                    InGameUIManager.instance.ToggleRunUI(false);
+                    InGameUIManager.instance.TogglePermanentCurrencyUI(false);
+                    InGameUIManager.instance.EnableRunStartStatRerollPopup(true);
+                }
+                else{
+                    InGameUIManager.instance.ToggleRunUI(true);
+                }
+            });
         }
         else if(currentSceneName == LICH_ARENA_STRING_NAME){
             // TODO: Play lich fight music
