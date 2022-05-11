@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool deathMenuOpen;
     [HideInInspector] public bool pauseMenuOpen;
     [HideInInspector] public bool statRerollUIOpen;
+    [HideInInspector] public bool inElevatorAnimation;
 
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform playerTransform; // TODO: set this at runtime if game manager starts in main menu???
@@ -148,7 +149,12 @@ public class GameManager : MonoBehaviour
                 if(currentRunNumber != 1){
                     InGameUIManager.instance.ToggleRunUI(false);
                     InGameUIManager.instance.TogglePermanentCurrencyUI(false);
-                    InGameUIManager.instance.EnableRunStartStatRerollPopup(true);
+
+                    inElevatorAnimation = true;
+                    FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
+                        InGameUIManager.instance.EnableRunStartStatRerollPopup(true);
+                        inElevatorAnimation = false;
+                    });
                 }
                 else{
                     InGameUIManager.instance.ToggleRunUI(true);

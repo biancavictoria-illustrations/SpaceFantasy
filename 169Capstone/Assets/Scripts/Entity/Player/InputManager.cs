@@ -90,7 +90,7 @@ public class InputManager : MonoBehaviour
 
     public bool CanAcceptGameplayInput()
     {
-        if(isInDialogue || PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || journalIsOpen || isInMainMenu || GameManager.instance.statRerollUIOpen){
+        if(isInDialogue || PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || journalIsOpen || isInMainMenu || GameManager.instance.statRerollUIOpen || GameManager.instance.inElevatorAnimation){
             return false;
         }
         return true;

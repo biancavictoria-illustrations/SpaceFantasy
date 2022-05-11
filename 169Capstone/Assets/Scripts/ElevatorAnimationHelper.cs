@@ -47,5 +47,6 @@ public class ElevatorAnimationHelper : MonoBehaviour
     public void OnAnimationComplete()
     {
         OnAnimationCompleteEvent.Invoke();
+        OnAnimationCompleteEvent.RemoveAllListeners();
     }
 }

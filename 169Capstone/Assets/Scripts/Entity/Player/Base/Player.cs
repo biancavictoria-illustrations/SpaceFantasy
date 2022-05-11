@@ -56,7 +56,11 @@ public class Player : MonoBehaviour
 
         // If your first run, auto trigger starting dialogue
         if(GameManager.instance.currentRunNumber == 1){
-            StartAutoDialogueFromPlayer();
+            GameManager.instance.inElevatorAnimation = true;
+            FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
+                StartAutoDialogueFromPlayer();
+                GameManager.instance.inElevatorAnimation = false;
+            });
         }
     }
 

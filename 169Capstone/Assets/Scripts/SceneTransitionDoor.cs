@@ -22,7 +22,11 @@ public class SceneTransitionDoor : MonoBehaviour
 
     public void ChangeScene()
     {
-        elevatorHelper.AddListenerToAnimationEnd(() => SceneManager.LoadScene(goToSceneName));
+        GameManager.instance.inElevatorAnimation = true;
+        elevatorHelper.AddListenerToAnimationEnd(() => {
+            GameManager.instance.inElevatorAnimation = false;
+            SceneManager.LoadScene(goToSceneName);
+        });
         elevatorHelper.StartExitAnimation();
     }
 
