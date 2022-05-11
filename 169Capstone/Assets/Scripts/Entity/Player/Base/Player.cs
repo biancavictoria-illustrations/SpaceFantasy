@@ -19,15 +19,31 @@ public class Player : MonoBehaviour
     void Awake()
     {
         if( instance ){
+            Debug.Log(instance);
             Destroy(gameObject);
         }
         else{
             instance = this;
+            Debug.Log(instance);
         }
     }
 
     // Start is called before the first frame update
     void Start()
+    {
+        // Commenting this out because currently the Player is spawned after generation is already complete, causing StartOnGenerationCOmplete to not be run
+        
+        // if(GameManager.instance.InSceneWithRandomGeneration()){
+        //     FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(StartOnGenerationComplete);
+        // }
+        // else{
+        //     StartOnGenerationComplete();
+        // }  
+
+        StartOnGenerationComplete();      
+    }
+
+    private void StartOnGenerationComplete()
     {
         stats = GetComponent<PlayerStats>();
 
@@ -40,7 +56,11 @@ public class Player : MonoBehaviour
 
         // If your first run, auto trigger starting dialogue
         if(GameManager.instance.currentRunNumber == 1){
-            StartAutoDialogueFromPlayer();
+            GameManager.instance.inElevatorAnimation = true;
+            FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
+                StartAutoDialogueFromPlayer();
+                GameManager.instance.inElevatorAnimation = false;
+            });
         }
     }
 

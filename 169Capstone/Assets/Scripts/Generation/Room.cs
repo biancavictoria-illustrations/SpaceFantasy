@@ -4,8 +4,17 @@ using UnityEngine;
 
 public class Room : MonoBehaviour
 {
-    [SerializeField] private List<Transform> roomExits;
-    private HashSet<EntityHealth> enemies;
+    public List<Transform> roomExits;
+    [Tooltip("X is room length along the X axis in grid units, Y is the same for the Z axis")]
+    public Vector2Int roomSize;
+    [Tooltip("Total number of grid units in the room")]
+    public int numGridSpaces;
+    public HashSet<EntityHealth> enemies{get; private set;}
+
+    void Awake()
+    {
+        enemies = new HashSet<EntityHealth>();
+    }
 
     void Start()
     {
@@ -37,6 +46,7 @@ public class Room : MonoBehaviour
         }
 
         enemies.Add(enemy);
+        enemy.OnDeath.AddListener(updateEnemies);
     }
 
     public HashSet<EntityHealth> GetEnemyList()

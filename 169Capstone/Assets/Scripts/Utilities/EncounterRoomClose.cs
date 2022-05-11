@@ -4,37 +4,52 @@ using UnityEngine;
 
 public class EncounterRoomClose : MonoBehaviour
 {
+    public List<GameObject> forceFields;
+
     [SerializeField] private Room room;
+    [SerializeField] private EnemyGen enemyGen;
     [SerializeField] private Color newColor;
     [SerializeField] private Light sceneLight;
     [SerializeField] private bool isBossRoom;
-    [SerializeField] private List<GameObject> forceFields;
 
     private Color oldColor;
     private GameObject elevator;
    
     void Start()
     {
+        if(GameManager.instance.InSceneWithRandomGeneration()){
+            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(StartOnGenerationComplete);
+        }
+        else{
+            StartOnGenerationComplete();
+        }
+    }
+
+    private void StartOnGenerationComplete()
+    {
         if(isBossRoom)
             elevator = FindObjectOfType<SceneTransitionDoor>().gameObject;
+    }
+
+    public void AddForceField(GameObject forceField)
+    {
+        if(forceFields == null)
+            forceFields = new List<GameObject>();
+
+        forceFields.Add(forceField);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
+            if(!GameManager.generationComplete){
+                return;
+            }
+
             // Enables the force field object
             foreach(GameObject ff in forceFields)
                 ff.SetActive(true);
-            
-            foreach(EntityHealth e in room.GetEnemyList())
-            {
-                e.OnDeath.AddListener(RoomOpen);
-                if( isBossRoom && e.isBossEnemy ){
-                    InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(true, e.enemyID);
-                }
-                Debug.Log("Enemy Added");
-            }
 
             if(isBossRoom)
             {
@@ -43,7 +58,23 @@ public class EncounterRoomClose : MonoBehaviour
 
                 Beetle boi = FindObjectOfType<Beetle>();
                 if(boi != null)
+                {
+                    boi.gameObject.SetActive(true);
                     boi.canAttack = true;
+                }
+            }
+            else
+            {
+                enemyGen.spawnEnemies();
+            }
+
+            foreach(EntityHealth e in room.GetEnemyList())
+            {
+                e.OnDeath.AddListener(RoomOpen);
+                if( isBossRoom && e.isBossEnemy ){
+                    InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(true, e.enemyID);
+                }
+                Debug.Log("Enemy Added");
             }
         }
     }

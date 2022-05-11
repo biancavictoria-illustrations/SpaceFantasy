@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     private const float hitStopDuration = 0.1f;
 
     public string currentSceneName {get; private set;}
+    public static bool generationComplete = true;
 
     public const float DEFAULT_AUTO_DIALOGUE_WAIT_TIME = 1.1f;
 
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool deathMenuOpen;
     [HideInInspector] public bool pauseMenuOpen;
     [HideInInspector] public bool statRerollUIOpen;
+    [HideInInspector] public bool inElevatorAnimation;
 
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform playerTransform; // TODO: set this at runtime if game manager starts in main menu???
@@ -88,13 +90,24 @@ public class GameManager : MonoBehaviour
             return;
         }
         else if(!DialogueManager.instance || !InGameUIManager.instance){
-            Debug.LogError("No dialogue/UI manager found!");
+            Debug.LogWarning("No dialogue/UI manager found!");
+            return;
         }
 
-        if(hitStop || DialogueManager.instance.stopTime || pauseMenuOpen || deathMenuOpen || InputManager.instance.shopIsOpen || InGameUIManager.instance.inventoryIsOpen || InGameUIManager.instance.gearSwapIsOpen || statRerollUIOpen)
+        if( generationComplete && GetPausedStateFromAllPauseConditions() )
             Time.timeScale = 0;
         else
             Time.timeScale = 1;
+    }
+
+    private bool GetPausedStateFromAllPauseConditions()
+    {
+        return hitStop || DialogueManager.instance.stopTime || pauseMenuOpen || deathMenuOpen || InputManager.instance.shopIsOpen || InGameUIManager.instance.inventoryIsOpen || InGameUIManager.instance.gearSwapIsOpen || statRerollUIOpen;
+    }
+
+    public bool InSceneWithRandomGeneration()
+    {
+        return currentSceneName == GAME_LEVEL1_STRING_NAME;
     }
 
     // Add any other reset stuff here too (called when player goes from death screen -> main hub)
@@ -130,14 +143,23 @@ public class GameManager : MonoBehaviour
         else if(currentSceneName == GAME_LEVEL1_STRING_NAME){
             PlayerInventory.instance.SetRunStartHealthPotionQuantity();            
             AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, false);
-            if(currentRunNumber != 1){
-                InGameUIManager.instance.ToggleRunUI(false);
-                InGameUIManager.instance.TogglePermanentCurrencyUI(false);
-                InGameUIManager.instance.EnableRunStartStatRerollPopup(true);
-            }
-            else{
-                InGameUIManager.instance.ToggleRunUI(true);
-            }
+
+            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener( () =>
+            {
+                if(currentRunNumber != 1){
+                    InGameUIManager.instance.ToggleRunUI(false);
+                    InGameUIManager.instance.TogglePermanentCurrencyUI(false);
+
+                    inElevatorAnimation = true;
+                    FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
+                        InGameUIManager.instance.EnableRunStartStatRerollPopup(true);
+                        inElevatorAnimation = false;
+                    });
+                }
+                else{
+                    InGameUIManager.instance.ToggleRunUI(true);
+                }
+            });
         }
         else if(currentSceneName == LICH_ARENA_STRING_NAME){
             // TODO: Play lich fight music

@@ -87,12 +87,11 @@ public class InGameUIManager : MonoBehaviour
 
     void Start()
     {
-        SetTempCurrencyValue(PlayerInventory.instance.tempCurrency);
-        SetPermanentCurrencyValue(PlayerInventory.instance.permanentCurrency);
-        SetHealthPotionValue(PlayerInventory.instance.healthPotionQuantity);
-
-        if(GameManager.instance.currentSceneName != GameManager.LICH_ARENA_STRING_NAME){
-            ClearAllItemUI();
+        if(GameManager.instance.InSceneWithRandomGeneration()){
+            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(StartOnGenerationComplete);
+        }
+        else{
+            StartOnGenerationComplete();
         }
     }
 
@@ -100,6 +99,17 @@ public class InGameUIManager : MonoBehaviour
     public void SetGameUIActive(bool set)
     {
         inGameUIPanel.SetActive(set);
+    }
+
+    private void StartOnGenerationComplete()
+    {
+        SetTempCurrencyValue(PlayerInventory.instance.tempCurrency);
+        SetPermanentCurrencyValue(PlayerInventory.instance.permanentCurrency);
+        SetHealthPotionValue(PlayerInventory.instance.healthPotionQuantity);
+
+        if(GameManager.instance.currentSceneName != GameManager.LICH_ARENA_STRING_NAME){
+            ClearAllItemUI();
+        }
     }
 
     public void EnableRunStartStatRerollPopup(bool set)

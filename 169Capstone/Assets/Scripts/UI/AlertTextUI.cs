@@ -41,6 +41,16 @@ public class AlertTextUI : MonoBehaviour
 
     void Start()
     {
+        if(GameManager.instance.InSceneWithRandomGeneration()){
+            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(StartOnGenerationComplete);
+        }        
+        else{
+            StartOnGenerationComplete();
+        }
+    }
+
+    private void StartOnGenerationComplete()
+    {
         alertTextIsActive = false;
         UpdateAlertText();
     }

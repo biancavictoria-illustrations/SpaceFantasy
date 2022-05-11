@@ -437,6 +437,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &3083759746474833840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7608350949209803387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6710a5ebd9123849b9bc851022ccc61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playEnterAnimationOnStart: 0
 --- !u!1 &8999321330333931688
 GameObject:
   m_ObjectHideFlags: 0
@@ -486,8 +499,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 12.34796, y: 7, z: 12.391517}
-  m_Center: {x: 0.028487206, y: 0, z: 2.1529531}
+  m_Size: {x: 5, y: 2, z: 5}
+  m_Center: {x: 0, y: 1, z: 2}
 --- !u!114 &1354217103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -501,6 +514,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goToSceneName: TestFloor
+  elevatorHelper: {fileID: 3083759746474833840}
 --- !u!1001 &7302344015274653482
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -755,12 +769,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 80cf56f861c1a4041b0895d121d88607, type: 3}
---- !u!1 &7608350949209803387 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 80cf56f861c1a4041b0895d121d88607,
-    type: 3}
-  m_PrefabInstance: {fileID: 7302344015274653482}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7124019837794799809 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 80cf56f861c1a4041b0895d121d88607,
@@ -782,6 +790,12 @@ GameObject:
 --- !u!1 &5177400059902447676 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -6733177361254619370, guid: 80cf56f861c1a4041b0895d121d88607,
+    type: 3}
+  m_PrefabInstance: {fileID: 7302344015274653482}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7608350949209803387 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 80cf56f861c1a4041b0895d121d88607,
     type: 3}
   m_PrefabInstance: {fileID: 7302344015274653482}
   m_PrefabAsset: {fileID: 0}
