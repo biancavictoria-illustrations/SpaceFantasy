@@ -74,6 +74,8 @@ public class EntityHealth : MonoBehaviour
     private const int TEMPCOINDROPAMOUNT = 5;
     private const float TEMPSTARSHARDDROPCHANCE = 0.25f;
 
+    public bool tempPlayerGodModeToggle = false;    // FOR TESTING - REMOVE THIS FOR FINAL BUILD
+
     void Start()
     {
         OnDeath.AddListener(onEntityDeath);
@@ -112,6 +114,10 @@ public class EntityHealth : MonoBehaviour
 
     public bool Damage(float damage)
     {
+        if( gameObject.tag == "Player" && tempPlayerGodModeToggle ){
+            return currentHitpoints <= 0;
+        }
+
         currentHitpoints -= damage;
         OnHit.Invoke(this, damage);
         InGameUIManager.instance.ShowFloatingText(damage.ToString(), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "damage");

@@ -266,7 +266,6 @@ public class Movement : MonoBehaviour
 
     private void HandleMovement()
     {
-
         Vector3 direction = new Vector3(-verticalMove, 0, horizontalMove).normalized;
 
         if(externalVelocity.magnitude > 0f)

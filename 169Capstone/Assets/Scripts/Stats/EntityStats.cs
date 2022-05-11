@@ -263,6 +263,11 @@ public abstract class EntityStats : MonoBehaviour
         {
             return moveSpeedBase * moveSpeedMultiplier + moveSpeedFlatBonus;
         }
+
+        public void SetMoveSpeedBase(float value)
+        {
+            moveSpeedBase = value;
+        }
     #endregion
     
     #region Defense
