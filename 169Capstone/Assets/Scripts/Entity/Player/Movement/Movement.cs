@@ -5,8 +5,10 @@ using UnityEngine.InputSystem;
 
 public class Movement : MonoBehaviour
 {
+    private const float baseMoveSpeed = 10;
+
     public Animator animator;
-    public float speed = 5;
+    public float speed { get { return baseMoveSpeed * stats.getMoveSpeed(); }}
     public Transform model;
     public CharacterController player;
     public float smoothing = 0.1f;
@@ -31,9 +33,13 @@ public class Movement : MonoBehaviour
     private InputAction moveUp;
     private InputAction moveDown;
     private InputAction jump;
+
+    private PlayerStats stats;
     
     void Awake()
     {
+        stats = FindObjectOfType<PlayerStats>();
+
         InputActionAsset controls = GetComponent<PlayerInput>().actions;
         moveLeft = controls.FindAction("MoveLeft");
         moveRight = controls.FindAction("MoveRight");
@@ -76,9 +82,9 @@ public class Movement : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(!InputManager.instance.CanAcceptGameplayInput()){
-            return;
-        }
+        // if(!InputManager.instance.CanAcceptGameplayInput()){
+        //     return;
+        // }
         HandleMovement();
     }
 
@@ -127,6 +133,7 @@ public class Movement : MonoBehaviour
     public void OnMoveLeft(InputValue input)
     {
         if(!InputManager.instance.CanAcceptGameplayInput()){
+            horizontalMove = 0;
             return;
         }
         movingLeft = true;
@@ -154,6 +161,7 @@ public class Movement : MonoBehaviour
     public void OnMoveRight(InputValue input)
     {
         if(!InputManager.instance.CanAcceptGameplayInput()){
+            horizontalMove = 0;
             return;
         }
         movingRight = true;
@@ -181,6 +189,7 @@ public class Movement : MonoBehaviour
     public void OnMoveUp(InputValue input)
     {
         if(!InputManager.instance.CanAcceptGameplayInput()){
+            verticalMove = 0;
             return;
         }
         movingUp = true;
@@ -208,6 +217,7 @@ public class Movement : MonoBehaviour
     public void OnMoveDown(InputValue input)
     {
         if(!InputManager.instance.CanAcceptGameplayInput()){
+            verticalMove = 0;
             return;
         }
         movingDown = true;
