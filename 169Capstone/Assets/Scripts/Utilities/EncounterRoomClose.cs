@@ -31,6 +31,14 @@ public class EncounterRoomClose : MonoBehaviour
             elevator = FindObjectOfType<SceneTransitionDoor>().gameObject;
     }
 
+    public void AddForceField(GameObject forceField)
+    {
+        if(forceFields == null)
+            forceFields = new List<GameObject>();
+
+        forceFields.Add(forceField);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))

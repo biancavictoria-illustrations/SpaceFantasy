@@ -57,7 +57,7 @@ public class FloorGenerator : MonoBehaviour
 
         OnGenerationComplete.AddListener( () => {
             Transform spawnPoint = GameObject.Find("SpawnPoint").transform;
-            Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation);
+            Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity);
         } );
     }
 
@@ -1016,7 +1016,7 @@ public class FloorGenerator : MonoBehaviour
                     if(!exit.gameObject.activeSelf)
                     {
                         GameObject forceField = Instantiate(forceFieldPrefab, exit.position, exit.rotation, exit.parent);
-                        roomClose.forceFields.Add(forceField);
+                        roomClose.AddForceField(forceField);
                         forceField.SetActive(false);
                         Destroy(exit.gameObject);
                     }
@@ -1033,7 +1033,7 @@ public class FloorGenerator : MonoBehaviour
                 if(!exit.gameObject.activeSelf)
                 {
                     GameObject forceField = Instantiate(forceFieldPrefab, exit.position, exit.rotation, exit.parent);
-                    bossRoomClose.forceFields.Add(forceField);
+                    bossRoomClose.AddForceField(forceField);
                     forceField.SetActive(false);
                     Destroy(exit.gameObject);
                 }

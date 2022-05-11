@@ -24,18 +24,23 @@ public class Player : MonoBehaviour
         }
         else{
             instance = this;
+            Debug.Log(instance);
         }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        if(GameManager.instance.InSceneWithRandomGeneration()){
-            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(StartOnGenerationComplete);
-        }
-        else{
-            StartOnGenerationComplete();
-        }        
+        // Commenting this out because currently the Player is spawned after generation is already complete, causing StartOnGenerationCOmplete to not be run
+        
+        // if(GameManager.instance.InSceneWithRandomGeneration()){
+        //     FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(StartOnGenerationComplete);
+        // }
+        // else{
+        //     StartOnGenerationComplete();
+        // }  
+
+        StartOnGenerationComplete();      
     }
 
     private void StartOnGenerationComplete()
