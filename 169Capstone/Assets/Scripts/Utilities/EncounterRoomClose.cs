@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EncounterRoomClose : MonoBehaviour
 {
     public List<GameObject> forceFields;
+    public Beetle boi;
 
     [SerializeField] private Room room;
     [SerializeField] private EnemyGen enemyGen;
@@ -28,7 +30,10 @@ public class EncounterRoomClose : MonoBehaviour
     private void StartOnGenerationComplete()
     {
         if(isBossRoom)
+        {
             elevator = FindObjectOfType<SceneTransitionDoor>().gameObject;
+            sceneLight = FindObjectOfType<Light>();
+        }
     }
 
     public void AddForceField(GameObject forceField)

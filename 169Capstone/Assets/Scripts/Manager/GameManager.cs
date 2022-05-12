@@ -130,8 +130,13 @@ public class GameManager : MonoBehaviour
 
         AudioManager.Instance.stopMusic(true);
 
+        ScreenFade fade = FindObjectOfType<ScreenFade>();
+
         if(currentSceneName == MAIN_HUB_STRING_NAME){
             InGameUIManager.instance.ToggleRunUI(false);
+
+            fade.opaqueOnStart = true;
+            fade.FadeIn(0.5f);
 
             // TODO: play main hub music
 
@@ -143,9 +148,11 @@ public class GameManager : MonoBehaviour
         else if(currentSceneName == GAME_LEVEL1_STRING_NAME){
             PlayerInventory.instance.SetRunStartHealthPotionQuantity();            
             AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, false);
-
+            fade.opaqueOnStart = true;
+            
             FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener( () =>
             {
+                fade.FadeIn(1f);
                 if(currentRunNumber != 1){
                     InGameUIManager.instance.ToggleRunUI(false);
                     InGameUIManager.instance.TogglePermanentCurrencyUI(false);
@@ -285,7 +292,13 @@ public class GameManager : MonoBehaviour
         // Story Beat Status Values
         sm.LoadSavedStoryBeatStatuses(saveData.storyBeatDatabaseStatuses, saveData.itemStoryBeatStatuses, saveData.genericStoryBeatStatuses, saveData.activeStoryBeatHeadNodes);
 
-        SceneManager.LoadScene(GameManager.MAIN_HUB_STRING_NAME);
+        // Load scene after fade to black
+        ScreenFade fade = FindObjectOfType<ScreenFade>();
+        fade.AddListenerToFadeEnd( () => {
+            SceneManager.LoadScene(GameManager.MAIN_HUB_STRING_NAME);
+        });
+        fade.FadeOut(0.5f);
+
         gameTimer.runTotalTimer = true;
     }
 
@@ -297,8 +310,12 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetInt(GetSaveFilePlayerPrefsKey(saveSlotNum), 1);
         PlayerPrefs.Save();
 
-        // If starting a new game, load level 1 scene (new game)
-        SceneManager.LoadScene(GameManager.GAME_LEVEL1_STRING_NAME);
+        // If starting a new game, load level 1 scene (new game) after fade to black
+        ScreenFade fade = FindObjectOfType<ScreenFade>();
+        fade.AddListenerToFadeEnd( () => {
+            SceneManager.LoadScene(GameManager.GAME_LEVEL1_STRING_NAME);
+        });
+        fade.FadeOut(1f);
 
         // Reset all starting values for anything set to dontdestroyonload
         InitializeGameManagerValuesOnNewGame();
