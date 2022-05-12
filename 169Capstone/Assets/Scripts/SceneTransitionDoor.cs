@@ -23,6 +23,9 @@ public class SceneTransitionDoor : MonoBehaviour
     public void ChangeScene()
     {
         GameManager.instance.inElevatorAnimation = true;
+
+        FindObjectOfType<ScreenFade>().FadeOut(1f);
+        
         elevatorHelper.AddListenerToAnimationEnd(() => {
             GameManager.instance.inElevatorAnimation = false;
             SceneManager.LoadScene(goToSceneName);
