@@ -42,7 +42,7 @@ public class Slime : Enemy
         Transform player = Player.instance.transform;
         if(Physics.Raycast(transform.position + Vector3.up, player.position - transform.position, out hit, nextAttack.attackRange))
         {
-            return hit.collider.tag == "Player" ? hit.collider.GetComponent<EntityHealth>().Damage(logic.baseDamage * nextAttack.damageMultiplier) : false;
+            return hit.collider.tag == "Player" ? hit.collider.GetComponent<EntityHealth>().Damage(logic.baseDamage * nextAttack.damageMultiplier, DamageSourceType.Slime) : false;
         }
         else
         {

@@ -207,12 +207,12 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         else{
             switch(upgradeType){
                 case PermanentUpgradeType.ArmorPlating:
-                    float defense = PermanentUpgradeManager.instance.GetCurrentSkillValue(upgradeType);
-                    baseDescription = "Increase base <b>Defense</b> from <b>" + defense + "</b> to <color=" + InGameUIManager.slimeGreenColor + ">" + (defense + PermanentUpgradeManager.instance.armorPlatingBonusPerLevel) + "</color>.";
+                    float defense = PermanentUpgradeManager.instance.GetCurrentSkillValue(upgradeType)*100;
+                    baseDescription = "Increase base <b>Defense</b> from <b>" + UIUtils.GetTruncatedDecimalForUIDisplay(defense) + "%</b> to <color=" + InGameUIManager.slimeGreenColor + ">" + UIUtils.GetTruncatedDecimalForUIDisplay(defense + PermanentUpgradeManager.instance.armorPlatingBonusPerLevel*100) + "%</color>.";
                     return;
                 case PermanentUpgradeType.ExtensiveTraining:
                     float attackSpeed = PermanentUpgradeManager.instance.GetCurrentSkillValue(upgradeType) * 100;
-                    baseDescription = "Increase base <b>Attack Speed</b> from <b>" + attackSpeed + "%</b> to <color=" + InGameUIManager.slimeGreenColor + ">" + (attackSpeed + PermanentUpgradeManager.instance.extensiveTrainingBonusPerLevel*100) + "%</color>.";
+                    baseDescription = "Increase base <b>Attack Speed</b> from <b>" + UIUtils.GetTruncatedDecimalForUIDisplay(attackSpeed) + "%</b> to <color=" + InGameUIManager.slimeGreenColor + ">" + UIUtils.GetTruncatedDecimalForUIDisplay(attackSpeed + PermanentUpgradeManager.instance.extensiveTrainingBonusPerLevel*100) + "%</color>.";
                     return;
                 case PermanentUpgradeType.PrecisionDrive:
                     float critDamage = PermanentUpgradeManager.instance.GetCurrentSkillValue(upgradeType) * 100;
@@ -228,7 +228,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
                             newCritDamage = PermanentUpgradeManager.instance.precisionDriveBonusPerLevel[3] * 100;
                             break;
                     }
-                    baseDescription = "Increase base <b>Critical Hit Damage</b> from <b>+" + critDamage + "%</b> to <color=" + InGameUIManager.slimeGreenColor + ">+" + newCritDamage + "%</color>.";
+                    baseDescription = "Increase base <b>Critical Hit Damage</b> from <b>+" + UIUtils.GetTruncatedDecimalForUIDisplay(critDamage) + "%</b> to <color=" + InGameUIManager.slimeGreenColor + ">+" + UIUtils.GetTruncatedDecimalForUIDisplay(newCritDamage) + "%</color>.";
                     return;
             }
         }
@@ -256,13 +256,11 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     {
         // Check conditions (if you can't purchase, clicking does nothing)
         if(soldOut || statMinEqualsMax){
-            Debug.Log("No more of this upgrade available for purchase.");
             // TODO: Maybe UI feedback?
             return;
         }
 
         if(cannotAffordUpgrade){
-            Debug.Log("Too broke to buy this upgrade!");
             // TODO: UI feedback about being too broke to buy an item
             return;
         }

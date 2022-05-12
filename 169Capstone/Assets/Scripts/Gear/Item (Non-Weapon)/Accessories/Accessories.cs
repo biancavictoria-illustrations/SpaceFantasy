@@ -27,6 +27,6 @@ public class Accessories : NonWeaponItem
 
     public void Damage(EntityHealth health)
     {
-        health.Damage(damage);
+        health.Damage(damage, DamageSourceType.Player);
     }
 }

@@ -25,29 +25,26 @@ public class GearSwapUI : MonoBehaviour
         }
         gearSwapInventoryUI.OnInventoryOpen();
 
-        
-        // THIS IS CAUSING BUGS it doesn't feel worth fixing right now; maybe a polish thing later???
         // If you have an item equipped in that slot, expand that one on open
-        // if(PlayerInventory.instance.gear[item.equipmentBaseData.ItemSlot()] != null){
-            // ExpandItemOfSameType();
-        // }
+        if(PlayerInventory.instance.gear[item.equipmentBaseData.ItemSlot()] != null){
+            ExpandItemOfType( item.equipmentBaseData.ItemSlot() );
+        }
     }
 
-    // private void ExpandItemOfSameType()
-    // {
-    //     InventoryItemSlot slot = newItem.equipmentBaseData.ItemSlot();
+    private void ExpandItemOfType(InventoryItemSlot slot)
+    {
+        if(!PlayerInventory.instance.gear[slot]){
+            Debug.Log("No item of slot type " + slot.ToString() + " equipped; not expanding item panel.");
+            return;
+        }
 
-    //     if(!PlayerInventory.instance.gear[slot]){
-    //         Debug.Log("No item of slot type " + slot.ToString() + " equipped; not expanding item panel.");
-    //         return;
-    //     }
-
-    //     foreach(InventoryUIItemPanel panel in gearSwapInventoryUI.itemPanels){
-    //         if(panel.GetItemSlot() == slot){
-    //             gearSwapInventoryUI.CardToggle(panel);
-    //         }
-    //     }
-    // }
+        foreach(InventoryUIItemPanel panel in gearSwapInventoryUI.itemPanels){
+            if(panel.GetItemSlot() == slot){
+                gearSwapInventoryUI.ManuallyToggleCard(panel);
+                return;
+            }
+        }
+    }
 
     public void CloseGearSwapUI()
     {

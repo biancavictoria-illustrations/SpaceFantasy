@@ -122,7 +122,7 @@ public class PlayerStats : EntityStats
             private int strength;
 
             const float strengthDamagePerStrengthPoint = 1f;
-            const float defenseBonusPerStrengthPoint = 0.01f;
+            const float defenseBonusPerStrengthPoint = 0.005f;
 
             public int Strength()
             {
@@ -134,7 +134,7 @@ public class PlayerStats : EntityStats
             private int dexterity;
 
             const float dexterityDamagePerDexterityPoint = 1f;
-            const float dodgeBonusPerDexterityPoint = 0.01f;
+            const float dodgeBonusPerDexterityPoint = 0.005f;
 
             public int Dexterity()
             {
