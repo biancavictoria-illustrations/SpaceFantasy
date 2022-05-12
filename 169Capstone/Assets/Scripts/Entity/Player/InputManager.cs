@@ -90,7 +90,7 @@ public class InputManager : MonoBehaviour
 
     public bool CanAcceptGameplayInput()
     {
-        if(isInDialogue || PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || journalIsOpen || isInMainMenu || GameManager.instance.statRerollUIOpen){
+        if(isInDialogue || PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || journalIsOpen || isInMainMenu || GameManager.instance.statRerollUIOpen || GameManager.instance.inElevatorAnimation){
             return false;
         }
         return true;
@@ -175,14 +175,14 @@ public class InputManager : MonoBehaviour
             return;
         }
         else if(shopIsOpen){
-            InGameUIManager.instance.CloseNPCShop(NPC.ActiveNPC.SpeakerData());
+            InGameUIManager.instance.CloseNPCShop(NPC.ActiveNPC.SpeakerData(), true);
             return;
         }
         else if(compareItemIsOpen){
-            ToggleCompareItemUI(false, DropTrigger.ActiveGearDrop);
+            InGameUIManager.instance.gearSwapUI.CloseGearSwapUI();
             return;            
         }
-        else if(GameManager.instance.statRerollUIOpen){ // Should this one be here? if so probably also death UI
+        else if(GameManager.instance.statRerollUIOpen){ // Should this one be here? if so probably also death UI. i'm thinking neither tho?
             InGameUIManager.instance.statRerollUI.DisableStatRerollUI();
             return;
         }
@@ -209,10 +209,17 @@ public class InputManager : MonoBehaviour
 
     public void OnToggleJournal(InputValue input)
     {
+        if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || inventoryIsOpen || isInMainMenu){
+            return;
+        }
+
         InGameUIManager.instance.journalUI.ToggleJournalActive(!journalIsOpen);
         journalIsOpen = !journalIsOpen;
 
-        RunGameTimer(!journalIsOpen);
+        if(GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME){
+            RunGameTimer(!journalIsOpen);
+        }
+
         if(AlertTextUI.instance.alertTextIsActive){
             AlertTextUI.instance.ToggleAlertText(!journalIsOpen);
         }
@@ -220,7 +227,7 @@ public class InputManager : MonoBehaviour
 
     public void OnToggleInventory(InputValue input)
     {
-        if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || GameManager.instance.currentSceneName == GameManager.MAIN_HUB_STRING_NAME || isInMainMenu){
+        if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || journalIsOpen || GameManager.instance.currentSceneName == GameManager.MAIN_HUB_STRING_NAME || isInMainMenu){
             return;
         }
         

@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     private const float hitStopDuration = 0.1f;
 
     public string currentSceneName {get; private set;}
+    public static bool generationComplete = true;
 
     public const float DEFAULT_AUTO_DIALOGUE_WAIT_TIME = 1.1f;
 
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool deathMenuOpen;
     [HideInInspector] public bool pauseMenuOpen;
     [HideInInspector] public bool statRerollUIOpen;
+    [HideInInspector] public bool inElevatorAnimation;
 
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform playerTransform; // TODO: set this at runtime if game manager starts in main menu???
@@ -88,13 +90,24 @@ public class GameManager : MonoBehaviour
             return;
         }
         else if(!DialogueManager.instance || !InGameUIManager.instance){
-            Debug.LogError("No dialogue/UI manager found!");
+            Debug.LogWarning("No dialogue/UI manager found!");
+            return;
         }
 
-        if(hitStop || DialogueManager.instance.stopTime || pauseMenuOpen || deathMenuOpen || InputManager.instance.shopIsOpen || InGameUIManager.instance.inventoryIsOpen || InGameUIManager.instance.gearSwapIsOpen || statRerollUIOpen)
+        if( generationComplete && GetPausedStateFromAllPauseConditions() )
             Time.timeScale = 0;
         else
             Time.timeScale = 1;
+    }
+
+    private bool GetPausedStateFromAllPauseConditions()
+    {
+        return hitStop || DialogueManager.instance.stopTime || pauseMenuOpen || deathMenuOpen || InputManager.instance.shopIsOpen || InGameUIManager.instance.inventoryIsOpen || InGameUIManager.instance.gearSwapIsOpen || statRerollUIOpen;
+    }
+
+    public bool InSceneWithRandomGeneration()
+    {
+        return currentSceneName == GAME_LEVEL1_STRING_NAME;
     }
 
     // Add any other reset stuff here too (called when player goes from death screen -> main hub)
@@ -117,8 +130,13 @@ public class GameManager : MonoBehaviour
 
         AudioManager.Instance.stopMusic(true);
 
+        ScreenFade fade = FindObjectOfType<ScreenFade>();
+
         if(currentSceneName == MAIN_HUB_STRING_NAME){
             InGameUIManager.instance.ToggleRunUI(false);
+
+            fade.opaqueOnStart = true;
+            fade.FadeIn(0.5f);
 
             // TODO: play main hub music
 
@@ -130,14 +148,25 @@ public class GameManager : MonoBehaviour
         else if(currentSceneName == GAME_LEVEL1_STRING_NAME){
             PlayerInventory.instance.SetRunStartHealthPotionQuantity();            
             AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, false);
-            if(currentRunNumber != 1){
-                InGameUIManager.instance.ToggleRunUI(false);
-                InGameUIManager.instance.TogglePermanentCurrencyUI(false);
-                InGameUIManager.instance.EnableRunStartStatRerollPopup(true);
-            }
-            else{
-                InGameUIManager.instance.ToggleRunUI(true);
-            }
+            fade.opaqueOnStart = true;
+            
+            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener( () =>
+            {
+                fade.FadeIn(1f);
+                if(currentRunNumber != 1){
+                    InGameUIManager.instance.ToggleRunUI(false);
+                    InGameUIManager.instance.TogglePermanentCurrencyUI(false);
+
+                    inElevatorAnimation = true;
+                    FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
+                        InGameUIManager.instance.EnableRunStartStatRerollPopup(true);
+                        inElevatorAnimation = false;
+                    });
+                }
+                else{
+                    InGameUIManager.instance.ToggleRunUI(true);
+                }
+            });
         }
         else if(currentSceneName == LICH_ARENA_STRING_NAME){
             // TODO: Play lich fight music
@@ -263,7 +292,13 @@ public class GameManager : MonoBehaviour
         // Story Beat Status Values
         sm.LoadSavedStoryBeatStatuses(saveData.storyBeatDatabaseStatuses, saveData.itemStoryBeatStatuses, saveData.genericStoryBeatStatuses, saveData.activeStoryBeatHeadNodes);
 
-        SceneManager.LoadScene(GameManager.MAIN_HUB_STRING_NAME);
+        // Load scene after fade to black
+        ScreenFade fade = FindObjectOfType<ScreenFade>();
+        fade.AddListenerToFadeEnd( () => {
+            SceneManager.LoadScene(GameManager.MAIN_HUB_STRING_NAME);
+        });
+        fade.FadeOut(0.5f);
+
         gameTimer.runTotalTimer = true;
     }
 
@@ -275,8 +310,12 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetInt(GetSaveFilePlayerPrefsKey(saveSlotNum), 1);
         PlayerPrefs.Save();
 
-        // If starting a new game, load level 1 scene (new game)
-        SceneManager.LoadScene(GameManager.GAME_LEVEL1_STRING_NAME);
+        // If starting a new game, load level 1 scene (new game) after fade to black
+        ScreenFade fade = FindObjectOfType<ScreenFade>();
+        fade.AddListenerToFadeEnd( () => {
+            SceneManager.LoadScene(GameManager.GAME_LEVEL1_STRING_NAME);
+        });
+        fade.FadeOut(1f);
 
         // Reset all starting values for anything set to dontdestroyonload
         InitializeGameManagerValuesOnNewGame();

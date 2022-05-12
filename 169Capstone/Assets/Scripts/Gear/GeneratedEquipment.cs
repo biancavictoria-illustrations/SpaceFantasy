@@ -13,7 +13,7 @@ public class GeneratedEquipment : MonoBehaviour
     public float criticalChance = 0f;
     public float criticalDamage = 0f;
     public float attackSpeed = 0f;
-    public int defense = 0;
+    public float defense = 0f;
     public float movementSpeed = 0f;
     public float trapDamageResist = 0f;
     public float dodgeChance = 0f;
@@ -89,10 +89,10 @@ public class GeneratedEquipment : MonoBehaviour
                 attackSpeed += 0.02f;
                 break;
             case StatType.Defense:
-                defense++;
+                defense += 0.02f;
                 break;
             case StatType.MoveSpeed:
-                movementSpeed += 0.1f;
+                movementSpeed += 0.05f;
                 break;
             case StatType.TrapDamageResist:
                 trapDamageResist += 0.02f;

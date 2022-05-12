@@ -37,6 +37,8 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     [SerializeField] private Image upgradeIcon;
     [SerializeField] private Image starShardIcon;
 
+    private Sprite upgradeIconSprite;
+
     [SerializeField] private Button upgradeButton;
 
     private bool soldOut = false;
@@ -44,6 +46,16 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     private bool cannotAffordUpgrade = false;
 
     private ShopUIStellan shopUI;
+
+    void Start()
+    {
+        if(IsStatUpgrade()){
+            upgradeIconSprite = InGameUIManager.instance.GetSpriteFromStatType(GetStatFromUpgradeType());
+        }
+        else{
+            upgradeIconSprite = upgradeIcon.sprite;
+        }
+    }
 
     public void SetShopUI(ShopUIStellan _shop)
     {
@@ -55,6 +67,34 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         return upgradeType;
     }
 
+    public bool IsStatUpgrade()
+    {
+        return (int)upgradeType < 12;
+    }
+
+    public bool IsStatMinimum()
+    {
+        switch(upgradeType){
+            case PermanentUpgradeType.STRMin:
+            case PermanentUpgradeType.DEXMin:
+            case PermanentUpgradeType.INTMin:
+            case PermanentUpgradeType.WISMin:
+            case PermanentUpgradeType.CONMin:
+            case PermanentUpgradeType.CHAMin:
+                return true;
+
+            case PermanentUpgradeType.STRMax:
+            case PermanentUpgradeType.DEXMax:
+            case PermanentUpgradeType.INTMax:
+            case PermanentUpgradeType.WISMax:
+            case PermanentUpgradeType.CONMax:
+            case PermanentUpgradeType.CHAMax:
+                return false;
+        }
+        Debug.LogWarning("Cannot determine if stat min for upgrade type: " + upgradeType);
+        return false;
+    }
+
     public void UpdateUIDisplayValues()
     {
         SetCurrentCost();
@@ -63,7 +103,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         UpdateBaseDescriptionValues();
 
         // If stat upgrade
-        if( (int)upgradeType < 12 ){            
+        if( IsStatUpgrade() ){            
             skillLevelText.text = "" + currentUpgradeLevel;            
             // Update description
             if(soldOut){
@@ -84,13 +124,13 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
         // If this is the currently active hover panel, update the focus panel values
         if(shopUI.activeUpgradeInFocus && shopUI.activeUpgradeInFocus == this){
-            shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, currentDescription, costText.text, upgradeIcon.sprite);
+            shopUI.SetFocusPanelValues(upgradeName, GetFocusPanelSkillLevelString(), currentDescription, costText.text, upgradeIconSprite, IsStatUpgrade());
         }
     }
 
     private void SetCurrentCost()
     {
-        if((int)upgradeType < 12){
+        if(IsStatUpgrade()){
             SetStatCurrentCost();
         }
         else{
@@ -106,7 +146,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         }
 
         // If a stat and not sold out, set UI based on Min/Max status 
-        if((int)upgradeType <= 11 && !soldOut && !cannotAffordUpgrade){
+        if(IsStatUpgrade() && !soldOut && !cannotAffordUpgrade){
             SetStatValuesBasedOnMinMaxStatus();
         }
 
@@ -123,7 +163,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
     private void SetStatValuesBasedOnMinMaxStatus()
     {
-        if( (int)upgradeType > 11 ){
+        if( !IsStatUpgrade() ){
             return;
         }
 
@@ -160,19 +200,19 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     private void UpdateBaseDescriptionValues()
     {
         // If stat
-        if((int)upgradeType <= 11){
+        if(IsStatUpgrade()){
             baseDescription = "Increase <b>" + upgradeName + "</b> from <b>" + currentUpgradeLevel + "</b> to <color=" + InGameUIManager.slimeGreenColor + ">" + (currentUpgradeLevel+1) + "</color>.";
         }
         // If update-able skill
         else{
             switch(upgradeType){
                 case PermanentUpgradeType.ArmorPlating:
-                    float defense = PermanentUpgradeManager.instance.GetCurrentSkillValue(upgradeType);
-                    baseDescription = "Increase base <b>Defense</b> from <b>" + defense + "</b> to <color=" + InGameUIManager.slimeGreenColor + ">" + (defense + PermanentUpgradeManager.instance.armorPlatingBonusPerLevel) + "</color>.";
+                    float defense = PermanentUpgradeManager.instance.GetCurrentSkillValue(upgradeType)*100;
+                    baseDescription = "Increase base <b>Defense</b> from <b>" + UIUtils.GetTruncatedDecimalForUIDisplay(defense) + "%</b> to <color=" + InGameUIManager.slimeGreenColor + ">" + UIUtils.GetTruncatedDecimalForUIDisplay(defense + PermanentUpgradeManager.instance.armorPlatingBonusPerLevel*100) + "%</color>.";
                     return;
                 case PermanentUpgradeType.ExtensiveTraining:
                     float attackSpeed = PermanentUpgradeManager.instance.GetCurrentSkillValue(upgradeType) * 100;
-                    baseDescription = "Increase base <b>Attack Speed</b> from <b>" + attackSpeed + "%</b> to <color=" + InGameUIManager.slimeGreenColor + ">" + (attackSpeed + PermanentUpgradeManager.instance.extensiveTrainingBonusPerLevel*100) + "%</color>.";
+                    baseDescription = "Increase base <b>Attack Speed</b> from <b>" + UIUtils.GetTruncatedDecimalForUIDisplay(attackSpeed) + "%</b> to <color=" + InGameUIManager.slimeGreenColor + ">" + UIUtils.GetTruncatedDecimalForUIDisplay(attackSpeed + PermanentUpgradeManager.instance.extensiveTrainingBonusPerLevel*100) + "%</color>.";
                     return;
                 case PermanentUpgradeType.PrecisionDrive:
                     float critDamage = PermanentUpgradeManager.instance.GetCurrentSkillValue(upgradeType) * 100;
@@ -188,7 +228,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
                             newCritDamage = PermanentUpgradeManager.instance.precisionDriveBonusPerLevel[3] * 100;
                             break;
                     }
-                    baseDescription = "Increase base <b>Critical Hit Damage</b> from <b>+" + critDamage + "%</b> to <color=" + InGameUIManager.slimeGreenColor + ">+" + newCritDamage + "%</color>.";
+                    baseDescription = "Increase base <b>Critical Hit Damage</b> from <b>+" + UIUtils.GetTruncatedDecimalForUIDisplay(critDamage) + "%</b> to <color=" + InGameUIManager.slimeGreenColor + ">+" + UIUtils.GetTruncatedDecimalForUIDisplay(newCritDamage) + "%</color>.";
                     return;
             }
         }
@@ -198,7 +238,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     public void InitializeUpgradeValues()
     {
         SetValuesByType();        
-        if( (int)upgradeType < 12 ){    // If stat upgrade
+        if( IsStatUpgrade() ){    // If stat upgrade
             currentUpgradeLevel = PermanentUpgradeManager.instance.GetStatGenerationValueFromUpgradeType(upgradeType);
             upgradeBaseCost = STAT_BASE_COST;
             SetStatCurrentCost();
@@ -216,13 +256,11 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     {
         // Check conditions (if you can't purchase, clicking does nothing)
         if(soldOut || statMinEqualsMax){
-            Debug.Log("No more of this upgrade available for purchase.");
             // TODO: Maybe UI feedback?
             return;
         }
 
         if(cannotAffordUpgrade){
-            Debug.Log("Too broke to buy this upgrade!");
             // TODO: UI feedback about being too broke to buy an item
             return;
         }
@@ -231,7 +269,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         currentUpgradeLevel++;
 
         // If stat upgrade
-        if( (int)upgradeType < 12 ){
+        if( IsStatUpgrade() ){
             UpgradeAssociatedStatValue();
         }
         // If skill
@@ -300,7 +338,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         {
             shopUI.activeUpgradeInFocus = this;
             UpdateUIDisplayValues();
-            shopUI.SetFocusPanelValues(upgradeName, skillLevelText.text, currentDescription, costText.text, upgradeIcon.sprite);
+            shopUI.SetFocusPanelValues(upgradeName, GetFocusPanelSkillLevelString(), currentDescription, costText.text, upgradeIconSprite, IsStatUpgrade());
         }
 
         private void OnUpgradePanelDeselct()
@@ -310,6 +348,21 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         }
 
     #endregion
+
+    private string GetFocusPanelSkillLevelString()
+    {
+        string skillLevel = "";
+        if(IsStatUpgrade()){
+            if(IsStatMinimum()){
+                skillLevel = "Min";
+            }
+            else{
+                skillLevel = "Max";
+            }
+            skillLevel += " Reroll Value: ";
+        }
+        return skillLevel + skillLevelText.text;
+    }
 
     private void SetValuesByType()
     {
@@ -422,11 +475,19 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
     private void SetSkillCurrentCost()
     {
+        if(IsStatUpgrade()){
+            return;
+        }
+
         currentCost = upgradeBaseCost + (currentUpgradeLevel * costIncreasePerLevel);
     }
 
     private void SetStatCurrentCost()
     {
+        if(!IsStatUpgrade()){
+            return;
+        }
+
         // If Stat MIN
         if( (int)upgradeType < 6 ){
             currentCost = upgradeBaseCost + Mathf.FloorToInt((MIN_STAT_NUM_TIMES_PURCHASABLE - (totalUpgradeLevels - currentUpgradeLevel)) * STAT_MIN_COST_INCREASE);
@@ -547,4 +608,35 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
         }
 
     #endregion
+
+    private PlayerFacingStatName GetStatFromUpgradeType()
+    {
+        switch(upgradeType){
+            case PermanentUpgradeType.STRMin:
+            case PermanentUpgradeType.STRMax:
+                return PlayerFacingStatName.STR;
+
+            case PermanentUpgradeType.DEXMin:
+            case PermanentUpgradeType.DEXMax:
+                return PlayerFacingStatName.DEX;
+
+            case PermanentUpgradeType.INTMin:
+            case PermanentUpgradeType.INTMax:
+                return PlayerFacingStatName.INT;
+
+            case PermanentUpgradeType.WISMin:
+            case PermanentUpgradeType.WISMax:
+                return PlayerFacingStatName.WIS;
+
+            case PermanentUpgradeType.CONMin:
+            case PermanentUpgradeType.CONMax:
+                return PlayerFacingStatName.CON;
+
+            case PermanentUpgradeType.CHAMin:
+            case PermanentUpgradeType.CHAMax:
+                return PlayerFacingStatName.CHA;
+        }
+        Debug.LogWarning("Cannot get player facing stat name for upgrade type: " + upgradeType);
+        return PlayerFacingStatName.size;
+    }
 }

@@ -122,7 +122,7 @@ public class PlayerStats : EntityStats
             private int strength;
 
             const float strengthDamagePerStrengthPoint = 1f;
-            const float defenseBonusPerStrengthPoint = 0.01f;
+            const float defenseBonusPerStrengthPoint = 0.005f;
 
             public int Strength()
             {
@@ -134,7 +134,7 @@ public class PlayerStats : EntityStats
             private int dexterity;
 
             const float dexterityDamagePerDexterityPoint = 1f;
-            const float dodgeBonusPerDexterityPoint = 0.01f;
+            const float dodgeBonusPerDexterityPoint = 0.005f;
 
             public int Dexterity()
             {
@@ -315,10 +315,8 @@ public class PlayerStats : EntityStats
             EntityHealth healthScript = GetComponent<EntityHealth>();
             float chance = Random.Range(0.0f, 1f);
             if(chance <= getCritChance()){
-            // TODO: Alert damage number effects that we crit so this one should be displayed special
                 float crit = getCritDamage();
                 healthScript.OnCrit.Invoke(healthScript, crit);
-            //return baseDamage * getCritDamage();
                 return baseDamage * crit;
             }
             return 0f;

@@ -7,12 +7,30 @@ public class SceneTransitionDoor : MonoBehaviour
 {
     public static SceneTransitionDoor ActiveDoor {get; private set;}
 
-    [SerializeField] private string goToSceneName;    // Set in the inspector, the room this door LEADS TO
+    [SerializeField] [Tooltip("The scene this door leads to.")]
+    private string goToSceneName;    // Set in the inspector, the room this door LEADS TO
 
+    [SerializeField] private ElevatorAnimationHelper elevatorHelper;
+
+    void Start()
+    {
+        if(GameManager.instance.InSceneWithRandomGeneration())
+        {
+            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(() => elevatorHelper.StartEnterAnimation());
+        }
+    }
 
     public void ChangeScene()
     {
-        SceneManager.LoadScene(goToSceneName);
+        GameManager.instance.inElevatorAnimation = true;
+
+        FindObjectOfType<ScreenFade>().FadeOut(1f);
+        
+        elevatorHelper.AddListenerToAnimationEnd(() => {
+            GameManager.instance.inElevatorAnimation = false;
+            SceneManager.LoadScene(goToSceneName);
+        });
+        elevatorHelper.StartExitAnimation();
     }
 
     private void OnTriggerEnter(Collider other)

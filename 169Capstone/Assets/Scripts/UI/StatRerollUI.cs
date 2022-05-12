@@ -26,12 +26,15 @@ public class StatRerollUI : MonoBehaviour
     private PlayerStats stats;
     private PermanentUpgradeManager upgradeManager;
 
+    public static bool tempSkipStatRerollToggle = false;
+
     public void EnableStatRerollUI()
     {
         ToggleActiveStatus(true);
 
         // Don't let us leave until the animation is done
-        continueButton.interactable = false;
+        if(!tempSkipStatRerollToggle)
+            continueButton.interactable = false;
 
         // For convenience, save these locally
         stats = Player.instance.GetComponent<PlayerStats>();
@@ -59,8 +62,11 @@ public class StatRerollUI : MonoBehaviour
         ToggleActiveStatus(false);
         InGameUIManager.instance.ToggleRunUI(true);
         InGameUIManager.instance.TogglePermanentCurrencyUI(true);
-        AlertTextUI.instance.EnableViewStatsAlert();
-        StartCoroutine(AlertTextUI.instance.RemoveAlertAfterSeconds());
+        
+        if(GameManager.instance.currentRunNumber != 2){
+            AlertTextUI.instance.EnableViewStatsAlert();
+            StartCoroutine(AlertTextUI.instance.RemoveAlertAfterSeconds());
+        }
     }
 
     private void ToggleActiveStatus(bool set)

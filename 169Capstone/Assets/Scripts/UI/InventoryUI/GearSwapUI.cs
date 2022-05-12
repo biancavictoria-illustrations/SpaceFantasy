@@ -27,14 +27,12 @@ public class GearSwapUI : MonoBehaviour
 
         // If you have an item equipped in that slot, expand that one on open
         if(PlayerInventory.instance.gear[item.equipmentBaseData.ItemSlot()] != null){
-            ExpandItemOfSameType();
+            ExpandItemOfType( item.equipmentBaseData.ItemSlot() );
         }
     }
 
-    private void ExpandItemOfSameType()
+    private void ExpandItemOfType(InventoryItemSlot slot)
     {
-        InventoryItemSlot slot = newItem.equipmentBaseData.ItemSlot();
-
         if(!PlayerInventory.instance.gear[slot]){
             Debug.Log("No item of slot type " + slot.ToString() + " equipped; not expanding item panel.");
             return;
@@ -42,7 +40,8 @@ public class GearSwapUI : MonoBehaviour
 
         foreach(InventoryUIItemPanel panel in gearSwapInventoryUI.itemPanels){
             if(panel.GetItemSlot() == slot){
-                gearSwapInventoryUI.CardToggle(panel);
+                gearSwapInventoryUI.ManuallyToggleCard(panel);
+                return;
             }
         }
     }
@@ -52,7 +51,10 @@ public class GearSwapUI : MonoBehaviour
         // If this is a drop item, close the UI (if this is a shop, it's handled in the shop)
         // Don't actually think this is necessary here? but leaving it as a precaution to try not to screw up shops
         if( InGameUIManager.instance.gearSwapIsOpen ){
+            // Collapse all item panels
             gearSwapInventoryUI.OnInventoryClose();
+
+            // Tell the input manager we closed the UI
             InputManager.instance.ToggleCompareItemUI(false, null);
             InputManager.instance.RunGameTimer(true);
         }

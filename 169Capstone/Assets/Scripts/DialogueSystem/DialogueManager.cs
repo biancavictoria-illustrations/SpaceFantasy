@@ -32,6 +32,8 @@ public class DialogueManager : MonoBehaviour
 
     public bool stopTime;
 
+    public const float DEFAULT_TEXT_SPEED = 0.015f;
+
     void Awake()
     {
         // Make this a singleton so that it can be accessed from anywhere and there's only one
@@ -66,6 +68,11 @@ public class DialogueManager : MonoBehaviour
     public void SetStellanCommTriggered(bool set)
     {
         stellanCommTriggered = set;
+    }
+
+    public void SetTextSpeed(float number)
+    {
+        dialogueUI.textSpeed = number;
     }
 
     private void SetYarnFunctions()
@@ -352,6 +359,10 @@ public class DialogueManager : MonoBehaviour
         if(NPC.ActiveNPC){
             NPC.ActiveNPC.TalkedToNPC();
             if(NPC.ActiveNPC.SpeakerData().IsShopkeeper()){
+                // If you've only completed ONE run and this is Stellan, don't open his shop this time
+                if(GameManager.instance.currentRunNumber == 2 && NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Stellan){
+                    return;
+                }
                 InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.SpeakerData());
             }
             else if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.TimeLich){

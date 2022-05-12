@@ -65,7 +65,7 @@ public class SlowCircle : MonoBehaviour
             if(moveScript != null)
             {
                 slowTargets.Add(other);
-                moveScript.speed *= (1 - speedChangePercent);
+                Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, -speedChangePercent);
             }
             else if(pathScript != null)
             {
@@ -78,7 +78,7 @@ public class SlowCircle : MonoBehaviour
             if(moveScript != null)
             {
                 speedTargets.Add(other);
-                moveScript.speed *= (1 + speedChangePercent);
+                Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, speedChangePercent);
             }
             else if(pathScript != null)
             {
@@ -165,9 +165,9 @@ public class SlowCircle : MonoBehaviour
         if(moveScript != null)
         {
             if(enable)
-                moveScript.speed *= (1 - speedChangePercent);
+                Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, -speedChangePercent);
             else
-                moveScript.speed /= (1 - speedChangePercent);
+                Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, 1);
         }
         else if(pathScript != null)
         {
@@ -195,9 +195,9 @@ public class SlowCircle : MonoBehaviour
         if(moveScript != null)
         {
             if(enable)
-                moveScript.speed *= (1 + speedChangePercent);
+                Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, speedChangePercent);
             else
-                moveScript.speed /= (1 + speedChangePercent);
+                Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, 1);
         }
         else if(pathScript != null)
         {

@@ -50,6 +50,6 @@ public class WristRocket : Accessories
     {
         GameObject rocket = Instantiate(rocketPrefab, player.transform.position + Vector3.up * 2, player.transform.rotation);
         Projectile projectileScript = rocket.GetComponent<Projectile>();
-        projectileScript.Initialize("Enemy", damage, InputManager.instance.cursorLookDirection, itemData.Radius(), 30);
+        projectileScript.Initialize("Enemy", damage, DamageSourceType.Player, InputManager.instance.cursorLookDirection, itemData.Radius(), 30);
     }
 }

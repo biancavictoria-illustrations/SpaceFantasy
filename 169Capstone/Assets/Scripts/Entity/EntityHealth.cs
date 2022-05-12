@@ -4,6 +4,29 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+public enum DamageSourceType{
+    Player,
+
+    // Enemies
+    Slime,
+    Robert,
+
+    // Bosses
+    BeetleBoss,
+    // Harvester,
+    TimeLich,
+    DefeatedTimeLichEndRunDeath,
+
+    // Traps
+    DeathPit,   // Intentionally does not contain "trap" because we check if the string contains "trap" to deal with trap damage
+    TurretTrap,
+    CoilTrap,
+    FlameTrap,
+    FloorSpikeTrap,
+
+    enumSize
+}
+
 public class EntityHealth : MonoBehaviour
 {
     #region OnDeath
@@ -74,6 +97,8 @@ public class EntityHealth : MonoBehaviour
     private const int TEMPCOINDROPAMOUNT = 5;
     private const float TEMPSTARSHARDDROPCHANCE = 0.25f;
 
+    public bool tempPlayerGodModeToggle = false;    // FOR TESTING - REMOVE THIS FOR FINAL BUILD
+
     void Start()
     {
         OnDeath.AddListener(onEntityDeath);
@@ -102,30 +127,53 @@ public class EntityHealth : MonoBehaviour
 
     public void SetStartingHealthUI()
     {
-        // if(gameObject.tag == "Player"){
-        //     Debug.Log("Max Health At Start: " + maxHitpoints + "\nCurrent Health At Start: " + currentHitpoints);
-        // }
-
         SetMaxHealthUI();
         SetCurrentHealthUI();
     }
 
-    public bool Damage(float damage)
+    // Need a bool to check for slime pit otherwise you could DODGE falling in a slime pit and fall for eternity
+    public bool Damage(float damage, DamageSourceType damageSource)
     {
+        Debug.Log("Player hit by " + damageSource);
+
+        if( gameObject.tag == "Player" && damageSource != DamageSourceType.DeathPit ){
+            // TEMP for dev
+            if( tempPlayerGodModeToggle ){
+                return currentHitpoints <= 0;
+            }
+
+            // Check for dodge
+            float dodgeChance = Player.instance.stats.getDodgeChance();
+            float rolledChance = Random.Range(0.0f, 1f);
+            if( rolledChance <= dodgeChance ){
+                // TODO: Trigger dodge floating text!
+                return currentHitpoints <= 0;
+            }
+
+            // If we got to this point, lower damage according to defense before enacting the damage to the player
+            float defense = Player.instance.stats.getDefense();
+            damage *= 1 - defense;
+
+            // IF A TRAP, account for trap damage resist
+            if( damageSource.ToString().Contains("Trap") ){
+                float trapDamageResist = Player.instance.stats.getTrapDamageResist();
+                damage *= 1 - trapDamageResist;
+            }
+        }
+
         currentHitpoints -= damage;
         OnHit.Invoke(this, damage);
         if (gameObject.tag == "Player")
             InGameUIManager.instance.ShowFloatingText(damage.ToString(), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "damage-player");
         else
             InGameUIManager.instance.ShowFloatingText(damage.ToString(), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "damage-enemy");
-        // Debug.Log("Hitpoints");
-        // Debug.Log(currentHitpoints);
         
         SetCurrentHealthUI();
 
         if(currentHitpoints <= 0)
         {
             //Debug.Log("Dead");
+            currentHitpoints = 0;
             OnDeath.Invoke(this);
         }
 

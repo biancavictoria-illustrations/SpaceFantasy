@@ -30,6 +30,8 @@ public class JournalContentDisplay : MonoBehaviour
         Slime,
         Robert,
         BrutePest,
+        //Harvester,
+        TimeLich,
 
         // GEAR
         Electrum,

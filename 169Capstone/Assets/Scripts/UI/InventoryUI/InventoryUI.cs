@@ -47,6 +47,16 @@ public class InventoryUI : MonoBehaviour
 
     void Start()
     {
+        if(GameManager.instance.InSceneWithRandomGeneration()){
+            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(StartOnGenerationComplete);
+        }
+        else{
+            StartOnGenerationComplete();
+        }        
+    }
+
+    private void StartOnGenerationComplete()
+    {
         FindPlayerStats();
     }
 
@@ -103,106 +113,113 @@ public class InventoryUI : MonoBehaviour
 
         FindPlayerStats();
 
-        attackSpeed.text = "Attack Speed: " + (stats.getAttackSpeed()*100) + "%";
-        moveSpeed.text = "Move Speed: " + (stats.getMoveSpeed()*100) + "%";
-        defense.text = "Defense: " + stats.getDefense()*100;
-        dodgeChance.text = "Dodge Chance: " + (stats.getDodgeChance()*100) + "%";
-        critChance.text = "Crit Chance: " + (stats.getCritChance()*100) + "%";
-        critDamage.text = "Crit Damage: " + (stats.getCritDamage()*100) + "%";
-        trapDamageResist.text = "Trap Damage Resist: " + (stats.getTrapDamageResist()*100) + "%";
-        haste.text = "Haste: " + (stats.getHaste()*100) + "%";
-        healingEfficacy.text = "Healing Efficacy: " + (stats.getHealingEfficacy()*100) + "%";
+        attackSpeed.text = "Attack Speed: " + UIUtils.GetTruncatedDecimalForUIDisplay(stats.getAttackSpeed()*100) + "%";
+        moveSpeed.text = "Move Speed: " + UIUtils.GetTruncatedDecimalForUIDisplay(stats.getMoveSpeed()*100) + "%";
+        defense.text = "Defense: " + UIUtils.GetTruncatedDecimalForUIDisplay(stats.getDefense()*100) + "%";
+        dodgeChance.text = "Dodge Chance: " + UIUtils.GetTruncatedDecimalForUIDisplay(stats.getDodgeChance()*100) + "%";
+        critChance.text = "Crit Chance: " + UIUtils.GetTruncatedDecimalForUIDisplay(stats.getCritChance()*100) + "%";
+        critDamage.text = "Crit Damage: " + UIUtils.GetTruncatedDecimalForUIDisplay(stats.getCritDamage()*100) + "%";
+        trapDamageResist.text = "Trap Damage Resist: " + UIUtils.GetTruncatedDecimalForUIDisplay(stats.getTrapDamageResist()*100) + "%";
+        haste.text = "Haste: " + UIUtils.GetTruncatedDecimalForUIDisplay(stats.getHaste()*100) + "%";
+        healingEfficacy.text = "Healing Efficacy: " + UIUtils.GetTruncatedDecimalForUIDisplay(stats.getHealingEfficacy()*100) + "%";
     }
 
-    // Called when you click on a panel
-    public void CardToggle( InventoryUIItemPanel hoverPanel )
-    {
-        // Get the NEW status of this panel
-        bool isOn = hoverPanel.GetComponent<Toggle>().isOn;
-        if(isOn){
-            // If there was already an active panel, deactivate it
-            if(activePanel != null && activePanel != hoverPanel){
-                OnCardDeselect(activePanel);
-            }
-
-            // Set this panel to the new active panel
-            OnCardSelect(hoverPanel);
+    #region Card Toggle Management
+        public void ManuallyToggleCard( InventoryUIItemPanel hoverPanel )
+        {
+            hoverPanel.GetComponent<Toggle>().isOn = true;
+            CardToggle(hoverPanel);
         }
-        else{
-            OnCardDeselect(hoverPanel);
-        }
-    }
-    
-    private void OnCardSelect( InventoryUIItemPanel selectedPanel )
-    {
-       activePanel = selectedPanel;
 
-        verticalLayoutGroup.childControlHeight = false;
-        foreach( InventoryUIItemPanel panel in itemPanels ){
-            if(panel == selectedPanel){
-                // Expand it
-                panel.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, expandedPanelSize);
+        // Called when you click on a panel
+        public void CardToggle( InventoryUIItemPanel hoverPanel )
+        {
+            // Get the NEW status of this panel
+            bool isOn = hoverPanel.GetComponent<Toggle>().isOn;
+            if(isOn){
+                // If there was already an active panel, deactivate it
+                if(activePanel != null && activePanel != hoverPanel){
+                    OnCardDeselect(activePanel);
+                }
 
-                // Reveal additional info
-                panel.SetExpandedDescription(true);
-
-                // Formatting!!!
-                panel.horizontalLayoutGroup.childAlignment = TextAnchor.UpperLeft;
-                panel.horizontalLayoutGroup.padding.top = expandedItemHorizontalGroupTopPadding;
-                panel.horizontalLayoutGroup.padding.left = defaultItemHorizontalGroupLeftPadding;
-                panel.itemDescription.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, expandedDescriptionBoxSize);
-                panel.itemDescription.GetComponent<RectTransform>().localPosition = new Vector3(panel.itemDescription.GetComponent<RectTransform>().localPosition.x, expandedDescriptionYPos, panel.itemDescription.GetComponent<RectTransform>().localPosition.z);
+                // Set this panel to the new active panel
+                OnCardSelect(hoverPanel);
             }
             else{
-                // Shrink it 
-                panel.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, shrunkPanelSize);
-                
-                // Hide icon and description
-                panel.itemIcon.gameObject.SetActive(false);
-                panel.descriptionPanel.SetActive(false);
-
-                // Set padding so that the text lines up nicely
-                panel.textGrid.padding.top = shrunkItemTextGridTopPadding;
-                panel.horizontalLayoutGroup.padding.left = shrunkItemHorizontalGroupLeftPadding;
+                OnCardDeselect(hoverPanel);
             }
         }
-    }
+        
+        private void OnCardSelect( InventoryUIItemPanel selectedPanel )
+        {
+        activePanel = selectedPanel;
 
-    private void OnCardDeselect( InventoryUIItemPanel deselectedPanel )
-    {
-        // Reset all to default
-        activePanel = null;
-        if(deselectedPanel.GetComponent<Toggle>().isOn){
-            deselectedPanel.GetComponent<Toggle>().isOn = false;
+            verticalLayoutGroup.childControlHeight = false;
+            foreach( InventoryUIItemPanel panel in itemPanels ){
+                if(panel == selectedPanel){
+                    // Expand it
+                    panel.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, expandedPanelSize);
+
+                    // Reveal additional info
+                    panel.SetExpandedDescription(true);
+                    panel.statIcon.gameObject.SetActive(true);
+
+                    // Formatting!!!
+                    panel.horizontalLayoutGroup.childAlignment = TextAnchor.UpperLeft;
+                    panel.horizontalLayoutGroup.padding.top = expandedItemHorizontalGroupTopPadding;
+                    panel.horizontalLayoutGroup.padding.left = defaultItemHorizontalGroupLeftPadding;
+                    panel.itemDescription.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, expandedDescriptionBoxSize);
+                    panel.itemDescription.GetComponent<RectTransform>().localPosition = new Vector3(panel.itemDescription.GetComponent<RectTransform>().localPosition.x, expandedDescriptionYPos, panel.itemDescription.GetComponent<RectTransform>().localPosition.z);
+                }
+                else{
+                    // Shrink it 
+                    panel.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, shrunkPanelSize);
+                    
+                    // Hide icon and description
+                    panel.itemIcon.gameObject.SetActive(false);
+                    panel.descriptionPanel.SetActive(false);
+                    panel.statIcon.gameObject.SetActive(false);
+
+                    // Set padding so that the text lines up nicely
+                    panel.textGrid.padding.top = shrunkItemTextGridTopPadding;
+                    panel.horizontalLayoutGroup.padding.left = shrunkItemHorizontalGroupLeftPadding;
+                }
+            }
         }
 
-        // TODO: Set the background color to the normal color
-        // can't do the following because it changes the actual image color which messes up the color tint stuff...
-        // deselectedPanel.GetComponent<Image>().color = deselectedPanel.GetComponent<Toggle>().colors.normalColor;
-
-        verticalLayoutGroup.childControlHeight = true;
-        foreach( InventoryUIItemPanel panel in itemPanels ){
-            if(panel == deselectedPanel){
-                // Remove excess info
-                panel.SetExpandedDescription(false);
-
-                // Revert formatting
-                panel.horizontalLayoutGroup.childAlignment = TextAnchor.MiddleLeft;
-                panel.horizontalLayoutGroup.padding.top = 0;
-                panel.itemDescription.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, defaultDescriptionBoxSize);
-                panel.itemDescription.GetComponent<RectTransform>().localPosition = new Vector3(panel.itemDescription.GetComponent<RectTransform>().localPosition.x, defaultDescriptionYPos, panel.itemDescription.GetComponent<RectTransform>().localPosition.z);
+        private void OnCardDeselect( InventoryUIItemPanel deselectedPanel )
+        {
+            // Reset all to default
+            activePanel = null;
+            if(deselectedPanel.GetComponent<Toggle>().isOn){
+                deselectedPanel.GetComponent<Toggle>().isOn = false;
             }
-            else{
-                // Reveal icon and description
-                panel.itemIcon.gameObject.SetActive(true);
-                panel.descriptionPanel.SetActive(true);
-                
-                // Reset the padding
-                panel.textGrid.padding.top = 0;
-                panel.horizontalLayoutGroup.padding.left = defaultItemHorizontalGroupLeftPadding;
+            
+            verticalLayoutGroup.childControlHeight = true;
+            foreach( InventoryUIItemPanel panel in itemPanels ){
+                if(panel == deselectedPanel){
+                    // Remove excess info
+                    panel.SetExpandedDescription(false);
+
+                    // Revert formatting
+                    panel.horizontalLayoutGroup.childAlignment = TextAnchor.MiddleLeft;
+                    panel.horizontalLayoutGroup.padding.top = 0;
+                    panel.itemDescription.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, defaultDescriptionBoxSize);
+                    panel.itemDescription.GetComponent<RectTransform>().localPosition = new Vector3(panel.itemDescription.GetComponent<RectTransform>().localPosition.x, defaultDescriptionYPos, panel.itemDescription.GetComponent<RectTransform>().localPosition.z);
+                }
+                else{
+                    // Reveal icon and description
+                    panel.itemIcon.gameObject.SetActive(true);
+                    panel.descriptionPanel.SetActive(true);
+                    panel.statIcon.gameObject.SetActive(true);
+                    
+                    // Reset the padding
+                    panel.textGrid.padding.top = 0;
+                    panel.horizontalLayoutGroup.padding.left = defaultItemHorizontalGroupLeftPadding;
+                }
             }
         }
-    }
+    #endregion
 
     public void OnInventoryOpen()
     {

@@ -12,6 +12,16 @@ public class FloatingTextManager : MonoBehaviour
 
     private void Start()
     {
+        if(GameManager.instance.InSceneWithRandomGeneration()){
+            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(StartOnGenerationComplete);
+        }
+        else{
+            StartOnGenerationComplete();
+        }
+    }
+
+    private void StartOnGenerationComplete()
+    {
         EntityHealth healthScript = Player.instance.GetComponent<EntityHealth>();
         healthScript.OnDeath.AddListener(Hide);
     }

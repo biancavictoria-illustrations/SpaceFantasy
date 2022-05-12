@@ -13,6 +13,7 @@ public class InGameUIManager : MonoBehaviour
     public const string turquoiseColor = "#1bc7b2";
     public const string medTurquoiseColor = "#017C6D";
     public const string darkTurquoiseColor = "#02141e";
+    public const string goldColor = "#E49200";
 
     [SerializeField] private GameObject inGameUIPanel;
     [SerializeField] private GameObject inGameUIGearIconPanel;  // Sometimes toggled separately from the rest of the in game UI
@@ -26,6 +27,13 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private Sprite emptySlotAccessoryIcon;
     [SerializeField] private Sprite emptySlotHelmetIcon;
     [SerializeField] private Sprite emptySlotBootsIcon;
+
+    [SerializeField] private Sprite strSprite;
+    [SerializeField] private Sprite dexSprite;
+    [SerializeField] private Sprite intSprite;
+    [SerializeField] private Sprite wisSprite;
+    [SerializeField] private Sprite conSprite;
+    [SerializeField] private Sprite chaSprite;
 
     [SerializeField] private GameObject darkBackgroundPanel;
 
@@ -79,12 +87,11 @@ public class InGameUIManager : MonoBehaviour
 
     void Start()
     {
-        SetTempCurrencyValue(PlayerInventory.instance.tempCurrency);
-        SetPermanentCurrencyValue(PlayerInventory.instance.permanentCurrency);
-        SetHealthPotionValue(PlayerInventory.instance.healthPotionQuantity);
-
-        if(GameManager.instance.currentSceneName != GameManager.LICH_ARENA_STRING_NAME){
-            ClearAllItemUI();
+        if(GameManager.instance.InSceneWithRandomGeneration()){
+            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(StartOnGenerationComplete);
+        }
+        else{
+            StartOnGenerationComplete();
         }
     }
 
@@ -92,6 +99,17 @@ public class InGameUIManager : MonoBehaviour
     public void SetGameUIActive(bool set)
     {
         inGameUIPanel.SetActive(set);
+    }
+
+    private void StartOnGenerationComplete()
+    {
+        SetTempCurrencyValue(PlayerInventory.instance.tempCurrency);
+        SetPermanentCurrencyValue(PlayerInventory.instance.permanentCurrency);
+        SetHealthPotionValue(PlayerInventory.instance.healthPotionQuantity);
+
+        if(GameManager.instance.currentSceneName != GameManager.LICH_ARENA_STRING_NAME){
+            ClearAllItemUI();
+        }
     }
 
     public void EnableRunStartStatRerollPopup(bool set)
@@ -136,127 +154,125 @@ public class InGameUIManager : MonoBehaviour
     }
 
     #region Item UI
+        // Called when player input opens or closes the inventory
+        public void SetInventoryUIActive(bool set)
+        {
+            if(!set){
+                inventoryUI.OnInventoryClose();
+            }
 
-    // Called when player input opens or closes the inventory
-    public void SetInventoryUIActive(bool set)
-    {
-        if(!set){
-            inventoryUI.OnInventoryClose();
+            inGameUIGearIconPanel.SetActive(!set);
+            darkBackgroundPanel.SetActive(set);
+            inventoryUIPanel.SetActive(set);
+            inventoryIsOpen = set;
+
+            if(set){
+                inventoryUI.OnInventoryOpen();
+                AlertTextUI.instance.ToggleAlertText(false);
+            }
+            else{
+                AlertTextUI.instance.ToggleAlertText(true);
+            }
         }
 
-        inGameUIGearIconPanel.SetActive(!set);
-        darkBackgroundPanel.SetActive(set);
-        inventoryUIPanel.SetActive(set);
-        inventoryIsOpen = set;
+        // Called when the player goes to pick up a new item
+        public void SetGearSwapUIActive(bool set, GeneratedEquipment item)
+        {
+            inGameUIGearIconPanel.SetActive(!set);
+            gearSwapUIPanel.SetActive(set);
+            gearSwapIsOpen = set;
 
-        if(set){
-            inventoryUI.OnInventoryOpen();
-            AlertTextUI.instance.ToggleAlertText(false);
+            if(set){
+                gearSwapUI.OnGearSwapUIOpen(item);
+                AlertTextUI.instance.DisableAlert();
+            }
+            else{
+                AlertTextUI.instance.EnableItemPickupAlert();
+            }
         }
-        else{
-            AlertTextUI.instance.ToggleAlertText(true);
+
+        public void SetGearItemUI(InventoryItemSlot itemSlot, Sprite _icon)
+        {
+            switch(itemSlot){
+                case InventoryItemSlot.Weapon:
+                    inGameWeaponIMG.sprite = _icon;
+                    inGameWeaponIMG.preserveAspect = true;
+                    // inGameWeaponIMG.SetNativeSize();                
+                    break;
+                case InventoryItemSlot.Accessory:
+                    inGameAccessoryIMG.sprite = _icon;
+                    inGameAccessoryIMG.preserveAspect = true;
+                    // inGameAccessoryIMG.SetNativeSize();
+                    break;
+                case InventoryItemSlot.Helmet:
+                    inGameHelmetIMG.sprite = _icon;
+                    inGameHelmetIMG.preserveAspect = true;
+                    // inGameHelmetIMG.SetNativeSize();
+                    break;
+                case InventoryItemSlot.Legs:
+                    inGameBootsIMG.sprite = _icon;
+                    inGameBootsIMG.preserveAspect = true;
+                    // inGameBootsIMG.SetNativeSize();
+                    break;
+                default:
+                    Debug.LogError("No item icon found for slot: " + itemSlot.ToString());
+                    return;
+            }
         }
-    }
 
-    // Called when the player goes to pick up a new item
-    public void SetGearSwapUIActive(bool set, GeneratedEquipment item)
-    {
-        inGameUIGearIconPanel.SetActive(!set);
-        gearSwapUIPanel.SetActive(set);
-        gearSwapIsOpen = set;
-
-        if(set){
-            gearSwapUI.OnGearSwapUIOpen(item);
-            AlertTextUI.instance.DisableAlert();
+        public void ClearAllItemUI()
+        {
+            ClearItemUI(InventoryItemSlot.Weapon);
+            ClearItemUI(InventoryItemSlot.Accessory);
+            ClearItemUI(InventoryItemSlot.Helmet);
+            ClearItemUI(InventoryItemSlot.Legs);
         }
-        else{
-            AlertTextUI.instance.EnableItemPickupAlert();
+
+        public void ClearItemUI(InventoryItemSlot itemSlot)
+        {
+            switch(itemSlot){
+                case InventoryItemSlot.Weapon:
+                    inGameWeaponIMG.sprite = emptySlotWeaponIcon;
+                    inGameWeaponIMG.preserveAspect = true;
+                    // inGameWeaponIMG.SetNativeSize();
+                    break;
+                case InventoryItemSlot.Accessory:
+                    inGameAccessoryIMG.sprite = emptySlotAccessoryIcon;
+                    inGameAccessoryIMG.preserveAspect = true;
+                    // inGameAccessoryIMG.SetNativeSize();
+                    break;
+                case InventoryItemSlot.Helmet:
+                    inGameHelmetIMG.sprite = emptySlotHelmetIcon;
+                    inGameHelmetIMG.preserveAspect = true;
+                    // inGameHelmetIMG.SetNativeSize();
+                    break;
+                case InventoryItemSlot.Legs:
+                    inGameBootsIMG.sprite = emptySlotBootsIcon;
+                    inGameBootsIMG.preserveAspect = true;
+                    // inGameBootsIMG.SetNativeSize();
+                    break;
+                default:
+                    Debug.LogError("No item icon found for slot: " + itemSlot.ToString());
+                    return;
+            }
         }
-    }
 
-    public void SetGearItemUI(InventoryItemSlot itemSlot, Sprite _icon)
-    {
-        switch(itemSlot){
-            case InventoryItemSlot.Weapon:
-                inGameWeaponIMG.sprite = _icon;
-                inGameWeaponIMG.preserveAspect = true;
-                // inGameWeaponIMG.SetNativeSize();                
-                break;
-            case InventoryItemSlot.Accessory:
-                inGameAccessoryIMG.sprite = _icon;
-                inGameAccessoryIMG.preserveAspect = true;
-                // inGameAccessoryIMG.SetNativeSize();
-                break;
-            case InventoryItemSlot.Helmet:
-                inGameHelmetIMG.sprite = _icon;
-                inGameHelmetIMG.preserveAspect = true;
-                // inGameHelmetIMG.SetNativeSize();
-                break;
-            case InventoryItemSlot.Legs:
-                inGameBootsIMG.sprite = _icon;
-                inGameBootsIMG.preserveAspect = true;
-                // inGameBootsIMG.SetNativeSize();
-                break;
-            default:
-                Debug.LogError("No item icon found for slot: " + itemSlot.ToString());
-                return;
+        public Sprite GetDefaultItemIconForSlot(InventoryItemSlot itemSlot)
+        {
+            switch(itemSlot){
+                case InventoryItemSlot.Weapon:
+                    return emptySlotWeaponIcon;
+                case InventoryItemSlot.Accessory:
+                    return emptySlotAccessoryIcon;
+                case InventoryItemSlot.Helmet:
+                    return emptySlotHelmetIcon;
+                case InventoryItemSlot.Legs:
+                    return emptySlotBootsIcon;
+                default:
+                    Debug.LogError("No item icon found for slot: " + itemSlot.ToString());
+                    return null;
+            }
         }
-    }
-
-    public void ClearAllItemUI()
-    {
-        ClearItemUI(InventoryItemSlot.Weapon);
-        ClearItemUI(InventoryItemSlot.Accessory);
-        ClearItemUI(InventoryItemSlot.Helmet);
-        ClearItemUI(InventoryItemSlot.Legs);
-    }
-
-    public void ClearItemUI(InventoryItemSlot itemSlot)
-    {
-        switch(itemSlot){
-            case InventoryItemSlot.Weapon:
-                inGameWeaponIMG.sprite = emptySlotWeaponIcon;
-                inGameWeaponIMG.preserveAspect = true;
-                // inGameWeaponIMG.SetNativeSize();
-                break;
-            case InventoryItemSlot.Accessory:
-                inGameAccessoryIMG.sprite = emptySlotAccessoryIcon;
-                inGameAccessoryIMG.preserveAspect = true;
-                // inGameAccessoryIMG.SetNativeSize();
-                break;
-            case InventoryItemSlot.Helmet:
-                inGameHelmetIMG.sprite = emptySlotHelmetIcon;
-                inGameHelmetIMG.preserveAspect = true;
-                // inGameHelmetIMG.SetNativeSize();
-                break;
-            case InventoryItemSlot.Legs:
-                inGameBootsIMG.sprite = emptySlotBootsIcon;
-                inGameBootsIMG.preserveAspect = true;
-                // inGameBootsIMG.SetNativeSize();
-                break;
-            default:
-                Debug.LogError("No item icon found for slot: " + itemSlot.ToString());
-                return;
-        }
-    }
-
-    public Sprite GetDefaultItemIconForSlot(InventoryItemSlot itemSlot)
-    {
-        switch(itemSlot){
-            case InventoryItemSlot.Weapon:
-                return emptySlotWeaponIcon;
-            case InventoryItemSlot.Accessory:
-                return emptySlotAccessoryIcon;
-            case InventoryItemSlot.Helmet:
-                return emptySlotHelmetIcon;
-            case InventoryItemSlot.Legs:
-                return emptySlotBootsIcon;
-            default:
-                Debug.LogError("No item icon found for slot: " + itemSlot.ToString());
-                return null;
-        }
-    }
-
     #endregion
 
     #region Currency UI
@@ -339,20 +355,20 @@ public class InGameUIManager : MonoBehaviour
         }
     }
 
-    public void CloseNPCShop(SpeakerData shopkeeper)
+    public void CloseNPCShop(SpeakerData shopkeeper, bool closeWithESCKey = false)
     {
         AlertTextUI.instance.EnableShopAlert();
         if(shopkeeper.SpeakerID() == SpeakerID.Bryn){
-            brynShopUI.CloseShopUI();
+            brynShopUI.CloseShopUI(closeWithESCKey);
         }
         else if(shopkeeper.SpeakerID() == SpeakerID.Stellan){
             stellanShopUI.CloseShopUI();
         }
         else if(shopkeeper.SpeakerID() == SpeakerID.Doctor){
-            doctorShopUI.CloseShopUI();
+            doctorShopUI.CloseShopUI(closeWithESCKey);
         }
         else if(shopkeeper.SpeakerID() == SpeakerID.Rhian){
-            weaponsShopUI.CloseShopUI();
+            weaponsShopUI.CloseShopUI(closeWithESCKey);
         }
         else{
             Debug.LogError("Failed to close shop for NPC " + shopkeeper.SpeakerID());
@@ -361,12 +377,23 @@ public class InGameUIManager : MonoBehaviour
 
     #endregion
 
-    public void TempOpenCaptainsLogFromInventory()
+    public Sprite GetSpriteFromStatType( PlayerFacingStatName statName )
     {
-        SetInventoryUIActive(false);
-        inventoryIsOpen = false;
-        InputManager.instance.inventoryIsOpen = false;
-
-        journalUI.ToggleJournalActive(true);
+        switch(statName){
+            case PlayerFacingStatName.STR:
+                return strSprite;
+            case PlayerFacingStatName.DEX:
+                return dexSprite;
+            case PlayerFacingStatName.INT:
+                return intSprite;
+            case PlayerFacingStatName.WIS:
+                return wisSprite;
+            case PlayerFacingStatName.CON:
+                return conSprite;
+            case PlayerFacingStatName.CHA:
+                return chaSprite;
+        }
+        Debug.LogError("No sprite found for stat: " + statName);
+        return null;
     }
 }

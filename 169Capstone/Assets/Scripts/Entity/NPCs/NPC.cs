@@ -26,7 +26,7 @@ public class NPC : MonoBehaviour
 
         InitializeAssociatedNumRunDialogueList();
 
-        if(speakerData.SpeakerID() == SpeakerID.TimeLich || (speakerData.SpeakerID() == SpeakerID.Stellan && GameManager.instance.currentRunNumber == 2)){
+        if(speakerData.SpeakerID() == SpeakerID.TimeLich || (speakerData.SpeakerID() == SpeakerID.Stellan && (GameManager.instance.currentRunNumber == 2 || GameManager.instance.currentRunNumber == 3))){
             forceNextDialogueOnTriggerEnter = true;
             if(speakerData.SpeakerID() == SpeakerID.Stellan){
                 timeToWaitForAutoDialogue = GameManager.DEFAULT_AUTO_DIALOGUE_WAIT_TIME;
@@ -41,6 +41,11 @@ public class NPC : MonoBehaviour
     {
         // If the collision was caused by the player
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
+            // If you've only completed ONE run and this is Stellan, don't open his shop this time
+            if(speakerData.SpeakerID() == SpeakerID.Stellan && GameManager.instance.currentRunNumber == 2 && haveTalkedToThisRun){
+                return;
+            }
+
             ActiveNPC = this;
 
             // If they're marked to autoplay dialogue this time, immediately start dialogue on trigger enter

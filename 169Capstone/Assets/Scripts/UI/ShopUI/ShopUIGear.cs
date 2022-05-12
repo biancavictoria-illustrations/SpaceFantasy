@@ -24,10 +24,10 @@ public class ShopUIGear : ShopUI
         SetShopUIValues();
     }
   
-    public override void CloseShopUI()
+    public override void CloseShopUI( bool closeWithESCKey = false )
     {
-        ToggleShopInventoryOn();
-        base.CloseShopUI();
+        ToggleShopInventoryOn(closeWithESCKey);
+        base.CloseShopUI(closeWithESCKey);
     }
 
     private void SetShopUIValues()
@@ -45,8 +45,13 @@ public class ShopUIGear : ShopUI
         }
     }
 
-    public void ToggleShopInventoryOn()
+    public void ToggleShopInventoryOn( bool closeWithESCKey = false )
     {
+        if(closeWithESCKey){
+            // Close all expanded panels
+            shopCompareUI.gearSwapInventoryUI.OnInventoryClose();
+        }        
+
         shopInventoryPanel.SetActive(true);
         shopCompareItemPanel.SetActive(false);
         InGameUIManager.instance.ToggleInGameGearIconPanel(true);
