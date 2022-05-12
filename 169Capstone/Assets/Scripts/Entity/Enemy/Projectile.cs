@@ -18,18 +18,21 @@ public class Projectile : MonoBehaviour
     private Rigidbody rb;
     private int _radius = 0;
 
-    public void Initialize(string enemyLayer, float damage, Vector3 direction, float? speed = null)
+    // Projectile's owner
+    private DamageSourceType damageSource;
+
+    public void Initialize(string enemyLayer, float damage, DamageSourceType damageSource, Vector3 direction, float? speed = null)
     {
-        Initialize(LayerMask.NameToLayer(enemyLayer), damage, direction, speed);
+        Initialize(LayerMask.NameToLayer(enemyLayer), damage, damageSource, direction, speed);
     }
 
-    public void Initialize(string enemyLayer, float damage, Vector3 direction, int radius, float? speed = null)
+    public void Initialize(string enemyLayer, float damage, DamageSourceType damageSource, Vector3 direction, int radius, float? speed = null)
     {
         _radius = radius;
-        Initialize(LayerMask.NameToLayer(enemyLayer), damage, direction, speed);
+        Initialize(LayerMask.NameToLayer(enemyLayer), damage, damageSource, direction, speed);
     }
 
-    public void Initialize(int enemyLayer, float damage, Vector3 direction, float? speed = null)
+    public void Initialize(int enemyLayer, float damage, DamageSourceType damageSource, Vector3 direction, float? speed = null)
     {
         rb = GetComponent<Rigidbody>();
         if(rb == null)
@@ -41,6 +44,7 @@ public class Projectile : MonoBehaviour
 
         this.enemyLayer = enemyLayer;
         this.damage = damage;
+        this.damageSource = damageSource;
 
         if(speed != null)
             this._speed = speed.Value;
@@ -64,7 +68,7 @@ public class Projectile : MonoBehaviour
         {
             EntityHealth enemyHealth = other.GetComponent<EntityHealth>();
             if(enemyHealth)
-                enemyHealth.Damage(damage);
+                enemyHealth.Damage(damage, damageSource);
             Explode();
             Destroy(gameObject);
         }
@@ -96,7 +100,7 @@ public class Projectile : MonoBehaviour
                 EntityHealth enemyHealth = enemies[i].GetComponent<EntityHealth>();
                 if(enemyHealth)
                 {
-                    enemyHealth.Damage(damage);
+                    enemyHealth.Damage(damage, damageSource);
                 }
             }
         }

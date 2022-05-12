@@ -148,7 +148,6 @@ public class InventoryUIItemPanel : MonoBehaviour
         return generatedDescription;
     }
 
-    // TODO: Truncate the decimals if they're too long
     private string GetStatModifierDescription()
     {
         string s = "\n";
@@ -166,7 +165,7 @@ public class InventoryUIItemPanel : MonoBehaviour
             float bonusValue = itemData.GetSecondaryLineValueFromStatType((StatType)i);
 
             bool percent = true;
-            if((StatType)i == StatType.HitPoints || (StatType)i == StatType.Defense){
+            if((StatType)i == StatType.HitPoints){
                 percent = false;
             }
 
@@ -184,11 +183,11 @@ public class InventoryUIItemPanel : MonoBehaviour
 
         // If %
         if(percent){
-            returnString += (bonusValue*100) + "%";
+            returnString += UIUtils.GetTruncatedDecimalForUIDisplay( (bonusValue*100) ) + "%";
         }
         // If flat
         else{
-            returnString += bonusValue;
+            returnString += UIUtils.GetTruncatedDecimalForUIDisplay( bonusValue );
         }
 
         return returnString + "</color>";

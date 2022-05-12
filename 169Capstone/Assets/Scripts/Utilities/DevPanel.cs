@@ -8,22 +8,33 @@ public class DevPanel : MonoBehaviour
     public Toggle moveSpeedToggle;
     public Toggle textSpeedToggle;
     public Toggle noDamageToggle;
+    public Toggle skipStatRerollToggle;
 
-    void Start()
+    private static bool speedBoost = false;
+    private static bool textSpeed = false;
+    private static bool godMode = false;
+    private static bool skipStatReroll = false;
+
+    public void UpdateValuesThatPersistBetweenScenes()
     {
-        if( DialogueManager.instance && DialogueManager.instance.dialogueUI.textSpeed == 0f ){
+        if(textSpeed){
             textSpeedToggle.isOn = true;
             ToggleTextSpeed();
         }
 
-        if( Player.instance && Player.instance.stats.GetMoveSpeedBase() == 2f ){
+        if(speedBoost){
             moveSpeedToggle.isOn = true;
             SpeedBoost();
         }
 
-        if( Player.instance && Player.instance.health.tempPlayerGodModeToggle ){
+        if(godMode){
             noDamageToggle.isOn = true;
             NoDamage();
+        }
+
+        if(skipStatReroll){
+            skipStatRerollToggle.isOn = true;
+            SkipStatReroll();
         }
     }
 
@@ -32,16 +43,76 @@ public class DevPanel : MonoBehaviour
     {
         if(DialogueManager.instance == null){
             textSpeedToggle.isOn = false;
+            textSpeed = false;
             return;
         }
 
         if(textSpeedToggle.isOn){
             DialogueManager.instance.SetTextSpeed(0f);
-            SetImageColorFromHex( textSpeedToggle.GetComponent<Image>(), InGameUIManager.turquoiseColor );
+            UIUtils.SetImageColorFromHex( textSpeedToggle.GetComponent<Image>(), InGameUIManager.turquoiseColor );
+            textSpeed = true;
         }
         else{
             DialogueManager.instance.SetTextSpeed(DialogueManager.DEFAULT_TEXT_SPEED);
-            SetImageColorFromHex( textSpeedToggle.GetComponent<Image>(), "#FFFFFF" );
+            UIUtils.SetImageColorFromHex( textSpeedToggle.GetComponent<Image>(), "#FFFFFF" );
+            textSpeed = false;
+        }
+    }
+
+    // Toggle
+    public void SkipStatReroll()
+    {
+        if(skipStatRerollToggle.isOn){
+            StatRerollUI.tempSkipStatRerollToggle = true;
+            UIUtils.SetImageColorFromHex( skipStatRerollToggle.GetComponent<Image>(), InGameUIManager.turquoiseColor );
+            skipStatReroll = true;
+        }
+        else{
+            StatRerollUI.tempSkipStatRerollToggle = false;
+            UIUtils.SetImageColorFromHex( skipStatRerollToggle.GetComponent<Image>(), "#FFFFFF" );
+            skipStatReroll = false;
+        }
+    }
+
+    // Toggle
+    public void SpeedBoost()
+    {
+        if(Player.instance == null){
+            moveSpeedToggle.isOn = false;
+            speedBoost = false;
+            return;
+        }
+
+        if(moveSpeedToggle.isOn){
+            Player.instance.stats.SetMoveSpeedBase(2f);
+            UIUtils.SetImageColorFromHex( moveSpeedToggle.GetComponent<Image>(), InGameUIManager.turquoiseColor );
+            speedBoost = true;
+        }
+        else{
+            Player.instance.stats.SetMoveSpeedBase(1f);
+            UIUtils.SetImageColorFromHex( moveSpeedToggle.GetComponent<Image>(), "#FFFFFF" );
+            speedBoost = false;
+        }
+    }
+
+    // Toggle
+    public void NoDamage()
+    {
+        if(Player.instance == null){
+            noDamageToggle.isOn = false;
+            godMode = false;
+            return;
+        }
+
+        if(noDamageToggle.isOn){
+            Player.instance.health.tempPlayerGodModeToggle = true;
+            UIUtils.SetImageColorFromHex( noDamageToggle.GetComponent<Image>(), InGameUIManager.turquoiseColor );
+            godMode = true;
+        }
+        else{
+            Player.instance.health.tempPlayerGodModeToggle = false;
+            UIUtils.SetImageColorFromHex( noDamageToggle.GetComponent<Image>(), "#FFFFFF" );
+            godMode = false;
         }
     }
 
@@ -53,42 +124,6 @@ public class DevPanel : MonoBehaviour
     public void Give10StarShards()
     {
         PlayerInventory.instance.SetPermanentCurrency( PlayerInventory.instance.permanentCurrency + 10 );
-    }
-
-    // Toggle
-    public void SpeedBoost()
-    {
-        if(Player.instance == null){
-            moveSpeedToggle.isOn = false;
-            return;
-        }
-
-        if(moveSpeedToggle.isOn){
-            Player.instance.stats.SetMoveSpeedBase(2f);
-            SetImageColorFromHex( moveSpeedToggle.GetComponent<Image>(), InGameUIManager.turquoiseColor );
-        }
-        else{
-            Player.instance.stats.SetMoveSpeedBase(1f);
-            SetImageColorFromHex( moveSpeedToggle.GetComponent<Image>(), "#FFFFFF" );
-        }
-    }
-
-    // Toggle
-    public void NoDamage()
-    {
-        if(Player.instance == null){
-            noDamageToggle.isOn = false;
-            return;
-        }
-
-        if(noDamageToggle.isOn){
-            Player.instance.health.tempPlayerGodModeToggle = true;
-            SetImageColorFromHex( noDamageToggle.GetComponent<Image>(), InGameUIManager.turquoiseColor );
-        }
-        else{
-            Player.instance.health.tempPlayerGodModeToggle = false;
-            SetImageColorFromHex( noDamageToggle.GetComponent<Image>(), "#FFFFFF" );
-        }
     }
 
     public void MaxSTR()
@@ -152,16 +187,5 @@ public class DevPanel : MonoBehaviour
         }
         Player.instance.stats.SetCharisma(5);
         Debug.Log("set CHA to 5");
-    }
-
-    public static void SetImageColorFromHex( Image img, string hexCode )
-    {
-        Color color;
-        if(ColorUtility.TryParseHtmlString( hexCode, out color )){
-            img.color = color;
-        }
-        else{
-            Debug.LogError("Failed to set color");
-        }   
     }
 }

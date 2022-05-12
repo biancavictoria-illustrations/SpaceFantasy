@@ -56,7 +56,7 @@ public class DeathScreenUI : MonoBehaviour
     public void GoToMainHubOnDeath()
     {
         GameManager.instance.deathMenuOpen = false;
-        ClosePlayerDeathUI();
+        // ClosePlayerDeathUI();
         GameManager.instance.EndRun();
         SceneManager.LoadScene(GameManager.MAIN_HUB_STRING_NAME);
     }

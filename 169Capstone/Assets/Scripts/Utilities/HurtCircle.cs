@@ -11,21 +11,25 @@ public class HurtCircle : MonoBehaviour
     private float damage;
     private float damageInterval;
 
+    // The owner of this hurt circle
+    private DamageSourceType damageSource;
+
     void Awake()
     {
         hurtTimers = new Dictionary<Collider, Coroutine>();
     }
 
-    public void Initialize(string enemyLayer, float damage, float lifetime, float radius = 1, float damageInterval = 0.5f, float fadeInDuration = 1)
+    public void Initialize(string enemyLayer, float damage, float lifetime, DamageSourceType damageSource, float radius = 1, float damageInterval = 0.5f, float fadeInDuration = 1)
     {
-        Initialize(LayerMask.NameToLayer(enemyLayer), damage, lifetime, radius, damageInterval, fadeInDuration);
+        Initialize(LayerMask.NameToLayer(enemyLayer), damage, lifetime, damageSource, radius, damageInterval, fadeInDuration);
     }
 
-    public void Initialize(int enemyLayer, float damage, float lifetime, float radius = 1, float damageInterval = 0.5f, float fadeInDuration = 1)
+    public void Initialize(int enemyLayer, float damage, float lifetime, DamageSourceType damageSource, float radius = 1, float damageInterval = 0.5f, float fadeInDuration = 1)
     {
         this.enemyLayer = enemyLayer;
         this.damage = damage;
         this.damageInterval = damageInterval;
+        this.damageSource = damageSource;
 
         transform.localScale = Vector3.one * radius;
 
@@ -59,7 +63,7 @@ public class HurtCircle : MonoBehaviour
             if(canDamage)
             {
                 yield return new WaitForSeconds(damageInterval);
-                target.Damage(damage);
+                target.Damage(damage, damageSource);
             }
             else
             {

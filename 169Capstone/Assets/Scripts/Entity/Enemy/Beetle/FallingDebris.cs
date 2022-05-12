@@ -48,7 +48,7 @@ public class FallingDebris : MonoBehaviour
     {
         if(other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            other.GetComponent<EntityHealth>().Damage(damage);
+            other.GetComponent<EntityHealth>().Damage(damage, DamageSourceType.BeetleBoss);
             Destroy(gameObject);
         }
 

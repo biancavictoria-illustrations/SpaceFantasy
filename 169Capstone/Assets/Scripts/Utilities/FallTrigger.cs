@@ -12,7 +12,7 @@ public class FallTrigger : MonoBehaviour
         {
             Debug.Log("Player fell onto trigger");
             EntityHealth playerHealth = collision.collider.GetComponent<EntityHealth>();
-            playerHealth.Damage(playerHealth.currentHitpoints);
+            playerHealth.Damage(playerHealth.currentHitpoints, DamageSourceType.DeathPit);
         }
     }
 }

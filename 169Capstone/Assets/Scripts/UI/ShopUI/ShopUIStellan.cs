@@ -70,9 +70,6 @@ public class ShopUIStellan : MonoBehaviour
 
     [HideInInspector] public UpgradePanel activeUpgradeInFocus;
 
-    public bool giveStarShardForTesting = false; // TEMP
-    public bool giveThousandStarShardsForTesting = false; // TEMP
-
     void Start()
     {
         playerStats = FindObjectOfType<PlayerStats>();
@@ -84,18 +81,6 @@ public class ShopUIStellan : MonoBehaviour
 
         if(GameManager.instance.hasKilledTimeLich){
             killTimeLichItem.SetActive(true);
-        }
-    }
-
-    void Update()
-    {
-        if(giveStarShardForTesting){
-            giveStarShardForTesting = false;
-            PlayerInventory.instance.SetPermanentCurrency( PlayerInventory.instance.permanentCurrency + 1 );
-        }
-        if(giveThousandStarShardsForTesting){
-            giveThousandStarShardsForTesting = false;
-            PlayerInventory.instance.SetPermanentCurrency( PlayerInventory.instance.permanentCurrency + 1000 );
         }
     }
 
@@ -137,12 +122,6 @@ public class ShopUIStellan : MonoBehaviour
         focusPanelIcon.color = new Color(255,255,255,255);
         focusPanelIcon.sprite = _icon;
         focusPanelIcon.preserveAspect = true;
-        if(isStatUpgrade){
-            // TODO: Make the image smaller
-        }
-        else{
-            // TODO: Make it normal
-        }
 
         focusPanelToPurchaseMessage.SetActive(true);
         SetPurchaseMessageButton(InputManager.instance.latestInputIsController, _cost=="");

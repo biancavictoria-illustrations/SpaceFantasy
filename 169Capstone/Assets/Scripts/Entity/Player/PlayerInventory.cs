@@ -21,8 +21,6 @@ public class PlayerInventory : MonoBehaviour
 
     [HideInInspector] public static bool hasPickedSomethingUpThisRun = false;
 
-    public bool giveElectrumForTesting = false; // TEMP - REMOVE THIS
-
     void Awake()
     {
         if( instance ){
@@ -42,14 +40,6 @@ public class PlayerInventory : MonoBehaviour
         gear[InventoryItemSlot.Accessory] = null;
         gear[InventoryItemSlot.Helmet] = null;
         gear[InventoryItemSlot.Legs] = null;
-    }
-
-    void Update()
-    {
-        if(giveElectrumForTesting){
-            giveElectrumForTesting = false;
-            SetTempCurrency(tempCurrency + 1);
-        }
     }
 
     public void InitializeInventoryValuesOnNewGame()

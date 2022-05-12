@@ -26,12 +26,15 @@ public class StatRerollUI : MonoBehaviour
     private PlayerStats stats;
     private PermanentUpgradeManager upgradeManager;
 
+    public static bool tempSkipStatRerollToggle = false;
+
     public void EnableStatRerollUI()
     {
         ToggleActiveStatus(true);
 
         // Don't let us leave until the animation is done
-        continueButton.interactable = false;
+        if(!tempSkipStatRerollToggle)
+            continueButton.interactable = false;
 
         // For convenience, save these locally
         stats = Player.instance.GetComponent<PlayerStats>();

@@ -33,7 +33,7 @@ public class Lich : Enemy
         canAttack = false;
 
         player = FindObjectOfType<Player>();
-        health.OnDeath.AddListener((EntityHealth _) => player.health.Damage(9999999999999999));
+        health.OnDeath.AddListener((EntityHealth _) => player.health.Damage(9999999999999999, DamageSourceType.DefeatedTimeLichEndRunDeath));
 
         EntityHealth healthScript = GetComponent<EntityHealth>();
         healthScript.OnHit.AddListener(checkForHalfHealth);
@@ -96,7 +96,7 @@ public class Lich : Enemy
         Vector3 towardsPlayer = player.transform.position - transform.position;
         towardsPlayer.y = 0;
         GameObject missile = Instantiate(missilePrefab, transform.position + transform.up + transform.forward, Quaternion.FromToRotation(transform.position, player.transform.position));
-        missile.GetComponent<Projectile>().Initialize("Player", logic.baseDamage * nextAttack.damageMultiplier, towardsPlayer);
+        missile.GetComponent<Projectile>().Initialize("Player", logic.baseDamage * nextAttack.damageMultiplier, DamageSourceType.TimeLich, towardsPlayer);
     }
 
     public void MeteorShower()
