@@ -306,10 +306,14 @@ tags:
 <<if $currentRunNum > 14>>
     [[StellanNumRuns15]]
 <<else>>
-    <<SetSpeaker Stellan>>
-    You must be quite the optimist, to keep trying like this. Either that, or just plain stupid. I haven’t quite figured out which yet.
-    <<SetSpeaker Player>>
-    Let me know once you do.
+    <<if Visited("StellanNumRuns")>>
+        [[StellanRepeatable]]
+    <<else>>
+        <<SetSpeaker Stellan>>
+        You must be quite the optimist, to keep trying like this. Either that, or just plain stupid. I haven’t quite figured out which yet.
+        <<SetSpeaker Player>>
+        Let me know once you do.
+    <<endif>>
 <<endif>>
 ===
 
@@ -319,12 +323,16 @@ tags:
 <<if $currentRunNum > 30>>
     [[StellanNumRuns34]]
 <<else>>
-    <<SetSpeaker Stellan>>
-    I’m getting tired of this existence, Atlan.
-    <<SetSpeaker Player>>
-    Then help me set you free.
-    <<SetSpeaker Stellan>>
-    … Only time will tell if you can.
+    <<if Visited("StellanNumRuns15")>>
+        [[StellanRepeatable]]
+    <<else>>
+        <<SetSpeaker Stellan>>
+        I’m getting tired of this existence, Atlan.
+        <<SetSpeaker Player>>
+        Then help me set you free.
+        <<SetSpeaker Stellan>>
+        … Only time will tell if you can.
+    <<endif>>
 <<endif>>
 ===
 

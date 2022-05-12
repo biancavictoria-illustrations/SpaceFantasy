@@ -77,6 +77,11 @@ public class Player : MonoBehaviour
     private IEnumerator DetectFall()
     {
         yield return new WaitUntil(() => transform.position.y <= -6);
+
+        if(health.tempPlayerGodModeToggle){
+            health.tempPlayerGodModeToggle = false;
+        }
+
         health.Damage(health.maxHitpoints);
     }
 

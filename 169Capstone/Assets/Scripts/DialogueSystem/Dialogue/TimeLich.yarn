@@ -102,10 +102,14 @@ tags:
 <<if $currentRunNum > 19>>
     [[TimeLichNumRuns20]]
 <<else>>
-    <<SetSpeaker TimeLich>>
-    Back once more.
-    <<SetSpeaker Player>>
-    As many times as it takes.
+    <<if Visited("TimeLichNumRuns")>>
+        [[TimeLichRepeatable]]
+    <<else>>
+        <<SetSpeaker TimeLich>>
+        Back once more.
+        <<SetSpeaker Player>>
+        As many times as it takes.
+    <<endif>>
 <<endif>>
 ===
 

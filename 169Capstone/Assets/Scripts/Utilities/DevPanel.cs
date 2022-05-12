@@ -9,6 +9,24 @@ public class DevPanel : MonoBehaviour
     public Toggle textSpeedToggle;
     public Toggle noDamageToggle;
 
+    void Start()
+    {
+        if( DialogueManager.instance && DialogueManager.instance.dialogueUI.textSpeed == 0f ){
+            textSpeedToggle.isOn = true;
+            ToggleTextSpeed();
+        }
+
+        if( Player.instance && Player.instance.stats.GetMoveSpeedBase() == 2f ){
+            moveSpeedToggle.isOn = true;
+            SpeedBoost();
+        }
+
+        if( Player.instance && Player.instance.health.tempPlayerGodModeToggle ){
+            noDamageToggle.isOn = true;
+            NoDamage();
+        }
+    }
+
     // Toggle
     public void ToggleTextSpeed()
     {
@@ -62,15 +80,14 @@ public class DevPanel : MonoBehaviour
             noDamageToggle.isOn = false;
             return;
         }
-        Player.instance.health.tempPlayerGodModeToggle = !Player.instance.health.tempPlayerGodModeToggle;
-        Debug.Log("God mode set to " + Player.instance.health.tempPlayerGodModeToggle);
 
         if(noDamageToggle.isOn){
+            Player.instance.health.tempPlayerGodModeToggle = true;
             SetImageColorFromHex( noDamageToggle.GetComponent<Image>(), InGameUIManager.turquoiseColor );
         }
         else{
+            Player.instance.health.tempPlayerGodModeToggle = false;
             SetImageColorFromHex( noDamageToggle.GetComponent<Image>(), "#FFFFFF" );
-
         }
     }
 
