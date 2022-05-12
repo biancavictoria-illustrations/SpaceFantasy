@@ -4,8 +4,11 @@ tags:
 <<set $visitedDefault to Visited("StellanDefaultDialogue")>>
 <<set $visitedDefault1 to Visited("StellanDefaultDialogue1")>>
 <<set $visitedDefault2 to Visited("StellanDefaultDialogue2")>>
-<<if $visitedDefault and $visitedDefault1 and $visitedDefault2>>
+<<set $visitedDefault3 to Visited("StellanDefaultDialogue3")>>
+<<if $visitedDefault and $visitedDefault1 and $visitedDefault2 and $visitedDefault3>>
     [[StellanNodeSelectHub]]
+<<elseif $visitedDefault2>>
+    [[StellanDefaultDialogue3]]
 <<elseif $visitedDefault1>>
     [[StellanDefaultDialogue2]]
 <<elseif $visitedDefault>>
@@ -369,8 +372,6 @@ tags:
     Can't fault a man for trying to steal from an abandoned wizard's tower. Didn't realize it wouldn't be so abandoned on the inside.
     <<SetSpeaker Stellan neutral ???>>
     Nevertheless, it was ambition that brought you here. The misguided arrogance that you could handle whatever threats might lurk within. And now, you're stuck. Just like the rest of us.
-    <<SetSpeaker Stellan>>
-    I’m Stellan. I may be willing to help you in your endeavor to escape, for a cost. I’m looking for something, and if you’re going beyond this lounge, you may be able to find it for me. In turn… I can offer a, ah, mutually beneficial relationship using the resources you source on my behalf.
 <<endif>>
 ===
 
@@ -380,12 +381,15 @@ tags:
 <<if Visited("StellanDefaultDialogue1")>>
     [[StellanDefaultDialogue2]]
 <<else>>
+    <<SetSpeaker Stellan neutral ???>>
+    Back again? Unsurprising. Just as I told you: You're stuck here.
     <<SetSpeaker Player>>
-    What can you tell me of the Captain of this ship? Who’s cursed tower have I stumbled into?
+    <i>Uugh</i>... What happened to me out there? I felt... different as soon as I left this lounge.
+    <<SetSpeaker Stellan neutral ???>>
+    Ah, yes. Everything is... twisted, within this ship. Continuously. I've been studying the time loop and its impact on the core qualities of a person for quite some time, but still many answers evade me.
     <<SetSpeaker Stellan>>
-    The Wizard is long dead. I was once his apprentice. But the Lich rules this ship now.
-    <<SetSpeaker Player>>
-    What a dramatic way of saying he’s the one I have to kill to break us all out of this godsforsaken loop.
+    I’m Stellan. If you're determined to keep dying out there, I may be willing to help in your endeavor to escape, for a cost. A, ah, mutually beneficial relationship.
+    I’m looking for Star Shards, and if you’re going beyond this lounge, you may be able to retrieve some for me. In turn… I have much to offer using the resources you source on my behalf.
 <<endif>>
 ===
 
@@ -394,6 +398,24 @@ tags:
 ---
 <<if Visited("StellanDefaultDialogue2")>>
     [[StellanDefaultDialogue3]]
+<<else>>
+    <<SetSpeaker Stellan>>
+    The inevitability of your death will continue if you don't stop being so careless.
+    <<SetSpeaker Player>>
+    Well, at least I'm doing <i>something</i> instead of wallowing in self-pity.
+    Make yourself useful and help me understand what's going on here. Who is the Captain of this ship? It didn't even ping on my radar, I assumed it was abandoned.
+    <<SetSpeaker Stellan>>
+    The Captain? The Wizard of this tower is long dead. I was once his apprentice. But the Lich rules this ship now.
+    <<SetSpeaker Player>>
+    What a dramatic way of saying he’s the one I have to kill to break us all out of this godsforsaken loop.
+<<endif>>
+===
+
+title: StellanDefaultDialogue3
+tags:
+---
+<<if Visited("StellanDefaultDialogue3")>>
+    [[StellanDefaultDialogue4]]
 <<else>>
     <<SetSpeaker Player>>
     If you’ve got all this fancy magic to make me stronger, why don’t you just do it all at once? Pump me full of magic juice and send me out to conquer this ship?
@@ -408,11 +430,11 @@ tags:
 <<endif>>
 ===
 
-title: StellanDefaultDialogue3
+title: StellanDefaultDialogue4
 tags:
 ---
-<<if Visited("StellanDefaultDialogue3")>>
-    [[StellanDefaultDialogue4]]
+<<if Visited("StellanDefaultDialogue4")>>
+    [[StellanDefaultDialogue5]]
 <<else>>
     <<SetSpeaker Stellan>>
     Back so soon? Yet you walked out of here with such confidence. Surely you’re more capable than that pathetic display.
@@ -423,11 +445,11 @@ tags:
 <<endif>>
 ===
 
-title: StellanDefaultDialogue4
+title: StellanDefaultDialogue5
 tags:
 ---
-<<if Visited("StellanDefaultDialogue4")>>
-    [[StellanDefaultDialogue5]]
+<<if Visited("StellanDefaultDialogue5")>>
+    [[StellanDefaultDialogue6]]
 <<else>>
     <<SetSpeaker Stellan>>
     Anything new to report? Any progress whatsoever?
@@ -438,11 +460,11 @@ tags:
 <<endif>>
 ===
 
-title: StellanDefaultDialogue5
+title: StellanDefaultDialogue6
 tags:
 ---
-<<if Visited("StellanDefaultDialogue5")>>
-    [[StellanDefaultDialogue6]]
+<<if Visited("StellanDefaultDialogue6")>>
+    [[StellanDefaultDialogue7]]
 <<else>>
     <<SetSpeaker Stellan>>
     Giving up yet?
@@ -457,11 +479,11 @@ tags:
 <<endif>>
 ===
 
-title: StellanDefaultDialogue6
+title: StellanDefaultDialogue7
 tags:
 ---
-<<if Visited("StellanDefaultDialogue6")>>
-    [[StellanDefaultDialogue7]]
+<<if Visited("StellanDefaultDialogue7")>>
+    [[StellanDefaultDialogue8]]
 <<else>>
     <<SetSpeaker Player>>
     Stellan, you’ve seemed to indicate to me in the past that you may have tried to escape this place on your own? Perhaps even… break whatever loop exists here?
@@ -474,11 +496,11 @@ tags:
 <<endif>>
 ===
 
-title: StellanDefaultDialogue7
+title: StellanDefaultDialogue8
 tags:
 ---
-<<if Visited("StellanDefaultDialogue7")>>
-    [[StellanDefaultDialogue8]]
+<<if Visited("StellanDefaultDialogue8")>>
+    [[StellanDefaultDialogue9]]
 <<else>>
     <<SetSpeaker Player>>
     You seem to know far more about what’s going on here than anyone else I’ve encountered on this ship. No one else even seems to find it particularly pressing that we get out of here.
@@ -489,7 +511,7 @@ tags:
 <<endif>>
 ===
 
-title: StellanDefaultDialogue8
+title: StellanDefaultDialogue9
 tags:
 ---
 <<SetSpeaker Stellan>><<BranchComplete DefaultDialogue DefaultDialogue>>
