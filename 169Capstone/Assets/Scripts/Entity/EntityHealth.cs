@@ -114,7 +114,10 @@ public class EntityHealth : MonoBehaviour
     {
         currentHitpoints -= damage;
         OnHit.Invoke(this, damage);
-        InGameUIManager.instance.ShowFloatingText(damage.ToString(), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "damage");
+        if (gameObject.tag == "Player")
+            InGameUIManager.instance.ShowFloatingText(damage.ToString(), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "damage-player");
+        else
+            InGameUIManager.instance.ShowFloatingText(damage.ToString(), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "damage-enemy");
         // Debug.Log("Hitpoints");
         // Debug.Log(currentHitpoints);
         
@@ -132,6 +135,7 @@ public class EntityHealth : MonoBehaviour
     public void Heal(float health)
     {
         currentHitpoints += health;
+        InGameUIManager.instance.ShowFloatingText(health.ToString(), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "health");
 
         if(currentHitpoints > maxHitpoints)
         {
@@ -150,6 +154,8 @@ public class EntityHealth : MonoBehaviour
 
         // Calculate new current by adding the same amount you gained or lost
         currentHitpoints += maxHitpoints - oldMax;
+
+        InGameUIManager.instance.ShowFloatingText(maxHitpoints.ToString(), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "health");
 
         SetMaxHealthUI();
         SetCurrentHealthUI();

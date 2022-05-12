@@ -28,13 +28,21 @@ public class FloatingTextManager : MonoBehaviour
 
         switch(type)
         {
-            case "damage":
+            case "damage-player":
                 floatingText.stat += float.Parse(msg);
-                floatingText.txt.text = "<color=" + InGameUIManager.magentaColor + ">-" + floatingText.stat.ToString() + "</color>";
+                floatingText.txt.text = "<color=" + InGameUIManager.magentaColor + ">" + floatingText.stat.ToString() + "</color>";
+                break;
+            case "damage-enemy":
+                floatingText.stat += float.Parse(msg);
+                floatingText.txt.text = floatingText.stat.ToString();
                 break;
             case "crit":
                 floatingText.stat += float.Parse(msg);
                 floatingText.txt.text = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.yellow) + ">x" + floatingText.stat.ToString() + " Crit Bonus</color>";
+                break;
+            case "health":
+                floatingText.stat += float.Parse(msg);
+                floatingText.txt.text = "<color=" + InGameUIManager.slimeGreenColor + ">" + floatingText.stat.ToString() + "</color>";
                 break;
             default:
                 floatingText.txt.text = msg;
