@@ -35,8 +35,12 @@ public class FloorGenerator : MonoBehaviour
     public GameObject spawnRoomPrefab;
     [Tooltip("The prefab for the beetle boss fight.")]
     public GameObject bossRoomPrefab;
-    [Tooltip("The prefab for the three shops.")]
-    public GameObject shopRoomPrefab;
+    [Tooltip("The prefab for the weapon shop.")]
+    public GameObject weaponsShopRoomPrefab;
+    [Tooltip("The prefab for the doctor shop.")]
+    public GameObject doctorShopRoomPrefab;
+    [Tooltip("The prefab for the gear shop.")]
+    public GameObject gearShopRoomPrefab;
     [Tooltip("The prefab for the force fields that trap players inside an encounter room.")]
     public GameObject forceFieldPrefab;
     [Tooltip("The prefab that contains a navmesh and the necessary settings for combat.")]
@@ -88,9 +92,9 @@ public class FloorGenerator : MonoBehaviour
         //Place down the spawn, shops, and boss room first
         GameObject spawnRoom = Instantiate(spawnRoomPrefab, new Vector3(-0.5f, 0, -0.5f) * gridCellSizeInUnits, Quaternion.identity);
 
-        GameObject centerShop = Instantiate(shopRoomPrefab, new Vector3(-0.5f - gridBounds.x / 2, 0, -0.5f - gridBounds.y / 2) * gridCellSizeInUnits, Quaternion.identity);
-        GameObject xShop = Instantiate(shopRoomPrefab, new Vector3(-gridBounds.x + 0.5f, 0, -0.5f) * gridCellSizeInUnits, Quaternion.identity);
-        GameObject zShop = Instantiate(shopRoomPrefab, new Vector3(-0.5f, 0, -gridBounds.y + 0.5f) * gridCellSizeInUnits, Quaternion.identity);
+        GameObject centerShop = Instantiate(doctorShopRoomPrefab, new Vector3(-0.5f - gridBounds.x / 2, 0, -0.5f - gridBounds.y / 2) * gridCellSizeInUnits, Quaternion.identity);
+        GameObject xShop = Instantiate(gearShopRoomPrefab, new Vector3(-gridBounds.x + 0.5f, 0, -0.5f) * gridCellSizeInUnits, Quaternion.identity);
+        GameObject zShop = Instantiate(weaponsShopRoomPrefab, new Vector3(-0.5f, 0, -gridBounds.y + 0.5f) * gridCellSizeInUnits, Quaternion.identity);
 
         GameObject bossRoom = Instantiate(bossRoomPrefab, new Vector3(-gridBounds.x + 0.5f, 0, -gridBounds.y + 0.5f) * gridCellSizeInUnits, Quaternion.identity);
         Beetle beetleBoss = bossRoom.GetComponentInChildren<Beetle>();
