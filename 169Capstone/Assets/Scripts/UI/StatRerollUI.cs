@@ -59,8 +59,11 @@ public class StatRerollUI : MonoBehaviour
         ToggleActiveStatus(false);
         InGameUIManager.instance.ToggleRunUI(true);
         InGameUIManager.instance.TogglePermanentCurrencyUI(true);
-        AlertTextUI.instance.EnableViewStatsAlert();
-        StartCoroutine(AlertTextUI.instance.RemoveAlertAfterSeconds());
+        
+        if(GameManager.instance.currentRunNumber != 2){
+            AlertTextUI.instance.EnableViewStatsAlert();
+            StartCoroutine(AlertTextUI.instance.RemoveAlertAfterSeconds());
+        }
     }
 
     private void ToggleActiveStatus(bool set)
