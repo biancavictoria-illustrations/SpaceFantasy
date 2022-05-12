@@ -48,7 +48,7 @@ public class FloatingTextManager : MonoBehaviour
                 break;
             case "crit":
                 floatingText.stat += float.Parse(msg);
-                floatingText.txt.text = "<color=#" + ColorUtility.ToHtmlStringRGB(Color.yellow) + ">x" + floatingText.stat.ToString() + " Crit Bonus</color>";
+                floatingText.txt.text = "<color=" + InGameUIManager.goldColor + ">" + floatingText.stat.ToString() + "</color>";
                 break;
             case "health":
                 floatingText.stat += float.Parse(msg);

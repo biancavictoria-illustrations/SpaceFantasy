@@ -312,11 +312,11 @@ public class PlayerStats : EntityStats
 
         private float CalculateCritValue(float baseDamage)
         {
-            EntityHealth healthScript = GetComponent<EntityHealth>();
+            //EntityHealth healthScript = GetComponent<EntityHealth>();
             float chance = Random.Range(0.0f, 1f);
             if(chance <= getCritChance()){
                 float crit = getCritDamage();
-                healthScript.OnCrit.Invoke(healthScript, crit);
+                //healthScript.OnCrit.Invoke(healthScript, crit);
                 return baseDamage * crit;
             }
             return 0f;
