@@ -8,6 +8,8 @@ tags:
     [[PlayerStellanCommTriggered]]
 <<elseif $runNum is 1 and not Visited("PlayerFirstRunIntro")>>
     [[PlayerFirstRunIntro]]
+<<elseif $runNum is 2 and not Visited("PlayerSecondRunIntro")>>
+    [[PlayerSecondRunIntro]]
 <<else>>
     ERROR: No player dialogue found.
 <<endif>>
@@ -21,6 +23,14 @@ tags:
 <<SetSpeaker Player>>
 Huh. Not quite as abandoned as it looked from the outside.
 Ah, well. As long as the loot's good.
+===
+
+title: PlayerSecondRunIntro
+tags:
+---
+<<SetSpeaker Player>>
+What...?
+I feel... different.
 ===
 
 

@@ -54,8 +54,8 @@ public class Player : MonoBehaviour
 
         StartCoroutine(DetectFall());
 
-        // If your first run, auto trigger starting dialogue
-        if(GameManager.instance.currentRunNumber == 1){
+        // If your 1st or 2nd run, auto trigger starting dialogue
+        if(GameManager.instance.currentRunNumber == 1 || (GameManager.instance.currentSceneName == GameManager.GAME_LEVEL1_STRING_NAME && GameManager.instance.currentRunNumber == 2)){
             GameManager.instance.inElevatorAnimation = true;
             FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
                 StartAutoDialogueFromPlayer();
@@ -67,11 +67,21 @@ public class Player : MonoBehaviour
     public void StartAutoDialogueFromPlayer(float timeToWait = GameManager.DEFAULT_AUTO_DIALOGUE_WAIT_TIME)
     {
         StartCoroutine(GameManager.instance.AutoRunDialogueAfterTime());
+        
+        if( GameManager.instance.currentRunNumber == 2 ){
+            AlertTextUI.instance.EnableViewStatsAlert();
+            StartCoroutine(AlertTextUI.instance.RemoveAlertAfterSeconds());
+        }
     }
 
     private IEnumerator DetectFall()
     {
         yield return new WaitUntil(() => transform.position.y <= -6);
+
+        if(health.tempPlayerGodModeToggle){
+            health.tempPlayerGodModeToggle = false;
+        }
+
         health.Damage(health.maxHitpoints);
     }
 

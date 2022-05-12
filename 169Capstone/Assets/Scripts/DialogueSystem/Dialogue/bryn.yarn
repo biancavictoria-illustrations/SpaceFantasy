@@ -152,10 +152,14 @@ tags:
 <<if $currentRunNum > 8>>
     [[BrynNumRuns9]]
 <<else>>
-    <<SetSpeaker Player>>
-    Back again.
-    <<SetSpeaker Bryn>>
-    Keep it up, Atlan! Try to have some patience with yourself, you’re making progress even if you can’t see it! Just remember: <i>Du skal kravle, før du kan gå!</i>
+    <<if Visited("BrynNumRuns")>>
+        [[BrynRepeatable]]
+    <<else>>
+        <<SetSpeaker Player>>
+        Back again.
+        <<SetSpeaker Bryn>>
+        Keep it up, Atlan! Try to have some patience with yourself, you’re making progress even if you can’t see it! Just remember: <i>Du skal kravle, før du kan gå!</i>
+    <<endif>>
 <<endif>>
 ===
 
@@ -165,12 +169,16 @@ tags:
 <<if $currentRunNum > 19>>
     [[BrynNumRuns20]]
 <<else>>
-    <<SetSpeaker Player>>
-    I shouldn’t be taking this long! I should’ve finished my quest by now.
-    <<SetSpeaker Bryn>>
-    Hey, woah woah woah, I don’t like the sound of that! Remember, best friend: <i>Kemst þó hægt fari!</i>
-    <<SetSpeaker Player>>
-    You got a dwarvish dictionary somewhere?
+    <<if Visited("BrynNumRuns9")>>
+        [[BrynRepeatable]]
+    <<else>>
+        <<SetSpeaker Player>>
+        I shouldn’t be taking this long! I should’ve finished my quest by now.
+        <<SetSpeaker Bryn>>
+        Hey, woah woah woah, I don’t like the sound of that! Remember, best friend: <i>Kemst þó hægt fari!</i>
+        <<SetSpeaker Player>>
+        You got a dwarvish dictionary somewhere?
+    <<endif>>
 <<endif>>
 ===
 
