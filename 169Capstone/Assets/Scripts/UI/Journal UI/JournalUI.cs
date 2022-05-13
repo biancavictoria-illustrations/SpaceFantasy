@@ -7,15 +7,29 @@ public class JournalUI : MonoBehaviour
 {
     [SerializeField] private GameObject journalUIPanel;
 
+    private GameObject devPanel;    // TEMP
+
     public void ToggleJournalActive(bool set)
     {
         journalUIPanel.SetActive(set);
+
+        // TEMP
+        if(!devPanel){
+            devPanel = FindObjectOfType<DevPanel>().buttonPanel;
+        }
+        devPanel.SetActive(!set);
+
+        // TODO: Check if we're in a level or in main hub. if main hub, only reactivate THOSE elements!
+        // This might work? there might be weird bugs idk
+
+        if(set){
+            InGameUIManager.instance.SetGameUIActive(false);
+        }
+        else{
+            InGameUIManager.instance.SetGameUIActive(true);
+            if(GameManager.instance.currentSceneName == GameManager.MAIN_HUB_STRING_NAME){
+                InGameUIManager.instance.ToggleRunUI(false);
+            }
+        }
     }
 }
-
-
-/*
-    TODO:
-    =====
-    - make a tab variant that swaps out content instead of panels for the sidebar tabs
-*/

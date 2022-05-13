@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class DevPanel : MonoBehaviour
 {
+    public GameObject buttonPanel;
+    
     public Toggle moveSpeedToggle;
     public Toggle textSpeedToggle;
     public Toggle noDamageToggle;

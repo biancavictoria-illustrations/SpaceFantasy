@@ -37,7 +37,8 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     [SerializeField] private Image upgradeIcon;
     [SerializeField] private Image starShardIcon;
 
-    private Sprite upgradeIconSprite;
+    [Tooltip("ONLY for stat upgrades; leave blank for skills bc it's set in code")]
+    [SerializeField] private Sprite upgradeIconSprite;
 
     [SerializeField] private Button upgradeButton;
 
@@ -49,10 +50,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
     void Start()
     {
-        if(IsStatUpgrade()){
-            upgradeIconSprite = InGameUIManager.instance.GetSpriteFromStatType(GetStatFromUpgradeType());
-        }
-        else{
+        if(!IsStatUpgrade()){
             upgradeIconSprite = upgradeIcon.sprite;
         }
     }

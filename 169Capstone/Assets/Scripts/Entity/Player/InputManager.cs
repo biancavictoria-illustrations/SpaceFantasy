@@ -218,6 +218,7 @@ public class InputManager : MonoBehaviour
 
         if(GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME){
             RunGameTimer(!journalIsOpen);
+            InGameUIManager.instance.timerUI.SetTimerUIActive(!journalIsOpen);
         }
 
         if(AlertTextUI.instance.alertTextIsActive){
