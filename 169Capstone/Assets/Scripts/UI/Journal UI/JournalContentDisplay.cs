@@ -42,7 +42,9 @@ public class JournalContentDisplay : MonoBehaviour
     }
 
     public JournalSidebarTabGroup tabGroup;
-    public int currentContentID;
+    [HideInInspector] public int currentContentID;
+
+    // TODO: store all the UI elements
 
     private JournalContentManager jcm;
     
@@ -50,20 +52,20 @@ public class JournalContentDisplay : MonoBehaviour
     {
         // For convenience
         jcm = JournalContentManager.instance;
-
-        ShowCurrentPanel();
+        ShowCurrentContentPage();
     }
 
-    private void ShowCurrentPanel()
+    private void ShowCurrentContentPage()
     {
         // Show the content for the panel associated with JournalContentID panelIndex
-
         JournalContent content = jcm.contentDatabase[(JournalContentID)currentContentID];
+
+        // TODO: Display the content, according to the type
     }
 
     public void SetPageIndex(int index)
     {
         currentContentID = index;
-        ShowCurrentPanel();
+        ShowCurrentContentPage();
     }
 }

@@ -17,14 +17,13 @@ public class JournalContentManager : MonoBehaviour
         else{
             instance = this;
         }
-
         contentDatabase = new Dictionary<JournalContentDisplay.JournalContentID, JournalContent>();
         LoadAllJournalContentObjects();
     }
 
     private void LoadAllJournalContentObjects()
     {
-        // ""
+        // Load in crew page data
         Object[] journalContentList = Resources.LoadAll("JournalContent/Crew", typeof(JournalContent));
         foreach(Object c in journalContentList){
             JournalContent content = (JournalContent)c;

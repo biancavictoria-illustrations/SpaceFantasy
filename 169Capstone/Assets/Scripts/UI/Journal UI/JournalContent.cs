@@ -10,7 +10,7 @@ public class JournalContent : ScriptableObject
     [Tooltip("PLAYER FACING entry name")]
     [SerializeField] protected string entryName;
     [Tooltip("PLAYER FACING flavor ID number")]
-    [SerializeField] protected int entryID;
+    [SerializeField] protected string entryID;
 
     [SerializeField] protected Sprite profilePicture;
 

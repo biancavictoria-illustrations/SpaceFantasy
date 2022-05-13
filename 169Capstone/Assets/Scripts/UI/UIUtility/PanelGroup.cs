@@ -8,7 +8,7 @@ public class PanelGroup : MonoBehaviour
 
     public TabGroup tabGroup;
 
-    public int panelIndex;
+    [HideInInspector] public int panelIndex;
 
     void Awake()
     {
