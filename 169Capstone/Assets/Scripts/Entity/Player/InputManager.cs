@@ -129,6 +129,10 @@ public class InputManager : MonoBehaviour
         }
         // If nearby NPC is a shopkeeper and you HAVE talked to them already, just open the shop
         else if(NPC.ActiveNPC && NPC.ActiveNPC.SpeakerData().IsShopkeeper()){
+            // If we just completed the FIRST run, don't open Stellan's shop
+            if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Stellan && GameManager.instance.currentRunNumber == 2){
+                return;
+            }
             InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.SpeakerData());
         }
 

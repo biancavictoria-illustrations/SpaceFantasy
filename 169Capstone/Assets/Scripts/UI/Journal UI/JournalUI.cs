@@ -19,9 +19,6 @@ public class JournalUI : MonoBehaviour
         }
         devPanel.SetActive(!set);
 
-        // TODO: Check if we're in a level or in main hub. if main hub, only reactivate THOSE elements!
-        // This might work? there might be weird bugs idk
-
         if(set){
             InGameUIManager.instance.SetGameUIActive(false);
         }
