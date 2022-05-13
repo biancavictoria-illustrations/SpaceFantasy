@@ -127,11 +127,15 @@ public class InGameUIManager : MonoBehaviour
         inGameUIGearIconPanel.SetActive(set);
     }
 
-    public void ToggleRunUI(bool setRunUIActive)
+    public void ToggleRunUI(bool setRunUIActive, bool resetTimer = true)
     {
         ToggleInGameGearIconPanel(setRunUIActive);
         tempCurrencyValue.gameObject.SetActive(setRunUIActive);
         healthUIContainer.SetActive(setRunUIActive);
+
+        if(!resetTimer){
+            return;
+        }
 
         // Reset timer
         InputManager.instance.RunGameTimer(setRunUIActive, setRunUIActive);

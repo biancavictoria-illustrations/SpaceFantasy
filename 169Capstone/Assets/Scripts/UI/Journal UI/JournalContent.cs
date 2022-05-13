@@ -29,7 +29,7 @@ public class JournalContent : ScriptableObject
 
     public string EntryID()
     {
-        return "ID: " + entryID;
+        return entryID;
     }
 
     public Sprite ProfilePicture()

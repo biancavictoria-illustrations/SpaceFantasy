@@ -10,7 +10,19 @@ public class Billboard : MonoBehaviour
 
     private Vector3 towardsCameraNoY;
 
+    private bool waitUntilGenerationComplete = false;
+
     void Start()
+    {
+        if(GameManager.instance.InSceneWithRandomGeneration()){
+            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(StartOnGenerationComplete);
+        }
+        else{
+            StartOnGenerationComplete();
+        }
+    }
+
+    private void StartOnGenerationComplete()
     {
         if(!renderer)
             renderer = GetComponentInChildren<SpriteRenderer>();
@@ -21,11 +33,13 @@ public class Billboard : MonoBehaviour
         Vector3 tiltVector = Quaternion.FromToRotation(towardsCameraNoY, towardsCamera) * Vector3.up;
         float scale = 1 / Vector3.Project(tiltVector, Vector3.up).magnitude;
         transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y * scale, transform.localScale.z);
+
+        waitUntilGenerationComplete = true;
     }
 
     void Update()
     {
-        if(spriteHolder)
+        if(spriteHolder && waitUntilGenerationComplete)
         {
             //Face the sprite towards the camera
             spriteHolder.forward = towardsCameraNoY;
