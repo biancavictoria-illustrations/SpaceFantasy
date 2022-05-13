@@ -28,6 +28,7 @@ public class JournalContentDisplay : MonoBehaviour
         INT,
         WIS,
         CHA,
+        SecondaryStats,
 
         // ENEMIES
         Slime,
@@ -61,6 +62,7 @@ public class JournalContentDisplay : MonoBehaviour
     public JournalContentID activePageID;
 
     private const string ID_PREFIX = "<b>ID:</b> ";
+    private const string RESEARCH_PREFIX = "<b>RESEARCH NOTES:</b>\n";
 
     #region UI Elements
         [Header("Top Header Panel")]
@@ -79,6 +81,10 @@ public class JournalContentDisplay : MonoBehaviour
 
         [Header("Right Panel")]
         [SerializeField] private Image contentImage;
+
+        [Header("Stat Panel Options")]
+        [SerializeField] private GameObject coreStatPanel;
+        [SerializeField] private GameObject secondaryStatPanel;
     #endregion
     
     void Start()
@@ -118,9 +124,12 @@ public class JournalContentDisplay : MonoBehaviour
         {
             // Top Header Panel
             contentSectionTitle.text = content.EntryName();
+            contentSectionSubTitleRight.text = ID_PREFIX + content.EntryID();
 
             // Right Panel
-            // contentImage.sprite = content.ProfilePicture();  // TODO: Uncomment once we have these
+            if(content.ProfilePicture()){
+                contentImage.sprite = content.ProfilePicture();
+            }
         }
 
         private void SetCrewValues(JournalContentCrew content)
@@ -129,7 +138,7 @@ public class JournalContentDisplay : MonoBehaviour
 
             // Top Header Panel
             contentSectionSubTitleLeft.text = content.JobTitle();
-            contentSectionSubTitleRight.text = ID_PREFIX + content.EntryID();
+            // contentSectionSubTitleRight.text = ID_PREFIX + content.EntryID();
 
             // Body Panel
             bodyContent1.text = "<b>DoB:</b> " + content.Birthday();
@@ -143,12 +152,22 @@ public class JournalContentDisplay : MonoBehaviour
 
         private void SetStatValues(JournalContentStat content)
         {
+            bool isSecondaryStatsEntry = content.InternalID() == JournalContentID.SecondaryStats;
+            secondaryStatPanel.SetActive(isSecondaryStatsEntry);
+            coreStatPanel.SetActive(!isSecondaryStatsEntry);
+
+            if(isSecondaryStatsEntry){
+                // panel is made all in the editor, nothing populates at runtime
+                return;
+            }
+
             SetDefaultValues(content);
 
             // Top Header Panel
 
             // Body Panel
-
+            bodyContent1.text = "<b>SECONDARY STAT:</b> " + content.AssociatedSecondaryStats();
+            mainBodyContent.text = RESEARCH_PREFIX + content.ReportNotes();
         }
 
         private void SetEnemyValues(JournalContentEnemy content)
@@ -158,7 +177,7 @@ public class JournalContentDisplay : MonoBehaviour
             // Top Header Panel
 
             // Body Panel
-            
+            mainBodyContent.text = RESEARCH_PREFIX + content.ReportNotes();
         }
 
         private void SetItemValues(JournalContentItem content)
@@ -168,7 +187,7 @@ public class JournalContentDisplay : MonoBehaviour
             // Top Header Panel
 
             // Body Panel
-            
+            mainBodyContent.text = RESEARCH_PREFIX + content.ReportNotes();
         }
 
         // TODO: the last type
