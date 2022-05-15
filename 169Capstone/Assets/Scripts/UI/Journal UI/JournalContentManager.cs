@@ -16,7 +16,24 @@ public class JournalContentManager : MonoBehaviour
     private void LoadAllJournalContentObjects()
     {
         // Load in crew page data
-        Object[] journalContentList = Resources.LoadAll("JournalContent/Crew", typeof(JournalContent));
+        LoadContentFromLocation("JournalContent/Crew");
+
+        // TODO: the last type
+        // "JournalContent/Locations"
+
+        // Load in stat page data
+        LoadContentFromLocation("JournalContent/Stats");
+
+        // Load in enemy page data
+        LoadContentFromLocation("JournalContent/Enemies");
+
+        // Load in item page data
+        LoadContentFromLocation("JournalContent/Items");
+    }
+
+    private void LoadContentFromLocation(string location)
+    {
+        Object[] journalContentList = Resources.LoadAll(location, typeof(JournalContent));
         foreach(Object c in journalContentList){
             JournalContent content = (JournalContent)c;
             if(contentDatabase.ContainsKey(content.InternalID())){
@@ -24,13 +41,5 @@ public class JournalContentManager : MonoBehaviour
             }
             contentDatabase.Add(content.InternalID(), content);
         }
-
-        // "JournalContent/Locations"
-
-        // "JournalContent/Stats"
-
-        // "JournalContent/Combat"
-
-        // "JournalContent/Gear"
     }
 }

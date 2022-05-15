@@ -29,14 +29,14 @@ public class JournalContentDisplay : MonoBehaviour
         WIS,
         CHA,
 
-        // COMBAT
+        // ENEMIES
         Slime,
         Robert,
         BrutePest,
         //Harvester,
         TimeLich,
 
-        // GEAR
+        // ITEMS
         Electrum,
         StarShards,
 
@@ -48,34 +48,38 @@ public class JournalContentDisplay : MonoBehaviour
         Crew,
         Locations,
         Stats,
-        Combat,
+        Enemy,
         Items
     }
 
     public JournalSidebarTabGroup tabGroup;
-    [HideInInspector] public int currentContentID;
     [SerializeField] private JournalContentManager jcm;
 
     [SerializeField] private ContentType contentType;
 
+    [Tooltip("Set to default first/top page value")]
+    public JournalContentID activePageID;
+
     private const string ID_PREFIX = "<b>ID:</b> ";
 
-    [Header("Top Header Panel")]
-    [SerializeField] private TMP_Text contentSectionTitle;
-    [SerializeField] private TMP_Text contentSectionSubTitleLeft;
-    [SerializeField] private TMP_Text contentSectionSubTitleRight;
+    #region UI Elements
+        [Header("Top Header Panel")]
+        [SerializeField] private TMP_Text contentSectionTitle;
+        [SerializeField] private TMP_Text contentSectionSubTitleLeft;
+        [SerializeField] private TMP_Text contentSectionSubTitleRight;
 
-    [Header("Body Panel")]
-    [SerializeField] private TMP_Text bodyContent1;
-    [SerializeField] private TMP_Text bodyContent2;
-    [SerializeField] private TMP_Text bodyContent3;
-    [SerializeField] private TMP_Text bodyContent4;
-    [SerializeField] private TMP_Text bodyContent5;
-    [SerializeField] private TMP_Text bodyContent6;
-    [SerializeField] private TMP_Text mainBodyContent;
+        [Header("Body Panel")]
+        [SerializeField] private TMP_Text bodyContent1;
+        [SerializeField] private TMP_Text bodyContent2;
+        [SerializeField] private TMP_Text bodyContent3;
+        [SerializeField] private TMP_Text bodyContent4;
+        [SerializeField] private TMP_Text bodyContent5;
+        [SerializeField] private TMP_Text bodyContent6;
+        [SerializeField] private TMP_Text mainBodyContent;
 
-    [Header("Right Panel")]
-    [SerializeField] private Image contentImage;
+        [Header("Right Panel")]
+        [SerializeField] private Image contentImage;
+    #endregion
     
     void Start()
     {
@@ -84,33 +88,46 @@ public class JournalContentDisplay : MonoBehaviour
 
     private void ShowCurrentContentPage()
     {
+        Debug.Log("Setting journal values for: " + activePageID);
+
         // Show the content for the panel associated with JournalContentID panelIndex
-        JournalContent content = jcm.contentDatabase[(JournalContentID)currentContentID];
+        JournalContent content = jcm.contentDatabase[activePageID];
 
         switch( contentType ){
             case ContentType.Crew:
                 SetCrewValues((JournalContentCrew)content);
                 break;
             case ContentType.Locations:
+                // TODO
                 // SetCrewValues((JournalContentCrew)content);
                 break;
             case ContentType.Stats:
-                // SetCrewValues((JournalContentCrew)content);
+                SetStatValues((JournalContentStat)content);
                 break;
-            case ContentType.Combat:
-                // SetCrewValues((JournalContentCrew)content);
+            case ContentType.Enemy:
+                SetEnemyValues((JournalContentEnemy)content);
                 break;
             case ContentType.Items:
-                // SetCrewValues((JournalContentCrew)content);
+                SetItemValues((JournalContentItem)content);
                 break;
         }
     }
 
     #region Set Values By Type
-        private void SetCrewValues(JournalContentCrew content)
+        private void SetDefaultValues(JournalContent content)
         {
             // Top Header Panel
             contentSectionTitle.text = content.EntryName();
+
+            // Right Panel
+            // contentImage.sprite = content.ProfilePicture();  // TODO: Uncomment once we have these
+        }
+
+        private void SetCrewValues(JournalContentCrew content)
+        {
+            SetDefaultValues(content);
+
+            // Top Header Panel
             contentSectionSubTitleLeft.text = content.JobTitle();
             contentSectionSubTitleRight.text = ID_PREFIX + content.EntryID();
 
@@ -122,17 +139,44 @@ public class JournalContentDisplay : MonoBehaviour
             bodyContent5.text = "<b>STRENGTHS:</b> " + content.Strengths();
             bodyContent6.text = "<b>WEAKNESSES:</b> " + content.Weaknesses();
             mainBodyContent.text = "<b>PERFORMANCE REVIEW:</b>\n" + content.ReportNotes();
-
-            // Right Panel
-            // contentImage.sprite = content.ProfilePicture();  // TODO: Uncomment once we have these
         }
 
-        // TODO: the other types
+        private void SetStatValues(JournalContentStat content)
+        {
+            SetDefaultValues(content);
+
+            // Top Header Panel
+
+            // Body Panel
+
+        }
+
+        private void SetEnemyValues(JournalContentEnemy content)
+        {
+            SetDefaultValues(content);
+
+            // Top Header Panel
+
+            // Body Panel
+            
+        }
+
+        private void SetItemValues(JournalContentItem content)
+        {
+            SetDefaultValues(content);
+
+            // Top Header Panel
+
+            // Body Panel
+            
+        }
+
+        // TODO: the last type
     #endregion
 
-    public void SetPageIndex(int index)
+    public void SetPageID(JournalContentID id)
     {
-        currentContentID = index;
+        activePageID = id;
         ShowCurrentContentPage();
     }
 }

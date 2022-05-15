@@ -13,8 +13,6 @@ public class JournalSidebarTabGroup : MonoBehaviour
 
     public JournalSidebarTabButton selectedTab;
 
-    // public List<GameObject> objectsToSwap;
-
     public JournalContentDisplay contentDisplay;
 
     public void Subscribe(JournalSidebarTabButton button)
@@ -61,20 +59,8 @@ public class JournalSidebarTabGroup : MonoBehaviour
         ResetTabs();
         button.background.color = tabActive;
 
-        // Swap the UI visible
-        // int index = button.transform.GetSiblingIndex();
-        // for(int i = 0; i < objectsToSwap.Count; i++){
-        //     if(i == index){
-        //         objectsToSwap[i].SetActive(true);
-        //     }
-        //     else{
-        //         objectsToSwap[i].SetActive(false);
-        //     }
-        // }
-
-        // This might work in place of the above??? maybe comment that out
         if(contentDisplay != null){
-            contentDisplay.SetPageIndex(button.transform.GetSiblingIndex());
+            contentDisplay.SetPageID(selectedTab.contentID);
         }
     }
 
