@@ -8,7 +8,11 @@ public class AnimationStateController : MonoBehaviour
     public bool attackActive;
     public UnityEvent endAttack;
     public UnityEvent startAccessory;
+    public UnityEvent startCooldownAccessory;
     public UnityEvent endAccessory;
+    public UnityEvent startLegs;
+    public UnityEvent endLegs;
+    public UnityEvent startCooldownLegs;
 
     public Animator animator;
 
@@ -30,6 +34,26 @@ public class AnimationStateController : MonoBehaviour
     public void EndAccessory()
     {
         endAccessory.Invoke();
+    }
+
+    public void StartCoolDownAccessory()
+    {
+        startCooldownAccessory.Invoke();
+    }
+
+    public void StartLegs()
+    {
+        startLegs.Invoke();
+    }
+
+    public void EndLegs()
+    {
+        endLegs.Invoke();
+    }
+
+    public void StartCoolDownLegs()
+    {
+        startCooldownLegs.Invoke();
     }
 }
 
