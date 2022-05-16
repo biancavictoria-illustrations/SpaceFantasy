@@ -90,7 +90,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4071815571541599162}
         m_MethodName: SetSFXVolumeToUIValue
         m_Mode: 1
         m_Arguments:
@@ -1003,6 +1003,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8748479022907609911}
   - component: {fileID: 6948587608825826648}
+  - component: {fileID: 4071815571541599162}
   m_Layer: 5
   m_Name: SettingsGrid
   m_TagString: Untagged
@@ -1060,6 +1061,25 @@ MonoBehaviour:
   spacing: {x: 0, y: 0}
   fitX: 1
   fitY: 1
+--- !u!114 &4071815571541599162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4239999569484198472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11e82dae7b0362347a1dc12eb5623eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  masterVolume: {fileID: 5782816752331524570}
+  musicVolume: {fileID: 4330067980688313332}
+  sfxVolume: {fileID: 6096576141102738924}
+  textSpeedToggles:
+  - {fileID: 7796228703335697676}
+  - {fileID: 2981939542618221303}
+  - {fileID: 3391700050559383118}
 --- !u!1 &4530360790209731395
 GameObject:
   m_ObjectHideFlags: 0
@@ -1150,7 +1170,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4071815571541599162}
         m_MethodName: SetMasterVolumeToUIValue
         m_Mode: 1
         m_Arguments:
@@ -2239,7 +2259,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4071815571541599162}
         m_MethodName: SetMusicVolumeToUIValue
         m_Mode: 1
         m_Arguments:

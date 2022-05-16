@@ -5,11 +5,21 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "JournalUI/JournalContentItem")]
 public class JournalContentItem : JournalContent
 {
-    [SerializeField] private string origin;
+    [Header("Item Data")]
+    [SerializeField] private string itemType;
 
-    [Tooltip("What the currency is /used for/ OR what the item /does/, depending on currency or gear")]
-    [SerializeField] private string purpose;
+    // Put ORIGIN + PURPOSE in research notes instead
 
-    [Tooltip("GEAR ONLY")]
-    [SerializeField] private string gearMechanicalDescription;
+    [TextArea(15,20)]
+    [SerializeField] private string mechanicalDescription;
+
+    public string ItemType()
+    {
+        return itemType;
+    }
+
+    public string MechanicalDescription()
+    {
+        return mechanicalDescription;
+    }
 }

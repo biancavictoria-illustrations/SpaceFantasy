@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour
 
     private bool GetPausedStateFromAllPauseConditions()
     {
-        return hitStop || DialogueManager.instance.stopTime || pauseMenuOpen || deathMenuOpen || InputManager.instance.shopIsOpen || InGameUIManager.instance.inventoryIsOpen || InGameUIManager.instance.gearSwapIsOpen || InputManager.instance.journalIsOpen || statRerollUIOpen;
+        return hitStop || DialogueManager.instance.stopTime || pauseMenuOpen || deathMenuOpen || InputManager.instance.shopIsOpen || InGameUIManager.instance.inventoryIsOpen || InGameUIManager.instance.gearSwapIsOpen || InputManager.instance.journalIsOpen || InputManager.instance.mapIsOpen || statRerollUIOpen;
     }
 
     public bool InSceneWithRandomGeneration()

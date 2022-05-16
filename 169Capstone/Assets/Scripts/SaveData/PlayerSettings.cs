@@ -10,7 +10,6 @@ public enum PlayerPrefKeys
     sfxVolume,
 
     textSpeed,
-    minTextSize,
 
     enumSize
 }
@@ -44,29 +43,67 @@ public class PlayerSettings : MonoBehaviour
     public void SaveNewMasterVolume(float newVolume)
     {
         masterVolumeValue = newVolume;
-        PlayerPrefs.SetFloat(PlayerPrefKeys.masterVolume.ToString(), newVolume);
+        SetMasterVolumeToCurrentSetting();
+
+        PlayerPrefs.SetFloat(PlayerPrefKeys.masterVolume.ToString(), masterVolumeValue);
         PlayerPrefs.Save();
+    }
+
+    public void SetMasterVolumeToCurrentSetting()
+    {
+        AudioManager.Instance.SetMasterVolume(masterVolumeValue);
     }
 
     public void SaveNewMusicVolume(float newVolume)
     {
         musicVolumeValue = newVolume;
-        PlayerPrefs.SetFloat(PlayerPrefKeys.musicVolume.ToString(), newVolume);
+        SetMusicVolumeToCurrentSetting();
+
+        PlayerPrefs.SetFloat(PlayerPrefKeys.musicVolume.ToString(), musicVolumeValue);
         PlayerPrefs.Save();
+    }
+
+    public void SetMusicVolumeToCurrentSetting()
+    {
+        AudioManager.Instance.SetMusicVolume(musicVolumeValue);
     }
 
     public void SaveNewSFXVolume(float newVolume)
     {
         sfxVolumeValue = newVolume;
-        PlayerPrefs.SetFloat(PlayerPrefKeys.sfxVolume.ToString(), newVolume);
+        SetSFXVolumeToCurrentSetting();
+
+        PlayerPrefs.SetFloat(PlayerPrefKeys.sfxVolume.ToString(), sfxVolumeValue);
         PlayerPrefs.Save();
+    }
+
+    public void SetSFXVolumeToCurrentSetting()
+    {
+        AudioManager.Instance.SetSFXVolume(sfxVolumeValue);
     }
 
     public void SaveNewTextSpeed(SettingsMenu.TextSpeedSetting textSpeed)
     {
         currentTextSpeed = textSpeed;
+        SetTextSpeedToCurrentSetting();
+
         PlayerPrefs.SetInt(PlayerPrefKeys.textSpeed.ToString(), (int)currentTextSpeed);
         PlayerPrefs.Save();
+    }
+
+    public void SetTextSpeedToCurrentSetting()
+    {
+        switch(currentTextSpeed){
+            case SettingsMenu.TextSpeedSetting.defaultSpeed:
+                DialogueManager.instance.SetTextSpeed(DialogueManager.DEFAULT_TEXT_SPEED);
+                break;
+            case SettingsMenu.TextSpeedSetting.fast:
+                DialogueManager.instance.SetTextSpeed(DialogueManager.FAST_TEXT_SPEED);
+                break;
+            case SettingsMenu.TextSpeedSetting.instant:
+                DialogueManager.instance.SetTextSpeed(0);
+                break;
+        }
     }
 
     /*
@@ -82,7 +119,7 @@ public class PlayerSettings : MonoBehaviour
         else{
             // If there is already a setting saved, retrieve it and set the current volume to that
             masterVolumeValue = PlayerPrefs.GetFloat(PlayerPrefKeys.masterVolume.ToString());
-            AudioManager.Instance.SetMasterVolume(masterVolumeValue);
+            SetMasterVolumeToCurrentSetting();
         }
 
         if(!PlayerPrefs.HasKey(PlayerPrefKeys.musicVolume.ToString())){
@@ -90,7 +127,7 @@ public class PlayerSettings : MonoBehaviour
         }
         else{
             musicVolumeValue = PlayerPrefs.GetFloat(PlayerPrefKeys.musicVolume.ToString());
-            AudioManager.Instance.SetMusicVolume(musicVolumeValue);
+            SetMusicVolumeToCurrentSetting();
         }
 
         if(!PlayerPrefs.HasKey(PlayerPrefKeys.sfxVolume.ToString())){
@@ -98,7 +135,7 @@ public class PlayerSettings : MonoBehaviour
         }
         else{
             sfxVolumeValue = PlayerPrefs.GetFloat(PlayerPrefKeys.sfxVolume.ToString());
-            AudioManager.Instance.SetSFXVolume(sfxVolumeValue);
+            SetSFXVolumeToCurrentSetting();
         }
 
         if(!PlayerPrefs.HasKey(PlayerPrefKeys.textSpeed.ToString())){
@@ -106,7 +143,7 @@ public class PlayerSettings : MonoBehaviour
         }
         else{
             currentTextSpeed = (SettingsMenu.TextSpeedSetting)PlayerPrefs.GetInt(PlayerPrefKeys.textSpeed.ToString());
-            SettingsMenu.SetTextSpeed(currentTextSpeed);
+            SetTextSpeedToCurrentSetting();
         }
     }
 }

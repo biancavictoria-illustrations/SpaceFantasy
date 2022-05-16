@@ -15,6 +15,7 @@ public class InputManager : MonoBehaviour
     [HideInInspector] public bool shopIsOpen = false;
     [HideInInspector] public bool compareItemIsOpen = false;
     [HideInInspector] public bool journalIsOpen = false;
+    [HideInInspector] public bool mapIsOpen = false;
 
     [HideInInspector] public bool isAttacking = false;
     [HideInInspector] public bool useAccessory = false;
@@ -90,7 +91,7 @@ public class InputManager : MonoBehaviour
 
     public bool CanAcceptGameplayInput()
     {
-        if(isInDialogue || PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || journalIsOpen || isInMainMenu || GameManager.instance.statRerollUIOpen || GameManager.instance.inElevatorAnimation){
+        if(isInDialogue || PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || mapIsOpen || journalIsOpen || isInMainMenu || GameManager.instance.statRerollUIOpen || GameManager.instance.inElevatorAnimation){
             return false;
         }
         return true;
@@ -162,7 +163,8 @@ public class InputManager : MonoBehaviour
     // If you're in dialogue, click anywhere to progress
     public void OnClick(InputValue input)
     {
-        if(isInDialogue && !PauseMenu.GameIsPaused && !DialogueManager.instance.dialogueUI.IsMidDialogueLineDisplay){
+        // input.isPressed confirms this is only run on KEY DOWN, not both key down AND then also key up
+        if(isInDialogue && input.isPressed && !PauseMenu.GameIsPaused && !DialogueManager.instance.dialogueUI.IsMidDialogueLineDisplay){
             DialogueManager.instance.dialogueUI.MarkLineComplete();
         }
     }
@@ -190,6 +192,10 @@ public class InputManager : MonoBehaviour
             InGameUIManager.instance.statRerollUI.DisableStatRerollUI();
             return;
         }
+        else if(mapIsOpen){
+            OnToggleMinimap(input);
+            return;
+        }
         else if(journalIsOpen){
             OnToggleJournal(input);
             return;
@@ -213,7 +219,7 @@ public class InputManager : MonoBehaviour
 
     public void OnToggleJournal(InputValue input)
     {
-        if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || inventoryIsOpen || isInMainMenu){
+        if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || inventoryIsOpen || mapIsOpen || isInMainMenu){
             return;
         }
 
@@ -230,9 +236,27 @@ public class InputManager : MonoBehaviour
         }
     }
 
+    public void OnToggleMinimap(InputValue input)
+    {
+        if(!GameManager.instance.InSceneWithRandomGeneration() || isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || inventoryIsOpen || journalIsOpen){
+            return;
+        }
+
+        // InGameUIManager.instance.(!mapIsOpen);
+        mapIsOpen = !mapIsOpen;
+        Debug.Log("Map status set to: " + mapIsOpen);
+
+        RunGameTimer(!mapIsOpen);
+        InGameUIManager.instance.timerUI.SetTimerUIActive(!mapIsOpen);
+
+        if(AlertTextUI.instance.alertTextIsActive){
+            AlertTextUI.instance.ToggleAlertText(!mapIsOpen);
+        }
+    }
+
     public void OnToggleInventory(InputValue input)
     {
-        if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || journalIsOpen || GameManager.instance.currentSceneName == GameManager.MAIN_HUB_STRING_NAME || isInMainMenu){
+        if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || mapIsOpen || journalIsOpen || GameManager.instance.currentSceneName == GameManager.MAIN_HUB_STRING_NAME || isInMainMenu){
             return;
         }
         

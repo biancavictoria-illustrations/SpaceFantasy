@@ -14,7 +14,7 @@ public enum ControlKeys
     MoveRight,
     Jump,
     AttackPrimary,
-    AttackSecondary,
+    ToggleMinimap,
     Interact,
     Pause,
     ToggleInventory,
@@ -59,7 +59,6 @@ public class ControlsMenu : MonoBehaviour
     [SerializeField] private ControlRebindButton jump;
     
     [SerializeField] private ControlRebindButton primaryAttack;
-    [SerializeField] private ControlRebindButton secondaryAttack;
     [SerializeField] private ControlRebindButton accessoryAbility;
     [SerializeField] private ControlRebindButton helmetAbility;
     [SerializeField] private ControlRebindButton bootsAbility;
@@ -68,6 +67,7 @@ public class ControlsMenu : MonoBehaviour
     [SerializeField] private ControlRebindButton interact;
     [SerializeField] private ControlRebindButton toggleInventory;
     [SerializeField] private ControlRebindButton toggleJournal;
+    [SerializeField] private ControlRebindButton toggleMinimap;
     [SerializeField] private ControlRebindButton pause;
 
 
@@ -82,7 +82,7 @@ public class ControlsMenu : MonoBehaviour
         buttons.Add(moveRight);
         buttons.Add(jump);
         buttons.Add(primaryAttack);
-        buttons.Add(secondaryAttack);
+        buttons.Add(toggleMinimap);
         buttons.Add(accessoryAbility);
         buttons.Add(helmetAbility);
         buttons.Add(bootsAbility);
@@ -350,8 +350,8 @@ public class ControlsMenu : MonoBehaviour
 
             case ControlKeys.AttackPrimary:
                 return primaryAttack;
-            case ControlKeys.AttackSecondary:
-                return secondaryAttack;
+            case ControlKeys.ToggleMinimap:
+                return toggleMinimap;
             
             case ControlKeys.Interact:
                 return interact;

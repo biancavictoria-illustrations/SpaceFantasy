@@ -29,13 +29,10 @@ public class SettingsMenu : MonoBehaviour
     {
         // If the text speed toggle is changed, change color
         for(int i = 0; i < textSpeedToggles.Count; i++){
-            textSpeedToggles[i].onValueChanged.AddListener( delegate{
-                UpdateTextSpeedToggleColors();
-            });
+            textSpeedToggles[i].onValueChanged.AddListener( (bool value) => UpdateTextSpeedTogglesOnValueChanged(textSpeedToggles[i], i, value) );
         }
 
         SetSettingsUIToSavedValues();
-        SetAllActualValues();
     }
 
     private void SetSettingsUIToSavedValues()
@@ -46,98 +43,54 @@ public class SettingsMenu : MonoBehaviour
         sfxVolume.value = PlayerPrefs.GetFloat(PlayerPrefKeys.sfxVolume.ToString());
 
         textSpeedToggles[PlayerPrefs.GetInt(PlayerPrefKeys.textSpeed.ToString())].isOn = true;
-        UpdateTextSpeedToggleColors();
     }
 
-    public void UpdateTextSpeedToggleColors()
+    public void UpdateTextSpeedTogglesOnValueChanged(Toggle toggle, int textSpeedIndex, bool value)
     {
-        for(int j = 0; j < textSpeedToggles.Count; j++){
-            Toggle t = textSpeedToggles[j];
-            if(t.isOn){
-                UIUtils.SetImageColorFromHex( t.GetComponent<Image>(), InGameUIManager.slimeGreenColor );
-            }
-            else{
-                UIUtils.SetImageColorFromHex( t.GetComponent<Image>(), "#FFFFFF" );
-                // t.GetComponent<Image>().color = new Color(255,255,255,255);
-            }
+        if(value){
+            PlayerSettings.instance.SaveNewTextSpeed( (TextSpeedSetting)textSpeedIndex );
+            UIUtils.SetImageColorFromHex( toggle.GetComponent<Image>(), InGameUIManager.slimeGreenColor );
+        }
+        else{
+            UIUtils.SetImageColorFromHex( toggle.GetComponent<Image>(), "#FFFFFF" );
         }
     }
 
     // Called when you adjust the slider value or when you reset values to default
     public void SetMasterVolumeToUIValue()
     {
-        AudioManager.Instance.SetMasterVolume(masterVolume.value);
+        PlayerSettings.instance.SaveNewMasterVolume(masterVolume.value);
     }
 
     // Called when you adjust the slider value or when you reset values to default
     public void SetMusicVolumeToUIValue()
     {
-        AudioManager.Instance.SetMusicVolume(musicVolume.value);
+        PlayerSettings.instance.SaveNewMusicVolume(musicVolume.value);
     }
 
     // Called when you adjust the slider value or when you reset values to default
     public void SetSFXVolumeToUIValue()
     {
-        AudioManager.Instance.SetSFXVolume(sfxVolume.value);
-    }
-
-    public static void SetTextSpeed(TextSpeedSetting setting)
-    {
-        switch(setting){
-            case TextSpeedSetting.defaultSpeed:
-                DialogueManager.instance.SetTextSpeed(DialogueManager.DEFAULT_TEXT_SPEED);
-                break;
-            case TextSpeedSetting.fast:
-                DialogueManager.instance.SetTextSpeed(DialogueManager.FAST_TEXT_SPEED);
-                break;
-            case TextSpeedSetting.instant:
-                DialogueManager.instance.SetTextSpeed(0);
-                break;
-        }
-    }
-
-    public void SetTextSpeed()
-    {
-        for(int i = 0; i < textSpeedToggles.Count; i++){
-            if( textSpeedToggles[i].isOn ){
-                SetTextSpeed( (TextSpeedSetting)i );
-            }
-        }
+        PlayerSettings.instance.SaveNewSFXVolume(sfxVolume.value);
     }
 
     // Called when you click Apply Settings button
     public void ApplySettingsChange()
     {
-        Debug.Log("Applying settings changes...");
+        // PlayerSettings.instance.SaveNewMasterVolume(masterVolume.value);
+        // PlayerSettings.instance.SaveNewMusicVolume(musicVolume.value);
+        // PlayerSettings.instance.SaveNewSFXVolume(sfxVolume.value);
 
-        PlayerSettings.instance.SaveNewMasterVolume(masterVolume.value);
-        PlayerSettings.instance.SaveNewMusicVolume(musicVolume.value);
-        PlayerSettings.instance.SaveNewSFXVolume(sfxVolume.value);
-
-        for(int i = 0; i < textSpeedToggles.Count; i++){
-            if( textSpeedToggles[i].isOn ){
-                PlayerSettings.instance.SaveNewTextSpeed( (TextSpeedSetting)i );
-            }
-        }
+        // for(int i = 0; i < textSpeedToggles.Count; i++){
+        //     if( textSpeedToggles[i].isOn ){
+        //         PlayerSettings.instance.SaveNewTextSpeed( (TextSpeedSetting)i );
+        //         Debug.Log("Setting text speed to: " + (TextSpeedSetting)i);
+        //     }
+        // }
     }
 
-    // Called when you click cancel settings button
-    public void CancelSettingsChange()
+    public void ResetSettingsToDefault()
     {
-        Debug.Log("No settings changes applied.");
-        
-        // Set UI values back to saved player prefs
-        SetSettingsUIToSavedValues();
-
-        // Set actual values to those values
-        SetAllActualValues();
-    }
-
-    private void SetAllActualValues()
-    {
-        SetMasterVolumeToUIValue();
-        SetMusicVolumeToUIValue();
-        SetSFXVolumeToUIValue();
-        SetTextSpeed();
+        // TODO
     }
 }
