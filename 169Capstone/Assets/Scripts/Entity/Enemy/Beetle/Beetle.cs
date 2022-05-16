@@ -40,6 +40,7 @@ public class Beetle : Enemy
 
         EntityHealth healthScript = GetComponent<EntityHealth>();
         healthScript.OnHit.AddListener(checkForHalfHealth);
+        healthScript.OnDeath.AddListener(stopBossMusic);
 
         logic = phase1logic;
 
@@ -302,5 +303,10 @@ public class Beetle : Enemy
     {
         if(!isPhase2 && health.currentHitpoints <= health.maxHitpoints/2)
             MoveToPhase2();
+    }
+
+    private void stopBossMusic(EntityHealth health)
+    {
+        AudioManager.Instance.queueMusicAfterFadeOut(AudioManager.MusicTrack.Level1, false);
     }
 }

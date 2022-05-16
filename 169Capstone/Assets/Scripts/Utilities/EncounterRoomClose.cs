@@ -76,6 +76,8 @@ public class EncounterRoomClose : MonoBehaviour
                 GameObject boss = Instantiate(bossPrefab, room.transform.position, room.transform.rotation);
                 boi = boss.GetComponent<Beetle>();
                 boi.bossRoomScript = room;
+
+                AudioManager.Instance.queueMusicAfterFadeOut(AudioManager.MusicTrack.BossMusic);
             }
             else
             {

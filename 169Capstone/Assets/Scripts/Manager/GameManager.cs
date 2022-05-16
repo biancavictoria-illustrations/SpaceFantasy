@@ -147,7 +147,7 @@ public class GameManager : MonoBehaviour
         }
         else if(currentSceneName == GAME_LEVEL1_STRING_NAME){
             PlayerInventory.instance.SetRunStartHealthPotionQuantity();            
-            AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, false);
+            // AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, false);
             fade.opaqueOnStart = true;
             
             FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener( () =>

@@ -7,7 +7,8 @@ public class AudioManager : MonoBehaviour
     #region Music & SFX Enums
         public enum MusicTrack
         {
-            Level1
+            Level1,
+            BossMusic
         }
     #endregion
 
@@ -34,6 +35,7 @@ public class AudioManager : MonoBehaviour
         //Music & SFX
         [Header("Music Tracks")]
         [SerializeField][FMODUnity.EventRef] private string level1MusicTrack;
+        [SerializeField][FMODUnity.EventRef] private string bossMusicTrack;
 
         //VCAs
         private const string masterVCAPath = "vca:/Master";
@@ -61,7 +63,7 @@ public class AudioManager : MonoBehaviour
         private const float combatTransitionDuration = 1;
         private float combatTransitionProgress = 0;
         private bool isInCombat;
-        private Coroutine combatTransitionRoutine;
+        private Coroutine queuedMusicRoutine;
     #endregion
 
     void Awake()
@@ -108,11 +110,16 @@ public class AudioManager : MonoBehaviour
                 musicInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
                 musicInstance.release();
                 musicInstance = FMODUnity.RuntimeManager.CreateInstance(level1MusicTrack);
+                combatTransitionProgress = isCombat ? 1 : 0;
+                musicInstance.setParameterByName("Combat", combatTransitionProgress);
+                break;
+
+            case MusicTrack.BossMusic:
+                musicInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                musicInstance.release();
+                musicInstance = FMODUnity.RuntimeManager.CreateInstance(bossMusicTrack);
                 break;
         }
-
-        combatTransitionProgress = isCombat ? 1 : 0;
-        musicInstance.setParameterByName("Combat", combatTransitionProgress);
         musicInstance.start();
     }
 
@@ -131,5 +138,30 @@ public class AudioManager : MonoBehaviour
         Debug.Log("Set combat to: " + isInCombat);
         this.isInCombat = isInCombat;
         musicInstance.setParameterByName("Combat", isInCombat ? 1 : 0);
+    }
+
+    public void queueMusicAfterFadeOut(MusicTrack track, bool isCombat = false)
+    {
+        musicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        musicInstance.release();
+
+        if(queuedMusicRoutine != null)
+            StopCoroutine(queuedMusicRoutine);
+
+        queuedMusicRoutine = StartCoroutine(queueMusicWatcherRoutine(track, isCombat));
+    }
+
+    private IEnumerator queueMusicWatcherRoutine(MusicTrack track, bool isCombat = false)
+    {
+        FMOD.Studio.PLAYBACK_STATE state = FMOD.Studio.PLAYBACK_STATE.PLAYING;
+        musicInstance.getPlaybackState(out state);
+
+        while(state != FMOD.Studio.PLAYBACK_STATE.STOPPED)
+        {
+            yield return null;
+	        musicInstance.getPlaybackState(out state);
+        }
+
+        playMusic(track, isCombat);
     }
 }
