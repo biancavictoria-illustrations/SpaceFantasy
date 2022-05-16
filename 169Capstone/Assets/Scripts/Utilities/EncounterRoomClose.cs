@@ -10,13 +10,14 @@ public class EncounterRoomClose : MonoBehaviour
 
     [SerializeField] private Room room;
     [SerializeField] private EnemyGen enemyGen;
+    [SerializeField] private GameObject bossPrefab;
     [SerializeField] private Color newColor;
     [SerializeField] private Light sceneLight;
     [SerializeField] private bool isBossRoom;
 
     private Color oldColor;
     private GameObject elevator;
-   
+
     void Start()
     {
         if(GameManager.instance.InSceneWithRandomGeneration()){
@@ -25,6 +26,18 @@ public class EncounterRoomClose : MonoBehaviour
         else{
             StartOnGenerationComplete();
         }
+
+        if(isBossRoom)
+        {
+            foreach(Light light in FindObjectsOfType<Light>())
+            {
+                if(light.type == LightType.Directional)
+                {
+                    sceneLight = light;
+                    break;
+                }
+            }
+        }
     }
 
     private void StartOnGenerationComplete()
@@ -32,7 +45,6 @@ public class EncounterRoomClose : MonoBehaviour
         if(isBossRoom)
         {
             elevator = FindObjectOfType<SceneTransitionDoor>().gameObject;
-            sceneLight = FindObjectOfType<Light>();
         }
     }
 
@@ -61,12 +73,9 @@ public class EncounterRoomClose : MonoBehaviour
                 oldColor = sceneLight.color;
                 sceneLight.color = newColor;
 
-                Beetle boi = FindObjectOfType<Beetle>();
-                if(boi != null)
-                {
-                    boi.gameObject.SetActive(true);
-                    boi.canAttack = true;
-                }
+                GameObject boss = Instantiate(bossPrefab, room.transform.position, room.transform.rotation);
+                boi = boss.GetComponent<Beetle>();
+                boi.bossRoomScript = room;
             }
             else
             {
