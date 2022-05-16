@@ -17,4 +17,16 @@ public class Leg : NonWeaponItem
             fire = true;
         }
     }
+
+    public IEnumerator CoolDown()
+    {
+        yield return new WaitForSeconds(itemData.CoolDown());
+        anim.animator.SetTrigger("CooldownLegs");
+    }
+
+    public IEnumerator Duration()
+    {
+        yield return new WaitForSeconds(itemData.Duration());
+        anim.animator.SetTrigger("DurationLegs");
+    }
 }
