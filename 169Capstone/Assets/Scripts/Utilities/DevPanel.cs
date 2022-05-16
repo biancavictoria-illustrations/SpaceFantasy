@@ -8,22 +8,15 @@ public class DevPanel : MonoBehaviour
     public GameObject buttonPanel;
     
     public Toggle moveSpeedToggle;
-    public Toggle textSpeedToggle;
     public Toggle noDamageToggle;
     public Toggle skipStatRerollToggle;
 
     private static bool speedBoost = false;
-    private static bool textSpeed = false;
     private static bool godMode = false;
     private static bool skipStatReroll = false;
 
     public void UpdateValuesThatPersistBetweenScenes()
     {
-        if(textSpeed){
-            textSpeedToggle.isOn = true;
-            ToggleTextSpeed();
-        }
-
         if(speedBoost){
             moveSpeedToggle.isOn = true;
             SpeedBoost();
@@ -37,27 +30,6 @@ public class DevPanel : MonoBehaviour
         if(skipStatReroll){
             skipStatRerollToggle.isOn = true;
             SkipStatReroll();
-        }
-    }
-
-    // Toggle
-    public void ToggleTextSpeed()
-    {
-        if(DialogueManager.instance == null){
-            textSpeedToggle.isOn = false;
-            textSpeed = false;
-            return;
-        }
-
-        if(textSpeedToggle.isOn){
-            DialogueManager.instance.SetTextSpeed(0f);
-            UIUtils.SetImageColorFromHex( textSpeedToggle.GetComponent<Image>(), InGameUIManager.turquoiseColor );
-            textSpeed = true;
-        }
-        else{
-            DialogueManager.instance.SetTextSpeed(DialogueManager.DEFAULT_TEXT_SPEED);
-            UIUtils.SetImageColorFromHex( textSpeedToggle.GetComponent<Image>(), "#FFFFFF" );
-            textSpeed = false;
         }
     }
 

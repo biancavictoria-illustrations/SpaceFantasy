@@ -33,6 +33,7 @@ public class DialogueManager : MonoBehaviour
     public bool stopTime;
 
     public const float DEFAULT_TEXT_SPEED = 0.015f;
+    public const float FAST_TEXT_SPEED = 0.008f;
 
     void Awake()
     {

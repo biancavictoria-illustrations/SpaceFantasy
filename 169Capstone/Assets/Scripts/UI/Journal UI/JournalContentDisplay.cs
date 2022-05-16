@@ -6,45 +6,6 @@ using TMPro;
 
 public class JournalContentDisplay : MonoBehaviour
 {
-    // Each page has a UNIQUE ID (these need to be IN ORDER of the tab buttons)
-    // TODO: Fill in the rest
-    public enum JournalContentID{
-        // CREW
-        Stellan,
-        Bryn,
-        Rhian,
-        Doctor,
-        Captain,
-        Orby,
-        Atlan,  // Hide him, unlock him later maybe?
-
-        // LOCATIONS
-        TheOrbis,
-
-        // STATS
-        STR,
-        DEX,
-        CON,
-        INT,
-        WIS,
-        CHA,
-        SecondaryStats,
-
-        // ENEMIES
-        Slime,
-        Robert,
-        BrutePest,
-        //Harvester,
-        TimeLich,
-
-        // ITEMS
-        Electrum,
-        StarShards,
-
-        // For looping and stuff
-        enumSize
-    }
-
     public enum ContentType{
         Crew,
         Locations,
@@ -57,9 +18,7 @@ public class JournalContentDisplay : MonoBehaviour
     [SerializeField] private JournalContentManager jcm;
 
     [SerializeField] private ContentType contentType;
-
-    [Tooltip("Set to default first/top page value")]
-    public JournalContentID activePageID;
+    [HideInInspector] public JournalContentID activePageID;
 
     private const string ID_PREFIX = "<b>ID:</b> ";
     private const string RESEARCH_PREFIX = "<b>RESEARCH NOTES:</b>\n";
@@ -85,10 +44,31 @@ public class JournalContentDisplay : MonoBehaviour
         [Header("Stat Panel Options")]
         [SerializeField] private GameObject coreStatPanel;
         [SerializeField] private GameObject secondaryStatPanel;
+
+        [Header("Location Panel Options")]
+        [SerializeField] private GameObject shipLocationPanel;
+        [SerializeField] private GameObject galaxyPanel;
     #endregion
     
     void Start()
     {
+        switch(contentType){
+            case ContentType.Crew:
+                activePageID = JournalContentID.Stellan;
+                break;
+            case ContentType.Locations:
+                activePageID = JournalContentID.TheOrbis;
+                break;
+            case ContentType.Stats:
+                activePageID = JournalContentID.STR;
+                break;
+            case ContentType.Enemy:
+                activePageID = JournalContentID.SlimeDefault;
+                break;
+            case ContentType.Items:
+                activePageID = JournalContentID.Electrum;
+                break;
+        }
         ShowCurrentContentPage();
     }
 
@@ -104,8 +84,7 @@ public class JournalContentDisplay : MonoBehaviour
                 SetCrewValues((JournalContentCrew)content);
                 break;
             case ContentType.Locations:
-                // TODO
-                // SetCrewValues((JournalContentCrew)content);
+                SetLocationValues((JournalContentLocation)content);
                 break;
             case ContentType.Stats:
                 SetStatValues((JournalContentStat)content);
@@ -190,7 +169,31 @@ public class JournalContentDisplay : MonoBehaviour
             mainBodyContent.text = RESEARCH_PREFIX + content.ReportNotes();
         }
 
-        // TODO: the last type
+        private void SetLocationValues(JournalContentLocation content)
+        {
+            contentSectionTitle.text = content.EntryName();
+            return;
+
+            // TODO:
+
+            if(galaxyPanel){
+                bool isGalaxyPanel = content.InternalID() == JournalContentID.Galaxy;
+                galaxyPanel.SetActive(isGalaxyPanel);
+                shipLocationPanel.SetActive(!isGalaxyPanel);
+
+                if(isGalaxyPanel){
+                    // panel is made all in the editor, nothing populates at runtime
+                    return;
+                }
+            }
+            
+            SetDefaultValues(content);
+
+            // Top Header Panel
+
+            // Body Panel
+            mainBodyContent.text = "<b>MAINTENANCE REVIEW:</b>\n" + content.ReportNotes();
+        }
     #endregion
 
     public void SetPageID(JournalContentID id)
