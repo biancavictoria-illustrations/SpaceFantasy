@@ -11,7 +11,7 @@ public class JournalSidebarTabButton : Selectable, IPointerClickHandler, IEventS
     public JournalSidebarTabGroup tabGroup;
     public Image background;
 
-    public JournalContentDisplay.JournalContentID contentID;
+    public JournalContentID contentID;
 
     public UnityEvent onTabSelected;
     public UnityEvent onTabDeselcted;

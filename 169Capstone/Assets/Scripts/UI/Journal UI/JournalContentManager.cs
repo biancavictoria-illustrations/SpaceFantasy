@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class JournalContentManager : MonoBehaviour
 {
-    public Dictionary<JournalContentDisplay.JournalContentID, JournalContent> contentDatabase {get; private set;}
+    public Dictionary<JournalContentID, JournalContent> contentDatabase {get; private set;}
 
     // Start is called before the first frame update
     void Awake()
     {
-        contentDatabase = new Dictionary<JournalContentDisplay.JournalContentID, JournalContent>();
+        contentDatabase = new Dictionary<JournalContentID, JournalContent>();
         LoadAllJournalContentObjects();
     }
 
@@ -18,8 +18,8 @@ public class JournalContentManager : MonoBehaviour
         // Load in crew page data
         LoadContentFromLocation("JournalContent/Crew");
 
-        // TODO: the last type
-        // "JournalContent/Locations"
+        // Load in location page data
+        LoadContentFromLocation("JournalContent/Location");
 
         // Load in stat page data
         LoadContentFromLocation("JournalContent/Stats");

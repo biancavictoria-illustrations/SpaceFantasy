@@ -9,6 +9,7 @@ public enum PlayerPrefKeys
     musicVolume,
     sfxVolume,
 
+    textSpeed,
     minTextSize,
 
     enumSize
@@ -23,8 +24,7 @@ public class PlayerSettings : MonoBehaviour
     public float musicVolumeValue {get; private set;}
     public float sfxVolumeValue {get; private set;}
 
-    private int defaultTextSize = 12;
-    public int minTextSizeValue {get; private set;}
+    public SettingsMenu.TextSpeedSetting currentTextSpeed {get; private set;}
 
     void Awake()
     {
@@ -62,10 +62,10 @@ public class PlayerSettings : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    public void SaveNewMinTextSize(int size)
+    public void SaveNewTextSpeed(SettingsMenu.TextSpeedSetting textSpeed)
     {
-        minTextSizeValue = size;
-        PlayerPrefs.SetInt(PlayerPrefKeys.minTextSize.ToString(), size);
+        currentTextSpeed = textSpeed;
+        PlayerPrefs.SetInt(PlayerPrefKeys.textSpeed.ToString(), (int)currentTextSpeed);
         PlayerPrefs.Save();
     }
 
@@ -101,11 +101,12 @@ public class PlayerSettings : MonoBehaviour
             AudioManager.Instance.SetSFXVolume(sfxVolumeValue);
         }
 
-        // if(!PlayerPrefs.HasKey(PlayerPrefKeys.minTextSize.ToString())){
-        //     SaveNewMinTextSize(defaultTextSize);
-        // }
-        // else{
-        //     minTextSizeValue = PlayerPrefs.GetInt(PlayerPrefKeys.minTextSize.ToString());
-        // }
+        if(!PlayerPrefs.HasKey(PlayerPrefKeys.textSpeed.ToString())){
+            SaveNewTextSpeed(SettingsMenu.TextSpeedSetting.defaultSpeed);
+        }
+        else{
+            currentTextSpeed = (SettingsMenu.TextSpeedSetting)PlayerPrefs.GetInt(PlayerPrefKeys.textSpeed.ToString());
+            SettingsMenu.SetTextSpeed(currentTextSpeed);
+        }
     }
 }
