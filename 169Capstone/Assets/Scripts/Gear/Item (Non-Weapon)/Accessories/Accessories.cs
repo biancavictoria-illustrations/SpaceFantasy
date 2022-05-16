@@ -29,4 +29,10 @@ public class Accessories : NonWeaponItem
     {
         health.Damage(damage, DamageSourceType.Player);
     }
+
+    public IEnumerator CoolDown()
+    {
+        yield return new WaitForSeconds(itemData.CoolDown());
+        anim.animator.SetTrigger("CooldownAccessory");
+    }
 }

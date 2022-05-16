@@ -9,14 +9,12 @@ public class NonWeaponItem : Equipment
     [HideInInspector] public int slot;
     public bool fire = false;
     [HideInInspector] public bool clearToFire = true;
+
+    [HideInInspector] public AnimationStateController anim;
     //[HideInInspector] public Timer timer;
 
-    public IEnumerator CoolDown()
+    public void StartCooldown()
     {
-        Timer timer = Instantiate(timerPrefab).GetComponent<Timer>();
-        timer.StartTimer(itemData.CoolDown());
-        yield return new WaitUntil(() => timer.timeRemaining <= 0);
-        Destroy(timer);
-        clearToFire = true;
+        StartCoroutine("CoolDown");
     }
 }

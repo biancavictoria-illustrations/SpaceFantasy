@@ -6,7 +6,7 @@ public class WristRocket : Accessories
 {
     private Player player;
     private Movement movement;
-    private AnimationStateController anim;
+    //private AnimationStateController anim;
     //private bool fire = false;
     [SerializeField] GameObject rocketPrefab;
 
@@ -19,6 +19,7 @@ public class WristRocket : Accessories
         damage = itemData.Damage() * player.stats.getINTDamage();
         anim.startAccessory.AddListener(LaunchRocket);
         anim.endAccessory.AddListener(ResetRocket);
+        anim.startCooldownAccessory.AddListener(StartCooldown);
     }
 
     // Update is called once per frame
