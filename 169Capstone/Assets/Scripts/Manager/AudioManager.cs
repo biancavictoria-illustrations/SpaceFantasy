@@ -7,6 +7,7 @@ public class AudioManager : MonoBehaviour
     #region Music & SFX Enums
         public enum MusicTrack
         {
+            TitleMusic,
             Level1,
             BossMusic
         }
@@ -34,6 +35,7 @@ public class AudioManager : MonoBehaviour
     #region Event Paths
         //Music & SFX
         [Header("Music Tracks")]
+        [SerializeField][FMODUnity.EventRef] private string titleMusic;
         [SerializeField][FMODUnity.EventRef] private string level1MusicTrack;
         [SerializeField][FMODUnity.EventRef] private string bossMusicTrack;
 
@@ -102,10 +104,16 @@ public class AudioManager : MonoBehaviour
         sfxVCA.setVolume(sfxVolume);
     }
 
-    public void playMusic(MusicTrack track, bool isCombat)
+    public void playMusic(MusicTrack track, bool isCombat = false)
     {
         switch(track)
         {
+            case MusicTrack.TitleMusic:
+                musicInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                musicInstance.release();
+                musicInstance = FMODUnity.RuntimeManager.CreateInstance(titleMusic);
+                break;
+
             case MusicTrack.Level1:
                 musicInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
                 musicInstance.release();

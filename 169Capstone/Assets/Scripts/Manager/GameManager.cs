@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public const string GAME_LEVEL1_STRING_NAME = "GenerationSetup";
     public const string LICH_ARENA_STRING_NAME = "LichArena";
 
-    private const float hitStopDuration = 0.1f;
+    private const float hitStopDuration = 0.05f;
 
     public string currentSceneName {get; private set;}
     public static bool generationComplete = true;
@@ -57,6 +57,11 @@ public class GameManager : MonoBehaviour
         }
         DontDestroyOnLoad(this.gameObject);        
         SceneManager.sceneLoaded += OnSceneLoad;
+    }
+
+    void Start()
+    {
+        AudioManager.Instance.playMusic(AudioManager.MusicTrack.TitleMusic);
     }
 
     // Called when you start a new game to set values to default
