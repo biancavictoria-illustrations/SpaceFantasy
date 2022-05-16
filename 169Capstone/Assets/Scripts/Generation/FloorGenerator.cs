@@ -97,8 +97,6 @@ public class FloorGenerator : MonoBehaviour
         GameObject zShop = Instantiate(weaponsShopRoomPrefab, new Vector3(-0.5f, 0, -gridBounds.y + 0.5f) * gridCellSizeInUnits, Quaternion.identity);
 
         GameObject bossRoom = Instantiate(bossRoomPrefab, new Vector3(-gridBounds.x + 0.5f, 0, -gridBounds.y + 0.5f) * gridCellSizeInUnits, Quaternion.identity);
-        Beetle beetleBoss = bossRoom.GetComponentInChildren<Beetle>();
-        beetleBoss.gameObject.SetActive(false);
 
 #endregion
 
@@ -718,7 +716,6 @@ public class FloorGenerator : MonoBehaviour
             //Hook up boss room with the correct forcefield exit
             Room bossRoomScript = bossRoom.GetComponentInChildren<Room>();
             EncounterRoomClose bossRoomClose = bossRoom.GetComponentInChildren<EncounterRoomClose>();
-            bossRoomClose.boi = beetleBoss;
             for(int i = 0; i < bossRoomScript.roomExits.Count; ++i)
             {
                 Transform exit = bossRoomScript.roomExits[i];
