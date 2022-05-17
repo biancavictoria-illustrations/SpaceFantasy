@@ -180,8 +180,7 @@ public class GameManager : MonoBehaviour
         else if(currentSceneName == TITLE_SCREEN_STRING_NAME){
             gameTimer.runTotalTimer = false;
 
-            // TODO: Play title screen music
-
+            AudioManager.Instance.playMusic(AudioManager.MusicTrack.TitleMusic);
         }
     }
 
