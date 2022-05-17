@@ -223,8 +223,8 @@ public class InputManager : MonoBehaviour
             return;
         }
 
-        InGameUIManager.instance.journalUI.ToggleJournalActive(!journalIsOpen);
         journalIsOpen = !journalIsOpen;
+        InGameUIManager.instance.journalUI.ToggleJournalActive(journalIsOpen);
 
         if(GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME){
             RunGameTimer(!journalIsOpen);

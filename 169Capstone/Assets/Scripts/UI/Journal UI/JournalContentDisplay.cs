@@ -74,8 +74,6 @@ public class JournalContentDisplay : MonoBehaviour
 
     private void ShowCurrentContentPage()
     {
-        Debug.Log("Setting journal values for: " + activePageID);
-
         // Show the content for the panel associated with JournalContentID panelIndex
         JournalContent content = jcm.contentDatabase[activePageID];
 

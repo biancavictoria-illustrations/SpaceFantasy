@@ -15,9 +15,9 @@ public class JournalUI : MonoBehaviour
 
         // TEMP
         if(!devPanel){
-            devPanel = FindObjectOfType<DevPanel>().buttonPanel;
+            devPanel = FindObjectOfType<DevPanel>()?.buttonPanel;
         }
-        devPanel.SetActive(!set);
+        devPanel?.SetActive(!set);
 
         InGameUIManager.instance.SetGameUIActive(!set);
 

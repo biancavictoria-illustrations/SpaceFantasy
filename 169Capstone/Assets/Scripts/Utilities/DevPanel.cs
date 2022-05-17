@@ -10,10 +10,12 @@ public class DevPanel : MonoBehaviour
     public Toggle moveSpeedToggle;
     public Toggle noDamageToggle;
     public Toggle skipStatRerollToggle;
+    public Toggle superJumpToggle;
 
     private static bool speedBoost = false;
     private static bool godMode = false;
     private static bool skipStatReroll = false;
+    private static bool superJump = false;
 
     public void UpdateValuesThatPersistBetweenScenes()
     {
@@ -30,6 +32,32 @@ public class DevPanel : MonoBehaviour
         if(skipStatReroll){
             skipStatRerollToggle.isOn = true;
             SkipStatReroll();
+        }
+
+        if(superJump){
+            superJumpToggle.isOn = true;   
+            EnableSuperJump();
+        }
+    }
+
+    // Toggle
+    public void EnableSuperJump()
+    {
+        if(Player.instance == null){
+            superJumpToggle.isOn = false;
+            superJump = false;
+            return;
+        }
+
+        if(superJumpToggle.isOn){
+            Player.instance.GetComponent<Movement>().jumpSpeed = 42;
+            UIUtils.SetImageColorFromHex( superJumpToggle.GetComponent<Image>(), InGameUIManager.turquoiseColor );
+            superJump = true;
+        }
+        else{
+            Player.instance.GetComponent<Movement>().jumpSpeed = 30;
+            UIUtils.SetImageColorFromHex( superJumpToggle.GetComponent<Image>(), "#FFFFFF" );
+            superJump = false;
         }
     }
 
