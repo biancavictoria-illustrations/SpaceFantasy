@@ -99,10 +99,8 @@ public class EntityHealth : MonoBehaviour
 
     public bool tempPlayerGodModeToggle = false;    // FOR TESTING - REMOVE THIS FOR FINAL BUILD
 
-    void Start()
+    void Awake()
     {
-        OnDeath.AddListener(onEntityDeath);
-        OnCrit.AddListener(onPlayerCrit);
         isBossEnemy = false;
         enemyID = EnemyID.enumSize;
         
@@ -125,6 +123,12 @@ public class EntityHealth : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        OnDeath.AddListener(onEntityDeath);
+        OnCrit.AddListener(onPlayerCrit);        
+    }
+
     public void SetStartingHealthUI()
     {
         SetMaxHealthUI();
@@ -134,8 +138,6 @@ public class EntityHealth : MonoBehaviour
     // Need a bool to check for slime pit otherwise you could DODGE falling in a slime pit and fall for eternity
     public bool Damage(float damage, DamageSourceType damageSource)
     {
-        Debug.Log("Player hit by " + damageSource);
-
         if( gameObject.tag == "Player" && damageSource != DamageSourceType.DeathPit ){
             // TEMP for dev
             if( tempPlayerGodModeToggle ){

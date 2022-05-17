@@ -242,9 +242,8 @@ public class InputManager : MonoBehaviour
             return;
         }
 
-        // InGameUIManager.instance.(!mapIsOpen);
         mapIsOpen = !mapIsOpen;
-        Debug.Log("Map status set to: " + mapIsOpen);
+        InGameUIManager.instance.ToggleExpandedMapOverlay(mapIsOpen);
 
         RunGameTimer(!mapIsOpen);
         InGameUIManager.instance.timerUI.SetTimerUIActive(!mapIsOpen);
