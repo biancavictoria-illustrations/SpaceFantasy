@@ -36,7 +36,15 @@ public class ItemPanelGearShop : ItemPanelShopUI
         itemIcon.sprite = baseData.Icon();
         itemSlot = baseData.ItemSlot();
         itemSlotRarity.text = item.rarity.ToString() + "/" + itemSlot.ToString();
-        enhancementCount.text = "Enhancement Count - " + item.enhancementCount;
+
+        // TODO: Change this
+        // Instead of having # of enhancements, have # of lines/upgrades in general? idk but the way it was was NOT helpful
+        // if(item.enhancementCount > 0){
+        //     enhancementCount.text = "Enhancement Count - " + item.enhancementCount;
+        // }
+        // else{
+            enhancementCount.text = "";
+        // }
     }
 
     public void OnItemClicked()

@@ -175,6 +175,9 @@ public class GameManager : MonoBehaviour
         }
         else if(currentSceneName == LICH_ARENA_STRING_NAME){
             // TODO: Play lich fight music
+
+            fade.opaqueOnStart = true;
+            fade.FadeIn(0.5f);
             
         }
         else if(currentSceneName == TITLE_SCREEN_STRING_NAME){
