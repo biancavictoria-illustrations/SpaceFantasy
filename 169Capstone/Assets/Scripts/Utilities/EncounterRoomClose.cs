@@ -78,7 +78,9 @@ public class EncounterRoomClose : MonoBehaviour
                 boi.bossRoomScript = room;
 
                 EntityHealth bossHealth = boss.GetComponent<EntityHealth>();
+                room.AddEnemy(bossHealth);
                 bossHealth.OnDeath.AddListener(RoomOpen);
+
                 InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(true, bossHealth.enemyID);
 
                 AudioManager.Instance.queueMusicAfterFadeOut(AudioManager.MusicTrack.BossMusic);
