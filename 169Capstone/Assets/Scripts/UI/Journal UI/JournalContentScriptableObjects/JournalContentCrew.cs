@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "JournalUI/JournalContentCrew")]
 public class JournalContentCrew : JournalContent
 {
+    [Header("Crew Data")]
     [SerializeField] private string jobTitle;
     [SerializeField] private string birthday;
     [SerializeField] private string placeOfBirth;

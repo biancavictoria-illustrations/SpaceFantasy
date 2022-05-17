@@ -69,6 +69,9 @@ public class InGameUIManager : MonoBehaviour
 
     [SerializeField] private TMP_Text healthPotionValue;
 
+    [SerializeField] private GameObject miniMap;
+    [SerializeField] private GameObject expandedMapOverlay;
+
     public BossHealthBar bossHealthBar;
     public TimerUI timerUI;
 
@@ -132,6 +135,7 @@ public class InGameUIManager : MonoBehaviour
         ToggleInGameGearIconPanel(setRunUIActive);
         tempCurrencyValue.gameObject.SetActive(setRunUIActive);
         healthUIContainer.SetActive(setRunUIActive);
+        miniMap.SetActive(setRunUIActive);
 
         if(!resetTimer){
             return;
@@ -140,6 +144,13 @@ public class InGameUIManager : MonoBehaviour
         // Reset timer
         InputManager.instance.RunGameTimer(setRunUIActive, setRunUIActive);
         GameManager.instance.gameTimer.ResetTimer();
+    }
+
+    public void ToggleExpandedMapOverlay(bool set)
+    {
+        expandedMapOverlay.SetActive(set);
+        SetGameUIActive(!set);
+        miniMap.SetActive(!set);
     }
 
     public void OnStellanShopUIOpen(bool setOpen)
