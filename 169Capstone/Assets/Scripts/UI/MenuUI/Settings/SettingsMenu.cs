@@ -3,8 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum TextSpeedSetting{
+    defaultSpeed,
+    fast,
+    instant,
+    enumSize
+}
+
 public class SettingsMenu : MonoBehaviour
 {
+    public bool hasBeenInitialized = false;
+
     #region Audio Settings
         public Slider masterVolume;
         public Slider musicVolume;
@@ -12,43 +21,50 @@ public class SettingsMenu : MonoBehaviour
     #endregion
 
     #region Text Speed
-        [Tooltip("ORDER MATTERS! Default /then/ instant")]
-        public List<Toggle> textSpeedToggles = new List<Toggle>();
-
-        // Toggles in the list must be in THE FOLLOWING ORDER
-        public enum TextSpeedSetting{
-            defaultSpeed,
-            fast,
-            instant
-        }
+        public Toggle defaultTextSpeedToggle;
+        public Toggle fastTextSpeedToggle;
+        public Toggle instantTextSpeedToggle;
     #endregion
 
     // Screen resolution? Full screen or otherwise?
 
     void Start()
     {
-        // If the text speed toggle is changed, change color
-        for(int i = 0; i < textSpeedToggles.Count; i++){
-            textSpeedToggles[i].onValueChanged.AddListener( (bool value) => UpdateTextSpeedTogglesOnValueChanged(textSpeedToggles[i], i, value) );
+        // If the text speed toggle is changed, do stuff
+        defaultTextSpeedToggle.onValueChanged.AddListener( (bool value) => UpdateTextSpeedTogglesOnValueChanged(defaultTextSpeedToggle, TextSpeedSetting.defaultSpeed, value) );
+        fastTextSpeedToggle.onValueChanged.AddListener( (bool value) => UpdateTextSpeedTogglesOnValueChanged(fastTextSpeedToggle, TextSpeedSetting.fast, value) );
+        instantTextSpeedToggle.onValueChanged.AddListener( (bool value) => UpdateTextSpeedTogglesOnValueChanged(instantTextSpeedToggle, TextSpeedSetting.instant, value) );
+    
+        if(!hasBeenInitialized){
+            SetSettingsUIToSavedValues();
         }
-
-        SetSettingsUIToSavedValues();
     }
 
-    private void SetSettingsUIToSavedValues()
+    public void SetSettingsUIToSavedValues()
     {
-        // Access the values from the playerprefs and set them
-        masterVolume.value = PlayerPrefs.GetFloat(PlayerPrefKeys.masterVolume.ToString());
-        musicVolume.value = PlayerPrefs.GetFloat(PlayerPrefKeys.musicVolume.ToString());
-        sfxVolume.value = PlayerPrefs.GetFloat(PlayerPrefKeys.sfxVolume.ToString());
+        hasBeenInitialized = true;
+        
+        masterVolume.value = PlayerSettings.instance.masterVolumeValue;
+        musicVolume.value = PlayerSettings.instance.musicVolumeValue;
+        sfxVolume.value = PlayerSettings.instance.sfxVolumeValue;
 
-        textSpeedToggles[PlayerPrefs.GetInt(PlayerPrefKeys.textSpeed.ToString())].isOn = true;
+        switch(PlayerSettings.instance.currentTextSpeed){
+            case TextSpeedSetting.defaultSpeed:
+                defaultTextSpeedToggle.isOn = true;
+                break;
+            case TextSpeedSetting.fast:
+                fastTextSpeedToggle.isOn = true;
+                break;
+            case TextSpeedSetting.instant:
+                instantTextSpeedToggle.isOn = true;
+                break;
+        }
     }
 
-    public void UpdateTextSpeedTogglesOnValueChanged(Toggle toggle, int textSpeedIndex, bool value)
+    public void UpdateTextSpeedTogglesOnValueChanged(Toggle toggle, TextSpeedSetting textSpeed, bool value)
     {
         if(value){
-            PlayerSettings.instance.SaveNewTextSpeed( (TextSpeedSetting)textSpeedIndex );
+            PlayerSettings.instance.SaveNewTextSpeed( textSpeed );
             UIUtils.SetImageColorFromHex( toggle.GetComponent<Image>(), InGameUIManager.slimeGreenColor );
         }
         else{
@@ -56,23 +72,25 @@ public class SettingsMenu : MonoBehaviour
         }
     }
 
-    // Called when you adjust the slider value or when you reset values to default
-    public void SetMasterVolumeToUIValue()
-    {
-        PlayerSettings.instance.SaveNewMasterVolume(masterVolume.value);
-    }
+    #region Volume Sliders
+        // Called when you adjust the slider value or when you reset values to default
+        public void SetMasterVolumeToUIValue()
+        {
+            PlayerSettings.instance.SaveNewMasterVolume(masterVolume.value);
+        }
 
-    // Called when you adjust the slider value or when you reset values to default
-    public void SetMusicVolumeToUIValue()
-    {
-        PlayerSettings.instance.SaveNewMusicVolume(musicVolume.value);
-    }
+        // Called when you adjust the slider value or when you reset values to default
+        public void SetMusicVolumeToUIValue()
+        {
+            PlayerSettings.instance.SaveNewMusicVolume(musicVolume.value);
+        }
 
-    // Called when you adjust the slider value or when you reset values to default
-    public void SetSFXVolumeToUIValue()
-    {
-        PlayerSettings.instance.SaveNewSFXVolume(sfxVolume.value);
-    }
+        // Called when you adjust the slider value or when you reset values to default
+        public void SetSFXVolumeToUIValue()
+        {
+            PlayerSettings.instance.SaveNewSFXVolume(sfxVolume.value);
+        }
+    #endregion
 
     // Called when you click Apply Settings button
     public void ApplySettingsChange()
@@ -91,6 +109,12 @@ public class SettingsMenu : MonoBehaviour
 
     public void ResetSettingsToDefault()
     {
-        // TODO
+        PlayerSettings.instance.SaveNewMasterVolume(PlayerSettings.DEFAULT_VOLUME);
+        PlayerSettings.instance.SaveNewMusicVolume(PlayerSettings.DEFAULT_VOLUME);
+        PlayerSettings.instance.SaveNewSFXVolume(PlayerSettings.DEFAULT_VOLUME);
+
+        PlayerSettings.instance.SaveNewTextSpeed(TextSpeedSetting.defaultSpeed);
+
+        SetSettingsUIToSavedValues();
     }
 }

@@ -72,6 +72,7 @@ public class KeyboardButtonSprites : DeviceButtonSpritesObject
     [SerializeField] private Sprite plusSign;
     [SerializeField] private Sprite plusSignTall;
     [SerializeField] private Sprite slash;
+    [SerializeField] private Sprite backSlash;
     [SerializeField] private Sprite tilda;
     [SerializeField] private Sprite asteriskNumpad;
     [SerializeField] private Sprite minus;
@@ -189,6 +190,7 @@ public class KeyboardButtonSprites : DeviceButtonSpritesObject
             case "]": return rightBracket;
             case "=": return plusSign;
             case "Numpad +": return plusSignTall;
+            case "\\": return backSlash;
             case "/": return slash;
             case "Numpad /": return slash;
             case "`": return tilda;
