@@ -11,11 +11,23 @@ public class DevPanel : MonoBehaviour
     public Toggle noDamageToggle;
     public Toggle skipStatRerollToggle;
     public Toggle superJumpToggle;
+    public Toggle devPanelToggle;
 
     private static bool speedBoost = false;
     private static bool godMode = false;
     private static bool skipStatReroll = false;
     private static bool superJump = false;
+    private static bool devPanelOpen = false;
+    
+    [Tooltip("SET TO FALSE FOR BUILDS")]
+    public bool setDevPanelActiveOnStart = true;
+
+    void Start()
+    {
+        devPanelOpen = setDevPanelActiveOnStart;
+        devPanelToggle.isOn = devPanelOpen;
+        ToggleDevPanel();
+    }
 
     public void UpdateValuesThatPersistBetweenScenes()
     {
@@ -37,6 +49,26 @@ public class DevPanel : MonoBehaviour
         if(superJump){
             superJumpToggle.isOn = true;   
             EnableSuperJump();
+        }
+
+        if(devPanelOpen){
+            devPanelToggle.isOn = true;   
+            ToggleDevPanel();
+        }
+    }
+
+    // Toggle
+    public void ToggleDevPanel()
+    {
+        if(devPanelToggle.isOn){
+            buttonPanel.SetActive(true);
+            UIUtils.SetImageColorFromHex( devPanelToggle.GetComponent<Image>(), InGameUIManager.turquoiseColor );
+            devPanelOpen = true;
+        }
+        else{
+            buttonPanel.SetActive(false);
+            UIUtils.SetImageColorFromHex( devPanelToggle.GetComponent<Image>(), "#FFFFFF" );
+            devPanelOpen = false;
         }
     }
 
