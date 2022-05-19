@@ -94,6 +94,8 @@ public class EntityHealth : MonoBehaviour
     public bool isBossEnemy {get; private set;}
     public EnemyID enemyID {get; private set;}
 
+    private DamageSourceType damageSourceCausedPlayerDeath;
+
     private const int TEMPCOINDROPAMOUNT = 5;
     private const float TEMPSTARSHARDDROPCHANCE = 0.25f;
 
@@ -103,6 +105,7 @@ public class EntityHealth : MonoBehaviour
     {
         isBossEnemy = false;
         enemyID = EnemyID.enumSize;
+        damageSourceCausedPlayerDeath = DamageSourceType.enumSize;
         
         if(gameObject.tag != "Player"){
             enemyID = GetComponent<EnemyStats>().enemyID;
@@ -176,6 +179,7 @@ public class EntityHealth : MonoBehaviour
         {
             //Debug.Log("Dead");
             currentHitpoints = 0;
+            damageSourceCausedPlayerDeath = damageSource;
             OnDeath.Invoke(this);
         }
 
@@ -246,8 +250,8 @@ public class EntityHealth : MonoBehaviour
         if(gameObject.tag == "Player")
         {
             // Tell the story manager that the player was killed by a creature
-            // TODO: Get the enemyID of the creature who killed you!!!
-            // StoryManager.instance.KilledEventOccurred(enemyID, StoryBeatType.KilledBy);            
+            // TODO
+            // StoryManager.instance.KilledEventOccurred(damageSourceCausedPlayerDeath, StoryBeatType.KilledBy);            
             GameManager.instance.playerDeath = true;
         }
         else

@@ -320,10 +320,10 @@ public class StoryManager : MonoBehaviour
             }
         }
         else{
-            Debug.LogError("No beats found for beat type: " + beatType);
+            Debug.LogWarning("No beats found for beat type: " + beatType);
             return null;
         }
-        Debug.LogError("No beats found for node name " + nodeName + " with beat type " + beatType);
+        Debug.LogWarning("No beats found for node name " + nodeName + " with beat type " + beatType);
         return null;
     }
 
@@ -443,6 +443,18 @@ public class StoryManager : MonoBehaviour
         }
 
         StoryBeat beat = FindBeatFromNodeNameAndType(beatType.ToString() + enemy, beatType);
+        AchievedStoryBeat(beat);
+    }
+
+    public void KilledEventOccurred(DamageSourceType damageSource, StoryBeatType beatType)
+    {
+        // If this event's beatType is NOT creatureKilled OR killedBy, error
+        if( !(beatType == StoryBeatType.EnemyKilled || beatType == StoryBeatType.KilledBy) ){
+            Debug.LogError("KilledEventOccurred for wrong StoryBeatType: " + beatType + " " + damageSource + "!");
+            return;
+        }
+
+        StoryBeat beat = FindBeatFromNodeNameAndType(beatType.ToString() + damageSource, beatType);
         AchievedStoryBeat(beat);
     }
 

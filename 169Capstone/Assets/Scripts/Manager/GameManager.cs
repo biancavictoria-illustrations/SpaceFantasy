@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public const string TITLE_SCREEN_STRING_NAME = "MainMenu";
     public const string MAIN_HUB_STRING_NAME = "Main Hub";
     public const string GAME_LEVEL1_STRING_NAME = "GenerationSetup";
-    public const string LICH_ARENA_STRING_NAME = "LichArena";
+    public const string LICH_ARENA_STRING_NAME = "Lich Fight";
 
     private const float hitStopDuration = 0.05f;
 
@@ -172,11 +172,19 @@ public class GameManager : MonoBehaviour
             });
         }
         else if(currentSceneName == LICH_ARENA_STRING_NAME){
+            // Get the location of the spawn point
+            Transform spawnPoint = GameObject.Find("SpawnPoint").transform;
+
+            // Make the player no longer a child of the game manager now that we've saved their build between scenes
+            Player.instance.transform.parent = null;
+
+            // Move the player to the spawn point (NOT WORKING)
+            Player.instance.transform.position = spawnPoint.position; // new Vector3(spawnPoint.position.x, spawnPoint.position.y, spawnPoint.position.z );
+
             // TODO: Play lich fight music
 
             fade.opaqueOnStart = true;
-            fade.FadeIn(0.5f);
-            
+            fade.FadeIn(0.5f);            
         }
         else if(currentSceneName == TITLE_SCREEN_STRING_NAME){
             gameTimer.runTotalTimer = false;
