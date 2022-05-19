@@ -44,8 +44,6 @@ public class GameManager : MonoBehaviour
 
     private int saveSlotNum;
 
-    public bool progressRunForTesting = false;  // TEMP
-
     void Awake()
     {
         if( instance ){
@@ -78,15 +76,6 @@ public class GameManager : MonoBehaviour
         {
             InGameUIManager.instance.deathScreen.OpenPlayerDeathUI();
             playerDeath = false;
-        }
-
-        if(progressRunForTesting){
-            progressRunForTesting = false;
-
-            // Simulate a new run (reroll stats too)
-            EndRun();
-            PlayerStats pstats = FindObjectsOfType<PlayerStats>()[0];
-            pstats.initializeStats();
         }
 
         if(currentSceneName == TITLE_SCREEN_STRING_NAME){

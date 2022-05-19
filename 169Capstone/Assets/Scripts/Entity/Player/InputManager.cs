@@ -130,7 +130,7 @@ public class InputManager : MonoBehaviour
         }
         isAttacking = true;
 
-        Debug.Log(moveDirection);
+        // Debug.Log(moveDirection);
     }
 
     public void OnAttackPrimaryCanceled()
@@ -180,6 +180,7 @@ public class InputManager : MonoBehaviour
         RunGameTimer(set);
     }
 
+    // TODO: Just add gamepad submit keybindings here??? just A button??? Also space bar???
     // If you're in dialogue, click anywhere to progress
     public void OnClick(InputValue input)
     {
@@ -208,7 +209,7 @@ public class InputManager : MonoBehaviour
             InGameUIManager.instance.gearSwapUI.CloseGearSwapUI();
             return;            
         }
-        else if(GameManager.instance.statRerollUIOpen){ // Should this one be here? if so probably also death UI. i'm thinking neither tho?
+        else if(GameManager.instance.statRerollUIOpen){ // Should this one be here?
             InGameUIManager.instance.statRerollUI.DisableStatRerollUI();
             return;
         }
