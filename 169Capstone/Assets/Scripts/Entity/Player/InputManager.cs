@@ -89,6 +89,16 @@ public class InputManager : MonoBehaviour
         cursorLookDirection = Quaternion.FromToRotation(-Camera.main.transform.forward, Vector3.up) * lookDirectionRelativeToCamera;    //Rotate the look vector to be in terms of world space
     }
 
+    public void SetLookDirectionHorizontal( float value)
+    {
+        moveDirection = new Vector3(moveDirection.x, 0, value).normalized;
+    }
+
+    public void SetLookDirectionVertical( float value)
+    {
+        moveDirection = new Vector3(-value, 0, moveDirection.z).normalized;
+    }
+
     public void UpdateLatestInputDevice()
     {
         if((int)UserDeviceManager.currentControlDevice == 0){
@@ -102,7 +112,7 @@ public class InputManager : MonoBehaviour
         if(!devPanel){
             devPanel = FindObjectOfType<DevPanel>();
         }
-        devPanel.ToggleInteractabilityOnDeviceChange( !latestInputIsController );   // TEMP
+        devPanel?.ToggleInteractabilityOnDeviceChange( !latestInputIsController );   // TEMP
     }
 
     public bool CanAcceptGameplayInput()
@@ -120,18 +130,12 @@ public class InputManager : MonoBehaviour
         }
         isAttacking = true;
 
-        // animator.SetBool("IsAttacking", true);
-        // Debug.Log(animator.GetLayerIndex("Slashing"));
-        // gameObject.GetComponent<Animator>().Rebind();
-        // animator.SetLayerWeight(1, 1);
+        Debug.Log(moveDirection);
     }
 
     public void OnAttackPrimaryCanceled()
     {
         isAttacking = false;
-
-        // animator.SetBool("IsAttacking", false);
-        // animator.SetLayerWeight(1, 0);
     }
 
     public void OnInteract(InputValue input)

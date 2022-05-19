@@ -148,6 +148,9 @@ public class Movement : MonoBehaviour
             horizontalMove = -1f;            
         }
         animator.SetBool("IsRunning", true);
+
+        // Update our direction in the input manager for controller aiming
+        InputManager.instance.SetLookDirectionHorizontal(horizontalMove);
     }
 
     public void OnMoveLeftCanceled()
@@ -176,6 +179,8 @@ public class Movement : MonoBehaviour
             horizontalMove = 1f;
         }
         animator.SetBool("IsRunning", true);
+
+        InputManager.instance.SetLookDirectionHorizontal(horizontalMove);
     }
 
     public void OnMoveRightCanceled()
@@ -204,6 +209,8 @@ public class Movement : MonoBehaviour
             verticalMove = 1f;
         }
         animator.SetBool("IsRunning", true);
+
+        InputManager.instance.SetLookDirectionVertical(verticalMove);
     }
 
     public void OnMoveUpCanceled()
@@ -232,6 +239,8 @@ public class Movement : MonoBehaviour
             verticalMove = -1f;
         }
         animator.SetBool("IsRunning", true);
+
+        InputManager.instance.SetLookDirectionVertical(verticalMove);
     }
 
     public void OnMoveDownCanceled()
@@ -367,8 +376,5 @@ public class Movement : MonoBehaviour
 
         direction += Vector3.up * fallingVelocity;
         player.Move(direction);
-
-        // Update our direction in the input manager for controller aiming
-        InputManager.instance.moveDirection = direction;
     }
 }
