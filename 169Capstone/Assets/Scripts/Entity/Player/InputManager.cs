@@ -32,6 +32,13 @@ public class InputManager : MonoBehaviour
     private Player player;
     private Vector2 mousePos;
 
+    public Vector3 moveDirection;   // For cursorLookDirection on controller
+
+    public static bool aimAtCursor;
+
+    // TEMP - REMOVE THIS FOR FINAL BUILD
+    public DevPanel devPanel;
+
     void Awake()
     {
         if( instance ){
@@ -58,6 +65,10 @@ public class InputManager : MonoBehaviour
             // Add STOPPING when you're no longer holding the button
             controls.FindAction("AttackPrimary").canceled += x => OnAttackPrimaryCanceled();
         }
+
+        if(!devPanel){
+            devPanel = FindObjectOfType<DevPanel>();
+        }
     }
 
     void Update()
@@ -66,10 +77,16 @@ public class InputManager : MonoBehaviour
             return;
         }
 
-        Vector2 playerPositionOnScreen = (Vector2)Camera.main.WorldToScreenPoint(player.transform.position); //Get Player's position on the screen
-        Vector2 cursorLookDirection2D = (mousePos - playerPositionOnScreen).normalized;                      //Get the vector from the player position to the cursor position 
+        Vector2 cursorLookDirection2D;
+        if(latestInputIsController || !aimAtCursor){
+            cursorLookDirection2D = moveDirection;
+        }
+        else{
+            Vector2 playerPositionOnScreen = (Vector2)Camera.main.WorldToScreenPoint(player.transform.position);    //Get Player's position on the screen
+            cursorLookDirection2D = (mousePos - playerPositionOnScreen).normalized;     //Get the vector from the player position to the cursor position 
+        }
         Vector3 lookDirectionRelativeToCamera = Camera.main.transform.right * cursorLookDirection2D.x + Camera.main.transform.up * cursorLookDirection2D.y; //Create the look vector in 3D space relative to the camera
-        cursorLookDirection = Quaternion.FromToRotation(-Camera.main.transform.forward, Vector3.up) * lookDirectionRelativeToCamera;                        //Rotate the look vector to be in terms of world space
+        cursorLookDirection = Quaternion.FromToRotation(-Camera.main.transform.forward, Vector3.up) * lookDirectionRelativeToCamera;    //Rotate the look vector to be in terms of world space
     }
 
     public void UpdateLatestInputDevice()
@@ -81,6 +98,11 @@ public class InputManager : MonoBehaviour
         else{
             latestInputIsController = true;
         }
+
+        if(!devPanel){
+            devPanel = FindObjectOfType<DevPanel>();
+        }
+        devPanel.ToggleInteractabilityOnDeviceChange( !latestInputIsController );   // TEMP
     }
 
     public bool CanAcceptGameplayInput()

@@ -367,5 +367,8 @@ public class Movement : MonoBehaviour
 
         direction += Vector3.up * fallingVelocity;
         player.Move(direction);
+
+        // Update our direction in the input manager for controller aiming
+        InputManager.instance.moveDirection = direction;
     }
 }

@@ -12,7 +12,7 @@ public enum TextSpeedSetting{
 
 public class SettingsMenu : MonoBehaviour
 {
-    public bool hasBeenInitialized = false;
+    [HideInInspector] public bool hasBeenInitialized = false;
 
     #region Audio Settings
         public Slider masterVolume;
@@ -26,6 +26,8 @@ public class SettingsMenu : MonoBehaviour
         public Toggle instantTextSpeedToggle;
     #endregion
 
+    public Toggle aimAtCursorToggle;
+
     // Screen resolution? Full screen or otherwise?
 
     void Start()
@@ -34,6 +36,8 @@ public class SettingsMenu : MonoBehaviour
         defaultTextSpeedToggle.onValueChanged.AddListener( (bool value) => UpdateTextSpeedTogglesOnValueChanged(defaultTextSpeedToggle, TextSpeedSetting.defaultSpeed, value) );
         fastTextSpeedToggle.onValueChanged.AddListener( (bool value) => UpdateTextSpeedTogglesOnValueChanged(fastTextSpeedToggle, TextSpeedSetting.fast, value) );
         instantTextSpeedToggle.onValueChanged.AddListener( (bool value) => UpdateTextSpeedTogglesOnValueChanged(instantTextSpeedToggle, TextSpeedSetting.instant, value) );
+
+        aimAtCursorToggle.onValueChanged.AddListener( (bool value) => UpdateAimAtCursorOnValueChanged(value) );
     
         if(!hasBeenInitialized){
             SetSettingsUIToSavedValues();
@@ -47,6 +51,8 @@ public class SettingsMenu : MonoBehaviour
         masterVolume.value = PlayerSettings.instance.masterVolumeValue;
         musicVolume.value = PlayerSettings.instance.musicVolumeValue;
         sfxVolume.value = PlayerSettings.instance.sfxVolumeValue;
+
+        aimAtCursorToggle.isOn = PlayerSettings.instance.aimAtCursor;
 
         switch(PlayerSettings.instance.currentTextSpeed){
             case TextSpeedSetting.defaultSpeed:
@@ -70,6 +76,11 @@ public class SettingsMenu : MonoBehaviour
         else{
             UIUtils.SetImageColorFromHex( toggle.GetComponent<Image>(), "#FFFFFF" );
         }
+    }
+
+    public void UpdateAimAtCursorOnValueChanged(bool value)
+    {
+        PlayerSettings.instance.SaveAimAtCursor(value);
     }
 
     #region Volume Sliders
@@ -114,6 +125,8 @@ public class SettingsMenu : MonoBehaviour
         PlayerSettings.instance.SaveNewSFXVolume(PlayerSettings.DEFAULT_VOLUME);
 
         PlayerSettings.instance.SaveNewTextSpeed(TextSpeedSetting.defaultSpeed);
+
+        PlayerSettings.instance.SaveAimAtCursor(true);
 
         SetSettingsUIToSavedValues();
     }

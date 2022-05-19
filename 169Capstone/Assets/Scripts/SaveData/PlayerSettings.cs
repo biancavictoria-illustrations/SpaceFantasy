@@ -11,6 +11,8 @@ public enum PlayerPrefKeys
 
     textSpeed,
 
+    aimAtCursor,
+
     enumSize
 }
 
@@ -24,6 +26,8 @@ public class PlayerSettings : MonoBehaviour
     public float sfxVolumeValue {get; private set;}
 
     public TextSpeedSetting currentTextSpeed {get; private set;}
+
+    public bool aimAtCursor {get; private set;}
 
     void Awake()
     {
@@ -109,6 +113,26 @@ public class PlayerSettings : MonoBehaviour
         Debug.LogError("No text speed setting found for text speed: " + currentTextSpeed);
     }
 
+    public void SaveAimAtCursor(bool value)
+    {
+        aimAtCursor = value;
+        SetAimAtCursorToCurrentSetting();
+
+        if(aimAtCursor){
+            PlayerPrefs.SetInt(PlayerPrefKeys.aimAtCursor.ToString(), 1);
+        }
+        else{
+            PlayerPrefs.SetInt(PlayerPrefKeys.aimAtCursor.ToString(), 0);
+        }
+        
+        PlayerPrefs.Save();
+    }
+
+    public void SetAimAtCursorToCurrentSetting()
+    {
+        InputManager.aimAtCursor = aimAtCursor;
+    }
+
     /*
         For each setting value, check if it exists and if so set to the saved value; otherwise, add it with the default value
         If there are saved values, set the ACTUAL values here (not just the saved variables here)
@@ -148,6 +172,20 @@ public class PlayerSettings : MonoBehaviour
         else{
             currentTextSpeed = (TextSpeedSetting)PlayerPrefs.GetInt(PlayerPrefKeys.textSpeed.ToString());
             SetTextSpeedToCurrentSetting();
+        }
+
+        if(!PlayerPrefs.HasKey(PlayerPrefKeys.aimAtCursor.ToString())){
+            SaveAimAtCursor(true);
+        }
+        else{
+            int value = PlayerPrefs.GetInt(PlayerPrefKeys.aimAtCursor.ToString());
+            if(value == 1){
+                aimAtCursor = true;
+            }
+            else{
+                aimAtCursor = false;
+            }
+            SetAimAtCursorToCurrentSetting();
         }
 
         FindObjectOfType<SettingsMenu>()?.SetSettingsUIToSavedValues();
