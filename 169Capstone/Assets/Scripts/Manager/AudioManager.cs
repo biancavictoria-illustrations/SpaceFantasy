@@ -143,7 +143,7 @@ public class AudioManager : MonoBehaviour
         if(this.isInCombat == isInCombat)
             return;
 
-        Debug.Log("Set combat to: " + isInCombat);
+        // Debug.Log("Set combat to: " + isInCombat);
         this.isInCombat = isInCombat;
         musicInstance.setParameterByName("Combat", isInCombat ? 1 : 0);
     }

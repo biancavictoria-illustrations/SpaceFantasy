@@ -57,8 +57,10 @@ public class Movement : MonoBehaviour
             if(col.bounds.Contains(transform.position))
             {
                 Room roomScript = col.GetComponent<Room>();
-                if(roomScript != null)
+                if(roomScript != null){
                     AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, roomScript.hasEnemies());
+                    roomScript.enableAllMinimapSprites();
+                }                    
                 break;
             }
         }
@@ -73,8 +75,10 @@ public class Movement : MonoBehaviour
             if(col.bounds.Contains(transform.position))
             {
                 Room roomScript = col.GetComponent<Room>();
-                if(roomScript != null)
+                if(roomScript != null){
                     AudioManager.Instance.toggleCombat(roomScript.hasEnemies());
+                    roomScript.enableAllMinimapSprites();
+                }                    
                 break;
             }
         }

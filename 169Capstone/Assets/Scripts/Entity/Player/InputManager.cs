@@ -77,15 +77,9 @@ public class InputManager : MonoBehaviour
         if((int)UserDeviceManager.currentControlDevice == 0){
             latestInputIsController = false;
             currentDevice = InputDevice.KeyboardMouse;
-            Debug.Log("input device is now keyboard/mouse");
         }
         else{
             latestInputIsController = true;
-
-            // InputDevice.
-            // UserDeviceManager.currentControlDevice
-
-            Debug.Log("input device is now a controller");
         }
     }
 

@@ -87,8 +87,6 @@ public class GameManager : MonoBehaviour
             EndRun();
             PlayerStats pstats = FindObjectsOfType<PlayerStats>()[0];
             pstats.initializeStats();
-
-            Debug.Log("Run Number: " + currentRunNumber);
         }
 
         if(currentSceneName == TITLE_SCREEN_STRING_NAME){
