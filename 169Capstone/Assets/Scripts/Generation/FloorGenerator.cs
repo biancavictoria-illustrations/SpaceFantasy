@@ -53,6 +53,8 @@ public class FloorGenerator : MonoBehaviour
     [Tooltip("A list of all room prefabs which will connect encounter rooms together.")]
     public List<GameObject> hallwayRoomPrefabs;
 
+    public GameObject expandedMapCameraPrefab;
+
     public OnGenerationCompleteEvent OnGenerationComplete;
 
     void Awake()
@@ -727,6 +729,9 @@ public class FloorGenerator : MonoBehaviour
                     Destroy(exit.gameObject);
                 }
             }
+
+            GameObject expandedMapCamera = Instantiate(expandedMapCameraPrefab, centerShop.transform.position, expandedMapCameraPrefab.transform.rotation);
+            expandedMapCamera.transform.Translate( Vector3.forward * -500, Space.Self );
 
             successCallback(true);
         }

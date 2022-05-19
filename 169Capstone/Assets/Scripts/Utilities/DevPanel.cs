@@ -24,8 +24,7 @@ public class DevPanel : MonoBehaviour
 
     void Start()
     {
-        devPanelOpen = setDevPanelActiveOnStart;
-        devPanelToggle.isOn = devPanelOpen;
+        devPanelToggle.isOn = setDevPanelActiveOnStart;
         ToggleDevPanel();
     }
 
@@ -53,6 +52,10 @@ public class DevPanel : MonoBehaviour
 
         if(devPanelOpen){
             devPanelToggle.isOn = true;   
+            ToggleDevPanel();
+        }
+        else{
+            devPanelToggle.isOn = false;   
             ToggleDevPanel();
         }
     }

@@ -10,12 +10,12 @@ public class Billboard : MonoBehaviour
 
     private Vector3 towardsCameraNoY;
 
-    private bool waitUntilGenerationComplete = false;
+    public static bool generationComplete;
 
-    void Start()
+    void Awake()
     {
         if(GameManager.instance.InSceneWithRandomGeneration()){
-            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(StartOnGenerationComplete);
+            FindObjectOfType<FloorGenerator>()?.OnGenerationComplete.AddListener(StartOnGenerationComplete);
         }
         else{
             StartOnGenerationComplete();
@@ -34,12 +34,12 @@ public class Billboard : MonoBehaviour
         float scale = 1 / Vector3.Project(tiltVector, Vector3.up).magnitude;
         transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y * scale, transform.localScale.z);
 
-        waitUntilGenerationComplete = true;
+        generationComplete = true;
     }
 
     void Update()
     {
-        if(spriteHolder && waitUntilGenerationComplete)
+        if(spriteHolder && generationComplete && towardsCameraNoY != Vector3.zero)
         {
             //Face the sprite towards the camera
             spriteHolder.forward = towardsCameraNoY;
