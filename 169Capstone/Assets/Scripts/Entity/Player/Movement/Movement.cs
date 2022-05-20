@@ -150,7 +150,7 @@ public class Movement : MonoBehaviour
         animator.SetBool("IsRunning", true);
 
         // Update our direction in the input manager for controller aiming
-        InputManager.instance.SetLookDirectionHorizontal(horizontalMove);
+        // InputManager.instance.SetLookDirectionHorizontal(horizontalMove);
     }
 
     public void OnMoveLeftCanceled()
@@ -180,7 +180,7 @@ public class Movement : MonoBehaviour
         }
         animator.SetBool("IsRunning", true);
 
-        InputManager.instance.SetLookDirectionHorizontal(horizontalMove);
+        // InputManager.instance.SetLookDirectionHorizontal(horizontalMove);
     }
 
     public void OnMoveRightCanceled()
@@ -210,7 +210,7 @@ public class Movement : MonoBehaviour
         }
         animator.SetBool("IsRunning", true);
 
-        InputManager.instance.SetLookDirectionVertical(verticalMove);
+        // InputManager.instance.SetLookDirectionVertical(verticalMove);
     }
 
     public void OnMoveUpCanceled()
@@ -240,7 +240,7 @@ public class Movement : MonoBehaviour
         }
         animator.SetBool("IsRunning", true);
 
-        InputManager.instance.SetLookDirectionVertical(verticalMove);
+        // InputManager.instance.SetLookDirectionVertical(verticalMove);
     }
 
     public void OnMoveDownCanceled()
@@ -280,12 +280,6 @@ public class Movement : MonoBehaviour
         //If we need to put code for what happens when the player lets go of jump
     }
 
-    // UPDATE MOVE DIRECTION IN INPUT MANAGER IF
-    // 1 KEY IS PRESSED
-    // 2 KEYS ARE PRESSED
-    // but NOT if no keys are pressed
-    // PROBLEM: what happens if you're moving vertically and then inevitably cancel one direction before the other?
-
     private void CheckForIdle()
     {
         if(animator != null && verticalMove == 0 && horizontalMove == 0){
@@ -296,6 +290,9 @@ public class Movement : MonoBehaviour
     private void HandleMovement()
     {
         Vector3 direction = new Vector3(-verticalMove, 0, horizontalMove).normalized;
+
+        InputManager.instance.SetLookDirectionHorizontal(horizontalMove);
+        InputManager.instance.SetLookDirectionVertical(verticalMove);
 
         if(externalVelocity.magnitude > 0f)
         {
@@ -346,8 +343,10 @@ public class Movement : MonoBehaviour
             if(cursorLookDirection == Vector3.zero || !lockLookDirection)
                 cursorLookDirection = InputManager.instance.cursorLookDirection;
 
-            model.rotation = Quaternion.LookRotation(cursorLookDirection);
-            direction /= 2;
+            if( cursorLookDirection != Vector3.zero ){
+                model.rotation = Quaternion.LookRotation(cursorLookDirection);
+                direction /= 2;
+            }
         }
         else
         {
