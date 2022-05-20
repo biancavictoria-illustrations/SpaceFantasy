@@ -280,6 +280,12 @@ public class Movement : MonoBehaviour
         //If we need to put code for what happens when the player lets go of jump
     }
 
+    // UPDATE MOVE DIRECTION IN INPUT MANAGER IF
+    // 1 KEY IS PRESSED
+    // 2 KEYS ARE PRESSED
+    // but NOT if no keys are pressed
+    // PROBLEM: what happens if you're moving vertically and then inevitably cancel one direction before the other?
+
     private void CheckForIdle()
     {
         if(animator != null && verticalMove == 0 && horizontalMove == 0){

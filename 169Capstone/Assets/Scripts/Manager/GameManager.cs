@@ -162,13 +162,13 @@ public class GameManager : MonoBehaviour
         }
         else if(currentSceneName == LICH_ARENA_STRING_NAME){
             // Get the location of the spawn point
-            Transform spawnPoint = GameObject.Find("SpawnPoint").transform;
+            // Transform spawnPoint = GameObject.Find("SpawnPoint").transform;
 
             // Make the player no longer a child of the game manager now that we've saved their build between scenes
             Player.instance.transform.parent = null;
 
             // Move the player to the spawn point (NOT WORKING)
-            Player.instance.transform.position = spawnPoint.position; // new Vector3(spawnPoint.position.x, spawnPoint.position.y, spawnPoint.position.z );
+            // Player.instance.transform.position = spawnPoint.position; // new Vector3(spawnPoint.position.x, spawnPoint.position.y, spawnPoint.position.z );
 
             // TODO: Play lich fight music
 

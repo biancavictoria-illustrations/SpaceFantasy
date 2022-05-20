@@ -32,7 +32,7 @@ public class InputManager : MonoBehaviour
     private Player player;
     private Vector2 mousePos;
 
-    public Vector3 moveDirection;   // For cursorLookDirection on controller
+    public Vector2 moveDirection;   // For cursorLookDirection on controller
 
     public static bool aimAtCursor;
 
@@ -91,12 +91,12 @@ public class InputManager : MonoBehaviour
 
     public void SetLookDirectionHorizontal( float value)
     {
-        moveDirection = new Vector3(moveDirection.x, 0, value).normalized;
+        moveDirection.x = value;
     }
 
     public void SetLookDirectionVertical( float value)
     {
-        moveDirection = new Vector3(-value, 0, moveDirection.z).normalized;
+        moveDirection.y = value;
     }
 
     public void UpdateLatestInputDevice()
