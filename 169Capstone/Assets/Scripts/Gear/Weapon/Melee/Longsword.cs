@@ -61,7 +61,7 @@ public class Longsword : Equipment
     {
         if(other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            Debug.Log("Damage");
+            // Debug.Log("Damage");
             bool killed = other.GetComponent<EntityHealth>().Damage(damageModifier[heldEffectCounter] * player.stats.getSTRDamage(), DamageSourceType.Player);
             if(killed)
             {

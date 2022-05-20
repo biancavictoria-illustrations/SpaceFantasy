@@ -7,11 +7,12 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    // TODO: Make sure these are all correct and up to date
+    // TODO: Make sure these are all correct and up to date when building
     public const string TITLE_SCREEN_STRING_NAME = "MainMenu";
     public const string MAIN_HUB_STRING_NAME = "Main Hub";
     public const string GAME_LEVEL1_STRING_NAME = "GenerationSetup";
     public const string LICH_ARENA_STRING_NAME = "Lich Fight";
+    public const string EPILOGUE_SCENE_STRING_NAME = "Epilogue Scene";
 
     private const float hitStopDuration = 0.05f;
 
@@ -29,7 +30,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool inElevatorAnimation;
 
     [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private Transform playerTransform; // TODO: set this at runtime if game manager starts in main menu???
+    [SerializeField] private Transform playerTransform; // is this used for anything anywhere
 
     [SerializeField] private GearManagerObject gearManager;
 
@@ -161,19 +162,36 @@ public class GameManager : MonoBehaviour
             });
         }
         else if(currentSceneName == LICH_ARENA_STRING_NAME){
-            // Get the location of the spawn point
-            // Transform spawnPoint = GameObject.Find("SpawnPoint").transform;
-
             // Make the player no longer a child of the game manager now that we've saved their build between scenes
             Player.instance.transform.parent = null;
-
-            // Move the player to the spawn point (NOT WORKING)
-            // Player.instance.transform.position = spawnPoint.position; // new Vector3(spawnPoint.position.x, spawnPoint.position.y, spawnPoint.position.z );
 
             // TODO: Play lich fight music
 
             fade.opaqueOnStart = true;
-            fade.FadeIn(0.5f);            
+            fade.FadeIn(0.5f);
+
+            inElevatorAnimation = true;
+            FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
+                inElevatorAnimation = false;
+            });
+        }
+        else if(currentSceneName == EPILOGUE_SCENE_STRING_NAME){
+            // Make the player no longer a child of the game manager now that we've saved their build between scenes
+            Player.instance.transform.parent = null;
+
+            InGameUIManager.instance.ToggleRunUI(false);
+
+            // TODO: Play end music?
+
+            fade.opaqueOnStart = true;
+            fade.FadeIn(0.5f);
+
+            inElevatorAnimation = true;
+            FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
+                inElevatorAnimation = false;
+            });
+
+            SaveGame();     // ? maybe? idk
         }
         else if(currentSceneName == TITLE_SCREEN_STRING_NAME){
             gameTimer.runTotalTimer = false;

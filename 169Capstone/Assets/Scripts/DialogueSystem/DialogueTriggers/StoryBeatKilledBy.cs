@@ -2,28 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Narrative/StoryBeatCreatureKilled")]
-public class StoryBeatCreatureKilled : StoryBeat
+[CreateAssetMenu(menuName = "Narrative/StoryBeatKilledBy")]
+public class StoryBeatKilledBy : StoryBeat
 {
     // Unique Trigger
-    [SerializeField] private EnemyID enemyID;
+    [SerializeField] private DamageSourceType damageSource;
 
     [Tooltip("JUST for adding to the yarn head node, if > 1")]
     [SerializeField] private int numCompletionsRequired = 1;
 
     public override void SetValues()
     {
-        beatType = StoryBeatType.EnemyKilled;      
+        beatType = StoryBeatType.KilledBy;     
 
-        yarnHeadNode = beatType.ToString() + enemyID;
+        yarnHeadNode = beatType.ToString() + damageSource;
 
         if(numCompletionsRequired > 1){
             yarnHeadNode = yarnHeadNode + numCompletionsRequired;
         }
     }
 
-    public EnemyID GetEnemyID()
+    public DamageSourceType DamageSource()
     {
-        return enemyID;
+        return damageSource;
     }
 }

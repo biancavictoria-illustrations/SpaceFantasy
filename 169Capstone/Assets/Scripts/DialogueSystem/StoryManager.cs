@@ -346,7 +346,7 @@ public class StoryManager : MonoBehaviour
                 return beat;
             }
         }
-        Debug.LogError("No beats found for node name " + nodeName);
+        Debug.LogWarning("No beats found for node name " + nodeName);
         return null;
     }
 
@@ -436,26 +436,30 @@ public class StoryManager : MonoBehaviour
     // Called when the event is invoked either by killing a creature OR being killed by a creature
     public void KilledEventOccurred(EnemyID enemy, StoryBeatType beatType)
     {
-        // If this event's beatType is NOT creatureKilled OR killedBy, error
-        if( !(beatType == StoryBeatType.EnemyKilled || beatType == StoryBeatType.KilledBy) ){
-            Debug.LogError("KilledEventOccurred for wrong StoryBeatType: " + beatType + " " + enemy + "!");
+        // If this event's beatType is NOT creatureKilled, error
+        if( beatType != StoryBeatType.EnemyKilled ){
+            Debug.LogError("Creature Killed event occurred for wrong StoryBeatType: " + beatType + " " + enemy + "!");
             return;
         }
 
         StoryBeat beat = FindBeatFromNodeNameAndType(beatType.ToString() + enemy, beatType);
-        AchievedStoryBeat(beat);
+        
+        if(beat != null)
+            AchievedStoryBeat(beat);
     }
 
     public void KilledEventOccurred(DamageSourceType damageSource, StoryBeatType beatType)
     {
-        // If this event's beatType is NOT creatureKilled OR killedBy, error
-        if( !(beatType == StoryBeatType.EnemyKilled || beatType == StoryBeatType.KilledBy) ){
-            Debug.LogError("KilledEventOccurred for wrong StoryBeatType: " + beatType + " " + damageSource + "!");
+        // If this event's beatType is NOT killedBy, error
+        if( beatType != StoryBeatType.KilledBy ){
+            Debug.LogError("Killed By event occurred for wrong StoryBeatType: " + beatType + " " + damageSource + "!");
             return;
         }
 
         StoryBeat beat = FindBeatFromNodeNameAndType(beatType.ToString() + damageSource, beatType);
-        AchievedStoryBeat(beat);
+        
+        if(beat != null)
+            AchievedStoryBeat(beat);
     }
 
     // TODO: Invoke this whenever the situations occur in the dialogue manager?
@@ -465,6 +469,8 @@ public class StoryManager : MonoBehaviour
         // Wherever this is called can either pass in just a string that combines that info automatically (SpeakerID + otherDialogueHeadNode (like the base, not inherently having the SpeakerID))
         // or it can pass them in separately like this and we can do that + here
         StoryBeat beat = FindBeatFromNodeNameAndType(StoryBeatType.DialogueCompleted + otherDialogueHeadNode, StoryBeatType.DialogueCompleted);
-        AchievedStoryBeat(beat);
+        
+        if(beat != null)
+            AchievedStoryBeat(beat);
     }
 }
