@@ -28,6 +28,12 @@ public class SceneTransitionDoor : MonoBehaviour
         
         elevatorHelper.AddListenerToAnimationEnd(() => {
             GameManager.instance.inElevatorAnimation = false;
+
+            // If we're NOT going to the main hub or the first level, save the player so that their build is retained
+            if(goToSceneName != GameManager.MAIN_HUB_STRING_NAME && goToSceneName != GameManager.GAME_LEVEL1_STRING_NAME){
+                Player.instance.transform.parent = GameManager.instance.transform;
+            }
+
             SceneManager.LoadScene(goToSceneName);
         });
         elevatorHelper.StartExitAnimation();

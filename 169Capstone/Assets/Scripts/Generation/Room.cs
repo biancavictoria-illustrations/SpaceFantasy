@@ -35,12 +35,12 @@ public class Room : MonoBehaviour
     private void updateEnemies(EntityHealth health)
     {
         enemies.Remove(health);
-        Debug.Log("Enemy Update");
+        // Debug.Log("Enemy Update");
     }
 
     public void AddEnemy(EntityHealth enemy)
     {
-        Debug.Log("Enemy Added");
+        // Debug.Log("Enemy Added");
 
         if(enemies == null)
         {

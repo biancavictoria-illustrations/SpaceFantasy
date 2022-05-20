@@ -32,6 +32,13 @@ public class InputManager : MonoBehaviour
     private Player player;
     private Vector2 mousePos;
 
+    public Vector2 moveDirection;   // For cursorLookDirection on controller
+
+    public static bool aimAtCursor;
+
+    // TEMP - REMOVE THIS FOR FINAL BUILD
+    public DevPanel devPanel;
+
     void Awake()
     {
         if( instance ){
@@ -58,6 +65,10 @@ public class InputManager : MonoBehaviour
             // Add STOPPING when you're no longer holding the button
             controls.FindAction("AttackPrimary").canceled += x => OnAttackPrimaryCanceled();
         }
+
+        if(!devPanel){
+            devPanel = FindObjectOfType<DevPanel>();
+        }
     }
 
     void Update()
@@ -66,10 +77,26 @@ public class InputManager : MonoBehaviour
             return;
         }
 
-        Vector2 playerPositionOnScreen = (Vector2)Camera.main.WorldToScreenPoint(player.transform.position); //Get Player's position on the screen
-        Vector2 cursorLookDirection2D = (mousePos - playerPositionOnScreen).normalized;                      //Get the vector from the player position to the cursor position 
+        Vector2 cursorLookDirection2D;
+        if(latestInputIsController || !aimAtCursor){
+            cursorLookDirection2D = moveDirection;
+        }
+        else{
+            Vector2 playerPositionOnScreen = (Vector2)Camera.main.WorldToScreenPoint(player.transform.position);    //Get Player's position on the screen
+            cursorLookDirection2D = (mousePos - playerPositionOnScreen).normalized;     //Get the vector from the player position to the cursor position 
+        }
         Vector3 lookDirectionRelativeToCamera = Camera.main.transform.right * cursorLookDirection2D.x + Camera.main.transform.up * cursorLookDirection2D.y; //Create the look vector in 3D space relative to the camera
-        cursorLookDirection = Quaternion.FromToRotation(-Camera.main.transform.forward, Vector3.up) * lookDirectionRelativeToCamera;                        //Rotate the look vector to be in terms of world space
+        cursorLookDirection = Quaternion.FromToRotation(-Camera.main.transform.forward, Vector3.up) * lookDirectionRelativeToCamera;    //Rotate the look vector to be in terms of world space
+    }
+
+    public void SetLookDirectionHorizontal( float value)
+    {
+        moveDirection.x = value;
+    }
+
+    public void SetLookDirectionVertical( float value)
+    {
+        moveDirection.y = value;
     }
 
     public void UpdateLatestInputDevice()
@@ -81,6 +108,11 @@ public class InputManager : MonoBehaviour
         else{
             latestInputIsController = true;
         }
+
+        if(!devPanel){
+            devPanel = FindObjectOfType<DevPanel>();
+        }
+        devPanel?.ToggleInteractabilityOnDeviceChange( !latestInputIsController );   // TEMP
     }
 
     public bool CanAcceptGameplayInput()
@@ -98,18 +130,12 @@ public class InputManager : MonoBehaviour
         }
         isAttacking = true;
 
-        // animator.SetBool("IsAttacking", true);
-        // Debug.Log(animator.GetLayerIndex("Slashing"));
-        // gameObject.GetComponent<Animator>().Rebind();
-        // animator.SetLayerWeight(1, 1);
+        // Debug.Log(moveDirection);
     }
 
     public void OnAttackPrimaryCanceled()
     {
         isAttacking = false;
-
-        // animator.SetBool("IsAttacking", false);
-        // animator.SetLayerWeight(1, 0);
     }
 
     public void OnInteract(InputValue input)
@@ -154,6 +180,7 @@ public class InputManager : MonoBehaviour
         RunGameTimer(set);
     }
 
+    // TODO: Just add gamepad submit keybindings here??? just A button??? Also space bar???
     // If you're in dialogue, click anywhere to progress
     public void OnClick(InputValue input)
     {
@@ -182,7 +209,7 @@ public class InputManager : MonoBehaviour
             InGameUIManager.instance.gearSwapUI.CloseGearSwapUI();
             return;            
         }
-        else if(GameManager.instance.statRerollUIOpen){ // Should this one be here? if so probably also death UI. i'm thinking neither tho?
+        else if(GameManager.instance.statRerollUIOpen){ // Should this one be here?
             InGameUIManager.instance.statRerollUI.DisableStatRerollUI();
             return;
         }

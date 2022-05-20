@@ -225,4 +225,11 @@ public class DevPanel : MonoBehaviour
         Player.instance.stats.SetCharisma(5);
         Debug.Log("set CHA to 5");
     }
+
+    public void ToggleInteractabilityOnDeviceChange( bool set )
+    {
+        foreach( Selectable s in GetComponentsInChildren<Selectable>() ){
+            s.interactable = set;
+        }
+    }
 }

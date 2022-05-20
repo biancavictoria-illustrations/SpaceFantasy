@@ -14,10 +14,16 @@ public class Billboard : MonoBehaviour
 
     void Awake()
     {
+        // If main level (do this in awake to add a listener)
         if(GameManager.instance.InSceneWithRandomGeneration()){
             FindObjectOfType<FloorGenerator>()?.OnGenerationComplete.AddListener(StartOnGenerationComplete);
         }
-        else{
+    }
+
+    void Start()
+    {
+        // If main hub or something
+        if(!GameManager.instance.InSceneWithRandomGeneration()){
             StartOnGenerationComplete();
         }
     }
