@@ -289,9 +289,9 @@ public class GameManager : MonoBehaviour
 
         sm.brynListInitialized = saveData.brynListInitialized;
         sm.stellanListInitialized = saveData.stellanListInitialized;
-        sm.doctorListInitialized = saveData.doctorListInitialized;
+        // sm.doctorListInitialized = saveData.doctorListInitialized;
         sm.lichListInitialized = saveData.lichListInitialized;
-        sm.rhianListInitialized = saveData.rhianListInitialized;
+        // sm.rhianListInitialized = saveData.rhianListInitialized;
 
         for(int i = 0; i < saveData.brynNumRunDialogueList.Length; i++){
             sm.brynNumRunDialogueList.Add(saveData.brynNumRunDialogueList[i]);
@@ -299,15 +299,15 @@ public class GameManager : MonoBehaviour
         for(int i = 0; i < saveData.stellanNumRunDialogueList.Length; i++){
             sm.stellanNumRunDialogueList.Add(saveData.stellanNumRunDialogueList[i]);
         }
-        for(int i = 0; i < saveData.doctorNumRunDialogueList.Length; i++){
-            sm.doctorNumRunDialogueList.Add(saveData.doctorNumRunDialogueList[i]);
-        }
+        // for(int i = 0; i < saveData.doctorNumRunDialogueList.Length; i++){
+        //     sm.doctorNumRunDialogueList.Add(saveData.doctorNumRunDialogueList[i]);
+        // }
         for(int i = 0; i < saveData.timeLichNumRunDialogueList.Length; i++){
             sm.timeLichNumRunDialogueList.Add(saveData.timeLichNumRunDialogueList[i]);
         }
-        for(int i = 0; i < saveData.rhianNumRunDialogueList.Length; i++){
-            sm.rhianNumRunDialogueList.Add(saveData.rhianNumRunDialogueList[i]);
-        }
+        // for(int i = 0; i < saveData.rhianNumRunDialogueList.Length; i++){
+        //     sm.rhianNumRunDialogueList.Add(saveData.rhianNumRunDialogueList[i]);
+        // }
 
         // Story Beat Status Values
         sm.LoadSavedStoryBeatStatuses(saveData.storyBeatDatabaseStatuses, saveData.itemStoryBeatStatuses, saveData.genericStoryBeatStatuses, saveData.activeStoryBeatHeadNodes);

@@ -48,10 +48,10 @@ public class Save
     public bool stellanListInitialized;
     public int[] timeLichNumRunDialogueList;
     public bool lichListInitialized;
-    public int[] doctorNumRunDialogueList;
-    public bool doctorListInitialized;
-    public int[] rhianNumRunDialogueList;
-    public bool rhianListInitialized;
+    // public int[] doctorNumRunDialogueList;
+    // public bool doctorListInitialized;
+    // public int[] rhianNumRunDialogueList;
+    // public bool rhianListInitialized;
 
     // Story Beat Status Values
 
@@ -111,13 +111,13 @@ public class Save
         stellanNumRunDialogueList = new int[storyManager.stellanNumRunDialogueList.Count];
         CharacterSpecificNumRunListToArray(SpeakerID.Stellan, storyManager.stellanNumRunDialogueList);
         
-        doctorListInitialized = storyManager.doctorListInitialized;
-        doctorNumRunDialogueList = new int[storyManager.doctorNumRunDialogueList.Count];
-        CharacterSpecificNumRunListToArray(SpeakerID.Doctor, storyManager.doctorNumRunDialogueList);
+        // doctorListInitialized = storyManager.doctorListInitialized;
+        // doctorNumRunDialogueList = new int[storyManager.doctorNumRunDialogueList.Count];
+        // CharacterSpecificNumRunListToArray(SpeakerID.Doctor, storyManager.doctorNumRunDialogueList);
 
-        rhianListInitialized = storyManager.rhianListInitialized;
-        rhianNumRunDialogueList = new int[storyManager.rhianNumRunDialogueList.Count];
-        CharacterSpecificNumRunListToArray(SpeakerID.Rhian, storyManager.rhianNumRunDialogueList);
+        // rhianListInitialized = storyManager.rhianListInitialized;
+        // rhianNumRunDialogueList = new int[storyManager.rhianNumRunDialogueList.Count];
+        // CharacterSpecificNumRunListToArray(SpeakerID.Rhian, storyManager.rhianNumRunDialogueList);
         
         lichListInitialized = storyManager.lichListInitialized;
         timeLichNumRunDialogueList = new int[storyManager.timeLichNumRunDialogueList.Count];
@@ -186,11 +186,11 @@ public class Save
                     stellanNumRunDialogueList[i] = numRunList[i];
                 }
                 return;
-            case SpeakerID.Doctor:
-                for(int i = 0; i < numRunList.Count; i++){
-                    doctorNumRunDialogueList[i] = numRunList[i];
-                }
-                return;
+            // case SpeakerID.Doctor:
+            //     for(int i = 0; i < numRunList.Count; i++){
+            //         doctorNumRunDialogueList[i] = numRunList[i];
+            //     }
+            //     return;
             case SpeakerID.TimeLich:
                 for(int i = 0; i < numRunList.Count; i++){
                     timeLichNumRunDialogueList[i] = numRunList[i];

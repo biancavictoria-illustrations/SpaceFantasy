@@ -23,13 +23,11 @@ tags:
 
 // === Dialogue Completed ===
 
-<<elseif $headNode is "DialogueCompletedDoctorNumRuns">>
-    [[DoctorDialogueCompletedDoctorNumRuns]]
+<<elseif $headNode is "DialogueCompletedDoctorDefaultDialogue">>
+    [[DoctorDialogueCompletedDoctorDefaultDialogue]]
 
 // === Generic Stuff ===
 
-<<elseif $headNode is "NumRuns">>
-    [[DoctorNumRuns]]
 <<elseif $headNode is "LowHealth">>
     [[DoctorLowHealth]]
 <<elseif $headNode is "BarterSuccess">>
@@ -39,6 +37,8 @@ tags:
 <<elseif $headNode is "DefaultDialogue">>
     [[DoctorDefaultDialogue]]
 <<elseif $headNode is "Repeatable">>
+    [[DoctorRepeatable]]
+<<elseif $headNode is "NumRuns">>
     [[DoctorRepeatable]]
 
 <<else>>
@@ -71,55 +71,6 @@ No, but you do, you <i>do,</i> you don’t know it but you do. And he won’t st
 
 
 
-title: DoctorNumRuns
-tags:
----
-<<SetSpeaker Doctor>><<BranchComplete NumRuns NumRuns>>
-My dear Atlan, I’ve discovered something… quite unusual. About you. Or, your blood, to be more specific.
-<<SetSpeaker Player>>
-Should I be concerned or flattered?
-<<SetSpeaker Doctor>>
-Are you aware you are not… exclusively human?
-<<SetSpeaker Player>>
-I… what?
-<<SetSpeaker Doctor>>
-Now, I would hate to distract you from your goals. So why don’t I fix you up and send you on your way, and we can revisit this another time, hmm? After all, we’ve got plenty of time to spare.
-===
-
-title: DoctorDialogueCompletedDoctorNumRuns
-tags:
----
-<<if Visited("DoctorDialogueCompletedDoctorNumRuns")>>
-    [[DoctorDialogueCompletedDoctorNumRuns1]]
-<<else>>
-    <<SetSpeaker Player>>
-    I’m not <i>human?</i> I’m from Planet Petra, and as far as I know, both my parents were, too – what do you mean I’m not <i>human?</i>
-    <<SetSpeaker Doctor>>
-    Well, you’re <i>human.</i> You’re just not <i>only</i> human.
-    <<SetSpeaker Player>>
-    What <i>am</i> I?
-    <<SetSpeaker Doctor>>
-    Ah, yes, well. You see. <i>That</i> part is proving to be… a bit more challenging to unravel. But I will certainly get back to you with my findings as soon as I… well… find them.
-<<endif>>
-===
-
-title: DoctorDialogueCompletedDoctorNumRuns1
-tags:
----
-<<SetSpeaker Doctor>><<BranchComplete DialogueCompleted DialogueCompletedDoctorNumRuns>>
-Atlan! Wonderful news. I have discovered what’s in your blood. You know, beyond the human part.
-<<SetSpeaker Player>>
-So this is a good thing then?
-<<SetSpeaker Doctor>>
-Ah, well, I suppose that depends on your perception of ancient astral beings. <i>Caelarae,</i> to be precise.
-<<SetSpeaker Player>>
-… I’m gonna be honest with you, Doc, I’m gonna need you to spell that out for me a little more directly.
-<<SetSpeaker Doctor>>
-Admittedly, I don’t know much about them myself! They’re present in fairy tales told to elven children, but that’s about all I know! Perhaps there’s someone else you could ask who is more interested in the theoretical rather than the tangible?
-===
-
-
-
 title: DoctorDefaultDialogue
 tags:
 ---
@@ -127,13 +78,14 @@ tags:
     [[DoctorDefaultDialogue1]]
 <<else>>
     <<SetSpeaker Doctor neutral ???>>
-    And just a smidgen to the left, and…
+    … Just a smidgen to the left, and…
     <<SetSpeaker Player>>
     Hello…?
     <<SetSpeaker Doctor neutral ???>>
-    OW! Ahh! Not quite… right…    
+    OW! Ahh! Not quite… right…
+    Oh? A customer! A patient? Or perhaps… a subject? No matter, for now!
     <<SetSpeaker Doctor>>
-    Oh? A customer! A patient? Or perhaps… a subject? No matter, for now! Welcome, welcome – I am Dr. Sanguin. Shall we discuss your treatment options?
+    Welcome, welcome! I am Dr. Sanguin. Shall we discuss your treatment options?
     <<SetSpeaker Player>>
     Sure, Doc. Name’s Atlan, by the way. If you have anything to make me stronger, I’m listening.
     <<SetSpeaker Doctor>>
@@ -147,12 +99,15 @@ tags:
 <<if Visited("DoctorDefaultDialogue1")>>
     [[DoctorDefaultDialogue2]]
 <<else>>
+    <<SetSpeaker Player>>
+    You ever feel stuck, Doc?
     <<SetSpeaker Doctor>>
-    AHHHHHHHHHHHHHHHHHHHHHHHH!
+    Physically or mentally? Or perhaps metaphysically?
+    <<SetSpeaker Player>>
+    No, I mean… on this ship? Seems an odd place for an elf of your particular interests. Wouldn’t you get more customers on, y’know, a <i>planet?</i>
     <<SetSpeaker Doctor>>
-    ...
-    <<SetSpeaker Doctor>>
-    Oh, it’s just you. Welcome, Atlan!
+    Ah. Yes, well, you see, my dear Atlan, I was once quite misguided in that I thought I wanted to be a <i>medic</i> for the crew of a ship. Merely tending to trivial wounds and placid diseases.
+    I have since learned the error of my ways, and branched out into areas of medicine with far more practical applications!
 <<endif>>
 ===
 
@@ -162,15 +117,30 @@ tags:
 <<if Visited("DoctorDefaultDialogue2")>>
     [[DoctorDefaultDialogue3]]
 <<else>>
-    <<SetSpeaker Player>>
-    You ever feel stuck, Doc?
     <<SetSpeaker Doctor>>
-    Physically or mentally? Or perhaps metaphysically?
+    My dear Atlan, I’ve discovered something… quite unusual. About you. Or, your blood, to be more specific.
     <<SetSpeaker Player>>
-    No, I mean… on this ship?
+    Should I be concerned or flattered?
     <<SetSpeaker Doctor>>
-    Why, I’m perfectly content right where I am!
+    Are you aware you are not… exclusively human?
+    <<SetSpeaker Player>>
+    I… what?
+    <<SetSpeaker Doctor>>
+    Now, I would hate to distract you from your goals. So why don’t I fix you up and send you on your way, and we can revisit this another time, hmm? After all, we’ve got plenty of time to spare.
 <<endif>>
+===
+
+title: DoctorDialogueCompletedDoctorDefaultDialogue
+tags:
+--- // Special interaction higher prio that should play after the above /almost/ no matter what
+<<SetSpeaker Player>><<BranchComplete DialogueCompleted DialogueCompletedDoctorDefaultDialogue>>
+I’m not <i>human?</i> I’m from Planet Petra, and as far as I know, both my parents were, too – what do you mean I’m not <i>human?</i>
+<<SetSpeaker Doctor>>
+Well, you’re <i>human.</i> You’re just not <i>only</i> human.
+<<SetSpeaker Player>>
+What <i>am</i> I?
+<<SetSpeaker Doctor>>
+Ah, yes, well. You see. <i>That</i> part is proving to be… a bit more challenging to unravel. But I will certainly get back to you with my findings as soon as I… well… find them.
 ===
 
 title: DoctorDefaultDialogue3
@@ -178,21 +148,6 @@ tags:
 ---
 <<if Visited("DoctorDefaultDialogue3")>>
     [[DoctorDefaultDialogue4]]
-<<else>>
-    <<SetSpeaker Player>>
-    So, how’d you end up working on this ship anyway? Seems an odd place for an elf of your particular interests. Wouldn’t you get more customers on, y’know, a <i>planet?</i>
-    <<SetSpeaker Doctor>>
-    You see, my dear Atlan, I was once quite misguided in that I thought I wanted to be a <i>medic</i> for the crew of a ship. Merely tending to trivial wounds and placid diseases.
-    <<SetSpeaker Doctor>>
-    I have since learned the error of my ways, and branched out into areas of medicine with far more practical applications!
-<<endif>>
-===
-
-title: DoctorDefaultDialogue4
-tags:
----
-<<if Visited("DoctorDefaultDialogue4")>>
-    [[DoctorDefaultDialogue5]]
 <<else>>
     <<SetSpeaker Player>>
     Tell me, Doc, why didn’t you leave this place once you realized you didn’t want to be a boring old ship medic anymore?
@@ -205,18 +160,37 @@ tags:
 <<endif>>
 ===
 
+title: DoctorDefaultDialogue4
+tags:
+---
+<<if Visited("DoctorDefaultDialogue4")>>
+    [[DoctorDefaultDialogue5]]
+<<else>>
+    <<SetSpeaker Player>>
+    Everything alright, Doc? I don’t mean to pry, but… you seemed pretty rattled when I tried to ask why you never left this ship before.
+    <<SetSpeaker Doctor>>
+    Oh. Yes. That. Well. You see! I mustn’t gossip. But the Captain, he– Well, you know. And after… I was allowed certain <i>freedoms,</i> freedoms that one does not often find in my line of work.
+    Freedoms and opportunities. I simply could not pass that up.
+<<endif>>
+===
+
 title: DoctorDefaultDialogue5
 tags:
 ---
 <<if Visited("DoctorDefaultDialogue5")>>
     [[DoctorDefaultDialogue6]]
 <<else>>
+    <<SetSpeaker Doctor>>
+    Atlan! Wonderful news. I have discovered what is in your blood. You know, beyond the human part.
     <<SetSpeaker Player>>
-    Everything alright, Doc? I don’t mean to pry, but… you seemed pretty rattled when I tried to ask why you never left this ship before.
+    So this is a good thing then?
     <<SetSpeaker Doctor>>
-    Oh. Yes. That. Well. You see! I mustn’t gossip. But the Captain, he– Well, you know. And after… I was allowed certain <i>freedoms,</i> freedoms that one does not often find in my line of work. Freedoms and opportunities.
+    Ah, well, I suppose that depends on your perception of ancient astral beings. <i>Caelarae,</i> to be precise.
+    <<SetSpeaker Player>>
+    … I’m gonna be honest with you, Doc, I’m gonna need you to spell that out for me a little more directly.
     <<SetSpeaker Doctor>>
-    I simply could not pass that up.
+    Admittedly, I don’t know much about them myself! They’re present in fairy tales told to elven children, but that’s about all I know!
+    Perhaps there’s someone else you could ask who is more interested in the theoretical rather than the tangible?
 <<endif>>
 ===
 
@@ -227,23 +201,35 @@ tags:
     [[DoctorDefaultDialogue7]]
 <<else>>
     <<SetSpeaker Player>>
-    These freedoms you once spoke of. Newfound opportunities. Were those, perhaps, research opportunities? Freedom to conduct your experiments using the resources on this ship?
+    Those freedoms you once spoke of. Newfound opportunities on this ship. Are we talking research opportunities? Freedom to conduct your experiments using the resources on this ship?
     <<SetSpeaker Doctor>>
     Ah, yes. The <i>resources.</i> Yes, yes.
-    <<SetSpeaker Doctor>>
-    Quite valuable resources, and far more encouragement than I was used to receiving for my pet projects. It seemed to me I was not the only one interested in stretching boundaries.
+    Quite valuable resources, and far more encouragement than I was used to receiving for my pet projects. It seems I was not the only one interested in stretching boundaries.
 <<endif>>
 ===
 
 title: DoctorDefaultDialogue7
 tags:
 ---
-<<SetSpeaker Player>><<BranchComplete DefaultDialogue DefaultDialogue>>
-Doc, were the resources you had on this ship for conducting your experiments… <i>people?</i>
-<<SetSpeaker Doctor>>
-… At one point, perhaps.
-<<SetSpeaker Doctor>>
-Though it seems we all lose some of our humanity eventually on this ship.
+<<if Visited("DoctorDefaultDialogue7")>>
+    [[DoctorDefaultDialogue8]]
+<<else>>
+    <<SetSpeaker Player>>
+    Doc, were the resources you had on this ship for conducting your experiments… <i>people?</i>
+    <<SetSpeaker Doctor>>
+    … At one point, perhaps.
+    <<SetSpeaker Doctor>>
+    Though it seems we all lose some of our humanity eventually on this ship.
+<<endif>>
+===
+
+title: DoctorDefaultDialogue8
+tags:
+---
+<<SetSpeaker Doctor>><<BranchComplete DefaultDialogue DefaultDialogue>>
+AHHHHHHHHHHHHHHHHHHHHHHHH!
+...
+Oh, it’s just you. Welcome, Atlan!
 ===
 
 

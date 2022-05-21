@@ -11,8 +11,11 @@ public class StoryBeatConversation : StoryBeat
     [Tooltip("The NPC associated with this event trigger (NPC talked to)")]
     [SerializeField] private SpeakerID talkedToNPC;
 
-    [Tooltip("The yarn head node for the dialogue branch completed (*** including NPC name ***)")]
+    [Tooltip("The yarn HEAD node for the dialogue branch completed (*** including NPC name ***)")]
     [SerializeField] private string otherDialogueHeadNode = "";
+
+    [Tooltip("If prereq is generic type, give a specific node name to check if visited here")]
+    [SerializeField] private string completedGenericNode;
 
     public override void SetValues()
     {
@@ -28,5 +31,10 @@ public class StoryBeatConversation : StoryBeat
     public string GetOtherDialogue()
     {
         return otherDialogueHeadNode;
+    }
+
+    public string CompletedGenericNode()
+    {
+        return completedGenericNode;
     }
 }

@@ -84,11 +84,11 @@ public class StoryManager : MonoBehaviour
     [HideInInspector] public List<int> timeLichNumRunDialogueList = new List<int>();
     [HideInInspector] public bool lichListInitialized;
 
-    [HideInInspector] public List<int> doctorNumRunDialogueList = new List<int>();
-    [HideInInspector] public bool doctorListInitialized;
+    // [HideInInspector] public List<int> doctorNumRunDialogueList = new List<int>();
+    // [HideInInspector] public bool doctorListInitialized;
 
-    [HideInInspector] public List<int> rhianNumRunDialogueList = new List<int>();
-    [HideInInspector] public bool rhianListInitialized;
+    // [HideInInspector] public List<int> rhianNumRunDialogueList = new List<int>();
+    // [HideInInspector] public bool rhianListInitialized;
 
     public Dictionary<StoryBeat,BeatStatus> storyBeatDatabase = new Dictionary<StoryBeat,BeatStatus>();     // All story beats of type Conversation or Killed
     public HashSet<StoryBeat> activeStoryBeats = new HashSet<StoryBeat>();    // For the DialogueManager to see just the active beats
@@ -119,8 +119,8 @@ public class StoryManager : MonoBehaviour
         brynListInitialized = false;
         stellanListInitialized = false;
         lichListInitialized = false;
-        doctorListInitialized = false;
-        rhianListInitialized = false;
+        // doctorListInitialized = false;
+        // rhianListInitialized = false;
 
         activeStoryBeats.Clear();
 
@@ -323,7 +323,7 @@ public class StoryManager : MonoBehaviour
             Debug.LogWarning("No beats found for beat type: " + beatType);
             return null;
         }
-        Debug.LogWarning("No beats found for node name " + nodeName + " with beat type " + beatType);
+        // Debug.LogWarning("No beats found for node name " + nodeName + " with beat type " + beatType);
         return null;
     }
 
@@ -387,7 +387,7 @@ public class StoryManager : MonoBehaviour
     }
 
     // When you achieve this story beat on a run, increment the # completions and set achieved to true
-    private void AchievedStoryBeat(StoryBeat beat)
+    private void AchievedStoryBeat(StoryBeat beat, string talkedToNPCName = "")
     {
         if( beat.GetBeatType() != StoryBeatType.EnemyKilled && beat.GetBeatType() != StoryBeatType.KilledBy && beat.GetBeatType() != StoryBeatType.DialogueCompleted ){
             Debug.LogError("Tried to call AchievedStoryBeat on wrong beat type: " + beat.GetBeatType() + " " + beat.GetYarnHeadNode() + "!");
@@ -398,10 +398,21 @@ public class StoryManager : MonoBehaviour
         if(beat.GetPrereqStoryBeats().Count > 0){
             Dictionary<StoryBeat,int> prereqs = beat.GetPrereqStoryBeats();
             foreach(StoryBeat p in prereqs.Keys){
-                // If one of the prereqs has not been met, don't mark this story beat as active
-                if( storyBeatDatabase[p].numberOfCompletions < prereqs[p] ){
-                    Debug.Log("Prereqs NOT met in order to add Story Beat " + beat.GetYarnHeadNode());
-                    return;
+                if( storyBeatDatabase.ContainsKey(p) ){
+                    // If one of the prereqs has not been met, don't mark this story beat as active
+                    if( storyBeatDatabase[p].numberOfCompletions < prereqs[p] ){
+                        Debug.Log("Prereqs NOT met in order to add Story Beat " + beat.GetYarnHeadNode());
+                        return;
+                    }
+                }
+                else if( (int)p.GetBeatType() <= 5 ){   // If generic, check for the specific node
+                    if( DialogueManager.instance.visitedNodes.Contains( talkedToNPCName + p.GetYarnHeadNode() + (prereqs[p] - 1) ) ){
+                        Debug.Log("Prereqs NOT met in order to add Story Beat. visitedNodes does not contain " + talkedToNPCName + p.GetYarnHeadNode() + (prereqs[p] - 1));
+                        return;
+                    }
+                }
+                else{
+                    Debug.LogWarning("Story beat with type " + p.GetBeatType() + " not found while checking prereqs");
                 }
             }
         }
@@ -462,15 +473,17 @@ public class StoryManager : MonoBehaviour
             AchievedStoryBeat(beat);
     }
 
-    // TODO: Invoke this whenever the situations occur in the dialogue manager?
-    public void ConversationEventOccurred(SpeakerID npc, string otherDialogueHeadNode)
+    public void ConversationEventOccurred(SpeakerID npc, string dialogueHeadNode)
     {
-        // TODO: Either implement a use for the speakerID or remove it from this (probably need it actually so that it's with a specific character not just that branch as a WHOLE?)
-        // Wherever this is called can either pass in just a string that combines that info automatically (SpeakerID + otherDialogueHeadNode (like the base, not inherently having the SpeakerID))
-        // or it can pass them in separately like this and we can do that + here
-        StoryBeat beat = FindBeatFromNodeNameAndType(StoryBeatType.DialogueCompleted + otherDialogueHeadNode, StoryBeatType.DialogueCompleted);
+        // Log that a dialogue completed beat occured with this NPC and this head node, if one is found
+        string nodeName = StoryBeatType.DialogueCompleted.ToString() + npc.ToString() + dialogueHeadNode;
+        StoryBeat beat = FindBeatFromNodeNameAndType(nodeName, StoryBeatType.DialogueCompleted);
         
-        if(beat != null)
-            AchievedStoryBeat(beat);
+        if(beat != null){
+            AchievedStoryBeat(beat, npc.ToString());
+        }
+        else{
+            Debug.LogWarning("No beat found/updated for " + nodeName);
+        }
     }
 }

@@ -319,6 +319,11 @@ public class DialogueManager : MonoBehaviour
         StoryBeatType beatType = StoryManager.instance.GetBeatTypeFromString(beatTypeString);
         StoryBeat beat = StoryManager.instance.FindBeatFromNodeNameAndType(nodeName, beatType);
 
+        if(beat == null){
+            Debug.LogError("Failed to mark branch complete for null story beat");
+            return;
+        }
+
         Debug.Log("Removing " + beat.GetYarnHeadNode() + " from " + NPC.ActiveNPC.SpeakerData().SpeakerID());
 
         // Remove the speaker
@@ -330,6 +335,9 @@ public class DialogueManager : MonoBehaviour
     {
         // Log that the node has been run
         visitedNodes.Add(nodeName);
+
+        // TODO: prob do this here?
+        // StoryManager.instance.ConversationEventOccurred( nodeName );
     }
 
     // Called when the player clicks the interact button in range of an NPC with something to say
