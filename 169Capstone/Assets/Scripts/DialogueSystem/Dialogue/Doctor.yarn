@@ -23,8 +23,8 @@ tags:
 
 // === Dialogue Completed ===
 
-<<elseif $headNode is "DialogueCompletedDoctorDefaultDialogue">>
-    [[DoctorDialogueCompletedDoctorDefaultDialogue]]
+<<elseif $headNode is "DialogueCompletedDoctorDefaultDialogue2">>
+    [[DoctorDialogueCompletedDoctorDefaultDialogue2]]
 
 // === Generic Stuff ===
 
@@ -130,10 +130,10 @@ tags:
 <<endif>>
 ===
 
-title: DoctorDialogueCompletedDoctorDefaultDialogue
+title: DoctorDialogueCompletedDoctorDefaultDialogue2
 tags:
 --- // Special interaction higher prio that should play after the above /almost/ no matter what
-<<SetSpeaker Player>><<BranchComplete DialogueCompleted DialogueCompletedDoctorDefaultDialogue>>
+<<SetSpeaker Player>><<BranchComplete DialogueCompleted DialogueCompletedDoctorDefaultDialogue2>>
 I’m not <i>human?</i> I’m from Planet Petra, and as far as I know, both my parents were, too – what do you mean I’m not <i>human?</i>
 <<SetSpeaker Doctor>>
 Well, you’re <i>human.</i> You’re just not <i>only</i> human.

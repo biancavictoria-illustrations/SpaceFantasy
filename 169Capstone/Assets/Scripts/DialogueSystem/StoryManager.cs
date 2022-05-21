@@ -387,15 +387,26 @@ public class StoryManager : MonoBehaviour
     }
 
     // When you achieve this story beat on a run, increment the # completions and set achieved to true
-    private void AchievedStoryBeat(StoryBeat beat, string talkedToNPCName = "")
+    private void AchievedStoryBeat(StoryBeat beat)
     {
-        if( beat.GetBeatType() != StoryBeatType.EnemyKilled && beat.GetBeatType() != StoryBeatType.KilledBy && beat.GetBeatType() != StoryBeatType.DialogueCompleted ){
+        StoryBeatType beatType = beat.GetBeatType();
+
+        if( beatType != StoryBeatType.EnemyKilled && beatType != StoryBeatType.KilledBy && beatType != StoryBeatType.DialogueCompleted ){
             Debug.LogError("Tried to call AchievedStoryBeat on wrong beat type: " + beat.GetBeatType() + " " + beat.GetYarnHeadNode() + "!");
             return;
         }
 
-        // If there are prereqs, check them
-        if(beat.GetPrereqStoryBeats().Count > 0){
+        // If dialogue completed, check prereqs differently
+        if(beatType == StoryBeatType.DialogueCompleted){            
+            string completedDialogueNode = ((StoryBeatConversation)beat).CompletedDialogueNode();
+            if( !DialogueManager.instance.visitedNodes.Contains(completedDialogueNode) ){
+                // Log it as an error cuz if it wasn't visited why are we here, that's bad
+                Debug.LogError("Prereqs NOT met in order to add Story Beat " + beat.GetYarnHeadNode());
+                return;
+            }
+        }
+        // For other beat types: If there are prereqs, check them
+        else if(beat.GetPrereqStoryBeats().Count > 0){
             Dictionary<StoryBeat,int> prereqs = beat.GetPrereqStoryBeats();
             foreach(StoryBeat p in prereqs.Keys){
                 if( storyBeatDatabase.ContainsKey(p) ){
@@ -405,12 +416,12 @@ public class StoryManager : MonoBehaviour
                         return;
                     }
                 }
-                else if( (int)p.GetBeatType() <= 5 ){   // If generic, check for the specific node
-                    if( DialogueManager.instance.visitedNodes.Contains( talkedToNPCName + p.GetYarnHeadNode() + (prereqs[p] - 1) ) ){
-                        Debug.Log("Prereqs NOT met in order to add Story Beat. visitedNodes does not contain " + talkedToNPCName + p.GetYarnHeadNode() + (prereqs[p] - 1));
-                        return;
-                    }
-                }
+                // else if( (int)p.GetBeatType() <= 5 ){   // If generic, check for the specific node
+                //     if( DialogueManager.instance.visitedNodes.Contains( talkedToNPCName + p.GetYarnHeadNode() + (prereqs[p] - 1) ) ){
+                //         Debug.Log("Prereqs NOT met in order to add Story Beat. visitedNodes does not contain " + talkedToNPCName + p.GetYarnHeadNode() + (prereqs[p] - 1));
+                //         return;
+                //     }
+                // }
                 else{
                     Debug.LogWarning("Story beat with type " + p.GetBeatType() + " not found while checking prereqs");
                 }
@@ -418,6 +429,7 @@ public class StoryManager : MonoBehaviour
         }
 
         // If all potential prereqs are met, update the story beat status to be active and increment completion
+        Debug.Log("UPDATING BEAT STATUS FOR: " + beat.GetYarnHeadNode());
         UpdateBeatStatus(beat, true, 1);
     }
 
@@ -473,14 +485,14 @@ public class StoryManager : MonoBehaviour
             AchievedStoryBeat(beat);
     }
 
-    public void ConversationEventOccurred(SpeakerID npc, string dialogueHeadNode)
+    public void ConversationEventOccurred(string dialogueNodeCompleted)
     {
-        // Log that a dialogue completed beat occured with this NPC and this head node, if one is found
-        string nodeName = StoryBeatType.DialogueCompleted.ToString() + npc.ToString() + dialogueHeadNode;
+        // Log that a dialogue completed beat occured with the just played node, if one is found
+        string nodeName = StoryBeatType.DialogueCompleted.ToString() + dialogueNodeCompleted;
         StoryBeat beat = FindBeatFromNodeNameAndType(nodeName, StoryBeatType.DialogueCompleted);
         
         if(beat != null){
-            AchievedStoryBeat(beat, npc.ToString());
+            AchievedStoryBeat(beat);
         }
         else{
             Debug.LogWarning("No beat found/updated for " + nodeName);

@@ -37,8 +37,8 @@ tags:
 
 // === Dialogue Completed ===
 
-<<elseif $headNode is "DialogueCompletedDoctorDefaultDialogue">>
-    [[StellanDialogueCompletedDoctorDefaultDialogue]]
+<<elseif $headNode is "DialogueCompletedDoctorDefaultDialogue5">>
+    [[StellanDialogueCompletedDoctorDefaultDialogue5]]
 
 <<elseif $headNode is "DialogueCompletedStellanEnemyKilledTimeLich">>
     [[StellanDialogueCompletedStellanEnemyKilledTimeLich]]
@@ -60,11 +60,11 @@ tags:
 
 
 
-title: StellanDialogueCompletedDoctorDefaultDialogue
+title: StellanDialogueCompletedDoctorDefaultDialogue5
 tags:
 ---
-<<if Visited("StellanDialogueCompletedDoctorDefaultDialogue")>>
-    [[StellanDialogueCompletedDoctorDefaultDialogue1]]
+<<if Visited("StellanDialogueCompletedDoctorDefaultDialogue5")>>
+    [[StellanDialogueCompletedDoctorDefaultDialogue51]]
 <<else>>
     <<SetSpeaker Player>>
     You ever heard of the <i>caelarae?</i>
@@ -77,11 +77,11 @@ tags:
 <<endif>>
 ===
 
-title: StellanDialogueCompletedDoctorDefaultDialogue1
+title: StellanDialogueCompletedDoctorDefaultDialogue51
 tags:
 ---
-<<if Visited("StellanDialogueCompletedDoctorDefaultDialogue1")>>
-    [[StellanDialogueCompletedDoctorDefaultDialogue2]]
+<<if Visited("StellanDialogueCompletedDoctorDefaultDialogue51")>>
+    [[StellanDialogueCompletedDoctorDefaultDialogue52]]
 <<else>>
     <<SetSpeaker Player>>
     Are you familiar with Dr. Sanguin?
@@ -95,11 +95,11 @@ tags:
 <<endif>>
 ===
 
-title: StellanDialogueCompletedDoctorDefaultDialogue2
+title: StellanDialogueCompletedDoctorDefaultDialogue52
 tags:
 ---
-<<if Visited("StellanDialogueCompletedDoctorDefaultDialogue2")>>
-    [[StellanDialogueCompletedDoctorDefaultDialogue3]]
+<<if Visited("StellanDialogueCompletedDoctorDefaultDialogue52")>>
+    [[StellanDialogueCompletedDoctorDefaultDialogue53]]
 <<else>>
     <<SetSpeaker Stellan>>
     The caelarae are a myth. Stories told to elven children of sentient stars who watch over them in the night. Guardians. Protectors.
@@ -112,11 +112,11 @@ tags:
 <<endif>>
 ===
 
-title: StellanDialogueCompletedDoctorDefaultDialogue3
+title: StellanDialogueCompletedDoctorDefaultDialogue53
 tags:
 ---
-<<if Visited("StellanDialogueCompletedDoctorDefaultDialogue3")>>
-    [[StellanDialogueCompletedDoctorDefaultDialogue4]]
+<<if Visited("StellanDialogueCompletedDoctorDefaultDialogue53")>>
+    [[StellanDialogueCompletedDoctorDefaultDialogue54]]
 <<else>>
     <<SetSpeaker Player>>
     I’ve been on my own for most of my life. But I have vague memories of my mother telling me my eyes were full of golden starlight.
@@ -130,10 +130,10 @@ tags:
 <<endif>>
 ===
 
-title: StellanDialogueCompletedDoctorDefaultDialogue4
+title: StellanDialogueCompletedDoctorDefaultDialogue54
 tags:
 ---
-<<SetSpeaker Player>><<BranchComplete DialogueCompleted DialogueCompletedDoctorDefaultDialogue>>
+<<SetSpeaker Player>><<BranchComplete DialogueCompleted DialogueCompletedDoctorDefaultDialogue5>>
 So you’ve been experimenting on me this whole time? What, you suspected my bloodline and wanted to see what would happen if you used those Star Shards on me?
 <<SetSpeaker Stellan>>
 I may have suspected certain things. But if I was wrong, it’s not like it would have hurt you.

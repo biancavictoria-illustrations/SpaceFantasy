@@ -333,11 +333,16 @@ public class DialogueManager : MonoBehaviour
     // Called by the Dialogue Runner to notify us that a node finished running
     public void NodeComplete(string nodeName)
     {
+        // If we've already visited this node, just return (since nodes run lots of times in order to access current node in a branch)
+        if(visitedNodes.Contains(nodeName)){
+            return;
+        }
+
         // Log that the node has been run
         visitedNodes.Add(nodeName);
 
-        // TODO: prob do this here?
-        // StoryManager.instance.ConversationEventOccurred( nodeName );
+        // Also alert the story manager in case there are any DialogueComplete nodes to add to the pool
+        StoryManager.instance.ConversationEventOccurred(nodeName);
     }
 
     // Called when the player clicks the interact button in range of an NPC with something to say

@@ -8,33 +8,18 @@ public class StoryBeatConversation : StoryBeat
 {    
     // Event Triggers
 
-    [Tooltip("The NPC associated with this event trigger (NPC talked to)")]
-    [SerializeField] private SpeakerID talkedToNPC;
-
-    [Tooltip("The yarn HEAD node for the dialogue branch completed (*** including NPC name ***)")]
-    [SerializeField] private string otherDialogueHeadNode = "";
-
-    [Tooltip("If prereq is generic type, give a specific node name to check if visited here")]
-    [SerializeField] private string completedGenericNode;
+    [Tooltip("The EXACT yarn node for the dialogue completed (*** including NPC name ***); IGNORE PREREQS do this instead; THIS node will have a head node of DialogueCompleted + this")]
+    [SerializeField] private string completedDialogueNode;
 
     public override void SetValues()
     {
         beatType = StoryBeatType.DialogueCompleted;
-        yarnHeadNode = beatType + otherDialogueHeadNode;
+
+        yarnHeadNode = beatType + completedDialogueNode;
     }
 
-    public SpeakerID GetTalkedToNPC()
+    public string CompletedDialogueNode()
     {
-        return talkedToNPC;
-    }
-
-    public string GetOtherDialogue()
-    {
-        return otherDialogueHeadNode;
-    }
-
-    public string CompletedGenericNode()
-    {
-        return completedGenericNode;
+        return completedDialogueNode;
     }
 }
