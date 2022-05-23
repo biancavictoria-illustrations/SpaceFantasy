@@ -18,6 +18,9 @@ public class BowAndArrows : Equipment
     private AnimationStateController playerAnim;
     [SerializeField] private GameObject arrowPrefab;
 
+    [SerializeField] private GameObject arrowUIPrefab;
+    private ArrowUI arrowUI;
+
     void Start()
     {
         player = Player.instance;
@@ -25,10 +28,15 @@ public class BowAndArrows : Equipment
 
         playerAnim = player.GetComponentInChildren<AnimationStateController>();
         playerAnim.endAttack.AddListener(disableAttacking);
+
+        arrowUI = Instantiate(arrowUIPrefab, player.GetComponentInChildren<Canvas>().transform).GetComponent<ArrowUI>();
+        arrowUI.maximum = maxHoldTime;
+        arrowUI.current = heldTime;
     }
 
     void Update()
     {
+        arrowUI.current = heldTime;
         if(InputManager.instance.isAttacking && !isAttacking)
         {
             isAttacking = true;
