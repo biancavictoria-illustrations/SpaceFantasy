@@ -66,6 +66,9 @@ public class JournalContent : ScriptableObject
     [Tooltip("INTERNAL ID for indexing and displaying the right info at the right time")]
     [SerializeField] protected JournalContentID internalID;
 
+    [Tooltip("Set to true if this journal entry is locked on start; false if we can see it right away")]
+    [SerializeField] protected bool lockedOnStart = false;
+
     [Tooltip("PLAYER FACING entry name")]
     [SerializeField] protected string entryName;
     [Tooltip("PLAYER FACING flavor ID number")]
@@ -79,6 +82,11 @@ public class JournalContent : ScriptableObject
     public JournalContentID InternalID()
     {
         return internalID;
+    }
+
+    public bool LockedOnStart()
+    {
+        return lockedOnStart;
     }
 
     public string EntryName()
