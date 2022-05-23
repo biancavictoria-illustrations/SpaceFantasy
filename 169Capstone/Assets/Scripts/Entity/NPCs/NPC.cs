@@ -24,7 +24,8 @@ public class NPC : MonoBehaviour
             return;
         }
 
-        InitializeAssociatedNumRunDialogueList();
+        if(speakerData.SpeakerID() != SpeakerID.Rhian && speakerData.SpeakerID() != SpeakerID.Doctor)
+            InitializeAssociatedNumRunDialogueList();
 
         if(speakerData.SpeakerID() == SpeakerID.TimeLich || (speakerData.SpeakerID() == SpeakerID.Stellan && (GameManager.instance.currentRunNumber == 2 || GameManager.instance.currentRunNumber == 3))){
             forceNextDialogueOnTriggerEnter = true;
@@ -162,24 +163,24 @@ public class NPC : MonoBehaviour
                     storyManager.timeLichNumRunDialogueList = new List<int>(speakerData.NumRunDialogueList());
                 }     
                 return;
-            case SpeakerID.Doctor:
-                if(!storyManager.doctorListInitialized){
-                    storyManager.doctorListInitialized = true;
-                    storyManager.doctorNumRunDialogueList = new List<int>(speakerData.NumRunDialogueList());
-                }     
-                return;
+            // case SpeakerID.Doctor:
+            //     if(!storyManager.doctorListInitialized){
+            //         storyManager.doctorListInitialized = true;
+            //         storyManager.doctorNumRunDialogueList = new List<int>(speakerData.NumRunDialogueList());
+            //     }     
+            //     return;
             case SpeakerID.Stellan:
                 if(!storyManager.stellanListInitialized){
                     storyManager.stellanListInitialized = true;
                     storyManager.stellanNumRunDialogueList = new List<int>(speakerData.NumRunDialogueList());
                 }     
                 return;
-            case SpeakerID.Rhian:
-                if(!storyManager.rhianListInitialized){
-                    storyManager.rhianListInitialized = true;
-                    storyManager.rhianNumRunDialogueList = new List<int>(speakerData.NumRunDialogueList());
-                }     
-                return;
+            // case SpeakerID.Rhian:
+            //     if(!storyManager.rhianListInitialized){
+            //         storyManager.rhianListInitialized = true;
+            //         storyManager.rhianNumRunDialogueList = new List<int>(speakerData.NumRunDialogueList());
+            //     }     
+            //     return;
         }
     }
 
@@ -190,14 +191,14 @@ public class NPC : MonoBehaviour
                 return StoryManager.instance.brynNumRunDialogueList;
             case SpeakerID.TimeLich:   
                 return StoryManager.instance.timeLichNumRunDialogueList;
-            case SpeakerID.Doctor:   
-                return StoryManager.instance.doctorNumRunDialogueList;
+            // case SpeakerID.Doctor:   
+            //     return StoryManager.instance.doctorNumRunDialogueList;
             case SpeakerID.Stellan: 
                 return StoryManager.instance.stellanNumRunDialogueList;
-            case SpeakerID.Rhian: 
-                return StoryManager.instance.rhianNumRunDialogueList;
+            // case SpeakerID.Rhian: 
+            //     return StoryManager.instance.rhianNumRunDialogueList;
         }
-        Debug.LogError("No num run dialogue list found for SpeakerID: " + speakerData.SpeakerID());
+        Debug.LogWarning("No num run dialogue list found for SpeakerID: " + speakerData.SpeakerID());
         return null;
     }
 

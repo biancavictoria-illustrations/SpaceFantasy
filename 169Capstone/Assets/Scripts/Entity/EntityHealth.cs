@@ -246,12 +246,11 @@ public class EntityHealth : MonoBehaviour
         if(health != this)
             return;
 
-        Debug.Log("Death");
+        // Debug.Log("Death");
         if(gameObject.tag == "Player")
         {
-            // Tell the story manager that the player was killed by a creature
-            // TODO
-            // StoryManager.instance.KilledEventOccurred(damageSourceCausedPlayerDeath, StoryBeatType.KilledBy);            
+            // Tell the story manager what the player was killed by
+            StoryManager.instance.KilledEventOccurred(damageSourceCausedPlayerDeath, StoryBeatType.KilledBy);            
             GameManager.instance.playerDeath = true;
         }
         else

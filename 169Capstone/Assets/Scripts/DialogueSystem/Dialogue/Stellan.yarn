@@ -37,8 +37,8 @@ tags:
 
 // === Dialogue Completed ===
 
-<<elseif $headNode is "DialogueCompletedDoctorDialogueCompletedDoctorNumRuns">>
-    [[StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns]]
+<<elseif $headNode is "DialogueCompletedDoctorDefaultDialogue5">>
+    [[StellanDialogueCompletedDoctorDefaultDialogue5]]
 
 <<elseif $headNode is "DialogueCompletedStellanEnemyKilledTimeLich">>
     [[StellanDialogueCompletedStellanEnemyKilledTimeLich]]
@@ -60,11 +60,11 @@ tags:
 
 
 
-title: StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns
+title: StellanDialogueCompletedDoctorDefaultDialogue5
 tags:
 ---
-<<if Visited("StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns")>>
-    [[StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns1]]
+<<if Visited("StellanDialogueCompletedDoctorDefaultDialogue5")>>
+    [[StellanDialogueCompletedDoctorDefaultDialogue51]]
 <<else>>
     <<SetSpeaker Player>>
     You ever heard of the <i>caelarae?</i>
@@ -77,11 +77,11 @@ tags:
 <<endif>>
 ===
 
-title: StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns1
+title: StellanDialogueCompletedDoctorDefaultDialogue51
 tags:
 ---
-<<if Visited("StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns1")>>
-    [[StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns2]]
+<<if Visited("StellanDialogueCompletedDoctorDefaultDialogue51")>>
+    [[StellanDialogueCompletedDoctorDefaultDialogue52]]
 <<else>>
     <<SetSpeaker Player>>
     Are you familiar with Dr. Sanguin?
@@ -91,22 +91,19 @@ tags:
     He claims to have found traces of caelarae ancestry in my blood.
     <<SetSpeaker Stellan>>
     He also claims to be a doctor. Perhaps learn not to be so gullible when talking to strangers aboard a cursed ship, Atlan.
-    <<SetSpeaker Stellan>>
     Oh, and the singular is <i>caelara.</i>
 <<endif>>
 ===
 
-title: StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns2
+title: StellanDialogueCompletedDoctorDefaultDialogue52
 tags:
 ---
-<<if Visited("StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns2")>>
-    [[StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns3]]
+<<if Visited("StellanDialogueCompletedDoctorDefaultDialogue52")>>
+    [[StellanDialogueCompletedDoctorDefaultDialogue53]]
 <<else>>
     <<SetSpeaker Stellan>>
     The caelarae are a myth. Stories told to elven children of sentient stars who watch over them in the night. Guardians. Protectors.
-    <<SetSpeaker Stellan>>
     I was named after one by my elven mother – supposedly, Stellan the caelara would watch over me when she left me to the mercy of my human father.
-    <<SetSpeaker Stellan>>
     Little good that did me.
     <<SetSpeaker Player>>
     You’re certain they’re a myth?
@@ -115,27 +112,28 @@ tags:
 <<endif>>
 ===
 
-title: StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns3
+title: StellanDialogueCompletedDoctorDefaultDialogue53
 tags:
 ---
-<<if Visited("StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns3")>>
-    [[StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns4]]
+<<if Visited("StellanDialogueCompletedDoctorDefaultDialogue53")>>
+    [[StellanDialogueCompletedDoctorDefaultDialogue54]]
 <<else>>
     <<SetSpeaker Player>>
     I’ve been on my own for most of my life. But I have vague memories of my mother telling me my eyes were full of golden starlight.
     <<SetSpeaker Stellan>>
     Drivel. If you truly are descended from a caelara, surely the bloodline is so diluted that it hardly matters–
     <<SetSpeaker Player>>
-    Not a chance that you believe that. Tell me, Stellan, what exactly have you been doing to me? You once told me your magic only unlocks hidden potential. And these Star Shards you use to do it – you mean to tell me they’re not connected to me being descended from a <i>sentient star?</i>
+    Not a chance that you believe that. Tell me, Stellan, what exactly have you been doing to me?
+    You once told me your magic only unlocks hidden potential. And these Star Shards you use to do it – you mean to tell me they’re not connected to me being descended from a <i>sentient star?</i>
     <<SetSpeaker Stellan>>
     … There may be a correlation.
 <<endif>>
 ===
 
-title: StellanDialogueCompletedDoctorDialogueCompletedDoctorNumRuns4
+title: StellanDialogueCompletedDoctorDefaultDialogue54
 tags:
 ---
-<<SetSpeaker Player>><<BranchComplete DialogueCompleted DialogueCompletedDoctorDialogueCompletedDoctorNumRuns>>   // Don't know what to call that either...
+<<SetSpeaker Player>><<BranchComplete DialogueCompleted DialogueCompletedDoctorDefaultDialogue5>>
 So you’ve been experimenting on me this whole time? What, you suspected my bloodline and wanted to see what would happen if you used those Star Shards on me?
 <<SetSpeaker Stellan>>
 I may have suspected certain things. But if I was wrong, it’s not like it would have hurt you.

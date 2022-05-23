@@ -56,10 +56,12 @@ public class FloorGenerator : MonoBehaviour
     public GameObject expandedMapCameraPrefab;
 
     public OnGenerationCompleteEvent OnGenerationComplete;
+    public bool generationComplete {get; private set;}
 
     void Awake()
     {
         OnGenerationComplete = new OnGenerationCompleteEvent();
+        generationComplete = false;
 
         OnGenerationComplete.AddListener( () => {
             Transform spawnPoint = GameObject.Find("SpawnPoint").transform;
@@ -763,6 +765,7 @@ public class FloorGenerator : MonoBehaviour
             }
         }
 
+        generationComplete = true;
         OnGenerationComplete.Invoke();
     }
 
