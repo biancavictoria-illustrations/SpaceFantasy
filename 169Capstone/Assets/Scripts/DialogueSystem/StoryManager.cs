@@ -384,6 +384,9 @@ public class StoryManager : MonoBehaviour
                 genericStoryBeats[beat] = new BeatStatus( beat.GetYarnHeadNode(), setActive, storyBeatDatabase[beat].numberOfCompletions + incrementCompletionNum, storyBeatDatabase[beat].speakersWithComments, (int)beatType );
             }
         }
+        if(setActive && beat.JournalEntriesUnlocked().Length != 0){
+            GameManager.instance.journalContentManager.UnlockJournalEntry(beat.JournalEntriesUnlocked());
+        }
     }
 
     // When you achieve this story beat on a run, increment the # completions and set achieved to true

@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform playerTransform; // is this used for anything anywhere
 
     [SerializeField] private GearManagerObject gearManager;
+    public JournalContentManager journalContentManager;
 
     [HideInInspector] public bool playerDeath = false;
     [HideInInspector] public int bossesKilled;
