@@ -163,8 +163,7 @@ public class GameManager : MonoBehaviour
             });
         }
         else if(currentSceneName == LICH_ARENA_STRING_NAME){
-            // Make the player no longer a child of the game manager now that we've saved their build between scenes
-            Player.instance.transform.parent = null;
+            UnparentPlayerOnSceneLoad();
 
             // TODO: Play lich fight music
 
@@ -177,8 +176,7 @@ public class GameManager : MonoBehaviour
             });
         }
         else if(currentSceneName == EPILOGUE_SCENE_STRING_NAME){
-            // Make the player no longer a child of the game manager now that we've saved their build between scenes
-            Player.instance.transform.parent = null;
+            UnparentPlayerOnSceneLoad();
 
             InGameUIManager.instance.ToggleRunUI(false);
 
@@ -199,6 +197,13 @@ public class GameManager : MonoBehaviour
 
             AudioManager.Instance.playMusic(AudioManager.MusicTrack.TitleMusic);
         }
+    }
+
+    private void UnparentPlayerOnSceneLoad()
+    {
+        // Make the player no longer a child of the game manager now that we've saved their build between scenes
+        // GameObject o = Instantiate<GameObject>(, Vector3.zero, Quaternion.identity);
+        Player.instance.transform.parent = null;
     }
 
     public IEnumerator AutoRunDialogueAfterTime(float timeToWait = DEFAULT_AUTO_DIALOGUE_WAIT_TIME)
