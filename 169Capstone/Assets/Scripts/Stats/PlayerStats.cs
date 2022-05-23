@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum PlayerFacingStatName
+public enum PlayerStatName
 {
     STR,
     DEX,
@@ -354,18 +354,28 @@ public class PlayerStats : EntityStats
 
         float relativeWeight = 2;
 
-        //TODO implement skill point "pool"
-
+        int numSkillPoints = Mathf.CeilToInt((pum.strMin + pum.strMax + pum.dexMin + pum.dexMax + pum.conMin + pum.conMax + pum.intMin + pum.intMax + pum.wisMin + pum.wisMax + pum.charismaMin + pum.charismaMax) / 2f);
+        
         if( GameManager.instance.currentRunNumber == 1 ){
             SetFirstRunStatValues();
         }
         else{
-            strength = randomOnCurve(pum.strMin, pum.strMax, relativeWeight);
-            dexterity = randomOnCurve(pum.dexMin, pum.dexMax, relativeWeight);
-            constitution = randomOnCurve(pum.conMin, pum.conMax, relativeWeight);
-            intelligence = randomOnCurve(pum.intMin, pum.intMax, relativeWeight);
-            wisdom = randomOnCurve(pum.wisMin, pum.wisMax, relativeWeight);
-            charisma = randomOnCurve(pum.charismaMin, pum.charismaMax, relativeWeight);
+            strength = generateStat(PlayerStatName.STR, pum, pum.strMin, pum.strMax, numSkillPoints);
+            numSkillPoints -= strength;
+
+            dexterity = generateStat(PlayerStatName.DEX, pum, pum.dexMin, pum.dexMax, numSkillPoints);
+            numSkillPoints -= dexterity;
+
+            constitution = generateStat(PlayerStatName.CON, pum, pum.conMin, pum.conMax, numSkillPoints);
+            numSkillPoints -= constitution;
+
+            intelligence = generateStat(PlayerStatName.INT, pum, pum.intMin, pum.intMax, numSkillPoints);
+            numSkillPoints -= intelligence;
+
+            wisdom = generateStat(PlayerStatName.WIS, pum, pum.wisMin, pum.wisMax, numSkillPoints);
+            numSkillPoints -= wisdom;
+
+            charisma = numSkillPoints;
         }
 
         healingEfficacyBase = 0.25f;
@@ -380,6 +390,81 @@ public class PlayerStats : EntityStats
         intelligence = 10;
         wisdom = 10;
         charisma = 10;
+    }
+
+    private int generateStat(PlayerStatName stat, PermanentUpgradeManager pum, int minValue, int maxValue, int numSkillPoints, float relativeWeight = 2)
+    {
+        int statValue = randomOnCurve(minValue, maxValue, relativeWeight);
+
+        int maxThreshold = getMaxPointThresholdForRemainingStats(pum, stat);
+        if(numSkillPoints - statValue > maxThreshold)
+        {
+            statValue = numSkillPoints - maxThreshold;
+        }
+
+        int minThreshold = getMinPointThresholdForRemainingStats(pum, stat);
+        if(numSkillPoints - statValue < minThreshold)
+        {
+            statValue = numSkillPoints - minThreshold;
+        }
+
+        return statValue;
+    }
+
+    private int getMinPointThresholdForRemainingStats(PermanentUpgradeManager pum, PlayerStatName stat)
+    {
+        int num = 0;
+        switch(stat)
+        {
+            case PlayerStatName.STR:
+                num += pum.dexMin;
+                goto case PlayerStatName.DEX;
+
+            case PlayerStatName.DEX:
+                num += pum.conMin;
+                goto case PlayerStatName.CON;
+
+            case PlayerStatName.CON:
+                num += pum.intMin;
+                goto case PlayerStatName.INT;
+
+            case PlayerStatName.INT:
+                num += pum.wisMin;
+                goto case PlayerStatName.WIS;
+
+            case PlayerStatName.WIS:
+                num += pum.charismaMin;
+                break;
+        }
+        return num;
+    }
+
+    private int getMaxPointThresholdForRemainingStats(PermanentUpgradeManager pum, PlayerStatName stat)
+    {
+        int num = 0;
+        switch(stat)
+        {
+            case PlayerStatName.STR:
+                num += pum.dexMax;
+                goto case PlayerStatName.DEX;
+
+            case PlayerStatName.DEX:
+                num += pum.conMax;
+                goto case PlayerStatName.CON;
+
+            case PlayerStatName.CON:
+                num += pum.intMax;
+                goto case PlayerStatName.INT;
+
+            case PlayerStatName.INT:
+                num += pum.wisMax;
+                goto case PlayerStatName.WIS;
+
+            case PlayerStatName.WIS:
+                num += pum.charismaMax;
+                break;
+        }
+        return num;
     }
 
     private int randomOnCurve(int min, int max, float relativeWeight)

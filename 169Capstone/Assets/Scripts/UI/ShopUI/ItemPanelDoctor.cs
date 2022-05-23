@@ -18,7 +18,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
 {
     private int currentStatValue;   // Or potion quantity, or healing efficacy
 
-    private PlayerFacingStatName statName;
+    private PlayerStatName statName;
     [SerializeField] private UpgradeShopCategory category;
     [SerializeField] private Image statIcon;
 
@@ -47,16 +47,16 @@ public class ItemPanelDoctor : ItemPanelShopUI
         if((int)category < 3){      // If stat (not health), pick a stat
             int r = Random.Range(0,2);
             if(category == UpgradeShopCategory.STROrDEX){
-                statName = r == 0 ? PlayerFacingStatName.STR : PlayerFacingStatName.DEX;
-                upgradeName = statName == PlayerFacingStatName.STR ? "Muscle Enhancement" : "Reflex Enhancement";
+                statName = r == 0 ? PlayerStatName.STR : PlayerStatName.DEX;
+                upgradeName = statName == PlayerStatName.STR ? "Muscle Enhancement" : "Reflex Enhancement";
             }
             else if(category == UpgradeShopCategory.INTOrWIS){
-                statName = r == 0 ? PlayerFacingStatName.INT : PlayerFacingStatName.WIS;
-                upgradeName = statName == PlayerFacingStatName.INT ? "Brain Function" : "Willpower";
+                statName = r == 0 ? PlayerStatName.INT : PlayerStatName.WIS;
+                upgradeName = statName == PlayerStatName.INT ? "Brain Function" : "Willpower";
             }
             else{       // CHAorCON
-                statName = r == 0 ? PlayerFacingStatName.CHA : PlayerFacingStatName.CON;
-                upgradeName = statName == PlayerFacingStatName.CHA ? "Bone Structure" : "Bone Fortitude";
+                statName = r == 0 ? PlayerStatName.CHA : PlayerStatName.CON;
+                upgradeName = statName == PlayerStatName.CHA ? "Bone Structure" : "Bone Fortitude";
             }
             statIcon.sprite = InGameUIManager.instance.GetSpriteFromStatType(statName);
         }
@@ -138,22 +138,22 @@ public class ItemPanelDoctor : ItemPanelShopUI
         }
 
         // If an actual stat number value
-        else if(statName == PlayerFacingStatName.STR){
+        else if(statName == PlayerStatName.STR){
             currentStatValue = stats.Strength();
         }
-        else if(statName == PlayerFacingStatName.DEX){
+        else if(statName == PlayerStatName.DEX){
             currentStatValue = stats.Dexterity();
         }
-        else if(statName == PlayerFacingStatName.INT){
+        else if(statName == PlayerStatName.INT){
             currentStatValue = stats.Intelligence();
         }
-        else if(statName == PlayerFacingStatName.WIS){
+        else if(statName == PlayerStatName.WIS){
             currentStatValue = stats.Wisdom();
         }
-        else if(statName == PlayerFacingStatName.CHA){
+        else if(statName == PlayerStatName.CHA){
             currentStatValue = stats.Charisma();
         }
-        else if(statName == PlayerFacingStatName.CON){
+        else if(statName == PlayerStatName.CON){
             currentStatValue = stats.Constitution();
         }
 
@@ -191,23 +191,23 @@ public class ItemPanelDoctor : ItemPanelShopUI
             IncrementHealingEfficacy();
         }
         else{
-            if(statName == PlayerFacingStatName.STR){
+            if(statName == PlayerStatName.STR){
                 stats.SetStrength( stats.Strength() + 1 );
                 IncrementStatValue();
             }
-            else if(statName == PlayerFacingStatName.DEX){
+            else if(statName == PlayerStatName.DEX){
                 stats.SetDexterity( stats.Dexterity() + 1 );
                 IncrementStatValue();
             }
-            else if(statName == PlayerFacingStatName.INT){
+            else if(statName == PlayerStatName.INT){
                 stats.SetIntelligence( stats.Intelligence() + 1 );
                 IncrementStatValue();
             }
-            else if(statName == PlayerFacingStatName.WIS){
+            else if(statName == PlayerStatName.WIS){
                 stats.SetWisdom( stats.Wisdom() + 1 );
                 IncrementStatValue();
             }
-            else if(statName == PlayerFacingStatName.CHA){
+            else if(statName == PlayerStatName.CHA){
                 stats.SetCharisma( stats.Charisma() + 1 );
                 IncrementStatValue();
             }
