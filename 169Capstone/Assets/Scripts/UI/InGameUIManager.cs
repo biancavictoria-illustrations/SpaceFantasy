@@ -392,20 +392,20 @@ public class InGameUIManager : MonoBehaviour
 
     #endregion
 
-    public Sprite GetSpriteFromStatType( PlayerFacingStatName statName )
+    public Sprite GetSpriteFromStatType( PlayerStatName statName )
     {
         switch(statName){
-            case PlayerFacingStatName.STR:
+            case PlayerStatName.STR:
                 return strSprite;
-            case PlayerFacingStatName.DEX:
+            case PlayerStatName.DEX:
                 return dexSprite;
-            case PlayerFacingStatName.INT:
+            case PlayerStatName.INT:
                 return intSprite;
-            case PlayerFacingStatName.WIS:
+            case PlayerStatName.WIS:
                 return wisSprite;
-            case PlayerFacingStatName.CON:
+            case PlayerStatName.CON:
                 return conSprite;
-            case PlayerFacingStatName.CHA:
+            case PlayerStatName.CHA:
                 return chaSprite;
         }
         Debug.LogError("No sprite found for stat: " + statName);

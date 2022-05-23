@@ -607,34 +607,34 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
 
     #endregion
 
-    private PlayerFacingStatName GetStatFromUpgradeType()
+    private PlayerStatName GetStatFromUpgradeType()
     {
         switch(upgradeType){
             case PermanentUpgradeType.STRMin:
             case PermanentUpgradeType.STRMax:
-                return PlayerFacingStatName.STR;
+                return PlayerStatName.STR;
 
             case PermanentUpgradeType.DEXMin:
             case PermanentUpgradeType.DEXMax:
-                return PlayerFacingStatName.DEX;
+                return PlayerStatName.DEX;
 
             case PermanentUpgradeType.INTMin:
             case PermanentUpgradeType.INTMax:
-                return PlayerFacingStatName.INT;
+                return PlayerStatName.INT;
 
             case PermanentUpgradeType.WISMin:
             case PermanentUpgradeType.WISMax:
-                return PlayerFacingStatName.WIS;
+                return PlayerStatName.WIS;
 
             case PermanentUpgradeType.CONMin:
             case PermanentUpgradeType.CONMax:
-                return PlayerFacingStatName.CON;
+                return PlayerStatName.CON;
 
             case PermanentUpgradeType.CHAMin:
             case PermanentUpgradeType.CHAMax:
-                return PlayerFacingStatName.CHA;
+                return PlayerStatName.CHA;
         }
         Debug.LogWarning("Cannot get player facing stat name for upgrade type: " + upgradeType);
-        return PlayerFacingStatName.size;
+        return PlayerStatName.size;
     }
 }

@@ -77,7 +77,7 @@ public class InventoryUIItemPanel : MonoBehaviour
         itemIcon.sprite = baseData.Icon();
         itemIcon.preserveAspect = true;
 
-        if( baseData.PrimaryStat() != PlayerFacingStatName.size ){
+        if( baseData.PrimaryStat() != PlayerStatName.size ){
             statIcon.color = new Color(255,255,255,255);
             statIcon.sprite = InGameUIManager.instance.GetSpriteFromStatType( baseData.PrimaryStat() );
         }
