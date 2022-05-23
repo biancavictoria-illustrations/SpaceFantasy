@@ -8,7 +8,7 @@ public class SceneTransitionDoor : MonoBehaviour
     public static SceneTransitionDoor ActiveDoor {get; private set;}
 
     [SerializeField] [Tooltip("The scene this door leads to.")]
-    private string goToSceneName;    // Set in the inspector, the room this door LEADS TO
+    private string goToSceneName;
 
     [SerializeField] private ElevatorAnimationHelper elevatorHelper;
 
@@ -17,6 +17,10 @@ public class SceneTransitionDoor : MonoBehaviour
         if(GameManager.instance.InSceneWithRandomGeneration())
         {
             FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(() => elevatorHelper.StartEnterAnimation());
+        }
+
+        if(PermanentUpgradeManager.instance.GetSkillLevel(PermanentUpgradeType.TimeLichKillerThing) > 0 && GameManager.instance.currentSceneName == GameManager.LICH_ARENA_STRING_NAME){
+            goToSceneName = GameManager.EPILOGUE_SCENE_STRING_NAME;
         }
     }
 

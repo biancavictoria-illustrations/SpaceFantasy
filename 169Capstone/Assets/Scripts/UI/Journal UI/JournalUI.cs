@@ -27,4 +27,18 @@ public class JournalUI : MonoBehaviour
             }
         }
     }
+
+    public void CheckForNewJournalContent()
+    {
+        
+
+        // If new content:
+        EnableJournalAlert();
+    }
+
+    public void EnableJournalAlert()
+    {
+        AlertTextUI.instance.EnableOpenJournalAlert();
+        StartCoroutine(AlertTextUI.instance.RemoveAlertAfterSeconds());
+    }    
 }

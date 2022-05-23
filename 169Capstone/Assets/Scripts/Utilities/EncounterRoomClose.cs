@@ -92,7 +92,7 @@ public class EncounterRoomClose : MonoBehaviour
                 foreach(EntityHealth e in room.GetEnemyList())
                 {
                     e.OnDeath.AddListener(RoomOpen);
-                    Debug.Log("Enemy Added");
+                    // Debug.Log("Enemy Added");
                 }
             }
         }

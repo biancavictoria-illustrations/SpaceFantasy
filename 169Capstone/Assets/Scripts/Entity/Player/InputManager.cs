@@ -47,8 +47,7 @@ public class InputManager : MonoBehaviour
         else{
             instance = this;
         }
-        latestInputIsController = false;
-        currentDevice = InputDevice.KeyboardMouse;
+        UpdateLatestInputDevice();
     }
 
     void Start()
@@ -180,9 +179,17 @@ public class InputManager : MonoBehaviour
         RunGameTimer(set);
     }
 
-    // TODO: Just add gamepad submit keybindings here??? just A button??? Also space bar???
-    // If you're in dialogue, click anywhere to progress
+    public void OnSubmit(InputValue input)
+    {
+        ProgressDialogueOnInput(input);
+    }
+
     public void OnClick(InputValue input)
+    {
+        ProgressDialogueOnInput(input);        
+    }
+
+    private void ProgressDialogueOnInput(InputValue input)
     {
         // input.isPressed confirms this is only run on KEY DOWN, not both key down AND then also key up
         if(isInDialogue && input.isPressed && !PauseMenu.GameIsPaused && !DialogueManager.instance.dialogueUI.IsMidDialogueLineDisplay){

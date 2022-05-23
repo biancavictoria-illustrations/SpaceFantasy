@@ -135,19 +135,27 @@ public class DialogueManager : MonoBehaviour
                 }
             }
 
-            // // Check for item event triggers and if any are met, find the highest priority item trigger
-            // // TODO: Get a reference to the player's inventory (remember to check if it's empty first presumably? unless foreach handles that well) and make this not pseudocode
-            // foreach( string itemName in playerInventory ){
-            //     // TODO: Check if this item has a story beat associated with it (don't break everything if not, but if so save it to item)
-            //     StoryBeat item = StoryManager.instance.FindBeatFromNodeName(itemName, StoryBeatType.item);
-            //     // If the active NPC has nothing to say about this beat, skip it
-            //     if( !StoryManager.instance.SpeakerIsInSpeakerList(item, NPC.ActiveNPC.speakerData.SpeakerID()) ){
-            //         continue;
-            //     }
-            //     // Otherwise, add it to the pool of dialogue options
-            //     sortedStoryBeats.Add(item);
-            // }
+            // Check for item event triggers and if any are met add them to the pool
+            foreach( Equipment item in PlayerInventory.instance.gear.Values ){
+                if(!item){
+                    continue;
+                }
 
+                // Check if this item has a story beat associated with it
+                string nodeName = StoryBeatType.Item + item.data.equipmentBaseData.ItemID().ToString();
+                StoryBeat itemStoryBeat = StoryManager.instance.FindBeatFromNodeNameAndType( nodeName, StoryBeatType.Item );
+                
+                // If there isn't a story beat associated with this item OR this specific NPC doesn't have anything to say about it, just move on
+                if(!itemStoryBeat || !StoryManager.instance.SpeakerIsInSpeakerList(itemStoryBeat, NPC.ActiveNPC.SpeakerData().SpeakerID())){
+                    continue;
+                }
+
+                // If we've reached this point, add it to the pool of dialogue options
+                sortedStoryBeats.Add(itemStoryBeat);
+                Debug.Log("Added ITEM STORY BEAT " + nodeName + " to dialogue pool");
+            }
+
+            // For bargain success & fail interactions
             PlayerStats playerStats = FindObjectsOfType<PlayerStats>()[0];
             
             // If we see a numRun dialogue interaction, we need to be able to remove that option from the pool later
@@ -311,6 +319,11 @@ public class DialogueManager : MonoBehaviour
         StoryBeatType beatType = StoryManager.instance.GetBeatTypeFromString(beatTypeString);
         StoryBeat beat = StoryManager.instance.FindBeatFromNodeNameAndType(nodeName, beatType);
 
+        if(beat == null){
+            Debug.LogError("Failed to mark branch complete for null story beat");
+            return;
+        }
+
         Debug.Log("Removing " + beat.GetYarnHeadNode() + " from " + NPC.ActiveNPC.SpeakerData().SpeakerID());
 
         // Remove the speaker
@@ -320,8 +333,16 @@ public class DialogueManager : MonoBehaviour
     // Called by the Dialogue Runner to notify us that a node finished running
     public void NodeComplete(string nodeName)
     {
+        // If we've already visited this node, just return (since nodes run lots of times in order to access current node in a branch)
+        if(visitedNodes.Contains(nodeName)){
+            return;
+        }
+
         // Log that the node has been run
         visitedNodes.Add(nodeName);
+
+        // Also alert the story manager in case there are any DialogueComplete nodes to add to the pool
+        StoryManager.instance.ConversationEventOccurred(nodeName);
     }
 
     // Called when the player clicks the interact button in range of an NPC with something to say

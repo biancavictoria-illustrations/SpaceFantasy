@@ -6,9 +6,12 @@ public class JournalContentManager : MonoBehaviour
 {
     public Dictionary<JournalContentID, JournalContent> contentDatabase {get; private set;}
 
+    public Dictionary<JournalContentID, bool> journalUnlockStatusDatabase {get; private set;}
+
     // Start is called before the first frame update
     void Awake()
     {
+        journalUnlockStatusDatabase = new Dictionary<JournalContentID, bool>();
         contentDatabase = new Dictionary<JournalContentID, JournalContent>();
         LoadAllJournalContentObjects();
     }
@@ -40,6 +43,35 @@ public class JournalContentManager : MonoBehaviour
                 continue;
             }
             contentDatabase.Add(content.InternalID(), content);
+            journalUnlockStatusDatabase.Add(content.InternalID(), !content.LockedOnStart());
         }
+    }
+
+    public void UnlockJournalEntry(JournalContentID[] contentIDs)
+    {
+        bool flag = false;
+        foreach(JournalContentID id in contentIDs){
+            if(!journalUnlockStatusDatabase.ContainsKey(id)){
+                Debug.LogWarning("No content id key found in journalUnlockStatusDatabase for id: " + id);
+                continue;
+            }
+            if(journalUnlockStatusDatabase[id]){
+                continue;
+            }
+
+            // If any have not yet been set active, set flag to true so that we can enable the UI alert after
+            flag = true;
+
+            // TODO: confirm this is working for ITEM type triggers... those are handled slightly differently so i'm not sure
+
+            // TODO: does the journal content display stuff need to be alerted? or does it check every time it's opened...?
+
+            journalUnlockStatusDatabase[id] = true;
+        }
+
+        if(flag){
+            AlertTextUI.instance.EnableOpenJournalAlert();
+            StartCoroutine(AlertTextUI.instance.RemoveAlertAfterSeconds());
+        }        
     }
 }

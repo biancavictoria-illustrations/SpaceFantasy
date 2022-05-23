@@ -41,6 +41,9 @@ public abstract class StoryBeat : ScriptableObject
     [Tooltip("If this event can be commented on on future runs beyond the immediate next one")]
     [SerializeField] private bool carriesOver = false;
 
+    [Tooltip("IF this story beat unlocks a journal content entry (or multiple), put that here; if not, leave it empty")]
+    [SerializeField] private JournalContentID[] journalEntriesUnlocked;
+
     protected StoryBeatType beatType;     // Automatically set in the children
 
     [Tooltip("List of the speaking characters who have something to say about this event")]
@@ -94,6 +97,11 @@ public abstract class StoryBeat : ScriptableObject
     public bool CarriesOver()
     {
         return carriesOver;
+    }
+
+    public JournalContentID[] JournalEntriesUnlocked()
+    {
+        return journalEntriesUnlocked;
     }
 
     public StoryBeatType GetBeatType()
