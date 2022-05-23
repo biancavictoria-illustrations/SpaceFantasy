@@ -239,25 +239,22 @@ public class PlayerStats : EntityStats
 
         public override float getMoveSpeed()
         {
-            return base.getMoveSpeed(); //No differences from the base as of yet
+            return (moveSpeedBase + moveSpeedFlatBonus) * moveSpeedMultiplier;
         }
 
         public override float getDefense()
         {
-            return defenseBase * defenseMultiplier + defenseFlatBonus
-                    + (strength * defenseBonusPerStrengthPoint);
+            return (defenseBase + defenseFlatBonus + (strength * defenseBonusPerStrengthPoint)) * defenseMultiplier;
         }
 
         public override float getDodgeChance()
         {
-            return dodgeChanceBase + dodgeChanceFlatBonus
-                    + (dexterity * dodgeBonusPerDexterityPoint);
+            return (dodgeChanceBase + dodgeChanceFlatBonus + (dexterity * dodgeBonusPerDexterityPoint)) * dodgeChanceMultiplier;
         }
 
         public override float getCritChance()
         {
-            return critChanceBase + critChanceFlatBonus
-                    + (intelligence * critChanceBonusPerIntelligencePoint);
+            return (critChanceBase + critChanceFlatBonus + (intelligence * critChanceBonusPerIntelligencePoint)) * critChanceMultiplier;
         }
 
         public override float getCritDamage()

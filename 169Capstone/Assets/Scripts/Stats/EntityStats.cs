@@ -71,7 +71,16 @@ public abstract class EntityStats : MonoBehaviour
             if(bonusSource == null || stat == StatType.enumSize ||  bonusType == BonusType.enumSize)
                 return;
             
-            if(!statBonusFromSource.ContainsKey(bonusSource))
+            if(statBonusFromSource.ContainsKey(bonusSource))
+            {
+                if(bonusAmount == 0)
+                {
+                    statBonusFromSource.Remove(bonusSource);
+                    RecalculateStatBonus(stat, bonusType);
+                    return;
+                }
+            }
+            else
             {
                 statBonusFromSource.Add(bonusSource, new Dictionary<StatBonusType, float>());
             }
@@ -289,20 +298,22 @@ public abstract class EntityStats : MonoBehaviour
     #region Dodge Chance
         protected float dodgeChanceBase;
         protected float dodgeChanceFlatBonus;
+        protected float dodgeChanceMultiplier;
 
         public virtual float getDodgeChance()
         {
-            return dodgeChanceBase + dodgeChanceFlatBonus;
+            return dodgeChanceBase * dodgeChanceMultiplier + dodgeChanceFlatBonus;
         }
     #endregion
 
     #region Crit Chance
         protected float critChanceBase;
         protected float critChanceFlatBonus;
+        protected float critChanceMultiplier;
 
         public virtual float getCritChance()
         {
-            return critChanceBase + critChanceFlatBonus;
+            return critChanceBase * critChanceMultiplier + critChanceFlatBonus;
         }
     #endregion
 
