@@ -314,6 +314,9 @@ public class InputManager : MonoBehaviour
         }
 
         useAccessory = true;
+
+        // TEMP - FOR TESTING
+        InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Legs, 4);
     }
 
     public void OnAccessoryAbilityCanceled()
@@ -329,6 +332,9 @@ public class InputManager : MonoBehaviour
         }
 
         useHead = true;
+
+        // TEMP - FOR TESTING
+        InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Helmet, 8);
     }
 
     public void OnBootsAbility()
@@ -339,6 +345,9 @@ public class InputManager : MonoBehaviour
         }
 
         useLegs = true;
+
+        // TEMP - FOR TESTING
+        InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Legs, 15);
     }
 
     public void OnPoint(InputValue input)

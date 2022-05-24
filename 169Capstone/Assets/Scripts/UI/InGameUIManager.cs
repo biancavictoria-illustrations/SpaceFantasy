@@ -23,6 +23,8 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private Image inGameHelmetIMG;
     [SerializeField] private Image inGameBootsIMG;
 
+    [SerializeField] private List<ItemCooldownUI> itemCooldownUI = new List<ItemCooldownUI>();
+
     [SerializeField] private Sprite emptySlotWeaponIcon;
     [SerializeField] private Sprite emptySlotAccessoryIcon;
     [SerializeField] private Sprite emptySlotHelmetIcon;
@@ -291,6 +293,27 @@ public class InGameUIManager : MonoBehaviour
             }
         }
 
+        public void SetItemIconColor(InventoryItemSlot itemSlot, string colorHex)
+        {
+            switch(itemSlot){
+                case InventoryItemSlot.Weapon:
+                    UIUtils.SetImageColorFromHex(inGameWeaponIMG, colorHex);
+                    break;
+                case InventoryItemSlot.Accessory:
+                    UIUtils.SetImageColorFromHex(inGameAccessoryIMG, colorHex);
+                    break;
+                case InventoryItemSlot.Helmet:
+                    UIUtils.SetImageColorFromHex(inGameHelmetIMG, colorHex);
+                    break;
+                case InventoryItemSlot.Legs:
+                    UIUtils.SetImageColorFromHex(inGameBootsIMG, colorHex);
+                    break;
+                default:
+                    Debug.LogError("No item icon found for slot: " + itemSlot.ToString());
+                    return;
+            }
+        }
+
         public Sprite GetDefaultItemIconForSlot(InventoryItemSlot itemSlot)
         {
             switch(itemSlot){
@@ -306,6 +329,37 @@ public class InGameUIManager : MonoBehaviour
                     Debug.LogError("No item icon found for slot: " + itemSlot.ToString());
                     return null;
             }
+        }
+
+        private ItemCooldownUI GetCooldownUIFromSlot(InventoryItemSlot slot)
+        {
+            foreach(ItemCooldownUI cooldown in itemCooldownUI){
+                if(cooldown.GetItemSlot() == slot){
+                    return cooldown;
+                }
+            }
+            Debug.LogError("No cooldown UI found for slot: " + slot);
+            return null;
+        }
+
+        public void StartCooldownForItem(InventoryItemSlot slot, int value)
+        {
+            if(!PlayerInventory.instance.gear[slot]){
+                return;
+            }
+
+            ItemCooldownUI cooldown = GetCooldownUIFromSlot(slot);
+
+            // If it's already going, don't restart it
+            if(cooldown.isActive){
+                Debug.LogWarning("Failed to activate an already-active cooldown for slot: " + slot);
+                return;
+            }
+
+            cooldown.gameObject.SetActive(true);
+            SetItemIconColor(slot, darkTurquoiseColor);
+            
+            cooldown.StartCooldownCountdown(value);
         }
     #endregion
 
