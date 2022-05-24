@@ -79,7 +79,7 @@ public class StatRerollUI : MonoBehaviour
     // Called once the animation is complete to set the actual value you rolled
     private void SetActualStatValues(PlayerStatName stat)
     {
-        string stringMod = "<color=" + InGameUIManager.medTurquoiseColor + "><b>";
+        string stringMod = "<color=" + InGameUIManager.MED_TURQUOISE_COLOR + "><b>";
         string endStringMod = "</color></b>";
 
         switch(stat){

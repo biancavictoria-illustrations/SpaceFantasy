@@ -65,10 +65,15 @@ public class InventoryUIItemPanel : MonoBehaviour
 
         EquipmentBaseData baseData = itemData.equipmentBaseData;
 
-        itemName.text = baseData.ItemName();
         rarity = itemData.rarity;
 
-        itemTypeRarity.text = rarity.ToString() + " " + baseData.ItemSlot().ToString();
+        itemName.text = "<color=" + UIUtils.GetColorFromRarity(rarity) + ">" + baseData.ItemName() + "</color>";
+
+        string statString = "";
+        if(itemData.equipmentBaseData.PrimaryStat() != PlayerStatName.size){
+            statString = itemData.equipmentBaseData.PrimaryStat().ToString();
+        }
+        itemTypeRarity.text = rarity.ToString() + " " + statString + " " + baseData.ItemSlot().ToString();
 
         shortDescription = baseData.ShortDescription();
         expandedDescription = GenerateExpandedDescription();
@@ -205,14 +210,14 @@ public class InventoryUIItemPanel : MonoBehaviour
 
             // If it gives a bonus for that stat and that bonus is higher than the new item's bonus
             if(currentValue != null && newBonusValue < currentValue){
-                colorMod += InGameUIManager.magentaColor;
+                colorMod += InGameUIManager.MAGENTA_COLOR;
             }
             else{
-                colorMod += InGameUIManager.slimeGreenColor;
+                colorMod += InGameUIManager.SLIME_GREEN_COLOR;
             }
         }
         else{
-            colorMod += InGameUIManager.slimeGreenColor;
+            colorMod += InGameUIManager.SLIME_GREEN_COLOR;
         }
 
         return colorMod + ">";
@@ -287,10 +292,10 @@ public class InventoryUIItemPanel : MonoBehaviour
         string startColor = "";
         string endColor = "</color>";
         if(totalValue > 0){
-            startColor = "<color=" + InGameUIManager.slimeGreenColor + ">";
+            startColor = "<color=" + InGameUIManager.SLIME_GREEN_COLOR + ">";
         }
         else{
-            startColor = "<color=" + InGameUIManager.magentaColor + ">";
+            startColor = "<color=" + InGameUIManager.MAGENTA_COLOR + ">";
         }
 
         return startColor + Mathf.Abs(totalValue) + endColor;

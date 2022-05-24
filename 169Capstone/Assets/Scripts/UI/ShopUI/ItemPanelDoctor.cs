@@ -84,16 +84,16 @@ public class ItemPanelDoctor : ItemPanelShopUI
     {
         // === Generate Description Text ===
         if( category == UpgradeShopCategory.HealthPotion ){
-            secondaryDescription.text = "<b>Potions:</b>   " + currentStatValue + "  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue+1);
+            secondaryDescription.text = "<b>Potions:</b>   " + currentStatValue + "  ->  <color=" + InGameUIManager.SLIME_GREEN_COLOR + ">" + (currentStatValue+1);
             return "Increases <b>Health Potion</b> quantity by 1.";
         }
         else if( category == UpgradeShopCategory.PotionEfficacy ){
-            secondaryDescription.text = "<b>Healing:</b>   " + currentStatValue + "%  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue + healingBonusValue) + "%";
+            secondaryDescription.text = "<b>Healing:</b>   " + currentStatValue + "%  ->  <color=" + InGameUIManager.SLIME_GREEN_COLOR + ">" + (currentStatValue + healingBonusValue) + "%";
             return "Increases <b>Health Potion</b> efficacy by " + healingBonusValue + "%.";
         }
         else{
             string s = statName.ToString();
-            secondaryDescription.text = "<b>" + s + ":</b>   " + currentStatValue + "  ->  <color=" + InGameUIManager.slimeGreenColor + ">" + (currentStatValue+1);
+            secondaryDescription.text = "<b>" + s + ":</b>   " + currentStatValue + "  ->  <color=" + InGameUIManager.SLIME_GREEN_COLOR + ">" + (currentStatValue+1);
             return "Increases <b>" + s + "</b> by 1.";
         }
     }
@@ -226,7 +226,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
 
     private void SetMaxStatReachedValues()
     {
-        descriptionText.text = "<color=" + InGameUIManager.magentaColor + ">Max " + statName.ToString() + " value reached.";
+        descriptionText.text = "<color=" + InGameUIManager.MAGENTA_COLOR + ">Max " + statName.ToString() + " value reached.";
         itemIsAvailable = false;
         SetHoverAlertsActive(false);
         SetInteractableAndCostDisplayValuesBasedOnStatus();

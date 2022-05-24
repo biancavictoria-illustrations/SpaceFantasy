@@ -40,7 +40,7 @@ public class FloatingTextManager : MonoBehaviour
         {
             case "damage-player":
                 floatingText.stat += float.Parse(msg);
-                floatingText.txt.text = "<color=" + InGameUIManager.magentaColor + ">" + floatingText.stat.ToString() + "</color>";
+                floatingText.txt.text = "<color=" + InGameUIManager.MAGENTA_COLOR + ">" + floatingText.stat.ToString() + "</color>";
                 break;
             case "damage-enemy":
                 floatingText.stat += float.Parse(msg);
@@ -48,11 +48,11 @@ public class FloatingTextManager : MonoBehaviour
                 break;
             case "crit":
                 floatingText.stat += float.Parse(msg);
-                floatingText.txt.text = "<color=" + InGameUIManager.goldColor + ">" + floatingText.stat.ToString() + "</color>";
+                floatingText.txt.text = "<color=" + InGameUIManager.STR_GOLD_COLOR + ">" + floatingText.stat.ToString() + "</color>";
                 break;
             case "health":
                 floatingText.stat += float.Parse(msg);
-                floatingText.txt.text = "<color=" + InGameUIManager.slimeGreenColor + ">" + floatingText.stat.ToString() + "</color>";
+                floatingText.txt.text = "<color=" + InGameUIManager.SLIME_GREEN_COLOR + ">" + floatingText.stat.ToString() + "</color>";
                 break;
             default:
                 floatingText.txt.text = msg;

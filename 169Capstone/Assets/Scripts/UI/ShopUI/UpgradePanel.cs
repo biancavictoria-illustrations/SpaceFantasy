@@ -199,18 +199,18 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     {
         // If stat
         if(IsStatUpgrade()){
-            baseDescription = "Increase <b>" + upgradeName + "</b> from <b>" + currentUpgradeLevel + "</b> to <color=" + InGameUIManager.slimeGreenColor + ">" + (currentUpgradeLevel+1) + "</color>.";
+            baseDescription = "Increase <b>" + upgradeName + "</b> from <b>" + currentUpgradeLevel + "</b> to <color=" + InGameUIManager.SLIME_GREEN_COLOR + ">" + (currentUpgradeLevel+1) + "</color>.";
         }
         // If update-able skill
         else{
             switch(upgradeType){
                 case PermanentUpgradeType.ArmorPlating:
                     float defense = PermanentUpgradeManager.instance.GetCurrentSkillValue(upgradeType)*100;
-                    baseDescription = "Increase base <b>Defense</b> from <b>" + UIUtils.GetTruncatedDecimalForUIDisplay(defense) + "%</b> to <color=" + InGameUIManager.slimeGreenColor + ">" + UIUtils.GetTruncatedDecimalForUIDisplay(defense + PermanentUpgradeManager.instance.armorPlatingBonusPerLevel*100) + "%</color>.";
+                    baseDescription = "Increase base <b>Defense</b> from <b>" + UIUtils.GetTruncatedDecimalForUIDisplay(defense) + "%</b> to <color=" + InGameUIManager.SLIME_GREEN_COLOR + ">" + UIUtils.GetTruncatedDecimalForUIDisplay(defense + PermanentUpgradeManager.instance.armorPlatingBonusPerLevel*100) + "%</color>.";
                     return;
                 case PermanentUpgradeType.ExtensiveTraining:
                     float attackSpeed = PermanentUpgradeManager.instance.GetCurrentSkillValue(upgradeType) * 100;
-                    baseDescription = "Increase base <b>Attack Speed</b> from <b>" + UIUtils.GetTruncatedDecimalForUIDisplay(attackSpeed) + "%</b> to <color=" + InGameUIManager.slimeGreenColor + ">" + UIUtils.GetTruncatedDecimalForUIDisplay(attackSpeed + PermanentUpgradeManager.instance.extensiveTrainingBonusPerLevel*100) + "%</color>.";
+                    baseDescription = "Increase base <b>Attack Speed</b> from <b>" + UIUtils.GetTruncatedDecimalForUIDisplay(attackSpeed) + "%</b> to <color=" + InGameUIManager.SLIME_GREEN_COLOR + ">" + UIUtils.GetTruncatedDecimalForUIDisplay(attackSpeed + PermanentUpgradeManager.instance.extensiveTrainingBonusPerLevel*100) + "%</color>.";
                     return;
                 case PermanentUpgradeType.PrecisionDrive:
                     float critDamage = PermanentUpgradeManager.instance.GetCurrentSkillValue(upgradeType) * 100;
@@ -226,7 +226,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
                             newCritDamage = PermanentUpgradeManager.instance.precisionDriveBonusPerLevel[3] * 100;
                             break;
                     }
-                    baseDescription = "Increase base <b>Critical Hit Damage</b> from <b>+" + UIUtils.GetTruncatedDecimalForUIDisplay(critDamage) + "%</b> to <color=" + InGameUIManager.slimeGreenColor + ">+" + UIUtils.GetTruncatedDecimalForUIDisplay(newCritDamage) + "%</color>.";
+                    baseDescription = "Increase base <b>Critical Hit Damage</b> from <b>+" + UIUtils.GetTruncatedDecimalForUIDisplay(critDamage) + "%</b> to <color=" + InGameUIManager.SLIME_GREEN_COLOR + ">+" + UIUtils.GetTruncatedDecimalForUIDisplay(newCritDamage) + "%</color>.";
                     return;
             }
         }
@@ -444,7 +444,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
                 upgradeBaseCost = 20;
                 costIncreasePerLevel = 0;
                 totalUpgradeLevels = PermanentUpgradeManager.maxNatural20Levels;
-                baseDescription = "Increase base Critical Hit Chance to <color=" + InGameUIManager.slimeGreenColor + ">" + PermanentUpgradeManager.instance.natural20BonusPerLevel*100 + "%</color>.";
+                baseDescription = "Increase base Critical Hit Chance to <color=" + InGameUIManager.SLIME_GREEN_COLOR + ">" + PermanentUpgradeManager.instance.natural20BonusPerLevel*100 + "%</color>.";
                 return;
             case PermanentUpgradeType.PrecisionDrive:
                 upgradeName = "Precision Drive";

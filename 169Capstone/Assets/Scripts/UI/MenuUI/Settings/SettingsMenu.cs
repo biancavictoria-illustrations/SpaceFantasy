@@ -71,7 +71,7 @@ public class SettingsMenu : MonoBehaviour
     {
         if(value){
             PlayerSettings.instance.SaveNewTextSpeed( textSpeed );
-            UIUtils.SetImageColorFromHex( toggle.GetComponent<Image>(), InGameUIManager.slimeGreenColor );
+            UIUtils.SetImageColorFromHex( toggle.GetComponent<Image>(), InGameUIManager.SLIME_GREEN_COLOR );
         }
         else{
             UIUtils.SetImageColorFromHex( toggle.GetComponent<Image>(), "#FFFFFF" );

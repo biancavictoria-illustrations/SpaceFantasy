@@ -8,12 +8,17 @@ public class InGameUIManager : MonoBehaviour
 {
     public static InGameUIManager instance;
 
-    public const string slimeGreenColor = "#05d806";
-    public const string magentaColor = "#FF49C7";
-    public const string turquoiseColor = "#1bc7b2";
-    public const string medTurquoiseColor = "#017C6D";
-    public const string darkTurquoiseColor = "#02141e";
-    public const string goldColor = "#E49200";
+    #region Color Hex Codes
+        public const string SLIME_GREEN_COLOR = "#05d806";
+        public const string MAGENTA_COLOR = "#FF49C7";
+        public const string CYAN_COLOR = "#46FFE8";
+        public const string TURQUOISE_COLOR = "#1bc7b2";
+        public const string MED_TURQUOISE_COLOR = "#017C6D";
+        public const string DARK_TURQUOISE_COLOR = "#02141e";
+        public const string STR_GOLD_COLOR = "#E49200";
+        public const string DEX_BLUE_COLOR = "#20ADE4";
+        public const string WIS_PURPLE_COLOR = "#C71FEE";
+    #endregion
 
     [SerializeField] private GameObject inGameUIPanel;
     [SerializeField] private GameObject inGameUIGearIconPanel;  // Sometimes toggled separately from the rest of the in game UI
@@ -22,6 +27,8 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private Image inGameAccessoryIMG;
     [SerializeField] private Image inGameHelmetIMG;
     [SerializeField] private Image inGameBootsIMG;
+
+    [SerializeField] private List<ItemCooldownUI> itemCooldownUI = new List<ItemCooldownUI>();
 
     [SerializeField] private Sprite emptySlotWeaponIcon;
     [SerializeField] private Sprite emptySlotAccessoryIcon;
@@ -146,6 +153,29 @@ public class InGameUIManager : MonoBehaviour
         GameManager.instance.gameTimer.ResetTimer();
     }
 
+    // For transferring between scenes
+    public void SetAllRunUIToCurrentValues()
+    {
+        // Health potions
+        SetHealthPotionValue(PlayerInventory.instance.healthPotionQuantity);
+
+        // Health bar
+        SetMaxHealthValue(Player.instance.health.maxHitpoints);
+        SetCurrentHealthValue(Player.instance.health.currentHitpoints);
+
+        // Sidebar item panel
+        foreach( KeyValuePair<InventoryItemSlot, Equipment> item in PlayerInventory.instance.gear ){
+            // If null, nothing is equipped - set to default
+            if(!item.Value){
+                SetGearItemUI( item.Key, GetDefaultItemIconForSlot(item.Key) );
+                continue;
+            }
+            else{
+                SetGearItemUI( item.Key, item.Value.data.equipmentBaseData.Icon() );
+            }            
+        }
+    }
+
     public void ToggleExpandedMapOverlay(bool set)
     {
         expandedMapOverlay.SetActive(set);
@@ -183,10 +213,6 @@ public class InGameUIManager : MonoBehaviour
 
             if(set){
                 inventoryUI.OnInventoryOpen();
-                AlertTextUI.instance.ToggleAlertText(false);
-            }
-            else{
-                AlertTextUI.instance.ToggleAlertText(true);
             }
         }
 
@@ -272,6 +298,27 @@ public class InGameUIManager : MonoBehaviour
             }
         }
 
+        public void SetItemIconColor(InventoryItemSlot itemSlot, string colorHex)
+        {
+            switch(itemSlot){
+                case InventoryItemSlot.Weapon:
+                    UIUtils.SetImageColorFromHex(inGameWeaponIMG, colorHex);
+                    break;
+                case InventoryItemSlot.Accessory:
+                    UIUtils.SetImageColorFromHex(inGameAccessoryIMG, colorHex);
+                    break;
+                case InventoryItemSlot.Helmet:
+                    UIUtils.SetImageColorFromHex(inGameHelmetIMG, colorHex);
+                    break;
+                case InventoryItemSlot.Legs:
+                    UIUtils.SetImageColorFromHex(inGameBootsIMG, colorHex);
+                    break;
+                default:
+                    Debug.LogError("No item icon found for slot: " + itemSlot.ToString());
+                    return;
+            }
+        }
+
         public Sprite GetDefaultItemIconForSlot(InventoryItemSlot itemSlot)
         {
             switch(itemSlot){
@@ -287,6 +334,49 @@ public class InGameUIManager : MonoBehaviour
                     Debug.LogError("No item icon found for slot: " + itemSlot.ToString());
                     return null;
             }
+        }
+
+        private ItemCooldownUI GetCooldownUIFromSlot(InventoryItemSlot slot)
+        {
+            foreach(ItemCooldownUI cooldown in itemCooldownUI){
+                if(cooldown.GetItemSlot() == slot){
+                    return cooldown;
+                }
+            }
+            Debug.LogError("No cooldown UI found for slot: " + slot);
+            return null;
+        }
+
+        public void StartCooldownForItem(InventoryItemSlot slot, int value)
+        {
+            if(!PlayerInventory.instance.gear[slot]){
+                return;
+            }
+
+            ItemCooldownUI cooldown = GetCooldownUIFromSlot(slot);
+
+            // If it's already going, don't restart it
+            if(cooldown.isActive){
+                Debug.LogWarning("Failed to activate an already-active cooldown for slot: " + slot);
+                return;
+            }
+
+            cooldown.gameObject.SetActive(true);
+            SetItemIconColor(slot, DARK_TURQUOISE_COLOR);
+            
+            StartCoroutine(CooldownRoutine(cooldown, value));
+        }
+
+        private IEnumerator CooldownRoutine(ItemCooldownUI cooldown, int value)
+        {
+            cooldown.StartCooldownCountdown(value);
+            while(cooldown.counter > 0){
+                yield return new WaitForSeconds(1f);
+                --cooldown.counter;
+                cooldown.SetTextToCounterValue();
+            }
+            SetItemIconColor(cooldown.GetItemSlot(), "#FFFFFF");
+            cooldown.EndCooldownCountdown();
         }
     #endregion
 

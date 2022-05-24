@@ -158,6 +158,7 @@ public class InputManager : MonoBehaviour
 
         // If you're in range of a door, walk through it
         else if(SceneTransitionDoor.ActiveDoor){
+            AlertTextUI.instance.DisableAlert();
             SceneTransitionDoor.ActiveDoor.ChangeScene();
         }
 
@@ -179,6 +180,17 @@ public class InputManager : MonoBehaviour
         RunGameTimer(set);
     }
 
+    public void OnCancel(InputValue input)
+    {
+        // if(isInMainMenu){
+        //     return;
+        // }
+
+        if(PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || GameManager.instance.statRerollUIOpen || mapIsOpen || journalIsOpen){
+            OnPause(input);
+        }
+    }
+    
     public void OnSubmit(InputValue input)
     {
         ProgressDialogueOnInput(input);
@@ -313,6 +325,9 @@ public class InputManager : MonoBehaviour
         }
 
         useAccessory = true;
+
+        // TEMP - FOR TESTING (call this where the cooldown starts for the item using a variable of the cooldown duration instead of this)
+        InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Accessory, 4);
     }
 
     public void OnAccessoryAbilityCanceled()
@@ -328,6 +343,9 @@ public class InputManager : MonoBehaviour
         }
 
         useHead = true;
+
+        // TEMP - FOR TESTING (call this where the cooldown starts for the item using a variable of the cooldown duration instead of this)
+        InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Helmet, 8);
     }
 
     public void OnBootsAbility()
@@ -338,6 +356,9 @@ public class InputManager : MonoBehaviour
         }
 
         useLegs = true;
+
+        // TEMP - FOR TESTING (call this where the cooldown starts for the item using a variable of the cooldown duration instead of this)
+        InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Legs, 15);
     }
 
     public void OnPoint(InputValue input)

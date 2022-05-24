@@ -65,7 +65,7 @@ public class DevPanel : MonoBehaviour
     {
         if(devPanelToggle.isOn){
             buttonPanel.SetActive(true);
-            UIUtils.SetImageColorFromHex( devPanelToggle.GetComponent<Image>(), InGameUIManager.turquoiseColor );
+            UIUtils.SetImageColorFromHex( devPanelToggle.GetComponent<Image>(), InGameUIManager.TURQUOISE_COLOR );
             devPanelOpen = true;
         }
         else{
@@ -86,7 +86,7 @@ public class DevPanel : MonoBehaviour
 
         if(superJumpToggle.isOn){
             Player.instance.GetComponent<Movement>().jumpSpeed = 42;
-            UIUtils.SetImageColorFromHex( superJumpToggle.GetComponent<Image>(), InGameUIManager.turquoiseColor );
+            UIUtils.SetImageColorFromHex( superJumpToggle.GetComponent<Image>(), InGameUIManager.TURQUOISE_COLOR );
             superJump = true;
         }
         else{
@@ -101,7 +101,7 @@ public class DevPanel : MonoBehaviour
     {
         if(skipStatRerollToggle.isOn){
             StatRerollUI.tempSkipStatRerollToggle = true;
-            UIUtils.SetImageColorFromHex( skipStatRerollToggle.GetComponent<Image>(), InGameUIManager.turquoiseColor );
+            UIUtils.SetImageColorFromHex( skipStatRerollToggle.GetComponent<Image>(), InGameUIManager.TURQUOISE_COLOR );
             skipStatReroll = true;
         }
         else{
@@ -122,7 +122,7 @@ public class DevPanel : MonoBehaviour
 
         if(moveSpeedToggle.isOn){
             Player.instance.stats.SetMoveSpeedBase(2f);
-            UIUtils.SetImageColorFromHex( moveSpeedToggle.GetComponent<Image>(), InGameUIManager.turquoiseColor );
+            UIUtils.SetImageColorFromHex( moveSpeedToggle.GetComponent<Image>(), InGameUIManager.TURQUOISE_COLOR );
             speedBoost = true;
         }
         else{
@@ -143,7 +143,7 @@ public class DevPanel : MonoBehaviour
 
         if(noDamageToggle.isOn){
             Player.instance.health.tempPlayerGodModeToggle = true;
-            UIUtils.SetImageColorFromHex( noDamageToggle.GetComponent<Image>(), InGameUIManager.turquoiseColor );
+            UIUtils.SetImageColorFromHex( noDamageToggle.GetComponent<Image>(), InGameUIManager.TURQUOISE_COLOR );
             godMode = true;
         }
         else{
@@ -224,6 +224,13 @@ public class DevPanel : MonoBehaviour
         }
         Player.instance.stats.SetCharisma(5);
         Debug.Log("set CHA to 5");
+    }
+
+    public void UnlockElevator()
+    {
+        if(GameManager.instance.InSceneWithRandomGeneration()){
+            FindObjectOfType<SceneTransitionDoor>().GetComponent<Collider>().enabled = true;
+        }
     }
 
     public void ToggleInteractabilityOnDeviceChange( bool set )
