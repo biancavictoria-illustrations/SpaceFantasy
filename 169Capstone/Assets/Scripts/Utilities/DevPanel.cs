@@ -226,6 +226,13 @@ public class DevPanel : MonoBehaviour
         Debug.Log("set CHA to 5");
     }
 
+    public void UnlockElevator()
+    {
+        if(GameManager.instance.InSceneWithRandomGeneration()){
+            FindObjectOfType<SceneTransitionDoor>().GetComponent<Collider>().enabled = true;
+        }
+    }
+
     public void ToggleInteractabilityOnDeviceChange( bool set )
     {
         foreach( Selectable s in GetComponentsInChildren<Selectable>() ){

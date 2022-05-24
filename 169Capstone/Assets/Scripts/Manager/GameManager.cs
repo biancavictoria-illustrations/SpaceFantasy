@@ -163,8 +163,6 @@ public class GameManager : MonoBehaviour
             });
         }
         else if(currentSceneName == LICH_ARENA_STRING_NAME){
-            UnparentPlayerOnSceneLoad();
-
             // TODO: Play lich fight music
 
             fade.opaqueOnStart = true;
@@ -174,6 +172,10 @@ public class GameManager : MonoBehaviour
             FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
                 inElevatorAnimation = false;
             });
+
+            InGameUIManager.instance.SetAllRunUIToCurrentValues();
+            
+            UnparentPlayerOnSceneLoad();
         }
         else if(currentSceneName == EPILOGUE_SCENE_STRING_NAME){
             UnparentPlayerOnSceneLoad();
@@ -202,8 +204,15 @@ public class GameManager : MonoBehaviour
     private void UnparentPlayerOnSceneLoad()
     {
         // Make the player no longer a child of the game manager now that we've saved their build between scenes
-        // GameObject o = Instantiate<GameObject>(, Vector3.zero, Quaternion.identity);
+        // Move the player out of dontdestroyonload
+        GameObject o = new GameObject();
+        Player.instance.transform.parent = o.transform;
+        
+        // Unparent it
         Player.instance.transform.parent = null;
+
+        // Destroy the dummy game object
+        Destroy(o.gameObject);
     }
 
     public IEnumerator AutoRunDialogueAfterTime(float timeToWait = DEFAULT_AUTO_DIALOGUE_WAIT_TIME)

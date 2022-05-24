@@ -158,6 +158,7 @@ public class InputManager : MonoBehaviour
 
         // If you're in range of a door, walk through it
         else if(SceneTransitionDoor.ActiveDoor){
+            AlertTextUI.instance.DisableAlert();
             SceneTransitionDoor.ActiveDoor.ChangeScene();
         }
 

@@ -146,6 +146,29 @@ public class InGameUIManager : MonoBehaviour
         GameManager.instance.gameTimer.ResetTimer();
     }
 
+    // For transferring between scenes
+    public void SetAllRunUIToCurrentValues()
+    {
+        // Health potions
+        SetHealthPotionValue(PlayerInventory.instance.healthPotionQuantity);
+
+        // Health bar
+        SetMaxHealthValue(Player.instance.health.maxHitpoints);
+        SetCurrentHealthValue(Player.instance.health.currentHitpoints);
+
+        // Sidebar item panel
+        foreach( KeyValuePair<InventoryItemSlot, Equipment> item in PlayerInventory.instance.gear ){
+            // If null, nothing is equipped - set to default
+            if(!item.Value){
+                SetGearItemUI( item.Key, GetDefaultItemIconForSlot(item.Key) );
+                continue;
+            }
+            else{
+                SetGearItemUI( item.Key, item.Value.data.equipmentBaseData.Icon() );
+            }            
+        }
+    }
+
     public void ToggleExpandedMapOverlay(bool set)
     {
         expandedMapOverlay.SetActive(set);
@@ -183,10 +206,6 @@ public class InGameUIManager : MonoBehaviour
 
             if(set){
                 inventoryUI.OnInventoryOpen();
-                AlertTextUI.instance.ToggleAlertText(false);
-            }
-            else{
-                AlertTextUI.instance.ToggleAlertText(true);
             }
         }
 
