@@ -42,7 +42,7 @@ public class TrousersOfFortitude : Leg
 
     private void UpdateStats(int fullBonus)
     {
-        player.stats.SetBonusForStat(this, StatType.Defense, EntityStats.BonusType.flat, player.stats.getDefense() * fullBonus);
-        player.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.flat, player.stats.getMoveSpeed() * -0.25f * fullBonus);
+        player.stats.SetBonusForStat(this, StatType.Defense, EntityStats.BonusType.multiplier, 1 + fullBonus);
+        player.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, -0.25f * fullBonus);
     }
 }
