@@ -180,6 +180,17 @@ public class InputManager : MonoBehaviour
         RunGameTimer(set);
     }
 
+    public void OnCancel(InputValue input)
+    {
+        // if(isInMainMenu){
+        //     return;
+        // }
+
+        if(PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || GameManager.instance.statRerollUIOpen || mapIsOpen || journalIsOpen){
+            OnPause(input);
+        }
+    }
+    
     public void OnSubmit(InputValue input)
     {
         ProgressDialogueOnInput(input);

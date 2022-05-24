@@ -8,12 +8,17 @@ public class InGameUIManager : MonoBehaviour
 {
     public static InGameUIManager instance;
 
-    public const string slimeGreenColor = "#05d806";
-    public const string magentaColor = "#FF49C7";
-    public const string turquoiseColor = "#1bc7b2";
-    public const string medTurquoiseColor = "#017C6D";
-    public const string darkTurquoiseColor = "#02141e";
-    public const string goldColor = "#E49200";
+    #region Color Hex Codes
+        public const string SLIME_GREEN_COLOR = "#05d806";
+        public const string MAGENTA_COLOR = "#FF49C7";
+        public const string CYAN_COLOR = "#46FFE8";
+        public const string TURQUOISE_COLOR = "#1bc7b2";
+        public const string MED_TURQUOISE_COLOR = "#017C6D";
+        public const string DARK_TURQUOISE_COLOR = "#02141e";
+        public const string STR_GOLD_COLOR = "#E49200";
+        public const string DEX_BLUE_COLOR = "#20ADE4";
+        public const string WIS_PURPLE_COLOR = "#C71FEE";
+    #endregion
 
     [SerializeField] private GameObject inGameUIPanel;
     [SerializeField] private GameObject inGameUIGearIconPanel;  // Sometimes toggled separately from the rest of the in game UI
@@ -357,7 +362,7 @@ public class InGameUIManager : MonoBehaviour
             }
 
             cooldown.gameObject.SetActive(true);
-            SetItemIconColor(slot, darkTurquoiseColor);
+            SetItemIconColor(slot, DARK_TURQUOISE_COLOR);
             
             StartCoroutine(CooldownRoutine(cooldown, value));
         }
