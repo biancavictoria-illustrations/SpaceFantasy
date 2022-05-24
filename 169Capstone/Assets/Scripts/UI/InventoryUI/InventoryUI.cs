@@ -75,12 +75,17 @@ public class InventoryUI : MonoBehaviour
         SetOtherStatText();
     }
 
-    public void SetInventoryItemValues()
+    public void SetInventoryItemValues( InventoryItemSlot compareItemSlot = InventoryItemSlot.enumSize )
     {
         foreach(InventoryUIItemPanel panel in itemPanels){
             // If you have something equipped in that slot, set the data; if not, set default empty values
             if( PlayerInventory.instance.gear[panel.GetItemSlot()] ){
-                panel.SetItemPanelValues(PlayerInventory.instance.gear[panel.GetItemSlot()].data);
+                if( compareItemSlot != InventoryItemSlot.enumSize && panel.GetItemSlot() == compareItemSlot ){
+                    panel.SetItemPanelValues(PlayerInventory.instance.gear[panel.GetItemSlot()].data, InventoryUIItemPanel.ItemPanelType.CurrentlyEquippedCompareItem);
+                }
+                else{
+                    panel.SetItemPanelValues(PlayerInventory.instance.gear[panel.GetItemSlot()].data, InventoryUIItemPanel.ItemPanelType.EquippedGeneric);
+                }
             }
             else{
                 panel.SetDefaultItemPanelValues();

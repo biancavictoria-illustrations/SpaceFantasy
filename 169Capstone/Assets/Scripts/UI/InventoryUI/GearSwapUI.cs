@@ -9,15 +9,16 @@ public class GearSwapUI : MonoBehaviour
     public Button replaceItemButton;
     public Button keepCurrentItemButton;
 
-    private GeneratedEquipment newItem;
+    public static GeneratedEquipment newItem {get; private set;}
     [SerializeField] public InventoryUIItemPanel newItemPanel;
 
     public void OnGearSwapUIOpen(GeneratedEquipment item)
     {
-        gearSwapInventoryUI.SetInventoryItemValues();   // Only set item values, no stat values
-
         newItem = item;
-        newItemPanel.SetItemPanelValues(item);
+        
+        gearSwapInventoryUI.SetInventoryItemValues(item.equipmentBaseData.ItemSlot());   // Only set item values, no stat values
+
+        newItemPanel.SetItemPanelValues(item, InventoryUIItemPanel.ItemPanelType.NewItemToCompare);
         newItemPanel.SetExpandedDescription(true);
         
         if(gearSwapInventoryUI.itemPanels.Count == 0){
