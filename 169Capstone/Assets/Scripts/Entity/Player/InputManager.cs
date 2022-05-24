@@ -315,8 +315,8 @@ public class InputManager : MonoBehaviour
 
         useAccessory = true;
 
-        // TEMP - FOR TESTING
-        InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Legs, 4);
+        // TEMP - FOR TESTING (call this where the cooldown starts for the item using a variable of the cooldown duration instead of this)
+        InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Accessory, 4);
     }
 
     public void OnAccessoryAbilityCanceled()
@@ -333,7 +333,7 @@ public class InputManager : MonoBehaviour
 
         useHead = true;
 
-        // TEMP - FOR TESTING
+        // TEMP - FOR TESTING (call this where the cooldown starts for the item using a variable of the cooldown duration instead of this)
         InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Helmet, 8);
     }
 
@@ -346,7 +346,7 @@ public class InputManager : MonoBehaviour
 
         useLegs = true;
 
-        // TEMP - FOR TESTING
+        // TEMP - FOR TESTING (call this where the cooldown starts for the item using a variable of the cooldown duration instead of this)
         InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Legs, 15);
     }
 

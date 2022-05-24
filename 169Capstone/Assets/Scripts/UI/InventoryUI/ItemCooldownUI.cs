@@ -7,9 +7,10 @@ public class ItemCooldownUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text cooldownText;
     [SerializeField] private InventoryItemSlot itemSlot;
-    // [SerializeField] private Image
 
     public bool isActive {get; private set;}
+
+    public int counter;
 
     void Start()
     {
@@ -24,19 +25,18 @@ public class ItemCooldownUI : MonoBehaviour
     public void StartCooldownCountdown(int value)
     {
         isActive = true;
-        StartCoroutine(CooldownRoutine(value));
+        counter = value;   
+        SetTextToCounterValue();     
     }
 
-    private IEnumerator CooldownRoutine( int counter )
+    public void EndCooldownCountdown()
+    {
+        isActive = false;
+        gameObject.SetActive(false);
+    }
+
+    public void SetTextToCounterValue()
     {
         cooldownText.text = counter + "";
-        while(counter > 0){
-            yield return new WaitForSecondsRealtime(1f);
-            --counter;
-            cooldownText.text = counter + "";
-        }
-        isActive = false;
-        InGameUIManager.instance.SetItemIconColor(itemSlot, "#FFFFFF");
-        gameObject.SetActive(false);
     }
 }

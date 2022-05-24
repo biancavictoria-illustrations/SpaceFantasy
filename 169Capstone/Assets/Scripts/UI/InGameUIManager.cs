@@ -359,7 +359,19 @@ public class InGameUIManager : MonoBehaviour
             cooldown.gameObject.SetActive(true);
             SetItemIconColor(slot, darkTurquoiseColor);
             
+            StartCoroutine(CooldownRoutine(cooldown, value));
+        }
+
+        private IEnumerator CooldownRoutine(ItemCooldownUI cooldown, int value)
+        {
             cooldown.StartCooldownCountdown(value);
+            while(cooldown.counter > 0){
+                yield return new WaitForSeconds(1f);
+                --cooldown.counter;
+                cooldown.SetTextToCounterValue();
+            }
+            SetItemIconColor(cooldown.GetItemSlot(), "#FFFFFF");
+            cooldown.EndCooldownCountdown();
         }
     #endregion
 
