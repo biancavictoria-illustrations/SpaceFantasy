@@ -176,7 +176,7 @@ public class InventoryUIItemPanel : MonoBehaviour
         StatType primaryLine = itemData.equipmentBaseData.PrimaryItemLine();
         float primaryLineValue = itemData.primaryLineValue;
         if(primaryLineValue > 0){
-            s += SetStringForStatValue(primaryLine, primaryLineValue, primaryLine:true) + "\n";
+            s += SetStringForStatValue(primaryLine, primaryLineValue, true, true) + "\n";
         }
 
         // Add secondary lines
@@ -217,8 +217,15 @@ public class InventoryUIItemPanel : MonoBehaviour
     private string GetColorModForStatValue(float thisBonusValue, StatType type, bool primaryLine = false)
     {
         // If nothing to compare to, return green
-        if(itemPanelType == ItemPanelType.EquippedGeneric){
+        if(itemPanelType == ItemPanelType.EquippedGeneric)
             return InGameUIManager.SLIME_GREEN_COLOR;
+            
+        // If compare and it's a DIFFERENT PRIMARY LINE, return green
+        if(primaryLine){
+            if(itemPanelType == ItemPanelType.NewItemToCompare && PlayerInventory.instance.ItemSlotIsFull(itemSlot) && type != PlayerInventory.instance.gear[itemSlot].data.equipmentBaseData.PrimaryItemLine())
+                return InGameUIManager.SLIME_GREEN_COLOR;
+            if(itemPanelType == ItemPanelType.CurrentlyEquippedCompareItem && type != GearSwapUI.newItem.equipmentBaseData.PrimaryItemLine())
+                return InGameUIManager.SLIME_GREEN_COLOR;
         }
 
         float compareItemValue;
@@ -230,13 +237,10 @@ public class InventoryUIItemPanel : MonoBehaviour
                 return InGameUIManager.SLIME_GREEN_COLOR;
             }
             // Get the value from the currently equipped item
-            // GeneratedEquipment currentlyEquippedItem = PlayerInventory.instance.gear[itemSlot].data;
-            // float? currentValue = Player.instance.stats.GetBonusForStat( currentlyEquippedItem, type, EntityStats.BonusType.flat);
             compareItemValue = PlayerInventory.instance.gear[itemSlot].data.GetLineValueFromStatType(type, primaryLine);
         }
         // If this is the CURRENT item, compare to the new item
         else{
-            // GeneratedEquipment newItem = GearSwapUI.newItem;
             compareItemValue = GearSwapUI.newItem.GetLineValueFromStatType(type, primaryLine);
         }
 
@@ -373,13 +377,10 @@ public class InventoryUIItemPanel : MonoBehaviour
 
             // Damage Values
             case DescriptionVariableCode.SD:
-                return Player.instance.stats.getSTRDamage(false);
             case DescriptionVariableCode.DD:
-                return Player.instance.stats.getDEXDamage(false);
             case DescriptionVariableCode.ID:
-                return Player.instance.stats.getINTDamage(false);
             case DescriptionVariableCode.WD:
-                return Player.instance.stats.getWISDamage(false);
+                return CalculateDamageValue(code);
 
             // Secondary Stats
             case DescriptionVariableCode.ATS:
@@ -402,14 +403,77 @@ public class InventoryUIItemPanel : MonoBehaviour
         Debug.LogError("No stat found for: " + code);
         return -1;
     }
+
+    private float CalculateDamageValue(DescriptionVariableCode code)
+    {
+        // If this is not a weapon or not a new item to compare OR it IS a new item to compare but we don't currently have anything equipped in that slot,
+        // just calculate the value normally
+        if( itemSlot != InventoryItemSlot.Weapon || itemPanelType != ItemPanelType.NewItemToCompare || !PlayerInventory.instance.ItemSlotIsFull(itemSlot) ){
+            switch(code){
+                case DescriptionVariableCode.SD:
+                    return Player.instance.stats.getSTRDamage(false);
+                case DescriptionVariableCode.DD:
+                    return Player.instance.stats.getDEXDamage(false);
+                case DescriptionVariableCode.ID:
+                    return Player.instance.stats.getINTDamage(false);
+                case DescriptionVariableCode.WD:
+                    return Player.instance.stats.getWISDamage(false);
+            }
+        }
+
+        // Just for weapons -> factoring in damage multiplier primary line
+
+        PlayerStats stats = Player.instance.stats;
+
+        float baseValue = 1f;
+        float multiplier = 1f;
+        float flatBonus = 0f;
+        float? currentItemBonus = 0f;
+
+        GeneratedEquipment currentlyEquippedWeapon = PlayerInventory.instance.gear[itemSlot].data;
+
+        switch(code){
+            case DescriptionVariableCode.SD:
+                baseValue = stats.Strength();
+                multiplier = stats.STRDamageMultiplier;
+                flatBonus = stats.STRDamageFlatBonus;
+                currentItemBonus = stats.GetBonusForStat( currentlyEquippedWeapon.equipmentBaseData, StatType.STRDamage, EntityStats.BonusType.multiplier );
+                break;
+            case DescriptionVariableCode.DD:
+                baseValue = stats.Dexterity();
+                multiplier = stats.DEXDamageMultiplier;
+                flatBonus = stats.DEXDamageFlatBonus;
+                currentItemBonus = stats.GetBonusForStat( currentlyEquippedWeapon.equipmentBaseData, StatType.DEXDamage, EntityStats.BonusType.multiplier );
+                break;
+            case DescriptionVariableCode.ID:
+                baseValue = stats.Intelligence();
+                multiplier = stats.INTDamageMultiplier;
+                flatBonus = stats.INTDamageFlatBonus;
+                currentItemBonus = stats.GetBonusForStat( currentlyEquippedWeapon.equipmentBaseData, StatType.INTDamage, EntityStats.BonusType.multiplier );
+                break;
+            case DescriptionVariableCode.WD:
+                baseValue = stats.Wisdom();
+                multiplier = stats.WISDamageMultiplier;
+                flatBonus = stats.WISDamageFlatBonus;
+                currentItemBonus = stats.GetBonusForStat( currentlyEquippedWeapon.equipmentBaseData, StatType.WISDamage, EntityStats.BonusType.multiplier );
+                break;
+            default:
+                Debug.LogError("No stat damage value found for: " + code);
+                return -1;
+        }
+
+        float newItemBonus = itemData.primaryLineValue;
+
+        
+
+        if(currentItemBonus.HasValue){
+            return baseValue * (multiplier - currentItemBonus.Value + newItemBonus) + flatBonus;
+        }
+        else{
+            return baseValue * (multiplier + newItemBonus) + flatBonus;
+        }
+    }
 }
-
-/*
-    TODO:
-    - include the primary line from THAT item (i.e., if STR sword w/ primary line of +10% STR Damage, factor in that primary line to the sword damage description)
-    - do NOT factor in your CURRENT buff from that item slot (if currently using a STR sword, don't factor in that buff)
-*/
-
 
 /*
     Description Variables
