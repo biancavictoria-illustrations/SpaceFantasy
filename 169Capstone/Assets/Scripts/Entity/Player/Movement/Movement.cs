@@ -57,8 +57,10 @@ public class Movement : MonoBehaviour
             if(col.bounds.Contains(transform.position))
             {
                 Room roomScript = col.GetComponent<Room>();
-                if(roomScript != null)
+                if(roomScript != null){
                     AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, roomScript.hasEnemies());
+                    roomScript.enableAllMinimapSprites();
+                }                    
                 break;
             }
         }
@@ -73,8 +75,10 @@ public class Movement : MonoBehaviour
             if(col.bounds.Contains(transform.position))
             {
                 Room roomScript = col.GetComponent<Room>();
-                if(roomScript != null)
+                if(roomScript != null){
                     AudioManager.Instance.toggleCombat(roomScript.hasEnemies());
+                    roomScript.enableAllMinimapSprites();
+                }                    
                 break;
             }
         }
@@ -144,6 +148,9 @@ public class Movement : MonoBehaviour
             horizontalMove = -1f;            
         }
         animator.SetBool("IsRunning", true);
+
+        // Update our direction in the input manager for controller aiming
+        // InputManager.instance.SetLookDirectionHorizontal(horizontalMove);
     }
 
     public void OnMoveLeftCanceled()
@@ -172,6 +179,8 @@ public class Movement : MonoBehaviour
             horizontalMove = 1f;
         }
         animator.SetBool("IsRunning", true);
+
+        // InputManager.instance.SetLookDirectionHorizontal(horizontalMove);
     }
 
     public void OnMoveRightCanceled()
@@ -200,6 +209,8 @@ public class Movement : MonoBehaviour
             verticalMove = 1f;
         }
         animator.SetBool("IsRunning", true);
+
+        // InputManager.instance.SetLookDirectionVertical(verticalMove);
     }
 
     public void OnMoveUpCanceled()
@@ -228,6 +239,8 @@ public class Movement : MonoBehaviour
             verticalMove = -1f;
         }
         animator.SetBool("IsRunning", true);
+
+        // InputManager.instance.SetLookDirectionVertical(verticalMove);
     }
 
     public void OnMoveDownCanceled()
@@ -278,6 +291,9 @@ public class Movement : MonoBehaviour
     {
         Vector3 direction = new Vector3(-verticalMove, 0, horizontalMove).normalized;
 
+        InputManager.instance.SetLookDirectionHorizontal(horizontalMove);
+        InputManager.instance.SetLookDirectionVertical(verticalMove);
+
         if(externalVelocity.magnitude > 0f)
         {
             direction = Vector3.zero;
@@ -327,8 +343,10 @@ public class Movement : MonoBehaviour
             if(cursorLookDirection == Vector3.zero || !lockLookDirection)
                 cursorLookDirection = InputManager.instance.cursorLookDirection;
 
-            model.rotation = Quaternion.LookRotation(cursorLookDirection);
-            direction /= 2;
+            if( cursorLookDirection != Vector3.zero ){
+                model.rotation = Quaternion.LookRotation(cursorLookDirection);
+                direction /= 2;
+            }
         }
         else
         {

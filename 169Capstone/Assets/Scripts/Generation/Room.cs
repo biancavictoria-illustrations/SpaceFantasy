@@ -11,6 +11,8 @@ public class Room : MonoBehaviour
     public int numGridSpaces;
     public HashSet<EntityHealth> enemies{get; private set;}
 
+    private bool roomHasBeenVisited = false;
+
     void Awake()
     {
         enemies = new HashSet<EntityHealth>();
@@ -33,12 +35,12 @@ public class Room : MonoBehaviour
     private void updateEnemies(EntityHealth health)
     {
         enemies.Remove(health);
-        Debug.Log("Enemy Update");
+        // Debug.Log("Enemy Update");
     }
 
     public void AddEnemy(EntityHealth enemy)
     {
-        Debug.Log("Enemy Added");
+        // Debug.Log("Enemy Added");
 
         if(enemies == null)
         {
@@ -63,5 +65,28 @@ public class Room : MonoBehaviour
             return false;
             
         return enemies.Count > 0;
+    }
+
+    public void enableAllMinimapSprites()
+    {
+        // If we already activated the minimap sprites, return
+        if(roomHasBeenVisited){
+            return;
+        }
+
+        // Get all the minimap sprites in this room
+        MinimapSprite[] minimapSprites = transform.parent.GetComponentsInChildren<MinimapSprite>();
+
+        // If there aren't any, return
+        if(minimapSprites.Length == 0){
+            return;
+        }
+
+        // Otherwise, iterate through and activate all of them
+        foreach(MinimapSprite ms in minimapSprites){
+            ms.MinimapSpriteDiscovered();
+        }
+
+        roomHasBeenVisited = true;
     }
 }

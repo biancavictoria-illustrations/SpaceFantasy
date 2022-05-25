@@ -94,17 +94,18 @@ public class EntityHealth : MonoBehaviour
     public bool isBossEnemy {get; private set;}
     public EnemyID enemyID {get; private set;}
 
+    private DamageSourceType damageSourceCausedPlayerDeath;
+
     private const int TEMPCOINDROPAMOUNT = 5;
     private const float TEMPSTARSHARDDROPCHANCE = 0.25f;
 
     public bool tempPlayerGodModeToggle = false;    // FOR TESTING - REMOVE THIS FOR FINAL BUILD
 
-    void Start()
+    void Awake()
     {
-        OnDeath.AddListener(onEntityDeath);
-        OnCrit.AddListener(onPlayerCrit);
         isBossEnemy = false;
         enemyID = EnemyID.enumSize;
+        damageSourceCausedPlayerDeath = DamageSourceType.enumSize;
         
         if(gameObject.tag != "Player"){
             enemyID = GetComponent<EnemyStats>().enemyID;
@@ -125,6 +126,12 @@ public class EntityHealth : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        OnDeath.AddListener(onEntityDeath);
+        OnCrit.AddListener(onPlayerCrit);        
+    }
+
     public void SetStartingHealthUI()
     {
         SetMaxHealthUI();
@@ -134,8 +141,6 @@ public class EntityHealth : MonoBehaviour
     // Need a bool to check for slime pit otherwise you could DODGE falling in a slime pit and fall for eternity
     public bool Damage(float damage, DamageSourceType damageSource)
     {
-        Debug.Log("Player hit by " + damageSource);
-
         if( gameObject.tag == "Player" && damageSource != DamageSourceType.DeathPit ){
             // TEMP for dev
             if( tempPlayerGodModeToggle ){
@@ -174,6 +179,7 @@ public class EntityHealth : MonoBehaviour
         {
             //Debug.Log("Dead");
             currentHitpoints = 0;
+            damageSourceCausedPlayerDeath = damageSource;
             OnDeath.Invoke(this);
         }
 
@@ -240,12 +246,11 @@ public class EntityHealth : MonoBehaviour
         if(health != this)
             return;
 
-        Debug.Log("Death");
+        // Debug.Log("Death");
         if(gameObject.tag == "Player")
         {
-            // Tell the story manager that the player was killed by a creature
-            // TODO: Get the enemyID of the creature who killed you!!!
-            // StoryManager.instance.KilledEventOccurred(enemyID, StoryBeatType.KilledBy);            
+            // Tell the story manager what the player was killed by
+            StoryManager.instance.KilledEventOccurred(damageSourceCausedPlayerDeath, StoryBeatType.KilledBy);            
             GameManager.instance.playerDeath = true;
         }
         else

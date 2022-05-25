@@ -10,14 +10,28 @@ public class Billboard : MonoBehaviour
 
     private Vector3 towardsCameraNoY;
 
-    private bool waitUntilGenerationComplete = false;
+    public static bool generationComplete;
+
+    void Awake()
+    {
+        // If main level (do this in awake to add a listener)
+        if(GameManager.instance.InSceneWithRandomGeneration()){
+            FloorGenerator generator = FindObjectOfType<FloorGenerator>();
+            if(generator){  // If we already completed generation, just run start; if not, add a listener
+                if(generator.generationComplete){
+                    StartOnGenerationComplete();
+                }
+                else{
+                    generator.OnGenerationComplete.AddListener(StartOnGenerationComplete);
+                }
+            }
+        }
+    }
 
     void Start()
     {
-        if(GameManager.instance.InSceneWithRandomGeneration()){
-            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(StartOnGenerationComplete);
-        }
-        else{
+        // If main hub or something
+        if(!GameManager.instance.InSceneWithRandomGeneration()){
             StartOnGenerationComplete();
         }
     }
@@ -34,12 +48,12 @@ public class Billboard : MonoBehaviour
         float scale = 1 / Vector3.Project(tiltVector, Vector3.up).magnitude;
         transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y * scale, transform.localScale.z);
 
-        waitUntilGenerationComplete = true;
+        generationComplete = true;
     }
 
     void Update()
     {
-        if(spriteHolder && waitUntilGenerationComplete)
+        if(spriteHolder && generationComplete && towardsCameraNoY != Vector3.zero)
         {
             //Face the sprite towards the camera
             spriteHolder.forward = towardsCameraNoY;

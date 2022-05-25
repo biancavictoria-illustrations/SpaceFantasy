@@ -22,4 +22,22 @@ public class UIUtils : MonoBehaviour
         value = value / 100f;
         return value + "";
     }
+
+    public static string GetColorFromRarity(ItemRarity rarity)
+    {
+        switch(rarity){
+            case ItemRarity.Common:
+                return "#FFFFFF";
+            case ItemRarity.Uncommon:
+                return InGameUIManager.SLIME_GREEN_COLOR;
+            case ItemRarity.Rare:
+                return InGameUIManager.DEX_BLUE_COLOR;
+            case ItemRarity.Epic:
+                return InGameUIManager.WIS_PURPLE_COLOR;
+            case ItemRarity.Legendary:
+                return InGameUIManager.STR_GOLD_COLOR;
+        }
+        Debug.LogError("No color code found for item rarity: " + rarity);
+        return "";
+    }
 }

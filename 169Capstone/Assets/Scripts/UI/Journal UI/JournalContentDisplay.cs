@@ -74,8 +74,6 @@ public class JournalContentDisplay : MonoBehaviour
 
     private void ShowCurrentContentPage()
     {
-        Debug.Log("Setting journal values for: " + activePageID);
-
         // Show the content for the panel associated with JournalContentID panelIndex
         JournalContent content = jcm.contentDatabase[activePageID];
 
@@ -106,7 +104,7 @@ public class JournalContentDisplay : MonoBehaviour
             contentSectionSubTitleRight.text = ID_PREFIX + content.EntryID();
 
             // Right Panel
-            if(content.ProfilePicture()){
+            if(content.ProfilePicture() && contentImage){
                 contentImage.sprite = content.ProfilePicture();
             }
         }
@@ -117,7 +115,6 @@ public class JournalContentDisplay : MonoBehaviour
 
             // Top Header Panel
             contentSectionSubTitleLeft.text = content.JobTitle();
-            // contentSectionSubTitleRight.text = ID_PREFIX + content.EntryID();
 
             // Body Panel
             bodyContent1.text = "<b>DoB:</b> " + content.Birthday();
@@ -142,8 +139,6 @@ public class JournalContentDisplay : MonoBehaviour
 
             SetDefaultValues(content);
 
-            // Top Header Panel
-
             // Body Panel
             bodyContent1.text = "<b>SECONDARY STAT:</b> " + content.AssociatedSecondaryStats();
             mainBodyContent.text = RESEARCH_PREFIX + content.ReportNotes();
@@ -154,8 +149,13 @@ public class JournalContentDisplay : MonoBehaviour
             SetDefaultValues(content);
 
             // Top Header Panel
+            contentSectionSubTitleLeft.text = "<b>THREAT LEVEL: </b>" + content.ThreatLevel();
 
             // Body Panel
+            bodyContent1.text = "<b>BASE DAMAGE:</b> " + content.BaseDamage();
+            bodyContent2.text = "<b>BASE HEALTH:</b> " + content.BaseHealth();
+            bodyContent3.text = "<b>ATTACK TYPE:</b> " + content.AttackType();
+            bodyContent4.text = "<b>MOVEMENT TYPE:</b> " + content.MovementType();
             mainBodyContent.text = RESEARCH_PREFIX + content.ReportNotes();
         }
 
@@ -164,18 +164,15 @@ public class JournalContentDisplay : MonoBehaviour
             SetDefaultValues(content);
 
             // Top Header Panel
+            contentSectionSubTitleLeft.text = content.ItemType();
 
             // Body Panel
+            bodyContent1.text = "<b>CAPABILITIES:</b>\n" + content.MechanicalDescription();
             mainBodyContent.text = RESEARCH_PREFIX + content.ReportNotes();
         }
 
         private void SetLocationValues(JournalContentLocation content)
         {
-            contentSectionTitle.text = content.EntryName();
-            return;
-
-            // TODO:
-
             if(galaxyPanel){
                 bool isGalaxyPanel = content.InternalID() == JournalContentID.Galaxy;
                 galaxyPanel.SetActive(isGalaxyPanel);
@@ -189,9 +186,13 @@ public class JournalContentDisplay : MonoBehaviour
             
             SetDefaultValues(content);
 
-            // Top Header Panel
+            // Top Header Panel (if a left subheader)
 
             // Body Panel
+            
+            // TODO: generate random date to put there
+            bodyContent1.text = "<b>DATE OF LAST INSPECTION:</b> " + "???";
+            
             mainBodyContent.text = "<b>MAINTENANCE REVIEW:</b>\n" + content.ReportNotes();
         }
     #endregion

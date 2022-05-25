@@ -25,9 +25,14 @@ public class AlertTextUI : MonoBehaviour
     private Sprite openInventoryControlIcon;
     private string openInventoryControlString;
     private bool openInventoryAlertIsActive = false;
+
+    private Sprite openJournalControlIcon;
+    private string openJournalControlString;
+    private bool openJournalAlertIsActive = false;
     
     [SerializeField] private InputActionReference interactAction;
     [SerializeField] private InputActionReference toggleInventoryAction;
+    [SerializeField] private InputActionReference toggleJournalAction;
 
     void Awake()
     {
@@ -55,6 +60,7 @@ public class AlertTextUI : MonoBehaviour
         UpdateAlertText();
     }
 
+    // TODO: DO THIS NOT IN UPDATE!!!
     void Update()
     {
         if(inputDeviceChanged){
@@ -97,12 +103,20 @@ public class AlertTextUI : MonoBehaviour
         alertTextIsActive = false;
         interactAlertIsActive = false;
         openInventoryAlertIsActive = false;
+        openJournalAlertIsActive = false;
     }
 
     public IEnumerator RemoveAlertAfterSeconds(float timeToWait = 2f)
     {
         yield return new WaitForSeconds(timeToWait);
         DisableAlert();   
+    }
+
+    public void EnableOpenJournalAlert()
+    {
+        SetAlertText(true, openJournalControlIcon, openJournalControlString, "OPEN CAPTAIN'S LOG");
+        alertTextIsActive = true;
+        openJournalAlertIsActive = true;
     }
 
     #region Interact Alerts
@@ -160,6 +174,9 @@ public class AlertTextUI : MonoBehaviour
         openInventoryControlIcon = GetIconForAction(ControlKeys.ToggleInventory);
         openInventoryControlString = "";
 
+        openJournalControlIcon = GetIconForAction(ControlKeys.ToggleJournal);
+        openJournalControlString = "";
+
         // If it's null at this point, get the string for the control instead
         if(!interactControlIcon){
             interactControlString = GetActionString(interactAction);
@@ -169,13 +186,20 @@ public class AlertTextUI : MonoBehaviour
             openInventoryControlString = GetActionString(toggleInventoryAction);
             controlButtonText.text = openInventoryControlString;
         }
+        if(!openJournalControlIcon){
+            openJournalControlString = GetActionString(toggleJournalAction);
+            controlButtonText.text = openJournalControlString;
+        }
 
         if(openInventoryAlertIsActive){
             SetAlertText(alertTextIsActive, openInventoryControlIcon, openInventoryControlString, alertText.text);
         }
-        else{
+        else if(interactAlertIsActive){
             SetAlertText(alertTextIsActive, interactControlIcon, interactControlString, alertText.text);
-        }        
+        }
+        else if(openJournalAlertIsActive){
+            SetAlertText(alertTextIsActive, openJournalControlIcon, openJournalControlString, alertText.text);
+        }
     }
 
     private string GetActionString(InputActionReference action)

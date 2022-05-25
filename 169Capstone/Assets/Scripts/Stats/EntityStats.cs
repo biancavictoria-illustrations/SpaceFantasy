@@ -71,7 +71,16 @@ public abstract class EntityStats : MonoBehaviour
             if(bonusSource == null || stat == StatType.enumSize ||  bonusType == BonusType.enumSize)
                 return;
             
-            if(!statBonusFromSource.ContainsKey(bonusSource))
+            if(statBonusFromSource.ContainsKey(bonusSource))
+            {
+                if(bonusAmount == 0)
+                {
+                    statBonusFromSource.Remove(bonusSource);
+                    RecalculateStatBonus(stat, bonusType);
+                    return;
+                }
+            }
+            else
             {
                 statBonusFromSource.Add(bonusSource, new Dictionary<StatBonusType, float>());
             }
@@ -219,17 +228,17 @@ public abstract class EntityStats : MonoBehaviour
         protected float hasteBase;
         protected float hasteFlatBonus;
 
-        protected float STRDamageFlatBonus;
-        protected float STRDamageMultiplier;
+        public float STRDamageFlatBonus {get; protected set;}
+        public float STRDamageMultiplier {get; protected set;}
 
-        protected float DEXDamageFlatBonus;
-        protected float DEXDamageMultiplier;
+        public float DEXDamageFlatBonus {get; protected set;}
+        public float DEXDamageMultiplier {get; protected set;}
         
-        protected float WISDamageFlatBonus;
-        protected float WISDamageMultiplier;
+        public float WISDamageFlatBonus {get; protected set;}
+        public float WISDamageMultiplier {get; protected set;}
         
-        protected float INTDamageFlatBonus;
-        protected float INTDamageMultiplier;        
+        public float INTDamageFlatBonus {get; protected set;}
+        public float INTDamageMultiplier {get; protected set;}
     #endregion
 
     #region Hit Points
@@ -289,20 +298,22 @@ public abstract class EntityStats : MonoBehaviour
     #region Dodge Chance
         protected float dodgeChanceBase;
         protected float dodgeChanceFlatBonus;
+        protected float dodgeChanceMultiplier;
 
         public virtual float getDodgeChance()
         {
-            return dodgeChanceBase + dodgeChanceFlatBonus;
+            return dodgeChanceBase * dodgeChanceMultiplier + dodgeChanceFlatBonus;
         }
     #endregion
 
     #region Crit Chance
         protected float critChanceBase;
         protected float critChanceFlatBonus;
+        protected float critChanceMultiplier;
 
         public virtual float getCritChance()
         {
-            return critChanceBase + critChanceFlatBonus;
+            return critChanceBase * critChanceMultiplier + critChanceFlatBonus;
         }
     #endregion
 

@@ -36,8 +36,6 @@ public class Beetle : Enemy
     {
         player = Player.instance;
 
-        bossRoomScript.AddEnemy(health);
-
         EntityHealth healthScript = GetComponent<EntityHealth>();
         healthScript.OnHit.AddListener(checkForHalfHealth);
         healthScript.OnDeath.AddListener(stopBossMusic);

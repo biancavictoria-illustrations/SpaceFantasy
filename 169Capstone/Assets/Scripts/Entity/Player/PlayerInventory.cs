@@ -99,7 +99,7 @@ public class PlayerInventory : MonoBehaviour
         // Primary line
         if(itemData.primaryLineValue > 0){
             // If %
-            if(itemData.equipmentBaseData.PrimaryItemLine() == StatType.HitPoints){
+            if(itemData.equipmentBaseData.PrimaryItemLine() == StatType.HitPoints || (int)itemData.equipmentBaseData.PrimaryItemLine() >= (int)StatType.STRDamage){
                 Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, itemData.equipmentBaseData.PrimaryItemLine(), EntityStats.BonusType.multiplier, itemData.primaryLineValue );
                 CheckForHealthBarUpdate(itemData.equipmentBaseData.PrimaryItemLine());
             }
@@ -111,7 +111,7 @@ public class PlayerInventory : MonoBehaviour
 
         // Secondary line
         for(int i = 0; i < EntityStats.numberOfSecondaryLineOptions; i++){
-            float bonusValue = itemData.GetSecondaryLineValueFromStatType((StatType)i);
+            float bonusValue = itemData.GetLineValueFromStatType((StatType)i);
             if(bonusValue != 0){
                 Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, (StatType)i, EntityStats.BonusType.flat, bonusValue );
                 CheckForHealthBarUpdate((StatType)i);
@@ -131,7 +131,7 @@ public class PlayerInventory : MonoBehaviour
         // Primary line
         if(itemData.primaryLineValue > 0){
             // If %
-            if(itemData.equipmentBaseData.PrimaryItemLine() == StatType.HitPoints){
+            if(itemData.equipmentBaseData.PrimaryItemLine() == StatType.HitPoints || (int)itemData.equipmentBaseData.PrimaryItemLine() >= (int)StatType.STRDamage){
                 Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, itemData.equipmentBaseData.PrimaryItemLine(), EntityStats.BonusType.multiplier, 0 );
                 CheckForHealthBarUpdate(itemData.equipmentBaseData.PrimaryItemLine());
             }
@@ -143,7 +143,7 @@ public class PlayerInventory : MonoBehaviour
 
         // Secondary line
         for(int i = 0; i < EntityStats.numberOfSecondaryLineOptions; i++){
-            float bonusValue = itemData.GetSecondaryLineValueFromStatType((StatType)i);
+            float bonusValue = itemData.GetLineValueFromStatType((StatType)i);
             if(bonusValue != 0){
                 Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, (StatType)i, EntityStats.BonusType.flat, 0 );
                 CheckForHealthBarUpdate((StatType)i);

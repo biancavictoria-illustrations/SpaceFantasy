@@ -7,11 +7,12 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    // TODO: Make sure these are all correct and up to date
+    // TODO: Make sure these are all correct and up to date when building
     public const string TITLE_SCREEN_STRING_NAME = "MainMenu";
     public const string MAIN_HUB_STRING_NAME = "Main Hub";
     public const string GAME_LEVEL1_STRING_NAME = "GenerationSetup";
-    public const string LICH_ARENA_STRING_NAME = "LichArena";
+    public const string LICH_ARENA_STRING_NAME = "Lich Fight";
+    public const string EPILOGUE_SCENE_STRING_NAME = "Epilogue Scene";
 
     private const float hitStopDuration = 0.05f;
 
@@ -29,9 +30,10 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool inElevatorAnimation;
 
     [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private Transform playerTransform; // TODO: set this at runtime if game manager starts in main menu???
+    [SerializeField] private Transform playerTransform; // is this used for anything anywhere
 
     [SerializeField] private GearManagerObject gearManager;
+    public JournalContentManager journalContentManager;
 
     [HideInInspector] public bool playerDeath = false;
     [HideInInspector] public int bossesKilled;
@@ -43,8 +45,6 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool hasKilledTimeLich;
 
     private int saveSlotNum;
-
-    public bool progressRunForTesting = false;  // TEMP
 
     void Awake()
     {
@@ -80,17 +80,6 @@ public class GameManager : MonoBehaviour
             playerDeath = false;
         }
 
-        if(progressRunForTesting){
-            progressRunForTesting = false;
-
-            // Simulate a new run (reroll stats too)
-            EndRun();
-            PlayerStats pstats = FindObjectsOfType<PlayerStats>()[0];
-            pstats.initializeStats();
-
-            Debug.Log("Run Number: " + currentRunNumber);
-        }
-
         if(currentSceneName == TITLE_SCREEN_STRING_NAME){
             return;
         }
@@ -107,7 +96,7 @@ public class GameManager : MonoBehaviour
 
     private bool GetPausedStateFromAllPauseConditions()
     {
-        return hitStop || DialogueManager.instance.stopTime || pauseMenuOpen || deathMenuOpen || InputManager.instance.shopIsOpen || InGameUIManager.instance.inventoryIsOpen || InGameUIManager.instance.gearSwapIsOpen || InputManager.instance.journalIsOpen || statRerollUIOpen;
+        return hitStop || DialogueManager.instance.stopTime || pauseMenuOpen || deathMenuOpen || InputManager.instance.shopIsOpen || InGameUIManager.instance.inventoryIsOpen || InGameUIManager.instance.gearSwapIsOpen || InputManager.instance.journalIsOpen || InputManager.instance.mapIsOpen || statRerollUIOpen;
     }
 
     public bool InSceneWithRandomGeneration()
@@ -175,13 +164,55 @@ public class GameManager : MonoBehaviour
         }
         else if(currentSceneName == LICH_ARENA_STRING_NAME){
             // TODO: Play lich fight music
+
+            fade.opaqueOnStart = true;
+            fade.FadeIn(0.5f);
+
+            inElevatorAnimation = true;
+            FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
+                inElevatorAnimation = false;
+            });
+
+            InGameUIManager.instance.SetAllRunUIToCurrentValues();
             
+            UnparentPlayerOnSceneLoad();
+        }
+        else if(currentSceneName == EPILOGUE_SCENE_STRING_NAME){
+            UnparentPlayerOnSceneLoad();
+
+            InGameUIManager.instance.ToggleRunUI(false);
+
+            // TODO: Play end music?
+
+            fade.opaqueOnStart = true;
+            fade.FadeIn(0.5f);
+
+            inElevatorAnimation = true;
+            FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
+                inElevatorAnimation = false;
+            });
+
+            SaveGame();     // ? maybe? idk
         }
         else if(currentSceneName == TITLE_SCREEN_STRING_NAME){
             gameTimer.runTotalTimer = false;
 
             AudioManager.Instance.playMusic(AudioManager.MusicTrack.TitleMusic);
         }
+    }
+
+    private void UnparentPlayerOnSceneLoad()
+    {
+        // Make the player no longer a child of the game manager now that we've saved their build between scenes
+        // Move the player out of dontdestroyonload
+        GameObject o = new GameObject();
+        Player.instance.transform.parent = o.transform;
+        
+        // Unparent it
+        Player.instance.transform.parent = null;
+
+        // Destroy the dummy game object
+        Destroy(o.gameObject);
     }
 
     public IEnumerator AutoRunDialogueAfterTime(float timeToWait = DEFAULT_AUTO_DIALOGUE_WAIT_TIME)
@@ -273,9 +304,9 @@ public class GameManager : MonoBehaviour
 
         sm.brynListInitialized = saveData.brynListInitialized;
         sm.stellanListInitialized = saveData.stellanListInitialized;
-        sm.doctorListInitialized = saveData.doctorListInitialized;
+        // sm.doctorListInitialized = saveData.doctorListInitialized;
         sm.lichListInitialized = saveData.lichListInitialized;
-        sm.rhianListInitialized = saveData.rhianListInitialized;
+        // sm.rhianListInitialized = saveData.rhianListInitialized;
 
         for(int i = 0; i < saveData.brynNumRunDialogueList.Length; i++){
             sm.brynNumRunDialogueList.Add(saveData.brynNumRunDialogueList[i]);
@@ -283,15 +314,15 @@ public class GameManager : MonoBehaviour
         for(int i = 0; i < saveData.stellanNumRunDialogueList.Length; i++){
             sm.stellanNumRunDialogueList.Add(saveData.stellanNumRunDialogueList[i]);
         }
-        for(int i = 0; i < saveData.doctorNumRunDialogueList.Length; i++){
-            sm.doctorNumRunDialogueList.Add(saveData.doctorNumRunDialogueList[i]);
-        }
+        // for(int i = 0; i < saveData.doctorNumRunDialogueList.Length; i++){
+        //     sm.doctorNumRunDialogueList.Add(saveData.doctorNumRunDialogueList[i]);
+        // }
         for(int i = 0; i < saveData.timeLichNumRunDialogueList.Length; i++){
             sm.timeLichNumRunDialogueList.Add(saveData.timeLichNumRunDialogueList[i]);
         }
-        for(int i = 0; i < saveData.rhianNumRunDialogueList.Length; i++){
-            sm.rhianNumRunDialogueList.Add(saveData.rhianNumRunDialogueList[i]);
-        }
+        // for(int i = 0; i < saveData.rhianNumRunDialogueList.Length; i++){
+        //     sm.rhianNumRunDialogueList.Add(saveData.rhianNumRunDialogueList[i]);
+        // }
 
         // Story Beat Status Values
         sm.LoadSavedStoryBeatStatuses(saveData.storyBeatDatabaseStatuses, saveData.itemStoryBeatStatuses, saveData.genericStoryBeatStatuses, saveData.activeStoryBeatHeadNodes);

@@ -30,7 +30,7 @@ tags:
 <<elseif $headNode is "Repeatable">>
     [[RhianRepeatable]]
 <<elseif $headNode is "NumRuns">>
-    [[RhianNumRuns]]
+    [[RhianRepeatable]]
 
 <<else>>
     [[RhianRepeatable]]
@@ -175,8 +175,8 @@ But whatever. As long as I get to hang out here, I don’t really care about wha
 title: RhianRepeatable
 tags:
 ---
-// Get a random number 0 - 7 and go to that node
-<<set $num to RandomNum(8)>>
+// Get a random number 0 - 6 and go to that node
+<<set $num to RandomNum(7)>>
 <<if $num is 0>>
     <<SetSpeaker Rhian>>
     <i>Ahh,</i> the sweet, sweet symphony of a rail gun.
@@ -190,10 +190,8 @@ tags:
     [[RhianRepeatable4]]
 <<elseif $num is 5>>
     [[RhianRepeatable5]]
-<<elseif $num is 6>>
-    [[RhianRepeatable6]]
 <<else>>
-    [[RhianRepeatable7]]
+    [[RhianRepeatable6]]
 <<endif>>
 ===
 
@@ -208,38 +206,31 @@ title: RhianRepeatable2
 tags:
 ---
 <<SetSpeaker Rhian>>
-
+Need something sharpened? Well, DO IT YOURSELF! What, do I look like I’m gonna hold your hand or something? Learn how to sharpen your own blade for a change!
 ===
 
 title: RhianRepeatable3
 tags:
 ---
 <<SetSpeaker Rhian>>
-Need something sharpened? Well, DO IT YOURSELF! What, do I look like I’m gonna hold your hand or something? Learn how to sharpen your own blade for a change!
+You looking for weapons? I got weapons. They’re some pretty badass weapons.
 ===
 
 title: RhianRepeatable4
 tags:
 ---
 <<SetSpeaker Rhian>>
-You looking for weapons? I got weapons. They’re some pretty badass weapons.
+You looking to shoot something? Stab something? Blow something up? Maybe laser something in the face? Well, you came to the right place!
 ===
 
 title: RhianRepeatable5
 tags:
 ---
 <<SetSpeaker Rhian>>
-You looking to shoot something? Stab something? Blow something up? Maybe laser something in the face? Well, you came to the right place!
-===
-
-title: RhianRepeatable6
-tags:
----
-<<SetSpeaker Rhian>>
 So much to shoot, so little time… Come on, let’s hurry this along!
 ===
 
-title: RhianRepeatable7
+title: RhianRepeatable6
 tags:
 ---
 <<SetSpeaker Rhian>>
@@ -345,7 +336,8 @@ tags:
     <<SetSpeaker Player>>
     Rhi, is that a new bandolier? It looks lovely on you.
     <<SetSpeaker Rhian>>
-    I know! And <i>look at how many pockets it has!</i> I was able to buy it with all that electrum you’ve been bringing me. You know what? Take a discount today. Consider this… a customer loyalty program!
+    I know! And <i>look at how many pockets it has!</i> I was able to buy it with all that electrum you’ve been bringing me.
+    You know what? Take a discount today. Consider this… a customer loyalty program!
     <<SetSpeaker Player>>
     I like the sound of that.
 <<endif>>
@@ -359,7 +351,8 @@ Hey Rhian, you ever visit the moon Fengari? It’s not too far from where I firs
 <<SetSpeaker Rhian>>
 No. Why?
 <<SetSpeaker Player>>
-Oh, it’s a horrible place. Seedy bars, gambling dens, black market weapons deals everywhere you look. I actually won this here ray gun in a, uh, particularly high stakes game of cards. You find loads of people pawning off gear like this to feed their gambling problems. Or other addictions.
+Oh, it’s a horrible place. Seedy bars, gambling dens, black market weapons deals everywhere you look.
+I actually won this here ray gun in a, uh, particularly high stakes game of cards. You find loads of people pawning off gear like this to feed their gambling problems. Or other addictions.
 <<SetSpeaker Rhian>>
 … Promise me you’ll take me someday! Please, I’ll do anything – I’ll even give you a discount!
 <<SetSpeaker Player>>
@@ -417,13 +410,4 @@ Hey, Atlan, check this out! It’s a laser scope you can shine directly into the
 You sure you can <i>reach</i> their eyes?
 <<SetSpeaker Rhian>>
 Oh, I get it. Because I’m short. Well, JOKES ON YOU. I’m raising my prices JUST FOR TALL JERKS LIKE YOU. Ha. Take that.
-===
-
-
-
-title: RhianNumRuns
-tags:
----
-<<SetSpeaker Rhian>><<BranchComplete NumRuns NumRuns>>
-Temp dialogue! Ignore this
 ===

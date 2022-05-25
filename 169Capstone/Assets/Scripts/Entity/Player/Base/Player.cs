@@ -54,7 +54,7 @@ public class Player : MonoBehaviour
 
         StartCoroutine(DetectFall());
 
-        FindObjectOfType<DevPanel>().UpdateValuesThatPersistBetweenScenes();    // TEMP -> REMOVE FOR FINAL BUILD
+        FindObjectOfType<DevPanel>()?.UpdateValuesThatPersistBetweenScenes();    // TEMP -> REMOVE FOR FINAL BUILD
 
         // If your 1st or 2nd run, auto trigger starting dialogue
         if(GameManager.instance.currentRunNumber == 1 || (GameManager.instance.currentSceneName == GameManager.GAME_LEVEL1_STRING_NAME && GameManager.instance.currentRunNumber == 2)){

@@ -49,12 +49,12 @@ public class StatRerollUI : MonoBehaviour
         CHAText.text = "" + RandomNumberInStatRange( upgradeManager.charismaMin, upgradeManager.charismaMax );
         
         // Start the couroutines for everything
-        StartCoroutine(RerollAnimationRoutine(PlayerFacingStatName.STR, numberOfRollAnimations));
-        StartCoroutine(RerollAnimationRoutine(PlayerFacingStatName.DEX, numberOfRollAnimations + addedToEachNextDuration));
-        StartCoroutine(RerollAnimationRoutine(PlayerFacingStatName.CON, numberOfRollAnimations + addedToEachNextDuration*2));
-        StartCoroutine(RerollAnimationRoutine(PlayerFacingStatName.INT, numberOfRollAnimations + addedToEachNextDuration*3));
-        StartCoroutine(RerollAnimationRoutine(PlayerFacingStatName.WIS, numberOfRollAnimations + addedToEachNextDuration*4));
-        StartCoroutine(RerollAnimationRoutine(PlayerFacingStatName.CHA, numberOfRollAnimations + addedToEachNextDuration*5));
+        StartCoroutine(RerollAnimationRoutine(PlayerStatName.STR, numberOfRollAnimations));
+        StartCoroutine(RerollAnimationRoutine(PlayerStatName.DEX, numberOfRollAnimations + addedToEachNextDuration));
+        StartCoroutine(RerollAnimationRoutine(PlayerStatName.CON, numberOfRollAnimations + addedToEachNextDuration*2));
+        StartCoroutine(RerollAnimationRoutine(PlayerStatName.INT, numberOfRollAnimations + addedToEachNextDuration*3));
+        StartCoroutine(RerollAnimationRoutine(PlayerStatName.WIS, numberOfRollAnimations + addedToEachNextDuration*4));
+        StartCoroutine(RerollAnimationRoutine(PlayerStatName.CHA, numberOfRollAnimations + addedToEachNextDuration*5));
     }
 
     public void DisableStatRerollUI()
@@ -77,28 +77,28 @@ public class StatRerollUI : MonoBehaviour
     }
 
     // Called once the animation is complete to set the actual value you rolled
-    private void SetActualStatValues(PlayerFacingStatName stat)
+    private void SetActualStatValues(PlayerStatName stat)
     {
-        string stringMod = "<color=" + InGameUIManager.medTurquoiseColor + "><b>";
+        string stringMod = "<color=" + InGameUIManager.MED_TURQUOISE_COLOR + "><b>";
         string endStringMod = "</color></b>";
 
         switch(stat){
-            case PlayerFacingStatName.STR:
+            case PlayerStatName.STR:
                 STRText.text = stringMod + stats.Strength() + endStringMod;
                 break;
-            case PlayerFacingStatName.DEX:
+            case PlayerStatName.DEX:
                 DEXText.text = stringMod + stats.Dexterity() + endStringMod;
                 break;
-            case PlayerFacingStatName.INT:
+            case PlayerStatName.INT:
                 INTText.text = stringMod + stats.Intelligence() + endStringMod;
                 break;
-            case PlayerFacingStatName.WIS:
+            case PlayerStatName.WIS:
                 WISText.text = stringMod + stats.Wisdom() + endStringMod;
                 break;
-            case PlayerFacingStatName.CON:
+            case PlayerStatName.CON:
                 CONText.text = stringMod + stats.Constitution() + endStringMod;
                 break;
-            case PlayerFacingStatName.CHA:
+            case PlayerStatName.CHA:
                 CHAText.text = stringMod + stats.Charisma() + endStringMod;
                 continueButton.interactable = true;
                 continueButton.Select();
@@ -108,28 +108,28 @@ public class StatRerollUI : MonoBehaviour
         // TODO: Flourish
     }
 
-    private IEnumerator RerollAnimationRoutine( PlayerFacingStatName stat, int counter )
+    private IEnumerator RerollAnimationRoutine( PlayerStatName stat, int counter )
     {
         while(counter > 0){
             yield return new WaitForSecondsRealtime(statAnimationNumberDuration);
             --counter;
             switch(stat){
-                case PlayerFacingStatName.STR:
+                case PlayerStatName.STR:
                     STRText.text = "" + RandomNumberInStatRange( upgradeManager.strMin, upgradeManager.strMax );
                     break;
-                case PlayerFacingStatName.DEX:
+                case PlayerStatName.DEX:
                     DEXText.text = "" + RandomNumberInStatRange( upgradeManager.dexMin, upgradeManager.dexMax );
                     break;
-                case PlayerFacingStatName.INT:
+                case PlayerStatName.INT:
                     INTText.text = "" + RandomNumberInStatRange( upgradeManager.intMin, upgradeManager.intMax );
                     break;
-                case PlayerFacingStatName.WIS:
+                case PlayerStatName.WIS:
                     WISText.text = "" + RandomNumberInStatRange( upgradeManager.wisMin, upgradeManager.wisMax );
                     break;
-                case PlayerFacingStatName.CON:
+                case PlayerStatName.CON:
                     CONText.text = "" + RandomNumberInStatRange( upgradeManager.conMin, upgradeManager.conMax );
                     break;
-                case PlayerFacingStatName.CHA:
+                case PlayerStatName.CHA:
                     CHAText.text = "" + RandomNumberInStatRange( upgradeManager.charismaMin, upgradeManager.charismaMax );
                     break;
             }

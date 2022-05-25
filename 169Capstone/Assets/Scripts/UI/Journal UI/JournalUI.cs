@@ -15,18 +15,30 @@ public class JournalUI : MonoBehaviour
 
         // TEMP
         if(!devPanel){
-            devPanel = FindObjectOfType<DevPanel>().buttonPanel;
+            devPanel = FindObjectOfType<DevPanel>()?.buttonPanel;
         }
-        devPanel.SetActive(!set);
+        devPanel?.SetActive(!set);
 
-        if(set){
-            InGameUIManager.instance.SetGameUIActive(false);
-        }
-        else{
-            InGameUIManager.instance.SetGameUIActive(true);
+        InGameUIManager.instance.SetGameUIActive(!set);
+
+        if(!set){
             if(GameManager.instance.currentSceneName == GameManager.MAIN_HUB_STRING_NAME){
                 InGameUIManager.instance.ToggleRunUI(false);
             }
         }
     }
+
+    public void CheckForNewJournalContent()
+    {
+        
+
+        // If new content:
+        EnableJournalAlert();
+    }
+
+    public void EnableJournalAlert()
+    {
+        AlertTextUI.instance.EnableOpenJournalAlert();
+        StartCoroutine(AlertTextUI.instance.RemoveAlertAfterSeconds());
+    }    
 }

@@ -163,8 +163,12 @@ public class GeneratedEquipment : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public float GetSecondaryLineValueFromStatType(StatType type)
+    public float GetLineValueFromStatType(StatType type, bool primaryLine = false)
     {
+        if(primaryLine){
+            return primaryLineValue;
+        }
+
         switch(type){
             case StatType.CritChance:
                 return criticalChance;
@@ -185,7 +189,7 @@ public class GeneratedEquipment : MonoBehaviour
             case StatType.Haste:
                 return haste;
         }
-        Debug.LogError("No value found for stat type: " + type + "; invalid secondary line type.");
+        Debug.LogError("No value found for stat type: " + type + "; invalid line type.");
         return -1;
     }
 

@@ -10,10 +10,23 @@ public class DevPanel : MonoBehaviour
     public Toggle moveSpeedToggle;
     public Toggle noDamageToggle;
     public Toggle skipStatRerollToggle;
+    public Toggle superJumpToggle;
+    public Toggle devPanelToggle;
 
     private static bool speedBoost = false;
     private static bool godMode = false;
     private static bool skipStatReroll = false;
+    private static bool superJump = false;
+    private static bool devPanelOpen = false;
+    
+    [Tooltip("SET TO FALSE FOR BUILDS")]
+    public bool setDevPanelActiveOnStart = true;
+
+    void Start()
+    {
+        devPanelToggle.isOn = setDevPanelActiveOnStart;
+        ToggleDevPanel();
+    }
 
     public void UpdateValuesThatPersistBetweenScenes()
     {
@@ -31,6 +44,56 @@ public class DevPanel : MonoBehaviour
             skipStatRerollToggle.isOn = true;
             SkipStatReroll();
         }
+
+        if(superJump){
+            superJumpToggle.isOn = true;   
+            EnableSuperJump();
+        }
+
+        if(devPanelOpen){
+            devPanelToggle.isOn = true;   
+            ToggleDevPanel();
+        }
+        else{
+            devPanelToggle.isOn = false;   
+            ToggleDevPanel();
+        }
+    }
+
+    // Toggle
+    public void ToggleDevPanel()
+    {
+        if(devPanelToggle.isOn){
+            buttonPanel.SetActive(true);
+            UIUtils.SetImageColorFromHex( devPanelToggle.GetComponent<Image>(), InGameUIManager.TURQUOISE_COLOR );
+            devPanelOpen = true;
+        }
+        else{
+            buttonPanel.SetActive(false);
+            UIUtils.SetImageColorFromHex( devPanelToggle.GetComponent<Image>(), "#FFFFFF" );
+            devPanelOpen = false;
+        }
+    }
+
+    // Toggle
+    public void EnableSuperJump()
+    {
+        if(Player.instance == null){
+            superJumpToggle.isOn = false;
+            superJump = false;
+            return;
+        }
+
+        if(superJumpToggle.isOn){
+            Player.instance.GetComponent<Movement>().jumpSpeed = 42;
+            UIUtils.SetImageColorFromHex( superJumpToggle.GetComponent<Image>(), InGameUIManager.TURQUOISE_COLOR );
+            superJump = true;
+        }
+        else{
+            Player.instance.GetComponent<Movement>().jumpSpeed = 30;
+            UIUtils.SetImageColorFromHex( superJumpToggle.GetComponent<Image>(), "#FFFFFF" );
+            superJump = false;
+        }
     }
 
     // Toggle
@@ -38,7 +101,7 @@ public class DevPanel : MonoBehaviour
     {
         if(skipStatRerollToggle.isOn){
             StatRerollUI.tempSkipStatRerollToggle = true;
-            UIUtils.SetImageColorFromHex( skipStatRerollToggle.GetComponent<Image>(), InGameUIManager.turquoiseColor );
+            UIUtils.SetImageColorFromHex( skipStatRerollToggle.GetComponent<Image>(), InGameUIManager.TURQUOISE_COLOR );
             skipStatReroll = true;
         }
         else{
@@ -59,7 +122,7 @@ public class DevPanel : MonoBehaviour
 
         if(moveSpeedToggle.isOn){
             Player.instance.stats.SetMoveSpeedBase(2f);
-            UIUtils.SetImageColorFromHex( moveSpeedToggle.GetComponent<Image>(), InGameUIManager.turquoiseColor );
+            UIUtils.SetImageColorFromHex( moveSpeedToggle.GetComponent<Image>(), InGameUIManager.TURQUOISE_COLOR );
             speedBoost = true;
         }
         else{
@@ -80,7 +143,7 @@ public class DevPanel : MonoBehaviour
 
         if(noDamageToggle.isOn){
             Player.instance.health.tempPlayerGodModeToggle = true;
-            UIUtils.SetImageColorFromHex( noDamageToggle.GetComponent<Image>(), InGameUIManager.turquoiseColor );
+            UIUtils.SetImageColorFromHex( noDamageToggle.GetComponent<Image>(), InGameUIManager.TURQUOISE_COLOR );
             godMode = true;
         }
         else{
@@ -161,5 +224,19 @@ public class DevPanel : MonoBehaviour
         }
         Player.instance.stats.SetCharisma(5);
         Debug.Log("set CHA to 5");
+    }
+
+    public void UnlockElevator()
+    {
+        if(GameManager.instance.InSceneWithRandomGeneration()){
+            FindObjectOfType<SceneTransitionDoor>().GetComponent<Collider>().enabled = true;
+        }
+    }
+
+    public void ToggleInteractabilityOnDeviceChange( bool set )
+    {
+        foreach( Selectable s in GetComponentsInChildren<Selectable>() ){
+            s.interactable = set;
+        }
     }
 }

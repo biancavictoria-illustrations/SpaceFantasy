@@ -77,20 +77,23 @@ public class EncounterRoomClose : MonoBehaviour
                 boi = boss.GetComponent<Beetle>();
                 boi.bossRoomScript = room;
 
+                EntityHealth bossHealth = boss.GetComponent<EntityHealth>();
+                room.AddEnemy(bossHealth);
+                bossHealth.OnDeath.AddListener(RoomOpen);
+
+                InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(true, bossHealth.enemyID);
+
                 AudioManager.Instance.queueMusicAfterFadeOut(AudioManager.MusicTrack.BossMusic);
             }
             else
             {
                 enemyGen.spawnEnemies();
-            }
 
-            foreach(EntityHealth e in room.GetEnemyList())
-            {
-                e.OnDeath.AddListener(RoomOpen);
-                if( isBossRoom && e.isBossEnemy ){
-                    InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(true, e.enemyID);
+                foreach(EntityHealth e in room.GetEnemyList())
+                {
+                    e.OnDeath.AddListener(RoomOpen);
+                    // Debug.Log("Enemy Added");
                 }
-                Debug.Log("Enemy Added");
             }
         }
     }

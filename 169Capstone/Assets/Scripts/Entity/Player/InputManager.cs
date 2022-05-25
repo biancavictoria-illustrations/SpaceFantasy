@@ -15,6 +15,7 @@ public class InputManager : MonoBehaviour
     [HideInInspector] public bool shopIsOpen = false;
     [HideInInspector] public bool compareItemIsOpen = false;
     [HideInInspector] public bool journalIsOpen = false;
+    [HideInInspector] public bool mapIsOpen = false;
 
     [HideInInspector] public bool isAttacking = false;
     [HideInInspector] public bool useAccessory = false;
@@ -31,6 +32,13 @@ public class InputManager : MonoBehaviour
     private Player player;
     private Vector2 mousePos;
 
+    public Vector2 moveDirection;   // For cursorLookDirection on controller
+
+    public static bool aimAtCursor;
+
+    // TEMP - REMOVE THIS FOR FINAL BUILD
+    public DevPanel devPanel;
+
     void Awake()
     {
         if( instance ){
@@ -39,8 +47,7 @@ public class InputManager : MonoBehaviour
         else{
             instance = this;
         }
-        latestInputIsController = false;
-        currentDevice = InputDevice.KeyboardMouse;
+        UpdateLatestInputDevice();
     }
 
     void Start()
@@ -57,6 +64,10 @@ public class InputManager : MonoBehaviour
             // Add STOPPING when you're no longer holding the button
             controls.FindAction("AttackPrimary").canceled += x => OnAttackPrimaryCanceled();
         }
+
+        if(!devPanel){
+            devPanel = FindObjectOfType<DevPanel>();
+        }
     }
 
     void Update()
@@ -65,10 +76,26 @@ public class InputManager : MonoBehaviour
             return;
         }
 
-        Vector2 playerPositionOnScreen = (Vector2)Camera.main.WorldToScreenPoint(player.transform.position); //Get Player's position on the screen
-        Vector2 cursorLookDirection2D = (mousePos - playerPositionOnScreen).normalized;                      //Get the vector from the player position to the cursor position 
+        Vector2 cursorLookDirection2D;
+        if(latestInputIsController || !aimAtCursor){
+            cursorLookDirection2D = moveDirection;
+        }
+        else{
+            Vector2 playerPositionOnScreen = (Vector2)Camera.main.WorldToScreenPoint(player.transform.position);    //Get Player's position on the screen
+            cursorLookDirection2D = (mousePos - playerPositionOnScreen).normalized;     //Get the vector from the player position to the cursor position 
+        }
         Vector3 lookDirectionRelativeToCamera = Camera.main.transform.right * cursorLookDirection2D.x + Camera.main.transform.up * cursorLookDirection2D.y; //Create the look vector in 3D space relative to the camera
-        cursorLookDirection = Quaternion.FromToRotation(-Camera.main.transform.forward, Vector3.up) * lookDirectionRelativeToCamera;                        //Rotate the look vector to be in terms of world space
+        cursorLookDirection = Quaternion.FromToRotation(-Camera.main.transform.forward, Vector3.up) * lookDirectionRelativeToCamera;    //Rotate the look vector to be in terms of world space
+    }
+
+    public void SetLookDirectionHorizontal( float value)
+    {
+        moveDirection.x = value;
+    }
+
+    public void SetLookDirectionVertical( float value)
+    {
+        moveDirection.y = value;
     }
 
     public void UpdateLatestInputDevice()
@@ -76,21 +103,20 @@ public class InputManager : MonoBehaviour
         if((int)UserDeviceManager.currentControlDevice == 0){
             latestInputIsController = false;
             currentDevice = InputDevice.KeyboardMouse;
-            Debug.Log("input device is now keyboard/mouse");
         }
         else{
             latestInputIsController = true;
-
-            // InputDevice.
-            // UserDeviceManager.currentControlDevice
-
-            Debug.Log("input device is now a controller");
         }
+
+        if(!devPanel){
+            devPanel = FindObjectOfType<DevPanel>();
+        }
+        devPanel?.ToggleInteractabilityOnDeviceChange( !latestInputIsController );   // TEMP
     }
 
     public bool CanAcceptGameplayInput()
     {
-        if(isInDialogue || PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || journalIsOpen || isInMainMenu || GameManager.instance.statRerollUIOpen || GameManager.instance.inElevatorAnimation){
+        if(isInDialogue || PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || mapIsOpen || journalIsOpen || isInMainMenu || GameManager.instance.statRerollUIOpen || GameManager.instance.inElevatorAnimation){
             return false;
         }
         return true;
@@ -103,18 +129,12 @@ public class InputManager : MonoBehaviour
         }
         isAttacking = true;
 
-        // animator.SetBool("IsAttacking", true);
-        // Debug.Log(animator.GetLayerIndex("Slashing"));
-        // gameObject.GetComponent<Animator>().Rebind();
-        // animator.SetLayerWeight(1, 1);
+        // Debug.Log(moveDirection);
     }
 
     public void OnAttackPrimaryCanceled()
     {
         isAttacking = false;
-
-        // animator.SetBool("IsAttacking", false);
-        // animator.SetLayerWeight(1, 0);
     }
 
     public void OnInteract(InputValue input)
@@ -138,6 +158,7 @@ public class InputManager : MonoBehaviour
 
         // If you're in range of a door, walk through it
         else if(SceneTransitionDoor.ActiveDoor){
+            AlertTextUI.instance.DisableAlert();
             SceneTransitionDoor.ActiveDoor.ChangeScene();
         }
 
@@ -159,10 +180,28 @@ public class InputManager : MonoBehaviour
         RunGameTimer(set);
     }
 
-    // If you're in dialogue, click anywhere to progress
+    public void OnCancel(InputValue input)
+    {
+        // If we're using controller, allow B button to close menus
+        if(latestInputIsController && (PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || GameManager.instance.statRerollUIOpen || mapIsOpen || journalIsOpen)){
+            OnPause(input);
+        }
+    }
+    
+    public void OnSubmit(InputValue input)
+    {
+        ProgressDialogueOnInput(input);
+    }
+
     public void OnClick(InputValue input)
     {
-        if(isInDialogue && !PauseMenu.GameIsPaused && !DialogueManager.instance.dialogueUI.IsMidDialogueLineDisplay){
+        ProgressDialogueOnInput(input);        
+    }
+
+    private void ProgressDialogueOnInput(InputValue input)
+    {
+        // input.isPressed confirms this is only run on KEY DOWN, not both key down AND then also key up
+        if(isInDialogue && input.isPressed && !PauseMenu.GameIsPaused && !DialogueManager.instance.dialogueUI.IsMidDialogueLineDisplay){
             DialogueManager.instance.dialogueUI.MarkLineComplete();
         }
     }
@@ -186,8 +225,12 @@ public class InputManager : MonoBehaviour
             InGameUIManager.instance.gearSwapUI.CloseGearSwapUI();
             return;            
         }
-        else if(GameManager.instance.statRerollUIOpen){ // Should this one be here? if so probably also death UI. i'm thinking neither tho?
+        else if(GameManager.instance.statRerollUIOpen){ // Should this one be here?
             InGameUIManager.instance.statRerollUI.DisableStatRerollUI();
+            return;
+        }
+        else if(mapIsOpen){
+            OnToggleMinimap(input);
             return;
         }
         else if(journalIsOpen){
@@ -213,12 +256,12 @@ public class InputManager : MonoBehaviour
 
     public void OnToggleJournal(InputValue input)
     {
-        if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || inventoryIsOpen || isInMainMenu){
+        if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || inventoryIsOpen || mapIsOpen || isInMainMenu){
             return;
         }
 
-        InGameUIManager.instance.journalUI.ToggleJournalActive(!journalIsOpen);
         journalIsOpen = !journalIsOpen;
+        InGameUIManager.instance.journalUI.ToggleJournalActive(journalIsOpen);
 
         if(GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME){
             RunGameTimer(!journalIsOpen);
@@ -230,9 +273,26 @@ public class InputManager : MonoBehaviour
         }
     }
 
+    public void OnToggleMinimap(InputValue input)
+    {
+        if(!GameManager.instance.InSceneWithRandomGeneration() || isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || inventoryIsOpen || journalIsOpen){
+            return;
+        }
+
+        mapIsOpen = !mapIsOpen;
+        InGameUIManager.instance.ToggleExpandedMapOverlay(mapIsOpen);
+
+        RunGameTimer(!mapIsOpen);
+        InGameUIManager.instance.timerUI.SetTimerUIActive(!mapIsOpen);
+
+        if(AlertTextUI.instance.alertTextIsActive){
+            AlertTextUI.instance.ToggleAlertText(!mapIsOpen);
+        }
+    }
+
     public void OnToggleInventory(InputValue input)
     {
-        if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || journalIsOpen || GameManager.instance.currentSceneName == GameManager.MAIN_HUB_STRING_NAME || isInMainMenu){
+        if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || mapIsOpen || journalIsOpen || GameManager.instance.currentSceneName == GameManager.MAIN_HUB_STRING_NAME || isInMainMenu){
             return;
         }
         
@@ -262,6 +322,9 @@ public class InputManager : MonoBehaviour
         }
 
         useAccessory = true;
+
+        // TEMP - FOR TESTING (call this where the cooldown starts for the item using a variable of the cooldown duration instead of this)
+        InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Accessory, 4);
     }
 
     public void OnAccessoryAbilityCanceled()
@@ -277,6 +340,9 @@ public class InputManager : MonoBehaviour
         }
 
         useHead = true;
+
+        // TEMP - FOR TESTING (call this where the cooldown starts for the item using a variable of the cooldown duration instead of this)
+        InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Helmet, 8);
     }
 
     public void OnBootsAbility()
@@ -287,6 +353,9 @@ public class InputManager : MonoBehaviour
         }
 
         useLegs = true;
+
+        // TEMP - FOR TESTING (call this where the cooldown starts for the item using a variable of the cooldown duration instead of this)
+        InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Legs, 15);
     }
 
     public void OnPoint(InputValue input)

@@ -31,12 +31,44 @@ public class ItemPanelGearShop : ItemPanelShopUI
         EquipmentBaseData baseData = item.equipmentBaseData;
         rarity = item.rarity;
 
-        SetBaseShopItemValues(baseData.BaseCost(), baseData.ItemName(), baseData.ShortDescription());
+        string itemNameWithColor = "<color=" + UIUtils.GetColorFromRarity(rarity) + ">" + baseData.ItemName() + "</color>";
+
+        SetBaseShopItemValues(baseData.BaseCost(), itemNameWithColor, baseData.ShortDescription());
 
         itemIcon.sprite = baseData.Icon();
         itemSlot = baseData.ItemSlot();
-        itemSlotRarity.text = item.rarity.ToString() + "/" + itemSlot.ToString();
-        enhancementCount.text = "Enhancement Count - " + item.enhancementCount;
+
+        string statString = "";
+        if(_item.equipmentBaseData.PrimaryStat() != PlayerStatName.size){
+            statString = _item.equipmentBaseData.PrimaryStat().ToString();
+        }
+        itemSlotRarity.text = item.rarity.ToString() + " " + statString + " " + itemSlot.ToString();
+
+        enhancementCount.text = "<color=" + InGameUIManager.CYAN_COLOR + ">Item Rating: " + GetItemRating(_item) + "</color>";
+    }
+
+    private int GetItemRating(GeneratedEquipment _item)
+    {
+        int itemRating = 0;
+
+        // For each secondary line that this item has, add 1 to the rating
+        for(int i = 0; i < (int)StatType.STRDamage; i++){
+            if( _item.GetLineValueFromStatType((StatType)i) > 0f ){
+                itemRating++;
+            }
+        }
+
+        // At this point if > 0, there ARE secondary lines, which means add # of enhancements as well
+        if(itemRating > 0){
+            itemRating += _item.enhancementCount;
+        }
+
+        // If NOT a Common Weapon, this item has a primary line -> add 1 for that
+        if(_item.primaryLineValue > 0f){
+            itemRating++;
+        }
+
+        return itemRating;
     }
 
     public void OnItemClicked()
@@ -54,7 +86,7 @@ public class ItemPanelGearShop : ItemPanelShopUI
         // Generate the actual item object in the scene (from the item data)
         item.EquipGeneratedItem();
 
-        descriptionText.text = "<b><color=" + InGameUIManager.magentaColor + ">SOLD";
+        descriptionText.text = "<b><color=" + InGameUIManager.MAGENTA_COLOR + ">SOLD";
         itemCardButton.interactable = false;
         itemIsAvailable = false;
         ToggleElectrumIconActive(false);
