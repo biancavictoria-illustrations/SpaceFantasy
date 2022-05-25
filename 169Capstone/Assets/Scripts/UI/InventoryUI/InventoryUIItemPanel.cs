@@ -75,6 +75,11 @@ public class InventoryUIItemPanel : MonoBehaviour
 
         EquipmentBaseData baseData = itemData.equipmentBaseData;
 
+        if(itemSlot != _itemData.equipmentBaseData.ItemSlot()){
+            Debug.Log("Panel item slot != equipment data slot! Setting it now (necessary if new item panel in compare UI)");
+            itemSlot = _itemData.equipmentBaseData.ItemSlot();
+        }
+
         rarity = itemData.rarity;
 
         itemName.text = "<color=" + UIUtils.GetColorFromRarity(rarity) + ">" + baseData.ItemName() + "</color>";
@@ -216,7 +221,7 @@ public class InventoryUIItemPanel : MonoBehaviour
             return InGameUIManager.SLIME_GREEN_COLOR;
         }
 
-        float compareItemValue = 0f;
+        float compareItemValue;
 
         // If this is the NEW item, compare to currently equipped
         if( itemPanelType == ItemPanelType.NewItemToCompare ){
