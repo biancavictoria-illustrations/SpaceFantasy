@@ -9,21 +9,22 @@ public class GearSwapUI : MonoBehaviour
     public Button replaceItemButton;
     public Button keepCurrentItemButton;
 
-    private GeneratedEquipment newItem;
+    public static GeneratedEquipment newItem {get; private set;}
     [SerializeField] public InventoryUIItemPanel newItemPanel;
 
     public void OnGearSwapUIOpen(GeneratedEquipment item)
     {
-        gearSwapInventoryUI.SetInventoryItemValues();   // Only set item values, no stat values
-
+        // Deal with new item stuff first because the inventory needs this stuff to be set to access it (for comparison values)
         newItem = item;
-        newItemPanel.SetItemPanelValues(item);
+        newItemPanel.SetItemPanelValues(item, InventoryUIItemPanel.ItemPanelType.NewItemToCompare);
         newItemPanel.SetExpandedDescription(true);
+        
+        gearSwapInventoryUI.SetInventoryItemValues(item.equipmentBaseData.ItemSlot());   // Only set item values, no stat values
         
         if(gearSwapInventoryUI.itemPanels.Count == 0){
             Debug.LogError("No item panels found in gear swap inventory UI!");
         }
-        gearSwapInventoryUI.OnInventoryOpen();
+        gearSwapInventoryUI.SelectTopPanel();
 
         // If you have an item equipped in that slot, expand that one on open
         if(PlayerInventory.instance.gear[item.equipmentBaseData.ItemSlot()] != null){

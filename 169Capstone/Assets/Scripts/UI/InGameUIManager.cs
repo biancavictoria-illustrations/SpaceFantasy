@@ -18,6 +18,8 @@ public class InGameUIManager : MonoBehaviour
         public const string STR_GOLD_COLOR = "#E49200";
         public const string DEX_BLUE_COLOR = "#20ADE4";
         public const string WIS_PURPLE_COLOR = "#C71FEE";
+        public const string LIGHT_GRAY_COLOR = "#93A3A4";
+        public const string DARK_GRAY_COLOR = "#5A6A6B";
     #endregion
 
     [SerializeField] private GameObject inGameUIPanel;

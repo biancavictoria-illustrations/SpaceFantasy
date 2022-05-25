@@ -182,11 +182,8 @@ public class InputManager : MonoBehaviour
 
     public void OnCancel(InputValue input)
     {
-        // if(isInMainMenu){
-        //     return;
-        // }
-
-        if(PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || GameManager.instance.statRerollUIOpen || mapIsOpen || journalIsOpen){
+        // If we're using controller, allow B button to close menus
+        if(latestInputIsController && (PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || GameManager.instance.statRerollUIOpen || mapIsOpen || journalIsOpen)){
             OnPause(input);
         }
     }

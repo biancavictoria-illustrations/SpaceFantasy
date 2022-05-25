@@ -111,7 +111,7 @@ public class PlayerInventory : MonoBehaviour
 
         // Secondary line
         for(int i = 0; i < EntityStats.numberOfSecondaryLineOptions; i++){
-            float bonusValue = itemData.GetSecondaryLineValueFromStatType((StatType)i);
+            float bonusValue = itemData.GetLineValueFromStatType((StatType)i);
             if(bonusValue != 0){
                 Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, (StatType)i, EntityStats.BonusType.flat, bonusValue );
                 CheckForHealthBarUpdate((StatType)i);
@@ -143,7 +143,7 @@ public class PlayerInventory : MonoBehaviour
 
         // Secondary line
         for(int i = 0; i < EntityStats.numberOfSecondaryLineOptions; i++){
-            float bonusValue = itemData.GetSecondaryLineValueFromStatType((StatType)i);
+            float bonusValue = itemData.GetLineValueFromStatType((StatType)i);
             if(bonusValue != 0){
                 Player.instance.stats.SetBonusForStat( itemData.equipmentBaseData, (StatType)i, EntityStats.BonusType.flat, 0 );
                 CheckForHealthBarUpdate((StatType)i);

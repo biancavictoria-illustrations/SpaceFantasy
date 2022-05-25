@@ -36,6 +36,12 @@ public class InventoryUIItemPanel : MonoBehaviour
         enumSize
     }
 
+    public enum ItemPanelType{
+        EquippedGeneric,
+        CurrentlyEquippedCompareItem,
+        NewItemToCompare
+    }
+
     public const string STAT_VARIABLE_PATTERN = @"({(STR|DEX|INT|WIS|CHA|CON|SD|DD|WD|ID|ATS|MOS|DEF|DOC|CRC|CRD|TDR|HAS)(:\d+)?(,(\*|\+|-)(\d?.)?\d+(,(\*|\+|-)(\d?.)?\d+)?)?})";
 
     [SerializeField] private InventoryItemSlot itemSlot;
@@ -59,11 +65,20 @@ public class InventoryUIItemPanel : MonoBehaviour
 
     [SerializeField] private Toggle toggle;
 
-    public void SetItemPanelValues(GeneratedEquipment _itemData)
+    private ItemPanelType itemPanelType;
+
+    public void SetItemPanelValues(GeneratedEquipment _itemData, ItemPanelType panelType)
     {
+        itemPanelType = panelType;
+
         itemData = _itemData;
 
         EquipmentBaseData baseData = itemData.equipmentBaseData;
+
+        if(itemSlot != _itemData.equipmentBaseData.ItemSlot()){
+            Debug.Log("Panel item slot != equipment data slot! Setting it now (necessary if new item panel in compare UI)");
+            itemSlot = _itemData.equipmentBaseData.ItemSlot();
+        }
 
         rarity = itemData.rarity;
 
@@ -161,13 +176,13 @@ public class InventoryUIItemPanel : MonoBehaviour
         StatType primaryLine = itemData.equipmentBaseData.PrimaryItemLine();
         float primaryLineValue = itemData.primaryLineValue;
         if(primaryLineValue > 0){
-            s += SetStringForStatValue(primaryLine, primaryLineValue) + "\n";
+            s += SetStringForStatValue(primaryLine, primaryLineValue, primaryLine:true) + "\n";
         }
 
         // Add secondary lines
         s += "<size=70%>";
         for(int i = 0; i < EntityStats.numberOfSecondaryLineOptions; i++){
-            float bonusValue = itemData.GetSecondaryLineValueFromStatType((StatType)i);
+            float bonusValue = itemData.GetLineValueFromStatType((StatType)i);
 
             bool percent = true;
             if((StatType)i == StatType.HitPoints){
@@ -182,9 +197,9 @@ public class InventoryUIItemPanel : MonoBehaviour
         return s;
     }
 
-    private string SetStringForStatValue(StatType type, float bonusValue, bool percent=true)
+    private string SetStringForStatValue(StatType type, float bonusValue, bool percent=true, bool primaryLine = false)
     {
-        string returnString = "\n<b>" + itemData.GetPlayerFacingStatName(type) + ":</b> " + GetColorModForStatValue(bonusValue, type) + "+";
+        string returnString = "\n<b>" + itemData.GetPlayerFacingStatName(type) + ":</b> <color=" + GetColorModForStatValue(bonusValue, type, primaryLine) + ">+";
 
         // If %
         if(percent){
@@ -198,29 +213,44 @@ public class InventoryUIItemPanel : MonoBehaviour
         return returnString + "</color>";
     }
 
-    // Returns green if increase in value, red if decrease
-    private string GetColorModForStatValue(float newBonusValue, StatType type)
+    // Returns green if increase in value, magenta if decrease, gray if same
+    private string GetColorModForStatValue(float thisBonusValue, StatType type, bool primaryLine = false)
     {
-        string colorMod = "<color=";
+        // If nothing to compare to, return green
+        if(itemPanelType == ItemPanelType.EquippedGeneric){
+            return InGameUIManager.SLIME_GREEN_COLOR;
+        }
 
-        // If you currently have something in that slot, compare new value to that value
-        if(PlayerInventory.instance.ItemSlotIsFull(itemSlot)){
-            GeneratedEquipment currentlyEquippedItem = PlayerInventory.instance.gear[itemSlot].data;
-            float? currentValue = Player.instance.stats.GetBonusForStat( currentlyEquippedItem, type, EntityStats.BonusType.flat);
+        float compareItemValue;
 
-            // If it gives a bonus for that stat and that bonus is higher than the new item's bonus
-            if(currentValue != null && newBonusValue < currentValue){
-                colorMod += InGameUIManager.MAGENTA_COLOR;
+        // If this is the NEW item, compare to currently equipped
+        if( itemPanelType == ItemPanelType.NewItemToCompare ){
+            // If there's nothing equipped to compare to, return green
+            if(!PlayerInventory.instance.ItemSlotIsFull(itemSlot)){
+                return InGameUIManager.SLIME_GREEN_COLOR;
             }
-            else{
-                colorMod += InGameUIManager.SLIME_GREEN_COLOR;
-            }
+            // Get the value from the currently equipped item
+            // GeneratedEquipment currentlyEquippedItem = PlayerInventory.instance.gear[itemSlot].data;
+            // float? currentValue = Player.instance.stats.GetBonusForStat( currentlyEquippedItem, type, EntityStats.BonusType.flat);
+            compareItemValue = PlayerInventory.instance.gear[itemSlot].data.GetLineValueFromStatType(type, primaryLine);
+        }
+        // If this is the CURRENT item, compare to the new item
+        else{
+            // GeneratedEquipment newItem = GearSwapUI.newItem;
+            compareItemValue = GearSwapUI.newItem.GetLineValueFromStatType(type, primaryLine);
+        }
+
+        // If it gives a bonus for that stat and that bonus is higher than the new item's bonus
+        // if checking through GetBonusForStat, make sure to check compareItemValue != null && 
+        if(thisBonusValue < compareItemValue){
+            return InGameUIManager.MAGENTA_COLOR;
+        }
+        else if(thisBonusValue == compareItemValue){
+            return InGameUIManager.LIGHT_GRAY_COLOR;
         }
         else{
-            colorMod += InGameUIManager.SLIME_GREEN_COLOR;
+            return InGameUIManager.SLIME_GREEN_COLOR;
         }
-
-        return colorMod + ">";
     }
 
     private string GetStatVariableValue(string matchString)

@@ -53,7 +53,7 @@ public class ItemPanelGearShop : ItemPanelShopUI
 
         // For each secondary line that this item has, add 1 to the rating
         for(int i = 0; i < (int)StatType.STRDamage; i++){
-            if( _item.GetSecondaryLineValueFromStatType((StatType)i) > 0f ){
+            if( _item.GetLineValueFromStatType((StatType)i) > 0f ){
                 itemRating++;
             }
         }
