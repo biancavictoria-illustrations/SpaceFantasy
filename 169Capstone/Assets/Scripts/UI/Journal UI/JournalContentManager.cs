@@ -62,7 +62,7 @@ public class JournalContentManager : MonoBehaviour
             // If any have not yet been set active, set flag to true so that we can enable the UI alert after
             flag = true;
 
-            // TODO: confirm this is working for ITEM type triggers... those are handled slightly differently so i'm not sure
+            // TODO: need to unlock for ITEM type triggers... the update function in StoryManager is never called on those so we need to set that up elsewhere
 
             // TODO: does the journal content display stuff need to be alerted? or does it check every time it's opened...?
 

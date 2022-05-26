@@ -25,7 +25,9 @@ tags:
 
 // === Enemy Killed ===
 
-<<if $headNode is "EnemyKilledTimeLich">>
+<<if $headNode is "EnemyKilledBeetleBoss">>
+    [[StellanEnemyKilledBeetleBoss]]
+<<elseif $headNode is "EnemyKilledTimeLich">>
     [[StellanEnemyKilledTimeLich]]
 
 // === Killed By ===
@@ -34,6 +36,8 @@ tags:
     [[StellanKilledByTimeLich]]
 <<elseif $headNode is "KilledBySlime">>
     [[StellanKilledBySlime]]
+<<elseif $headNode is "KilledByBeetleBoss">>
+    [[StellanKilledByBeetleBoss]]
 
 // === Dialogue Completed ===
 
@@ -145,6 +149,26 @@ Remember when I mentioned you burning up with arcane energy?
 So it would have killed me.
 <<SetSpeaker Stellan>>
 We’re in a time loop, Atlan. You would have come back.
+===
+
+
+
+title: StellanEnemyKilledBeetleBoss
+tags:
+---
+<<if Visited("StellanEnemyKilledBeetleBoss")>>
+    [[StellanEnemyKilledBeetleBoss1]]
+<<else>>
+    <<SetSpeaker Stellan>>
+    test you killed the beetle boss dialogue
+<<endif>>
+===
+
+title: StellanEnemyKilledBeetleBoss1
+tags:
+---
+<<SetSpeaker Stellan>><<BranchComplete EnemyKilled EnemyKilledBeetleBoss>>
+test you killed the beetle boss again (twice)
 ===
 
 
@@ -263,6 +287,26 @@ No, Atlan, listen to me. He wasn’t the Captain. This wasn’t his tower, origi
 I don’t see how that changes much, personally.
 <<SetSpeaker Stellan>>
 … I have seen your desire for loot. For wealth. For fame. I tell you this to warn you, friend. Be cautious of ambition. It changes a person. Ambition alone has the power to twist a person into a monstrous shell of what he once was.
+===
+
+
+
+title: StellanKilledByBeetleBoss
+tags:
+---
+<<if Visited("StellanKilledByBeetleBoss")>>
+    [[StellanKilledByBeetleBoss1]]
+<<else>>
+    <<SetSpeaker Stellan>>
+    test killed BY beetle boss dialogue 1
+<<endif>>
+===
+
+title: StellanKilledByBeetleBoss1
+tags:
+---
+<<SetSpeaker Stellan>><<BranchComplete KilledBy KilledByBeetleBoss>>
+test killed by beetle boss dialogue 2
 ===
 
 
