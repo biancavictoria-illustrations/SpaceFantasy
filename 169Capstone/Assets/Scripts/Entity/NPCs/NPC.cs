@@ -17,6 +17,9 @@ public class NPC : MonoBehaviour
     private bool forceNextDialogueOnTriggerEnter = false;
     private float timeToWaitForAutoDialogue = 0f;
 
+    [Tooltip("False for Epilogue Stellan")]
+    [SerializeField] private bool displayNewDialogueAlert = true;
+
     void Start()
     {
         if(speakerData == null){
@@ -42,8 +45,8 @@ public class NPC : MonoBehaviour
     {
         // If the collision was caused by the player
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
-            // If you've only completed ONE run and this is Stellan, don't open his shop this time
-            if(speakerData.SpeakerID() == SpeakerID.Stellan && GameManager.instance.currentRunNumber == 2 && haveTalkedToThisRun){
+            // If you've only completed ONE run and this is Stellan, don't open his shop this time (or if final run)
+            if(speakerData.SpeakerID() == SpeakerID.Stellan && haveTalkedToThisRun && (GameManager.instance.currentRunNumber == 2 || GameManager.instance.epilogueTriggered)){
                 return;
             }
 
@@ -82,7 +85,7 @@ public class NPC : MonoBehaviour
         haveTalkedToThisRun = set;
 
         // Check if it exists cuz presumably time lich won't have one so we don't need to set it
-        if(newDialogueAlert && !forceNextDialogueOnTriggerEnter){
+        if(newDialogueAlert && !forceNextDialogueOnTriggerEnter && displayNewDialogueAlert){
             newDialogueAlert.SetActive(!set);
         }
     }

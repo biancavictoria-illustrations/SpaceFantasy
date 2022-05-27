@@ -18,10 +18,6 @@ public class SceneTransitionDoor : MonoBehaviour
         {
             FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(() => elevatorHelper.StartEnterAnimation());
         }
-
-        if(PermanentUpgradeManager.instance.GetSkillLevel(PermanentUpgradeType.TimeLichKillerThing) > 0 && GameManager.instance.currentSceneName == GameManager.LICH_ARENA_STRING_NAME){
-            goToSceneName = GameManager.EPILOGUE_SCENE_STRING_NAME;
-        }
     }
 
     public void ChangeScene()

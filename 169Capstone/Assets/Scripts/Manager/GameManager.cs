@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     public const string MAIN_HUB_STRING_NAME = "Main Hub";
     public const string GAME_LEVEL1_STRING_NAME = "GenerationSetup";
     public const string LICH_ARENA_STRING_NAME = "Lich Fight";
-    public const string EPILOGUE_SCENE_STRING_NAME = "Epilogue Scene";
+    public const string EPILOGUE_SCENE_STRING_NAME = "EpilogueScene";
 
     private const float hitStopDuration = 0.05f;
 
@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour
         PlayerInventory.instance.ClearRunInventory();
 
         // Set all NPC talked to variables to false and increment story beats
-        StoryManager.instance.OnRunEndUpdateStory();
+        StoryManager.instance.ResetAllNPCTalkedToValues();
         StoryManager.instance.CheckForNewStoryBeats();
         
         // Increment run # -> once in main hub, run # always = # of your NEXT run (not previous)
@@ -165,6 +165,7 @@ public class GameManager : MonoBehaviour
         }
         else if(currentSceneName == LICH_ARENA_STRING_NAME){
             // TODO: Play lich fight music
+            // TODO: Set mini map inactive
 
             fade.opaqueOnStart = true;
             fade.FadeIn(0.5f);
@@ -181,7 +182,10 @@ public class GameManager : MonoBehaviour
         else if(currentSceneName == EPILOGUE_SCENE_STRING_NAME){
             UnparentPlayerOnSceneLoad();
 
-            InGameUIManager.instance.ToggleRunUI(false);
+            StoryManager.instance.ResetAllNPCTalkedToValues();
+
+            // InGameUIManager.instance.ToggleRunUI(false);
+            // TODO: Set mini map inactive if it's active
 
             // TODO: Play end music?
 

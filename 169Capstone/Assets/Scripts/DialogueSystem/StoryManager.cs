@@ -204,16 +204,13 @@ public class StoryManager : MonoBehaviour
     }
 
     // Called by Game Manager when you end a run
-    public void OnRunEndUpdateStory()
+    public void ResetAllNPCTalkedToValues()
     {
-        // TODO: Increment story beat values (i think that's already happening in the CheckForNewStoryBeats function???)
-
-        // When you end a run, reset all talked to bools
         talkedToBryn = false;
         talkedToStellan = false;
         talkedToRhian = false;
         talkedToDoctor = false;
-        talkedToSorrel = false;
+        // talkedToSorrel = false;
         talkedToLich = false;
     }
 
