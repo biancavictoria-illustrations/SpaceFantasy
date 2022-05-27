@@ -732,6 +732,20 @@ public class FloorGenerator : MonoBehaviour
                 }
             }
 
+            Room spawnRoomScript = spawnRoom.GetComponentInChildren<Room>();
+            SpawnRoomForceFields spawnRoomClose = spawnRoom.GetComponentInChildren<SpawnRoomForceFields>();
+            for(int i = 0; i < spawnRoomScript.roomExits.Count; ++i)
+            {
+                Transform exit = spawnRoomScript.roomExits[i];
+                if(!exit.gameObject.activeSelf)
+                {
+                    GameObject forceField = Instantiate(forceFieldPrefab, exit.position, exit.rotation, exit.parent);
+                    spawnRoomClose.AddForceField(forceField);
+                    forceField.SetActive(false);
+                    Destroy(exit.gameObject);
+                }
+            }
+
             GameObject expandedMapCamera = Instantiate(expandedMapCameraPrefab, centerShop.transform.position, expandedMapCameraPrefab.transform.rotation);
             expandedMapCamera.transform.Translate( Vector3.forward * -500, Space.Self );
 
