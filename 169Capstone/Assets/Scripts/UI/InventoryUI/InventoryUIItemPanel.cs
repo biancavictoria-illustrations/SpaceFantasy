@@ -229,6 +229,7 @@ public class InventoryUIItemPanel : MonoBehaviour
         }
 
         float compareItemValue;
+        GeneratedEquipment compareItem;
 
         // If this is the NEW item, compare to currently equipped
         if( itemPanelType == ItemPanelType.NewItemToCompare ){
@@ -237,23 +238,36 @@ public class InventoryUIItemPanel : MonoBehaviour
                 return InGameUIManager.SLIME_GREEN_COLOR;
             }
             // Get the value from the currently equipped item
-            compareItemValue = PlayerInventory.instance.gear[itemSlot].data.GetLineValueFromStatType(type, primaryLine);
+            compareItem = PlayerInventory.instance.gear[itemSlot].data;
+            compareItemValue = compareItem.GetLineValueFromStatType(type, primaryLine);
         }
         // If this is the CURRENT item, compare to the new item
         else{
-            compareItemValue = GearSwapUI.newItem.GetLineValueFromStatType(type, primaryLine);
+            compareItem = GearSwapUI.newItem;
+            compareItemValue = compareItem.GetLineValueFromStatType(type, primaryLine);
         }
 
-        // If it gives a bonus for that stat and that bonus is higher than the new item's bonus
-        // if checking through GetBonusForStat, make sure to check compareItemValue != null && 
-        if(thisBonusValue < compareItemValue){
-            return InGameUIManager.MAGENTA_COLOR;
+        // Check for overlap with primary/secondary lines (non-weapons only)
+        // This way if something has 2 movement speed values, we factor in both when picking colors
+        if( itemSlot != InventoryItemSlot.Weapon ){
+            compareItemValue += GetPrimaryLineOverlapForNonWeapons( compareItem, type, primaryLine );
+            thisBonusValue += GetPrimaryLineOverlapForNonWeapons( itemData, type, primaryLine );
         }
-        else if(thisBonusValue == compareItemValue){
-            return InGameUIManager.LIGHT_GRAY_COLOR;
+
+        return GetColorCodeFromComparison(thisBonusValue, compareItemValue);
+    }
+
+    private float GetPrimaryLineOverlapForNonWeapons( GeneratedEquipment item, StatType type, bool primaryLine )
+    {
+        StatType primaryLineType = item.equipmentBaseData.PrimaryItemLine();
+
+        // If this is the primary line, check for secondary and add that
+        if(primaryLine){
+            return item.GetLineValueFromStatType( primaryLineType, false );
         }
+        // If this is the secondary version of the primary line, add the primary
         else{
-            return InGameUIManager.SLIME_GREEN_COLOR;
+            return item.GetLineValueFromStatType( primaryLineType, true );
         }
     }
 
@@ -322,18 +336,65 @@ public class InventoryUIItemPanel : MonoBehaviour
 
         totalValue = (totalValue * (percent * 0.01f)) * multiplier + flatAddition;
 
-        // Set the color of the text according to if it is pos or neg
-        string startColor = "";
-        string endColor = "</color>";
-        if(totalValue > 0){
-            startColor = "<color=" + InGameUIManager.SLIME_GREEN_COLOR + ">";
+        string startColor = "<color=";
+        if( itemPanelType == ItemPanelType.EquippedGeneric ){
+            startColor += InGameUIManager.SLIME_GREEN_COLOR + ">";
         }
+        // Only weapons scale with rarity
+        else if(itemSlot != InventoryItemSlot.Weapon){
+            // If it's the same item, make it neutral; otherwise, green
+            ItemID itemID = itemData.equipmentBaseData.ItemID();
+            startColor += GetColorCodeFromComparison(itemID) + ">";
+        }
+        // For weapons, set the color of the text according to comparison (if necessary) (otherwise, default to green)
         else{
-            startColor = "<color=" + InGameUIManager.MAGENTA_COLOR + ">";
+            ItemRarity compareRarity = ItemRarity.enumSize;
+            if( itemPanelType == ItemPanelType.NewItemToCompare ){
+                if(!PlayerInventory.instance.ItemSlotIsFull(itemSlot)){
+                    startColor += InGameUIManager.SLIME_GREEN_COLOR + ">";
+                }
+                else{
+                    compareRarity = PlayerInventory.instance.gear[itemSlot].data.rarity;
+                }
+            }
+            else{
+                compareRarity = GearSwapUI.newItem.rarity;
+            }
+
+            if(compareRarity != ItemRarity.enumSize){
+                startColor += GetColorCodeFromComparison((int)rarity, (int)compareRarity) + ">";
+            }
+        }
+        return startColor + Mathf.Abs(totalValue) + "</color>";
+    }
+
+    #region Color Compare Helpers
+        private string GetColorCodeFromComparison( float thisValue, float otherValue )
+        {
+            if( thisValue < otherValue){
+                return InGameUIManager.MAGENTA_COLOR;
+            }
+            else if( thisValue == otherValue ){
+                return InGameUIManager.TURQUOISE_COLOR;
+            }
+            else{
+                return InGameUIManager.SLIME_GREEN_COLOR;
+            }
         }
 
-        return startColor + Mathf.Abs(totalValue) + endColor;
-    }
+        private string GetColorCodeFromComparison( ItemID thisID)
+        {
+            if( itemPanelType == ItemPanelType.CurrentlyEquippedCompareItem && thisID == GearSwapUI.newItem.equipmentBaseData.ItemID() ){
+                return InGameUIManager.TURQUOISE_COLOR;
+            }
+            else if( itemPanelType == ItemPanelType.NewItemToCompare && PlayerInventory.instance.ItemSlotIsFull(itemSlot) && thisID == PlayerInventory.instance.gear[itemSlot].data.equipmentBaseData.ItemID() ){
+                return InGameUIManager.TURQUOISE_COLOR;
+            }
+            else{
+                return InGameUIManager.SLIME_GREEN_COLOR;
+            }
+        }
+    #endregion
 
     private float GetNumberFromMatchStringGivenIndices(int startingIndex, int commaIndex, string matchString)
     {
