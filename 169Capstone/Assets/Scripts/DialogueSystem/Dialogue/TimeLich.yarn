@@ -1,6 +1,10 @@
 ﻿title: TimeLichStart
 tags:
 ---
+<<if HasDeusExMachina() and not Visited("TimeLichHasDeusExMachina")>>
+    [[TimeLichHasDeusExMachina]]
+<<endif>>
+
 <<set $visitedDefault to Visited("TimeLichDefaultDialogue")>>
 <<set $visitedDefault1 to Visited("TimeLichDefaultDialogue1")>>
 <<set $visitedDefault2 to Visited("TimeLichDefaultDialogue2")>>
@@ -315,6 +319,17 @@ tags:
 You’ll not be a quitter if you submit. Indeed, you would be wise to accept the fate time has written for you.
 <<SetSpeaker Player>>
 I’m not feeling particularly wise today.
+===
+
+
+
+title: TimeLichHasDeusExMachina
+tags:
+---
+<<SetSpeaker TimeLich>>
+TODO
+<<SetSpeaker Player>>
+TODO
 ===
 
 

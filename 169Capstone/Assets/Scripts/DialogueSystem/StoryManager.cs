@@ -160,7 +160,7 @@ public class StoryManager : MonoBehaviour
     private void LoadAllStoryBeats()
     {
         // Load in the StoryBeats (only of type Killed and Conversation) from the StoryBeats folder in Resources
-        Object[] storyBeatList = Resources.LoadAll("SpecificStoryBeats", typeof(StoryBeat));
+        Object[] storyBeatList = Resources.LoadAll("StoryBeats/SpecificStoryBeats", typeof(StoryBeat));
         foreach(Object s in storyBeatList){
             StoryBeat beat = (StoryBeat)s;
             
@@ -175,7 +175,7 @@ public class StoryManager : MonoBehaviour
         }
 
         // Load in the ItemDialogueTriggers from the ItemTriggers folder in Resources
-        Object[] itemDialogueList = Resources.LoadAll("ItemStoryBeats", typeof(StoryBeatItem));
+        Object[] itemDialogueList = Resources.LoadAll("StoryBeats/ItemStoryBeats", typeof(StoryBeatItem));
         foreach(Object i in itemDialogueList){
             StoryBeatItem beat = (StoryBeatItem)i;
 
@@ -189,7 +189,7 @@ public class StoryManager : MonoBehaviour
         }
 
         // Load in the generic story beats from the GenericStoryBeats folders in Resources
-        Object[] genericDialogueList = Resources.LoadAll("GenericStoryBeats", typeof (StoryBeat));
+        Object[] genericDialogueList = Resources.LoadAll("StoryBeats/GenericStoryBeats", typeof (StoryBeat));
         foreach(Object g in genericDialogueList){
             StoryBeat beat = (StoryBeat)g;
 

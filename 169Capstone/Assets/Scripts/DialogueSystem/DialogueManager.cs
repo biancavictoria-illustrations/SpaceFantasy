@@ -115,6 +115,14 @@ public class DialogueManager : MonoBehaviour
             }
         });
 
+        dialogueRunner.AddFunction("EpilogueTriggered", 0, delegate (Yarn.Value[] parameters){
+            return GameManager.instance.epilogueTriggered;
+        });
+
+        dialogueRunner.AddFunction("HasDeusExMachina", 0, delegate (Yarn.Value[] parameters){
+            return PermanentUpgradeManager.instance.GetSkillLevel(PermanentUpgradeType.TimeLichKillerThing) > 0;
+        });
+
         dialogueRunner.AddFunction("HasKilledTimeLich", 0, delegate (Yarn.Value[] parameters){
             return GameManager.instance.hasKilledTimeLich;
         });
