@@ -230,7 +230,7 @@ public class InGameUIManager : MonoBehaviour
                 AlertTextUI.instance.DisableAlert();
             }
             else{
-                AlertTextUI.instance.EnableItemPickupAlert();
+                AlertTextUI.instance.EnableItemExamineAlert();
             }
         }
 

@@ -11,7 +11,6 @@ public class SpawnRoomForceFields : MonoBehaviour
 
     // TODO: Activate force fields on generation complete
 
-    // TODO: Call this when you interacted with any of the objects in the interactableObjectsToOpenRoom list
     public void RoomOpenOnObjectInteracted()
     {
         foreach(GameObject ff in forceFields)

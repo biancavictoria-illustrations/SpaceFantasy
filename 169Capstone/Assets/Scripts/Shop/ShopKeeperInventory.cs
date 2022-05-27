@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-// Likely temp?
 public enum RarityAssignmentTier{
     X,
     X_1
