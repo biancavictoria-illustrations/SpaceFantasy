@@ -21,6 +21,8 @@ public class PlayerInventory : MonoBehaviour
 
     [HideInInspector] public static bool hasPickedSomethingUpThisRun = false;
 
+    public static bool hasCaptainsLog = true;
+
     void Awake()
     {
         if( instance ){
@@ -180,7 +182,7 @@ public class PlayerInventory : MonoBehaviour
 
         // Set value to null in the dictionary and clear the UI
         ClearItemSlot(slot);
-        AlertTextUI.instance.EnableItemPickupAlert();        
+        AlertTextUI.instance.EnableItemExamineAlert();        
     }
 
     private void RemoveEquippedWeaponModel()

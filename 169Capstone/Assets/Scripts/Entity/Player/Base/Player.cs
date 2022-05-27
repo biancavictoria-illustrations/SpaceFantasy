@@ -28,7 +28,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         // Commenting this out because currently the Player is spawned after generation is already complete, causing StartOnGenerationCOmplete to not be run
@@ -63,6 +62,12 @@ public class Player : MonoBehaviour
                 StartAutoDialogueFromPlayer();
                 GameManager.instance.inElevatorAnimation = false;
             });
+
+            // If first run, auto-equip sword and note we don't have the Captain's Log yet
+            if(GameManager.instance.currentRunNumber == 1){
+                FindObjectOfType<StartWeaponSpawner>().itemObject.GetComponent<GeneratedEquipment>().EquipGeneratedItem();
+                PlayerInventory.hasCaptainsLog = false;
+            }
         }
     }
 

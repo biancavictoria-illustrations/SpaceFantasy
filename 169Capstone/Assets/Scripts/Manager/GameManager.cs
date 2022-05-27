@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
     // Set to true (permanently) once you have killed the Time Lich at least once
     // (Makes a new special item pop up in Stellan's shop)
     [HideInInspector] public bool hasKilledTimeLich;
+    [HideInInspector] public bool epilogueTriggered = false;
 
     private int saveSlotNum;
 
@@ -189,10 +190,11 @@ public class GameManager : MonoBehaviour
 
             inElevatorAnimation = true;
             FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
+                Player.instance.StartAutoDialogueFromPlayer();
                 inElevatorAnimation = false;
             });
 
-            SaveGame();     // ? maybe? idk
+            // SaveGame();     // ? maybe? idk -> if saving, prob have to save epilogue triggered?
         }
         else if(currentSceneName == TITLE_SCREEN_STRING_NAME){
             gameTimer.runTotalTimer = false;

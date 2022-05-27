@@ -260,6 +260,10 @@ public class EntityHealth : MonoBehaviour
 
                 if(enemyID == EnemyID.TimeLich){
                     GameManager.instance.hasKilledTimeLich = true;
+
+                    if( PermanentUpgradeManager.instance.GetSkillLevel(PermanentUpgradeType.TimeLichKillerThing) > 0 ){
+                        GameManager.instance.epilogueTriggered = true;
+                    }
                 }
             }
 

@@ -2,10 +2,13 @@
 tags:
 ---
 <<set $runNum to GetCurrentRunNum()>>
-<<set $stellanCommTriggered to StellanCommTriggered()>>
+// <<set $stellanCommTriggered to StellanCommTriggered()>>
+// <<set $epilogueTriggered to EpilogueTriggered()>>
 
-<<if $stellanCommTriggered>>
+<<if StellanCommTriggered()>>
     [[PlayerStellanCommTriggered]]
+<<elseif EpilogueTriggered()>>
+    [[PlayerEpilogueIntro]]
 <<elseif $runNum is 1 and not Visited("PlayerFirstRunIntro")>>
     [[PlayerFirstRunIntro]]
 <<elseif $runNum is 2 and not Visited("PlayerSecondRunIntro")>>
@@ -92,4 +95,15 @@ tags:
     <<SetSpeaker Stellan comm>>
     Go on, then. Up the elevator to another pointless death.
 <<endif>>
+===
+
+
+
+title: PlayerEpilogueIntro
+tags:
+---
+<<SetSpeaker Player>>
+Stellan, we're free! I did it, he's gone!
+...
+... Stellan?
 ===
