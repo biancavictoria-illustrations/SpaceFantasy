@@ -5,10 +5,10 @@ using UnityEngine;
 public class JournalContentManager : MonoBehaviour
 {
     public Dictionary<JournalContentID, JournalContent> contentDatabase {get; private set;}
-
     public Dictionary<JournalContentID, bool> journalUnlockStatusDatabase {get; private set;}
 
-    // Start is called before the first frame update
+    [SerializeField] private Sprite journalLockedSprite;
+
     void Awake()
     {
         journalUnlockStatusDatabase = new Dictionary<JournalContentID, bool>();
@@ -47,6 +47,11 @@ public class JournalContentManager : MonoBehaviour
         }
     }
 
+    public Sprite JournalLockedSprite()
+    {
+        return journalLockedSprite;
+    }
+    
     public void UnlockJournalEntry(JournalContentID[] contentIDs)
     {
         bool flag = false;

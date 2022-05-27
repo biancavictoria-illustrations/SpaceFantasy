@@ -15,7 +15,7 @@ public class JournalContentDisplay : MonoBehaviour
     }
 
     public JournalSidebarTabGroup tabGroup;
-    [SerializeField] private JournalContentManager jcm;
+    private JournalContentManager jcm;
 
     [SerializeField] private ContentType contentType;
     [HideInInspector] public JournalContentID activePageID;
@@ -24,6 +24,9 @@ public class JournalContentDisplay : MonoBehaviour
     private const string RESEARCH_PREFIX = "<b>RESEARCH NOTES:</b>\n";
 
     #region UI Elements
+        [SerializeField] private GameObject mainContentPanel;
+        [SerializeField] private GameObject lockedPanel;
+
         [Header("Top Header Panel")]
         [SerializeField] private TMP_Text contentSectionTitle;
         [SerializeField] private TMP_Text contentSectionSubTitleLeft;
@@ -42,16 +45,16 @@ public class JournalContentDisplay : MonoBehaviour
         [SerializeField] private Image contentImage;
 
         [Header("Stat Panel Options")]
-        [SerializeField] private GameObject coreStatPanel;
         [SerializeField] private GameObject secondaryStatPanel;
 
         [Header("Location Panel Options")]
-        [SerializeField] private GameObject shipLocationPanel;
         [SerializeField] private GameObject galaxyPanel;
     #endregion
     
     void Start()
     {
+        jcm = GameManager.instance.journalContentManager;
+
         switch(contentType){
             case ContentType.Crew:
                 activePageID = JournalContentID.Stellan;
@@ -130,7 +133,7 @@ public class JournalContentDisplay : MonoBehaviour
         {
             bool isSecondaryStatsEntry = content.InternalID() == JournalContentID.SecondaryStats;
             secondaryStatPanel.SetActive(isSecondaryStatsEntry);
-            coreStatPanel.SetActive(!isSecondaryStatsEntry);
+            mainContentPanel.SetActive(!isSecondaryStatsEntry);
 
             if(isSecondaryStatsEntry){
                 // panel is made all in the editor, nothing populates at runtime
@@ -176,7 +179,7 @@ public class JournalContentDisplay : MonoBehaviour
             if(galaxyPanel){
                 bool isGalaxyPanel = content.InternalID() == JournalContentID.Galaxy;
                 galaxyPanel.SetActive(isGalaxyPanel);
-                shipLocationPanel.SetActive(!isGalaxyPanel);
+                mainContentPanel.SetActive(!isGalaxyPanel);
 
                 if(isGalaxyPanel){
                     // panel is made all in the editor, nothing populates at runtime
@@ -197,9 +200,24 @@ public class JournalContentDisplay : MonoBehaviour
         }
     #endregion
 
-    public void SetPageID(JournalContentID id)
+    public void SetPageID(JournalContentID id, bool isLocked)
     {
         activePageID = id;
-        ShowCurrentContentPage();
+
+        lockedPanel.SetActive(isLocked);
+
+        if(!isLocked){     // If it's unlocked, activate the main content panel and find the right data to display
+            mainContentPanel.SetActive(true);
+            ShowCurrentContentPage();
+        }
+        else{   // If it's locked, set all the content panel options inactive
+            mainContentPanel.SetActive(false);
+            if(secondaryStatPanel){
+                secondaryStatPanel.SetActive(false);
+            }
+            if(galaxyPanel){
+                galaxyPanel.SetActive(false);
+            }
+        }
     }
 }
