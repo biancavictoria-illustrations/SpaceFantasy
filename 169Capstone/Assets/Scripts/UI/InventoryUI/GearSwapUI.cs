@@ -75,6 +75,10 @@ public class GearSwapUI : MonoBehaviour
             AlertTextUI.instance.EnableOpenInventoryAlert();
             StartCoroutine(AlertTextUI.instance.RemoveAlertAfterSeconds());
         }
+
+        // If this is a spawn room weapon, drop the force fields
+        if( SpawnRoomForceFieldUnlockItem.activeForceFieldUnlockItem )
+            SpawnRoomForceFieldUnlockItem.activeForceFieldUnlockItem.UnlockForceFieldsOnPickUp();
     }
 
     public void SetSwapUIInteractable(bool set)

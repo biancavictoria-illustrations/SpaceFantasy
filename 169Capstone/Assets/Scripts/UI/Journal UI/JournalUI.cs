@@ -7,6 +7,8 @@ public class JournalUI : MonoBehaviour
 {
     [SerializeField] private GameObject journalUIPanel;
 
+    [SerializeField] private JournalSidebarTabGroup[] tabGroups;
+
     private GameObject devPanel;    // TEMP
 
     public void ToggleJournalActive(bool set)
@@ -24,6 +26,11 @@ public class JournalUI : MonoBehaviour
         if(!set){
             if(GameManager.instance.currentSceneName == GameManager.MAIN_HUB_STRING_NAME){
                 InGameUIManager.instance.ToggleRunUI(false);
+            }
+        }
+        else{
+            foreach( JournalSidebarTabGroup tabGroup in tabGroups ){
+                tabGroup.SetTabUnlockedStatus();
             }
         }
     }

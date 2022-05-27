@@ -1,6 +1,10 @@
 ﻿title: TimeLichStart
 tags:
 ---
+<<if HasDeusExMachina() and not Visited("TimeLichHasDeusExMachina")>>
+    [[TimeLichHasDeusExMachina]]
+<<endif>>
+
 <<set $visitedDefault to Visited("TimeLichDefaultDialogue")>>
 <<set $visitedDefault1 to Visited("TimeLichDefaultDialogue1")>>
 <<set $visitedDefault2 to Visited("TimeLichDefaultDialogue2")>>
@@ -88,7 +92,7 @@ title: TimeLichKilledBySlime
 tags:
 ---
 <<SetSpeaker TimeLich>><<BranchComplete KilledBy KilledBySlime>>
-You have been bested by a mere slime fighting through my domain, yet still you think yourself strong enough to face me?
+You were bested by a mere slime last time you fought through my domain, yet still you think yourself strong enough to face me?
 <<SetSpeaker Player>>
 Those slimes are surprisingly vicious. You’re a frail old man. Yeah, I still think I can take you.
 ===
@@ -315,6 +319,17 @@ tags:
 You’ll not be a quitter if you submit. Indeed, you would be wise to accept the fate time has written for you.
 <<SetSpeaker Player>>
 I’m not feeling particularly wise today.
+===
+
+
+
+title: TimeLichHasDeusExMachina
+tags:
+---
+<<SetSpeaker TimeLich>>
+TODO
+<<SetSpeaker Player>>
+TODO
 ===
 
 

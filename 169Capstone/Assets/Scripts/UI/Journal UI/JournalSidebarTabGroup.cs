@@ -60,7 +60,8 @@ public class JournalSidebarTabGroup : MonoBehaviour
         button.background.color = tabActive;
 
         if(contentDisplay != null){
-            contentDisplay.SetPageID(selectedTab.contentID);
+            // If it's unlocked, show the entry; otherwise, locked page
+            contentDisplay.SetPageID(selectedTab.contentID, button.entryIsLocked);
         }
     }
 
@@ -71,6 +72,30 @@ public class JournalSidebarTabGroup : MonoBehaviour
                 continue;
             }
             button.background.color = tabIdle;
+        }
+    }
+
+    public void SetTabUnlockedStatus()
+    {
+        Dictionary<JournalContentID, bool> journalUnlockStatusDatabase = GameManager.instance.journalContentManager.journalUnlockStatusDatabase;
+        foreach( JournalSidebarTabButton journalEntryButton in tabButtons ){
+            JournalContentID contentID = journalEntryButton.contentID;
+
+            // If this ID isn't in the database, log a warning and continue
+            if(!journalUnlockStatusDatabase.ContainsKey(contentID)){
+                Debug.LogWarning("Content ID not found in the database: " + contentID);
+                continue;
+            }
+
+            // If it's true, unlock it
+            if( journalUnlockStatusDatabase[contentID] ){
+                journalEntryButton.background.sprite = journalEntryButton.buttonSprite;
+                journalEntryButton.entryIsLocked = false;
+            }
+            else{   // Else, lock it
+                journalEntryButton.background.sprite = GameManager.instance.journalContentManager.JournalLockedSprite();
+                journalEntryButton.entryIsLocked = true;
+            }
         }
     }
 }

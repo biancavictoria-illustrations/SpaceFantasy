@@ -171,6 +171,13 @@ public class InputManager : MonoBehaviour
         else if(OrbyBartenderChat.instance && OrbyBartenderChat.instance.inOrbyRange){
             OrbyBartenderChat.instance.OnOrbyInteracted();
         }
+
+        // If run 1 and you're in range of the captain's log
+        else if( SpawnRoomForceFieldUnlockItem.activeForceFieldUnlockItem && !SpawnRoomForceFieldUnlockItem.activeForceFieldUnlockItem.isWeapon ){
+            SpawnRoomForceFieldUnlockItem.activeForceFieldUnlockItem.UnlockForceFieldsOnPickUp();
+            AlertTextUI.instance.EnableOpenJournalAlert();
+            StartCoroutine(AlertTextUI.instance.RemoveAlertAfterSeconds());
+        }
     }
 
     public void ToggleCompareItemUI(bool set, GeneratedEquipment item)
@@ -256,7 +263,7 @@ public class InputManager : MonoBehaviour
 
     public void OnToggleJournal(InputValue input)
     {
-        if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || inventoryIsOpen || mapIsOpen || isInMainMenu){
+        if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || inventoryIsOpen || mapIsOpen || isInMainMenu || !PlayerInventory.hasCaptainsLog){
             return;
         }
 

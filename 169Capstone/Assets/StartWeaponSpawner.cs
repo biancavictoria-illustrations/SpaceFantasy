@@ -6,18 +6,26 @@ public class StartWeaponSpawner : MonoBehaviour
 {
     public GameObject dropItemPrefab;
     public EquipmentBaseData weaponData;
+
+    [HideInInspector] public GameObject itemObject;
+
+    [Tooltip("ONLY False for run 1 variant spawn room sword; True otherwise")]
+    public bool dropIn3DSpace = true;
     
-    // Start is called before the first frame update
     void Start()
     {
-        GameObject itemObject = Instantiate(dropItemPrefab, transform.position, Quaternion.identity, transform);
-        itemObject.GetComponent<GeneratedEquipment>().SetEquipmentBaseData( weaponData, ItemRarity.Common );
-        itemObject.GetComponent<DropTrigger>().DropItemModelIn3DSpace();
-    }
+        itemObject = Instantiate(dropItemPrefab, transform.position, Quaternion.identity, transform);
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if(weaponData){
+            itemObject.GetComponent<GeneratedEquipment>().SetEquipmentBaseData( weaponData, ItemRarity.Common );
+        }
+        else{
+            Debug.LogWarning("No weapon data found for StartWeaponSpawner");
+        }
+
+        // Unless this auto-equips to the player, this should be true and we drop it in the level space
+        if(dropIn3DSpace){
+            itemObject.GetComponent<DropTrigger>().DropItemModelIn3DSpace();
+        }        
     }
 }

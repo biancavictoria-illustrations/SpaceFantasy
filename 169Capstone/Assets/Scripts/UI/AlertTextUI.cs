@@ -141,7 +141,14 @@ public class AlertTextUI : MonoBehaviour
             interactAlertIsActive = true;
         }
 
-        public void EnableItemPickupAlert()
+        public void EnablePickupAlert()
+        {
+            SetAlertText(true, interactControlIcon, interactControlString, "PICK UP");
+            alertTextIsActive = true;
+            interactAlertIsActive = true;
+        }
+
+        public void EnableItemExamineAlert()
         {
             SetAlertText(true, interactControlIcon, interactControlString, "EXAMINE");
             alertTextIsActive = true;
