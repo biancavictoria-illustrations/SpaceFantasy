@@ -28,6 +28,8 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private int numRunsThreshold = 4;   // Threshold for # runs beyond the exact num run that numRun dialogue can trigger
 
     public bool stellanCommTriggered {get; private set;}
+    public bool timeLichDeathDialogueTriggered {get; private set;}
+
     private bool hasBeenInitialized = false;
 
     public bool stopTime;
@@ -71,6 +73,11 @@ public class DialogueManager : MonoBehaviour
         stellanCommTriggered = set;
     }
 
+    public void SetTimeLichDeathDialogueTriggered(bool set)
+    {
+        timeLichDeathDialogueTriggered = set;
+    }
+
     public void SetTextSpeed(float number)
     {
         dialogueUI.textSpeed = number;
@@ -108,6 +115,16 @@ public class DialogueManager : MonoBehaviour
         dialogueRunner.AddFunction("StellanCommTriggered", 0, delegate (Yarn.Value[] parameters){
             if(DialogueManager.instance.stellanCommTriggered){
                 DialogueManager.instance.SetStellanCommTriggered(false);
+                return true;
+            }
+            else{
+                return false;
+            }
+        });
+
+        dialogueRunner.AddFunction("TimeLichDeathDialogueTriggered", 0, delegate (Yarn.Value[] parameters){
+            if(DialogueManager.instance.timeLichDeathDialogueTriggered){
+                DialogueManager.instance.SetTimeLichDeathDialogueTriggered(false);
                 return true;
             }
             else{
@@ -406,6 +423,10 @@ public class DialogueManager : MonoBehaviour
                 FindObjectOfType<Lich>().canAttack = true;
                 InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(true, EnemyID.TimeLich);
             }
+        }
+        // If there's no active NPC and we're in the lich fight room AND the epilogue has NOT been triggered, kill Atlan
+        else if( GameManager.instance.currentSceneName == GameManager.LICH_ARENA_STRING_NAME && !GameManager.instance.epilogueTriggered ){
+            Player.instance.health.Damage( Player.instance.health.maxHitpoints, DamageSourceType.DefeatedTimeLichEndRunDeath );
         }
     }
 }

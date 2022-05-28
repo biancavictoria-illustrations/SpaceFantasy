@@ -105,6 +105,11 @@ public class GameManager : MonoBehaviour
         return currentSceneName == GAME_LEVEL1_STRING_NAME;
     }
 
+    public bool InSceneWithGameTimer()
+    {
+        return GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME && GameManager.instance.currentSceneName != GameManager.EPILOGUE_SCENE_STRING_NAME;
+    }
+
     // Add any other reset stuff here too (called when player goes from death screen -> main hub)
     public void EndRun()
     {
@@ -128,8 +133,9 @@ public class GameManager : MonoBehaviour
 
             ScreenFade fade = FindObjectOfType<ScreenFade>();
 
+            // === MAIN HUB ===
             if(currentSceneName == MAIN_HUB_STRING_NAME){
-                InGameUIManager.instance.ToggleRunUI(false);
+                InGameUIManager.instance.ToggleRunUI(false, false, true, false);
 
                 fade.opaqueOnStart = true;
                 fade.FadeIn(0.5f);
@@ -141,6 +147,8 @@ public class GameManager : MonoBehaviour
                 // Autosave in main hub!
                 SaveGame();
             }
+
+            // === LEVEL ===
             else if(currentSceneName == GAME_LEVEL1_STRING_NAME){
                 PlayerInventory.instance.SetRunStartHealthPotionQuantity();            
                 // AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, false);
@@ -149,8 +157,10 @@ public class GameManager : MonoBehaviour
                 FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener( () =>
                 {
                     fade.FadeIn(1f);
+
+                    // For an average run (beyond run # 1)
                     if(currentRunNumber != 1){
-                        InGameUIManager.instance.ToggleRunUI(false);
+                        InGameUIManager.instance.ToggleRunUI(false, false, true, false);
                         InGameUIManager.instance.TogglePermanentCurrencyUI(false);
 
                         inElevatorAnimation = true;
@@ -159,11 +169,15 @@ public class GameManager : MonoBehaviour
                             inElevatorAnimation = false;
                         });
                     }
+
+                    // If first run, skip reroll
                     else{
-                        InGameUIManager.instance.ToggleRunUI(true);
+                        InGameUIManager.instance.ToggleRunUI(true, true, true, false);
                     }
                 });
             }
+
+            // === LICH FIGHT ROOM ===
             else if(currentSceneName == LICH_ARENA_STRING_NAME){
                 // TODO: Play lich fight music
 
@@ -172,11 +186,13 @@ public class GameManager : MonoBehaviour
                     inElevatorAnimation = false;
 
                     // Set all the UI active
-                    ReactivateUIAfterElevatorAnimation();
+                    ReactivateUIAfterElevatorAnimation(true);
                 });
 
                 OnSceneLoadIfPlayerNotDestroyed(fade);
             }
+
+            // === EPILOGUE HUB ===
             else if(currentSceneName == EPILOGUE_SCENE_STRING_NAME){
                 StoryManager.instance.ResetAllNPCTalkedToValues();
 
@@ -190,11 +206,13 @@ public class GameManager : MonoBehaviour
                     inElevatorAnimation = false;
 
                     // Set all the UI active
-                    ReactivateUIAfterElevatorAnimation();
+                    ReactivateUIAfterElevatorAnimation(false);
                 });
 
                 OnSceneLoadIfPlayerNotDestroyed(fade);
             }
+
+            // === TITLE SCREEN ===
             else if(currentSceneName == TITLE_SCREEN_STRING_NAME){
                 gameTimer.runTotalTimer = false;
                 AudioManager.Instance.playMusic(AudioManager.MusicTrack.TitleMusic);
@@ -208,15 +226,15 @@ public class GameManager : MonoBehaviour
             
             UnparentPlayerOnSceneLoad();
             InGameUIManager.instance.TogglePermanentCurrencyUI(false);
-            InGameUIManager.instance.ToggleRunUI(false);
-            InGameUIManager.instance.ToggleMiniMap(false);
+            InGameUIManager.instance.ToggleRunUI(false, false, false, false);
+            // InGameUIManager.instance.ToggleMiniMap(false);
         }
 
-        private void ReactivateUIAfterElevatorAnimation()
+        private void ReactivateUIAfterElevatorAnimation(bool setTimerUIActive)
         {
             InGameUIManager.instance.SetAllRunUIToCurrentValues();
             InGameUIManager.instance.TogglePermanentCurrencyUI(true);
-            InGameUIManager.instance.ToggleRunUI(true, setMinimap: false);
+            InGameUIManager.instance.ToggleRunUI(true, setTimerUIActive, false, false);
         }
 
         private void UnparentPlayerOnSceneLoad()

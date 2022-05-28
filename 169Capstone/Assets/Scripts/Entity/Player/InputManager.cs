@@ -248,18 +248,10 @@ public class InputManager : MonoBehaviour
         }
         
         if(PauseMenu.GameIsPaused){
-            InGameUIManager.instance.pauseMenu.ResumeGame();
-
-            if(GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME){
-                RunGameTimer(true);
-            }            
+            InGameUIManager.instance.pauseMenu.ResumeGame();       
         }
         else{
-            InGameUIManager.instance.pauseMenu.PauseGame();
-
-            if(GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME){
-                RunGameTimer(false);
-            }            
+            InGameUIManager.instance.pauseMenu.PauseGame();       
         }
     }
 
@@ -272,7 +264,8 @@ public class InputManager : MonoBehaviour
         journalIsOpen = !journalIsOpen;
         InGameUIManager.instance.journalUI.ToggleJournalActive(journalIsOpen);
 
-        if(GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME){
+        // Deal with timer if we're in a scene with the timer
+        if(GameManager.instance.InSceneWithGameTimer()){
             RunGameTimer(!journalIsOpen);
             InGameUIManager.instance.timerUI.SetTimerUIActive(!journalIsOpen);
         }
@@ -287,7 +280,7 @@ public class InputManager : MonoBehaviour
 
     public void OnToggleExpandedMap(InputValue input)
     {
-        if(!GameManager.instance.InSceneWithRandomGeneration() || isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || inventoryIsOpen || journalIsOpen){
+        if(!GameManager.instance.InSceneWithRandomGeneration() || isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || inventoryIsOpen || journalIsOpen || !PlayerInventory.hasCaptainsLog){
             return;
         }
 
@@ -314,9 +307,12 @@ public class InputManager : MonoBehaviour
         InGameUIManager.instance.SetInventoryUIActive(!InGameUIManager.instance.inventoryIsOpen);
         inventoryIsOpen = !inventoryIsOpen;
 
-        InGameUIManager.instance.ToggleMiniMap(!inventoryIsOpen);
+        if(GameManager.instance.InSceneWithRandomGeneration())
+            InGameUIManager.instance.ToggleMiniMap(!inventoryIsOpen);
 
-        RunGameTimer(!inventoryIsOpen);
+        if(GameManager.instance.InSceneWithGameTimer())
+            RunGameTimer(!inventoryIsOpen);
+
         if(AlertTextUI.instance.primaryAlertTextIsActive){
             AlertTextUI.instance.TogglePrimaryAlertText(!inventoryIsOpen);
         }
@@ -399,7 +395,7 @@ public class InputManager : MonoBehaviour
     {
         isInDialogue = set;
 
-        if(!NPC.ActiveNPC || NPC.ActiveNPC?.SpeakerData().SpeakerID() != SpeakerID.Stellan){
+        if(GameManager.instance.InSceneWithGameTimer()){
             RunGameTimer(!set, !set);
         }
     }

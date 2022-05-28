@@ -141,7 +141,7 @@ public class EntityHealth : MonoBehaviour
     // Need a bool to check for slime pit otherwise you could DODGE falling in a slime pit and fall for eternity
     public bool Damage(float damage, DamageSourceType damageSource)
     {
-        if( gameObject.tag == "Player" && damageSource != DamageSourceType.DeathPit ){
+        if( gameObject.tag == "Player" && damageSource != DamageSourceType.DeathPit && damageSource != DamageSourceType.DefeatedTimeLichEndRunDeath ){
             // TEMP for dev
             if( tempPlayerGodModeToggle ){
                 return currentHitpoints <= 0;
@@ -255,20 +255,24 @@ public class EntityHealth : MonoBehaviour
         }
         else
         {
+            // Tell the story manager that this creature was killed
+            StoryManager.instance.KilledEventOccurred(enemyID, StoryBeatType.EnemyKilled);
+
             if(isBossEnemy){
                 InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(false);
 
                 if(enemyID == EnemyID.TimeLich){
+                    // Story state things
                     GameManager.instance.hasKilledTimeLich = true;
-
+                    DialogueManager.instance.SetTimeLichDeathDialogueTriggered(true);
                     if( PermanentUpgradeManager.instance.GetSkillLevel(PermanentUpgradeType.TimeLichKillerThing) > 0 ){
                         GameManager.instance.epilogueTriggered = true;
                     }
+
+                    // Trigger auto dialogue
+                    Player.instance.StartAutoDialogueFromPlayer();
                 }
             }
-
-            // Tell the story manager that this creature was killed
-            StoryManager.instance.KilledEventOccurred(enemyID, StoryBeatType.EnemyKilled);
             
             if(enemyDropGenerator){
                 enemyDropGenerator.GetDrop(GameManager.instance.bossesKilled, transform);

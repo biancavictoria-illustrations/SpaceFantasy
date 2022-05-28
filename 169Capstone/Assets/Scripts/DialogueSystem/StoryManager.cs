@@ -136,18 +136,36 @@ public class StoryManager : MonoBehaviour
         for(int i = 0; i < storyBeatDatabaseStatuses.Length; i++){
             BeatStatus status = storyBeatDatabaseStatuses[i];
             StoryBeat beat = FindBeatFromNodeNameAndType(status.storyBeatHeadNode, (StoryBeatType)status.storyBeatType);
+
+            if(!beat){
+                Debug.LogWarning("No story beat loaded for head node: " + status.storyBeatHeadNode + " with type: " + (StoryBeatType)status.storyBeatType);
+                continue;
+            }
+
             storyBeatDatabase[beat] = status;
         }
 
         for(int i = 0; i < itemStoryBeatStatuses.Length; i++){
             BeatStatus status = itemStoryBeatStatuses[i];
             StoryBeatItem beat = (StoryBeatItem)FindBeatFromNodeNameAndType(status.storyBeatHeadNode, (StoryBeatType)status.storyBeatType);
+            
+            if(!beat){
+                Debug.LogWarning("No story beat loaded for head node: " + status.storyBeatHeadNode + " with type: " + (StoryBeatType)status.storyBeatType);
+                continue;
+            }
+            
             itemStoryBeats[beat] = status;
         }
 
         for(int i = 0; i < genericStoryBeatStatuses.Length; i++){
             BeatStatus status = genericStoryBeatStatuses[i];
             StoryBeat beat = FindBeatFromNodeNameAndType(status.storyBeatHeadNode, (StoryBeatType)status.storyBeatType);
+
+            if(!beat){
+                Debug.LogWarning("No story beat loaded for head node: " + status.storyBeatHeadNode + " with type: " + (StoryBeatType)status.storyBeatType);
+                continue;
+            }
+            
             genericStoryBeats[beat] = status;
         }
 

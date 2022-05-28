@@ -35,6 +35,8 @@ public class StatRerollUI : MonoBehaviour
         // Don't let us leave until the animation is done
         if(!tempSkipStatRerollToggle)
             continueButton.interactable = false;
+        else    // TEMP
+            continueButton.Select();
 
         // For convenience, save these locally
         stats = Player.instance.GetComponent<PlayerStats>();
@@ -60,7 +62,7 @@ public class StatRerollUI : MonoBehaviour
     public void DisableStatRerollUI()
     {
         ToggleActiveStatus(false);
-        InGameUIManager.instance.ToggleRunUI(true);
+        InGameUIManager.instance.ToggleRunUI(true, true, false, true);
         InGameUIManager.instance.TogglePermanentCurrencyUI(true);
         
         if(GameManager.instance.currentRunNumber != 2){

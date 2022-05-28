@@ -139,22 +139,18 @@ public class InGameUIManager : MonoBehaviour
         inGameUIGearIconPanel.SetActive(set);
     }
 
-    public void ToggleRunUI(bool setRunUIActive, bool resetTimer = true, bool setMinimap = true)
+    public void ToggleRunUI(bool setRunUIActive, bool setTimerUIActive, bool resetTimer, bool setMinimapActive)
     {
         ToggleInGameGearIconPanel(setRunUIActive);
         tempCurrencyValue.gameObject.SetActive(setRunUIActive);
         healthUIContainer.SetActive(setRunUIActive);
 
-        if(setMinimap)
-            ToggleMiniMap(setRunUIActive);
+        ToggleMiniMap(setMinimapActive);
 
-        if(!resetTimer){
-            return;
+        InputManager.instance.RunGameTimer(setRunUIActive, setTimerUIActive);
+        if(resetTimer){
+            GameManager.instance.gameTimer.ResetTimer();
         }
-
-        // Reset timer
-        InputManager.instance.RunGameTimer(setRunUIActive, setRunUIActive);
-        GameManager.instance.gameTimer.ResetTimer();
     }
 
     // For transferring between scenes
