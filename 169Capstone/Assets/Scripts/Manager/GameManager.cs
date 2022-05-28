@@ -119,107 +119,120 @@ public class GameManager : MonoBehaviour
         currentRunNumber++;
     }
 
-    void OnSceneLoad(Scene scene, LoadSceneMode mode)
-    {
-        currentSceneName = scene.name;
+    #region Scene Load Stuff
+        void OnSceneLoad(Scene scene, LoadSceneMode mode)
+        {
+            currentSceneName = scene.name;
 
-        AudioManager.Instance.stopMusic(true);
+            AudioManager.Instance.stopMusic(true);
 
-        ScreenFade fade = FindObjectOfType<ScreenFade>();
+            ScreenFade fade = FindObjectOfType<ScreenFade>();
 
-        if(currentSceneName == MAIN_HUB_STRING_NAME){
+            if(currentSceneName == MAIN_HUB_STRING_NAME){
+                InGameUIManager.instance.ToggleRunUI(false);
+
+                fade.opaqueOnStart = true;
+                fade.FadeIn(0.5f);
+
+                // TODO: play main hub music
+
+                // TODO: Play animation of you falling or something Idk (or like phasing in)
+
+                // Autosave in main hub!
+                SaveGame();
+            }
+            else if(currentSceneName == GAME_LEVEL1_STRING_NAME){
+                PlayerInventory.instance.SetRunStartHealthPotionQuantity();            
+                // AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, false);
+                fade.opaqueOnStart = true;
+                
+                FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener( () =>
+                {
+                    fade.FadeIn(1f);
+                    if(currentRunNumber != 1){
+                        InGameUIManager.instance.ToggleRunUI(false);
+                        InGameUIManager.instance.TogglePermanentCurrencyUI(false);
+
+                        inElevatorAnimation = true;
+                        FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
+                            InGameUIManager.instance.EnableRunStartStatRerollPopup(true);
+                            inElevatorAnimation = false;
+                        });
+                    }
+                    else{
+                        InGameUIManager.instance.ToggleRunUI(true);
+                    }
+                });
+            }
+            else if(currentSceneName == LICH_ARENA_STRING_NAME){
+                // TODO: Play lich fight music
+
+                inElevatorAnimation = true;
+                FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
+                    inElevatorAnimation = false;
+
+                    // Set all the UI active
+                    ReactivateUIAfterElevatorAnimation();
+                });
+
+                OnSceneLoadIfPlayerNotDestroyed(fade);
+            }
+            else if(currentSceneName == EPILOGUE_SCENE_STRING_NAME){
+                StoryManager.instance.ResetAllNPCTalkedToValues();
+
+                // TODO: Play end music?
+
+                inElevatorAnimation = true;
+                FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
+                    // Trigger epilogue intro dialogue
+                    Player.instance.StartAutoDialogueFromPlayer();
+
+                    inElevatorAnimation = false;
+
+                    // Set all the UI active
+                    ReactivateUIAfterElevatorAnimation();
+                });
+
+                OnSceneLoadIfPlayerNotDestroyed(fade);
+            }
+            else if(currentSceneName == TITLE_SCREEN_STRING_NAME){
+                gameTimer.runTotalTimer = false;
+                AudioManager.Instance.playMusic(AudioManager.MusicTrack.TitleMusic);
+            }
+        }
+
+        private void OnSceneLoadIfPlayerNotDestroyed(ScreenFade fade)
+        {
+            fade.opaqueOnStart = true;
+            fade.FadeIn(0.5f);
+            
+            UnparentPlayerOnSceneLoad();
+            InGameUIManager.instance.TogglePermanentCurrencyUI(false);
             InGameUIManager.instance.ToggleRunUI(false);
-
-            fade.opaqueOnStart = true;
-            fade.FadeIn(0.5f);
-
-            // TODO: play main hub music
-
-            // TODO: Play animation of you falling or something Idk (or like phasing in)
-
-            // Autosave in main hub!
-            SaveGame();
+            InGameUIManager.instance.ToggleMiniMap(false);
         }
-        else if(currentSceneName == GAME_LEVEL1_STRING_NAME){
-            PlayerInventory.instance.SetRunStartHealthPotionQuantity();            
-            // AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, false);
-            fade.opaqueOnStart = true;
-            
-            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener( () =>
-            {
-                fade.FadeIn(1f);
-                if(currentRunNumber != 1){
-                    InGameUIManager.instance.ToggleRunUI(false);
-                    InGameUIManager.instance.TogglePermanentCurrencyUI(false);
 
-                    inElevatorAnimation = true;
-                    FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
-                        InGameUIManager.instance.EnableRunStartStatRerollPopup(true);
-                        inElevatorAnimation = false;
-                    });
-                }
-                else{
-                    InGameUIManager.instance.ToggleRunUI(true);
-                }
-            });
-        }
-        else if(currentSceneName == LICH_ARENA_STRING_NAME){
-            // TODO: Play lich fight music
-            // TODO: Set mini map inactive
-
-            fade.opaqueOnStart = true;
-            fade.FadeIn(0.5f);
-
-            inElevatorAnimation = true;
-            FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
-                inElevatorAnimation = false;
-            });
-
+        private void ReactivateUIAfterElevatorAnimation()
+        {
             InGameUIManager.instance.SetAllRunUIToCurrentValues();
+            InGameUIManager.instance.TogglePermanentCurrencyUI(true);
+            InGameUIManager.instance.ToggleRunUI(true, setMinimap: false);
+        }
+
+        private void UnparentPlayerOnSceneLoad()
+        {
+            // Make the player no longer a child of the game manager now that we've saved their build between scenes
+            // Move the player out of dontdestroyonload
+            GameObject o = new GameObject();
+            Player.instance.transform.parent = o.transform;
             
-            UnparentPlayerOnSceneLoad();
+            // Unparent it
+            Player.instance.transform.parent = null;
+
+            // Destroy the dummy game object
+            Destroy(o.gameObject);
         }
-        else if(currentSceneName == EPILOGUE_SCENE_STRING_NAME){
-            UnparentPlayerOnSceneLoad();
-
-            StoryManager.instance.ResetAllNPCTalkedToValues();
-
-            // InGameUIManager.instance.ToggleRunUI(false);
-            // TODO: Set mini map inactive if it's active
-
-            // TODO: Play end music?
-
-            fade.opaqueOnStart = true;
-            fade.FadeIn(0.5f);
-
-            inElevatorAnimation = true;
-            FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
-                Player.instance.StartAutoDialogueFromPlayer();
-                inElevatorAnimation = false;
-            });
-
-            // SaveGame();     // ? maybe? idk -> if saving, prob have to save epilogue triggered?
-        }
-        else if(currentSceneName == TITLE_SCREEN_STRING_NAME){
-            gameTimer.runTotalTimer = false;
-
-            AudioManager.Instance.playMusic(AudioManager.MusicTrack.TitleMusic);
-        }
-    }
-
-    private void UnparentPlayerOnSceneLoad()
-    {
-        // Make the player no longer a child of the game manager now that we've saved their build between scenes
-        // Move the player out of dontdestroyonload
-        GameObject o = new GameObject();
-        Player.instance.transform.parent = o.transform;
-        
-        // Unparent it
-        Player.instance.transform.parent = null;
-
-        // Destroy the dummy game object
-        Destroy(o.gameObject);
-    }
+    #endregion
 
     public IEnumerator AutoRunDialogueAfterTime(float timeToWait = DEFAULT_AUTO_DIALOGUE_WAIT_TIME)
     {
@@ -253,7 +266,7 @@ public class GameManager : MonoBehaviour
         SaveDisplayValuesToPlayerPrefs();
         MarkSlotToDelete(false, saveSlotNum);
         
-        SaveLoadManager.SaveGame(saveSlotNum, this, PlayerInventory.instance, DialogueManager.instance, StoryManager.instance, PermanentUpgradeManager.instance);        
+        SaveLoadManager.SaveGame(saveSlotNum, this, PlayerInventory.instance, DialogueManager.instance, StoryManager.instance, PermanentUpgradeManager.instance, journalContentManager);        
     }
 
     // Called when you load your game in the Main Menu (and ONLY then)
@@ -310,9 +323,7 @@ public class GameManager : MonoBehaviour
 
         sm.brynListInitialized = saveData.brynListInitialized;
         sm.stellanListInitialized = saveData.stellanListInitialized;
-        // sm.doctorListInitialized = saveData.doctorListInitialized;
         sm.lichListInitialized = saveData.lichListInitialized;
-        // sm.rhianListInitialized = saveData.rhianListInitialized;
 
         for(int i = 0; i < saveData.brynNumRunDialogueList.Length; i++){
             sm.brynNumRunDialogueList.Add(saveData.brynNumRunDialogueList[i]);
@@ -320,18 +331,15 @@ public class GameManager : MonoBehaviour
         for(int i = 0; i < saveData.stellanNumRunDialogueList.Length; i++){
             sm.stellanNumRunDialogueList.Add(saveData.stellanNumRunDialogueList[i]);
         }
-        // for(int i = 0; i < saveData.doctorNumRunDialogueList.Length; i++){
-        //     sm.doctorNumRunDialogueList.Add(saveData.doctorNumRunDialogueList[i]);
-        // }
         for(int i = 0; i < saveData.timeLichNumRunDialogueList.Length; i++){
             sm.timeLichNumRunDialogueList.Add(saveData.timeLichNumRunDialogueList[i]);
         }
-        // for(int i = 0; i < saveData.rhianNumRunDialogueList.Length; i++){
-        //     sm.rhianNumRunDialogueList.Add(saveData.rhianNumRunDialogueList[i]);
-        // }
 
         // Story Beat Status Values
         sm.LoadSavedStoryBeatStatuses(saveData.storyBeatDatabaseStatuses, saveData.itemStoryBeatStatuses, saveData.genericStoryBeatStatuses, saveData.activeStoryBeatHeadNodes);
+
+        // Journal status
+        journalContentManager.SetJournalStatusOnLoad( saveData.journalContentSaveStatus );
 
         // Load scene after fade to black
         ScreenFade fade = FindObjectOfType<ScreenFade>();
@@ -365,6 +373,8 @@ public class GameManager : MonoBehaviour
         StoryManager.instance.InitializeStoryManagerOnNewGame();
 
         DialogueManager.instance.visitedNodes.Clear();
+
+        journalContentManager.ReloadDefaultJournalStatus();
 
         gameTimer.ResetTotalTimer();
         gameTimer.runTotalTimer = true;

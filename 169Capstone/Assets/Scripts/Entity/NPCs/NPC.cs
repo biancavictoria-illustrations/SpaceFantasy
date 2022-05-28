@@ -76,7 +76,7 @@ public class NPC : MonoBehaviour
         // If the player is no longer near this NPC
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
             ActiveNPC = null;
-            AlertTextUI.instance.DisableAlert();
+            AlertTextUI.instance.DisablePrimaryAlert();
         }
     }
 

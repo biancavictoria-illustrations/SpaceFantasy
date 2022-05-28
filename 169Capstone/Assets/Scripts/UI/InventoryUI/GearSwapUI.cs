@@ -68,12 +68,12 @@ public class GearSwapUI : MonoBehaviour
         
         // Deal with UI alerts
         if(PlayerInventory.hasPickedSomethingUpThisRun){
-            AlertTextUI.instance.DisableAlert();
+            AlertTextUI.instance.DisablePrimaryAlert();
         }        
         else{
             PlayerInventory.hasPickedSomethingUpThisRun = true;
             AlertTextUI.instance.EnableOpenInventoryAlert();
-            StartCoroutine(AlertTextUI.instance.RemoveAlertAfterSeconds());
+            StartCoroutine(AlertTextUI.instance.RemovePrimaryAlertAfterSeconds());
         }
 
         // If this is a spawn room weapon, drop the force fields

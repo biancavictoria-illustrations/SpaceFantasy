@@ -65,7 +65,7 @@ public class StatRerollUI : MonoBehaviour
         
         if(GameManager.instance.currentRunNumber != 2){
             AlertTextUI.instance.EnableViewStatsAlert();
-            StartCoroutine(AlertTextUI.instance.RemoveAlertAfterSeconds());
+            StartCoroutine(AlertTextUI.instance.RemovePrimaryAlertAfterSeconds());
         }
     }
 

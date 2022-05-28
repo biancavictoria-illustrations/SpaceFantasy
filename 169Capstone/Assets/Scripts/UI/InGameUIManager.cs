@@ -139,12 +139,14 @@ public class InGameUIManager : MonoBehaviour
         inGameUIGearIconPanel.SetActive(set);
     }
 
-    public void ToggleRunUI(bool setRunUIActive, bool resetTimer = true)
+    public void ToggleRunUI(bool setRunUIActive, bool resetTimer = true, bool setMinimap = true)
     {
         ToggleInGameGearIconPanel(setRunUIActive);
         tempCurrencyValue.gameObject.SetActive(setRunUIActive);
         healthUIContainer.SetActive(setRunUIActive);
-        miniMap.SetActive(setRunUIActive);
+
+        if(setMinimap)
+            ToggleMiniMap(setRunUIActive);
 
         if(!resetTimer){
             return;
@@ -167,13 +169,11 @@ public class InGameUIManager : MonoBehaviour
 
         // Sidebar item panel
         foreach( KeyValuePair<InventoryItemSlot, Equipment> item in PlayerInventory.instance.gear ){
-            // If null, nothing is equipped - set to default
-            if(!item.Value){
-                SetGearItemUI( item.Key, GetDefaultItemIconForSlot(item.Key) );
-                continue;
-            }
-            else{
+            if( PlayerInventory.instance.ItemSlotIsFull(item.Key) ){ // if(item.Value != null){
                 SetGearItemUI( item.Key, item.Value.data.equipmentBaseData.Icon() );
+            }
+            else{   // If null, nothing is equipped - set to default
+                SetGearItemUI( item.Key, GetDefaultItemIconForSlot(item.Key) );
             }            
         }
     }
@@ -182,7 +182,12 @@ public class InGameUIManager : MonoBehaviour
     {
         expandedMapOverlay.SetActive(set);
         SetGameUIActive(!set);
-        miniMap.SetActive(!set);
+        ToggleMiniMap(!set);
+    }
+
+    public void ToggleMiniMap(bool set)
+    {
+        miniMap.SetActive(set);
     }
 
     public void OnStellanShopUIOpen(bool setOpen)
@@ -222,12 +227,15 @@ public class InGameUIManager : MonoBehaviour
         public void SetGearSwapUIActive(bool set, GeneratedEquipment item)
         {
             inGameUIGearIconPanel.SetActive(!set);
+            InGameUIManager.instance.ToggleMiniMap(!set);
+            
             gearSwapUIPanel.SetActive(set);
             gearSwapIsOpen = set;
 
             if(set){
                 gearSwapUI.OnGearSwapUIOpen(item);
-                AlertTextUI.instance.DisableAlert();
+                AlertTextUI.instance.DisablePrimaryAlert();
+                AlertTextUI.instance.DisableSecondaryAlert();
             }
             else{
                 AlertTextUI.instance.EnableItemExamineAlert();
@@ -444,7 +452,9 @@ public class InGameUIManager : MonoBehaviour
 
     public void OpenNPCShop(SpeakerData shopkeeper)
     {
-        AlertTextUI.instance.DisableAlert();
+        AlertTextUI.instance.DisablePrimaryAlert();
+        AlertTextUI.instance.DisableSecondaryAlert();
+
         if(shopkeeper.SpeakerID() == SpeakerID.Bryn){
             brynShopUI.OpenShopUI();
         }
@@ -464,7 +474,8 @@ public class InGameUIManager : MonoBehaviour
 
     public void CloseNPCShop(SpeakerData shopkeeper, bool closeWithESCKey = false)
     {
-        AlertTextUI.instance.EnableShopAlert();
+        AlertTextUI.instance.EnableShopAlert();        
+
         if(shopkeeper.SpeakerID() == SpeakerID.Bryn){
             brynShopUI.CloseShopUI(closeWithESCKey);
         }

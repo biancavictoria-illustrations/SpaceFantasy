@@ -376,7 +376,9 @@ public class DialogueManager : MonoBehaviour
 
         // Disable UI elements
         InGameUIManager.instance.SetGameUIActive(false);
-        AlertTextUI.instance.DisableAlert();
+        AlertTextUI.instance.DisablePrimaryAlert();
+        AlertTextUI.instance.DisableSecondaryAlert();
+        InGameUIManager.instance.ToggleMiniMap(false);
     }
 
     // Called when the dialogue ends/closes
@@ -384,6 +386,7 @@ public class DialogueManager : MonoBehaviour
     {
         InputManager.instance.ToggleDialogueOpenStatus(false);
         InGameUIManager.instance.SetGameUIActive(true);
+
         stopTime = false;
 
         if(NPC.ActiveNPC){
@@ -391,6 +394,10 @@ public class DialogueManager : MonoBehaviour
             if(NPC.ActiveNPC.SpeakerData().IsShopkeeper()){
                 // If you've only completed ONE run (or last run) and this is Stellan, don't open his shop this time
                 if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Stellan && (GameManager.instance.currentRunNumber == 2 || GameManager.instance.epilogueTriggered)){
+                    // If the final run option, unlock the elevator
+                    if(GameManager.instance.epilogueTriggered){
+                        FindObjectOfType<SceneTransitionDoor>().GetComponent<Collider>().enabled = true;
+                    }
                     return;
                 }
                 InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.SpeakerData());

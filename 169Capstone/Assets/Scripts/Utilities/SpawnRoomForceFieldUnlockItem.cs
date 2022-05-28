@@ -29,7 +29,7 @@ public class SpawnRoomForceFieldUnlockItem : MonoBehaviour
             activeForceFieldUnlockItem = null;
 
             if(!isWeapon)   // If a weapon, alert is handled there
-                AlertTextUI.instance.DisableAlert();
+                AlertTextUI.instance.DisablePrimaryAlert();
         }
     }
 
@@ -44,7 +44,7 @@ public class SpawnRoomForceFieldUnlockItem : MonoBehaviour
 
         if(!isWeapon){
             // If a weapon, alert is handled there
-            AlertTextUI.instance.DisableAlert();
+            AlertTextUI.instance.DisablePrimaryAlert();
             PlayerInventory.hasCaptainsLog = true;
         }
 

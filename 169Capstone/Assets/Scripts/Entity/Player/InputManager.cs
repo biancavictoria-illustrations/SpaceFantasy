@@ -158,7 +158,8 @@ public class InputManager : MonoBehaviour
 
         // If you're in range of a door, walk through it
         else if(SceneTransitionDoor.ActiveDoor){
-            AlertTextUI.instance.DisableAlert();
+            AlertTextUI.instance.DisablePrimaryAlert();
+            AlertTextUI.instance.DisableSecondaryAlert();
             SceneTransitionDoor.ActiveDoor.ChangeScene();
         }
 
@@ -175,8 +176,9 @@ public class InputManager : MonoBehaviour
         // If run 1 and you're in range of the captain's log
         else if( SpawnRoomForceFieldUnlockItem.activeForceFieldUnlockItem && !SpawnRoomForceFieldUnlockItem.activeForceFieldUnlockItem.isWeapon ){
             SpawnRoomForceFieldUnlockItem.activeForceFieldUnlockItem.UnlockForceFieldsOnPickUp();
+            InGameUIManager.instance.ToggleMiniMap(true);
             AlertTextUI.instance.EnableOpenJournalAlert();
-            StartCoroutine(AlertTextUI.instance.RemoveAlertAfterSeconds());
+            StartCoroutine(AlertTextUI.instance.RemoveSecondaryAlertAfterSeconds());
         }
     }
 
@@ -237,7 +239,7 @@ public class InputManager : MonoBehaviour
             return;
         }
         else if(mapIsOpen){
-            OnToggleMinimap(input);
+            OnToggleExpandedMap(input);
             return;
         }
         else if(journalIsOpen){
@@ -275,12 +277,15 @@ public class InputManager : MonoBehaviour
             InGameUIManager.instance.timerUI.SetTimerUIActive(!journalIsOpen);
         }
 
-        if(AlertTextUI.instance.alertTextIsActive){
-            AlertTextUI.instance.ToggleAlertText(!journalIsOpen);
+        if(AlertTextUI.instance.primaryAlertTextIsActive){
+            AlertTextUI.instance.TogglePrimaryAlertText(!journalIsOpen);
+        }
+        if(AlertTextUI.instance.secondaryAlertTextIsActive){
+            AlertTextUI.instance.ToggleSecondaryAlertText(!journalIsOpen);
         }
     }
 
-    public void OnToggleMinimap(InputValue input)
+    public void OnToggleExpandedMap(InputValue input)
     {
         if(!GameManager.instance.InSceneWithRandomGeneration() || isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || inventoryIsOpen || journalIsOpen){
             return;
@@ -292,8 +297,11 @@ public class InputManager : MonoBehaviour
         RunGameTimer(!mapIsOpen);
         InGameUIManager.instance.timerUI.SetTimerUIActive(!mapIsOpen);
 
-        if(AlertTextUI.instance.alertTextIsActive){
-            AlertTextUI.instance.ToggleAlertText(!mapIsOpen);
+        if(AlertTextUI.instance.primaryAlertTextIsActive){
+            AlertTextUI.instance.TogglePrimaryAlertText(!mapIsOpen);
+        }
+        if(AlertTextUI.instance.secondaryAlertTextIsActive){
+            AlertTextUI.instance.ToggleSecondaryAlertText(!mapIsOpen);
         }
     }
 
@@ -306,9 +314,14 @@ public class InputManager : MonoBehaviour
         InGameUIManager.instance.SetInventoryUIActive(!InGameUIManager.instance.inventoryIsOpen);
         inventoryIsOpen = !inventoryIsOpen;
 
+        InGameUIManager.instance.ToggleMiniMap(!inventoryIsOpen);
+
         RunGameTimer(!inventoryIsOpen);
-        if(AlertTextUI.instance.alertTextIsActive){
-            AlertTextUI.instance.ToggleAlertText(!inventoryIsOpen);
+        if(AlertTextUI.instance.primaryAlertTextIsActive){
+            AlertTextUI.instance.TogglePrimaryAlertText(!inventoryIsOpen);
+        }
+        if(AlertTextUI.instance.secondaryAlertTextIsActive){
+            AlertTextUI.instance.ToggleSecondaryAlertText(!inventoryIsOpen);
         }
     }
 

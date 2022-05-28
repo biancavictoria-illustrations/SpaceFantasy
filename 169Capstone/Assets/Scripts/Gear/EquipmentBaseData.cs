@@ -66,6 +66,9 @@ public class EquipmentBaseData : ScriptableObject
     [Tooltip("Internal ID")]
     [SerializeField] private ItemID itemID;
 
+    [Tooltip("IF equipping this item, unlocks a journal content entry (or multiple), put that here; if not, leave it empty")]
+    [SerializeField] private JournalContentID[] journalEntriesUnlocked;
+
     [Tooltip("Just the model, for dropping on the ground")]
     [SerializeField] private GameObject itemDropModelPrefab;
 
@@ -152,5 +155,10 @@ public class EquipmentBaseData : ScriptableObject
     public StatType PrimaryItemLine()
     {
         return primaryItemLine;
+    }
+
+    public JournalContentID[] JournalEntriesUnlocked()
+    {
+        return journalEntriesUnlocked;
     }
 }

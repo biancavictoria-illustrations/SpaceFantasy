@@ -267,10 +267,8 @@ public class EntityHealth : MonoBehaviour
                 }
             }
 
-            if(enemyID == EnemyID.Slime || enemyID == EnemyID.TimeLich || enemyID == EnemyID.BeetleBoss){
-                // Tell the story manager that this creature was killed
-                StoryManager.instance.KilledEventOccurred(enemyID, StoryBeatType.EnemyKilled);
-            }
+            // Tell the story manager that this creature was killed
+            StoryManager.instance.KilledEventOccurred(enemyID, StoryBeatType.EnemyKilled);
             
             if(enemyDropGenerator){
                 enemyDropGenerator.GetDrop(GameManager.instance.bossesKilled, transform);
