@@ -42,6 +42,8 @@ tags:
 
 <<elseif $headNode is "KilledByTimeLich">>
     [[StellanKilledByTimeLich]]
+<<elseif $headNode is "KilledByDeathPitTimeLichArena">>
+    [[StellanKilledByDeathPitTimeLichArena]]
 <<elseif $headNode is "KilledBySlime">>
     [[StellanKilledBySlime]]
 <<elseif $headNode is "KilledByBeetleBoss">>
@@ -213,6 +215,22 @@ I killed him.
 I killed the Lich. Why are we still here? What’s going on? If you know something, if you’re <i>hiding</i> something–
 <<SetSpeaker Stellan>>
 Tone down the aggression, Atlan. You’ve only made it this far because of me. … I have some theories, but I’ll need some time. And lots of Star Shards.
+===
+
+
+
+title: StellanKilledByDeathPitTimeLichArena
+tags:
+---
+// If this was your first time facing the lich, play default lich death 1 first instead
+<<if not Visited("StellanKilledByTimeLich")>>
+    [[StellanKilledByTimeLich]]
+<<else>>
+    <<SetSpeaker Stellan>><<BranchComplete KilledBy KilledByDeathPitTimeLichArena>>
+    TODO
+    <<SetSpeaker Player>>
+    TODO
+<<endif>>
 ===
 
 

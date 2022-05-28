@@ -24,6 +24,8 @@ public enum DamageSourceType{
     FlameTrap,
     FloorSpikeTrap,
 
+    DeathPitTimeLichArena,
+
     enumSize
 }
 
@@ -177,9 +179,16 @@ public class EntityHealth : MonoBehaviour
 
         if(currentHitpoints <= 0)
         {
-            //Debug.Log("Dead");
             currentHitpoints = 0;
-            damageSourceCausedPlayerDeath = damageSource;
+
+            // If the player died in the lich arena but NOT to the lich himself OR after killing him OR to a death pit, set damageSource to lich instead
+            if( GameManager.instance.currentSceneName == GameManager.LICH_ARENA_STRING_NAME && damageSource != DamageSourceType.DeathPitTimeLichArena && damageSource != DamageSourceType.DefeatedTimeLichEndRunDeath ){
+                damageSourceCausedPlayerDeath = DamageSourceType.TimeLich;
+            }
+            else{   // Otherwise, set it to whatever it registered as
+                damageSourceCausedPlayerDeath = damageSource;
+            }
+            
             OnDeath.Invoke(this);
         }
 
@@ -274,11 +283,12 @@ public class EntityHealth : MonoBehaviour
                 }
             }
             
-            if(enemyDropGenerator){
-                enemyDropGenerator.GetDrop(GameManager.instance.bossesKilled, transform);
-            }
-            else{
-                Debug.LogWarning("No enemy drop generator found for enemy: " + enemyID);
+            // If we're NOT in the lich fight, maybe drop something
+            if(GameManager.instance.currentSceneName != GameManager.LICH_ARENA_STRING_NAME){
+                if(enemyDropGenerator)
+                    enemyDropGenerator.GetDrop(GameManager.instance.bossesKilled, transform);
+                else
+                    Debug.LogWarning("No enemy drop generator found for enemy: " + enemyID);
             }
             
             for(int i = 0; i < TEMPCOINDROPAMOUNT; ++i)
