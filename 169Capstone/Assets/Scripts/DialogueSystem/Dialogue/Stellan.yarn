@@ -1,6 +1,10 @@
 ﻿title: StellanStart
 tags:
 ---
+<<if EpilogueTriggered()>>
+    [[StellanEpilogueDialogue]]
+<<endif>>
+
 <<set $visitedDefault to Visited("StellanDefaultDialogue")>>
 <<set $visitedDefault1 to Visited("StellanDefaultDialogue1")>>
 <<set $visitedDefault2 to Visited("StellanDefaultDialogue2")>>
@@ -586,8 +590,9 @@ tags:
 <<SetSpeaker Player>>
 Play recording.
 <<SetSpeaker Stellan comm>>
-Hello, friend.
+Hello, friend. A message for you, before you finally leave this place for good.
 I… Hmm.
+Where to begin?
 I, like everyone on this ship, was plucked from a very specific moment in my life. A defining moment, for me. A… a crossroads.
 Only I, unlike the others, had the unique opportunity to see how one of the possible choices that lay before me would play out if -- when -- I chose it.
 How it <i>did</i> play out. In my future.
@@ -598,7 +603,7 @@ Perhaps my mother was right, after all. Perhaps the caelarae were watching over 
 You died too much, suffered too much for my punishment. No amount of suffering could ever bring me close to enough to repay you for what you've done here, but…
 I can only hope, through all of this, that you know I have suffered, too, watching you fail time and time again. To know that with each of your deaths, the blood was always on my own hands.
 ...
-… I understand if you can never find it in yourself to forgive me. I would not wish the burden of yet another task I have yet found insurmountable upon you.
+… I understand if you can never find it in yourself to forgive me. I would not wish the burden of yet another task I myself have yet found insurmountable upon you.
 But I hope -- I do hope -- that you will know the deepest extents of my gratitude for putting an end to all of this.
 … Thank you, friend. For giving me the chance to atone.
 ===

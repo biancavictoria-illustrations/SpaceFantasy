@@ -77,6 +77,10 @@ public class JournalContentDisplay : MonoBehaviour
 
     private void ShowCurrentContentPage()
     {
+        if(!jcm){
+            jcm = GameManager.instance.journalContentManager;
+        }
+        
         // Show the content for the panel associated with JournalContentID panelIndex
         JournalContent content = jcm.contentDatabase[activePageID];
 

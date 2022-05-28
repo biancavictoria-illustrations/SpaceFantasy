@@ -228,9 +228,16 @@ public class DevPanel : MonoBehaviour
 
     public void UnlockElevator()
     {
-        if(GameManager.instance.InSceneWithRandomGeneration()){
-            FindObjectOfType<SceneTransitionDoor>().GetComponent<Collider>().enabled = true;
+        if(GameManager.instance.InSceneWithRandomGeneration() || GameManager.instance.currentSceneName == GameManager.LICH_ARENA_STRING_NAME){
+            SceneTransitionDoor door = FindObjectOfType<SceneTransitionDoor>();
+            if(door)
+                door.GetComponent<Collider>().enabled = true;
         }
+    }
+
+    public void TriggerEpilogue()
+    {
+        GameManager.instance.epilogueTriggered = true;
     }
 
     public void ToggleInteractabilityOnDeviceChange( bool set )

@@ -9,12 +9,18 @@ public class AlertTextUI : MonoBehaviour
 {
     public static AlertTextUI instance;
 
-    [SerializeField] private GameObject alert;
-    [SerializeField] private Image controlButtonIcon;
-    [SerializeField] private TMP_Text controlButtonText;
-    [SerializeField] private TMP_Text alertText;
+    [SerializeField] private GameObject primaryAlert;
+    [SerializeField] private Image primaryAlertControlButtonIcon;
+    [SerializeField] private TMP_Text primaryAlertControlButtonText;
+    [SerializeField] private TMP_Text primaryAlertText;
 
-    [HideInInspector] public bool alertTextIsActive = false;
+    [SerializeField] private GameObject secondaryAlert;
+    [SerializeField] private Image secondaryAlertControlButtonIcon;
+    [SerializeField] private TMP_Text secondaryAlertControlButtonText;
+    [SerializeField] private TMP_Text secondaryAlertText;
+
+    [HideInInspector] public bool primaryAlertTextIsActive = false;
+    [HideInInspector] public bool secondaryAlertTextIsActive = false;
 
     public static bool inputDeviceChanged = false;
 
@@ -56,7 +62,8 @@ public class AlertTextUI : MonoBehaviour
 
     private void StartOnGenerationComplete()
     {
-        alertTextIsActive = false;
+        primaryAlertTextIsActive = false;
+        secondaryAlertTextIsActive = false;
         UpdateAlertText();
     }
 
@@ -69,89 +76,159 @@ public class AlertTextUI : MonoBehaviour
         }
     }
 
-    private void SetAlertText(bool set, Sprite _icon=null, string _text="", string newAlertDescription="")
-    {
-        ToggleAlertText(set);
-
-        if(_icon){
-            controlButtonIcon.gameObject.SetActive(true);
-            controlButtonText.gameObject.SetActive(false);
-
-            controlButtonIcon.sprite = _icon;
-            controlButtonIcon.preserveAspect = true;
-        }
-        else{
-            controlButtonIcon.gameObject.SetActive(false);
-            controlButtonText.gameObject.SetActive(true);
+    #region Set Alert Values
+        private void SetPrimaryAlertText(bool set, Sprite _icon=null, string _text="", string newAlertDescription="")
+        {
+            if(!primaryAlert){
+                return;
+            }
             
-            controlButtonText.text = _text;
+            TogglePrimaryAlertText(set);
+
+            if(_icon){
+                primaryAlertControlButtonIcon.gameObject.SetActive(true);
+                primaryAlertControlButtonText.gameObject.SetActive(false);
+
+                primaryAlertControlButtonIcon.sprite = _icon;
+                primaryAlertControlButtonIcon.preserveAspect = true;
+            }
+            else{
+                primaryAlertControlButtonIcon.gameObject.SetActive(false);
+                primaryAlertControlButtonText.gameObject.SetActive(true);
+                
+                primaryAlertControlButtonText.text = _text;
+            }
+
+            primaryAlertText.text = newAlertDescription;
         }
 
-        alertText.text = newAlertDescription;
-    }
+        private void SetSecondaryAlertText(bool set, Sprite _icon=null, string _text="", string newAlertDescription="")
+        {
+            if(!secondaryAlert){
+                return;
+            }
+            
+            ToggleSecondaryAlertText(set);
 
-    // For temporarily toggling in pause menu and other screens like that (if necessary)
-    public void ToggleAlertText(bool set)
-    {
-        alert.SetActive(set);
-    }
+            if(_icon){
+                secondaryAlertControlButtonIcon.gameObject.SetActive(true);
+                secondaryAlertControlButtonText.gameObject.SetActive(false);
 
-    // Called when you leave a trigger
-    public void DisableAlert()
-    {
-        SetAlertText(false);
-        alertTextIsActive = false;
-        interactAlertIsActive = false;
-        openInventoryAlertIsActive = false;
-        openJournalAlertIsActive = false;
-    }
+                secondaryAlertControlButtonIcon.sprite = _icon;
+                secondaryAlertControlButtonIcon.preserveAspect = true;
+            }
+            else{
+                secondaryAlertControlButtonIcon.gameObject.SetActive(false);
+                secondaryAlertControlButtonText.gameObject.SetActive(true);
+                
+                secondaryAlertControlButtonText.text = _text;
+            }
 
-    public IEnumerator RemoveAlertAfterSeconds(float timeToWait = 2f)
-    {
-        yield return new WaitForSeconds(timeToWait);
-        DisableAlert();   
-    }
+            secondaryAlertText.text = newAlertDescription;
+        }
+    #endregion
 
-    public void EnableOpenJournalAlert()
-    {
-        SetAlertText(true, openJournalControlIcon, openJournalControlString, "OPEN CAPTAIN'S LOG");
-        alertTextIsActive = true;
-        openJournalAlertIsActive = true;
-    }
+    #region Toggles
+        // For temporarily toggling in pause menu and other screens like that (if necessary)
+        public void TogglePrimaryAlertText(bool set)
+        {
+            if(primaryAlert){
+                primaryAlert.SetActive(set);
+            }        
+        }
+
+        public void ToggleSecondaryAlertText(bool set)
+        {
+            if(secondaryAlert){
+                secondaryAlert.SetActive(set);
+            }        
+        }
+
+        // Called when you leave a trigger
+        public void DisablePrimaryAlert()
+        {
+            SetPrimaryAlertText(false);
+            primaryAlertTextIsActive = false;
+            interactAlertIsActive = false;
+            openInventoryAlertIsActive = false;
+        }
+
+        public void DisableSecondaryAlert()
+        {
+            SetSecondaryAlertText(false);
+            secondaryAlertTextIsActive = false;
+            openJournalAlertIsActive = false;
+        }
+
+        public IEnumerator RemovePrimaryAlertAfterSeconds(float timeToWait = 2f)
+        {
+            yield return new WaitForSeconds(timeToWait);
+            DisablePrimaryAlert();   
+        }
+
+        public IEnumerator RemoveSecondaryAlertAfterSeconds(float timeToWait = 4f)
+        {
+            yield return new WaitForSeconds(timeToWait);
+            DisableSecondaryAlert();
+        }
+    #endregion
+
+    #region Journal Alerts
+        public void EnableOpenJournalAlert()
+        {
+            SetSecondaryAlertText(true, openJournalControlIcon, openJournalControlString, "OPEN CAPTAIN'S LOG");
+            secondaryAlertTextIsActive = true;
+            openJournalAlertIsActive = true;
+        }
+
+        public void EnableJournalUpdatedAlert()
+        {
+            SetSecondaryAlertText(true, openJournalControlIcon, openJournalControlString, "CAPTAIN'S LOG UPDATED");
+            secondaryAlertTextIsActive = true;
+            openJournalAlertIsActive = true;
+        }
+    #endregion
 
     #region Interact Alerts
         public void EnableInteractAlert()
         {
-            SetAlertText(true, interactControlIcon, interactControlString, "INTERACT");
-            alertTextIsActive = true;
+            SetPrimaryAlertText(true, interactControlIcon, interactControlString, "INTERACT");
+            primaryAlertTextIsActive = true;
             interactAlertIsActive = true;
         }
 
         public void EnableShopAlert()
         {
-            SetAlertText(true, interactControlIcon, interactControlString, "SHOP");
-            alertTextIsActive = true;
+            SetPrimaryAlertText(true, interactControlIcon, interactControlString, "SHOP");
+            primaryAlertTextIsActive = true;
             interactAlertIsActive = true;
         }
 
-        public void EnableProceedDoorAlert()
+        public void EnableContinueDoorAlert()
         {
-            SetAlertText(true, interactControlIcon, interactControlString, "PROCEED");
-            alertTextIsActive = true;
+            SetPrimaryAlertText(true, interactControlIcon, interactControlString, "CONTINUE");
+            primaryAlertTextIsActive = true;
+            interactAlertIsActive = true;
+        }
+
+        public void EnableLeaveDoorAlert()
+        {
+            SetPrimaryAlertText(true, interactControlIcon, interactControlString, "LEAVE");
+            primaryAlertTextIsActive = true;
             interactAlertIsActive = true;
         }
 
         public void EnablePickupAlert()
         {
-            SetAlertText(true, interactControlIcon, interactControlString, "PICK UP");
-            alertTextIsActive = true;
+            SetPrimaryAlertText(true, interactControlIcon, interactControlString, "PICK UP");
+            primaryAlertTextIsActive = true;
             interactAlertIsActive = true;
         }
 
         public void EnableItemExamineAlert()
         {
-            SetAlertText(true, interactControlIcon, interactControlString, "EXAMINE");
-            alertTextIsActive = true;
+            SetPrimaryAlertText(true, interactControlIcon, interactControlString, "EXAMINE");
+            primaryAlertTextIsActive = true;
             interactAlertIsActive = true;
         }
     #endregion
@@ -159,15 +236,15 @@ public class AlertTextUI : MonoBehaviour
     #region Inventory Alerts
         public void EnableOpenInventoryAlert()
         {
-            SetAlertText(true, openInventoryControlIcon, openInventoryControlString, "OPEN INVENTORY");
-            alertTextIsActive = true;
+            SetPrimaryAlertText(true, openInventoryControlIcon, openInventoryControlString, "OPEN INVENTORY");
+            primaryAlertTextIsActive = true;
             openInventoryAlertIsActive = true;
         }
 
         public void EnableViewStatsAlert()
         {
-            SetAlertText(true, openInventoryControlIcon, openInventoryControlString, "VIEW STATS");
-            alertTextIsActive = true;
+            SetPrimaryAlertText(true, openInventoryControlIcon, openInventoryControlString, "VIEW STATS");
+            primaryAlertTextIsActive = true;
             openInventoryAlertIsActive = true;
         }
     #endregion
@@ -187,25 +264,25 @@ public class AlertTextUI : MonoBehaviour
         // If it's null at this point, get the string for the control instead
         if(!interactControlIcon){
             interactControlString = GetActionString(interactAction);
-            controlButtonText.text = interactControlString;
+            primaryAlertControlButtonText.text = interactControlString;
         }
         if(!openInventoryControlIcon){
             openInventoryControlString = GetActionString(toggleInventoryAction);
-            controlButtonText.text = openInventoryControlString;
+            primaryAlertControlButtonText.text = openInventoryControlString;
         }
         if(!openJournalControlIcon){
             openJournalControlString = GetActionString(toggleJournalAction);
-            controlButtonText.text = openJournalControlString;
+            secondaryAlertControlButtonText.text = openJournalControlString;
         }
 
         if(openInventoryAlertIsActive){
-            SetAlertText(alertTextIsActive, openInventoryControlIcon, openInventoryControlString, alertText.text);
+            SetPrimaryAlertText(primaryAlertTextIsActive, openInventoryControlIcon, openInventoryControlString, primaryAlertText.text);
         }
         else if(interactAlertIsActive){
-            SetAlertText(alertTextIsActive, interactControlIcon, interactControlString, alertText.text);
+            SetPrimaryAlertText(primaryAlertTextIsActive, interactControlIcon, interactControlString, primaryAlertText.text);
         }
         else if(openJournalAlertIsActive){
-            SetAlertText(alertTextIsActive, openJournalControlIcon, openJournalControlString, alertText.text);
+            SetSecondaryAlertText(secondaryAlertTextIsActive, openJournalControlIcon, openJournalControlString, secondaryAlertText.text);
         }
     }
 

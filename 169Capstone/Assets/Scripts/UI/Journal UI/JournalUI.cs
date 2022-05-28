@@ -22,6 +22,7 @@ public class JournalUI : MonoBehaviour
         devPanel?.SetActive(!set);
 
         InGameUIManager.instance.SetGameUIActive(!set);
+        InGameUIManager.instance.ToggleMiniMap(!set);
 
         if(!set){
             if(GameManager.instance.currentSceneName == GameManager.MAIN_HUB_STRING_NAME){
@@ -35,17 +36,9 @@ public class JournalUI : MonoBehaviour
         }
     }
 
-    public void CheckForNewJournalContent()
-    {
-        
-
-        // If new content:
-        EnableJournalAlert();
-    }
-
     public void EnableJournalAlert()
     {
-        AlertTextUI.instance.EnableOpenJournalAlert();
-        StartCoroutine(AlertTextUI.instance.RemoveAlertAfterSeconds());
+        AlertTextUI.instance.EnableJournalUpdatedAlert();
+        StartCoroutine(AlertTextUI.instance.RemoveSecondaryAlertAfterSeconds());
     }    
 }

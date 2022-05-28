@@ -67,6 +67,7 @@ public class Player : MonoBehaviour
             if(GameManager.instance.currentRunNumber == 1){
                 FindObjectOfType<StartWeaponSpawner>().itemObject.GetComponent<GeneratedEquipment>().EquipGeneratedItem();
                 PlayerInventory.hasCaptainsLog = false;
+                InGameUIManager.instance.ToggleMiniMap(false);
             }
         }
     }
@@ -77,7 +78,7 @@ public class Player : MonoBehaviour
         
         if( GameManager.instance.currentRunNumber == 2 ){
             AlertTextUI.instance.EnableViewStatsAlert();
-            StartCoroutine(AlertTextUI.instance.RemoveAlertAfterSeconds());
+            StartCoroutine(AlertTextUI.instance.RemovePrimaryAlertAfterSeconds());
         }
     }
 

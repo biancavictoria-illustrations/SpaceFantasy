@@ -94,6 +94,11 @@ public class PlayerInventory : MonoBehaviour
 
         // Add your new passive upgrades
         SetStatBonusesFromItem(item.data);
+
+        // If necessary, unlock journal entires
+        if(item.data.equipmentBaseData.JournalEntriesUnlocked()?.Length > 0){
+            GameManager.instance.journalContentManager.UnlockJournalEntry(item.data.equipmentBaseData.JournalEntriesUnlocked());
+        }
     }
 
     private void SetStatBonusesFromItem(GeneratedEquipment itemData)

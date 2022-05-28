@@ -14,6 +14,10 @@ public enum EnemyID
     Slime,
     EnchantedCloak,
 
+    // Elite variants
+    EliteSlime,
+    EliteRobert,
+
     // Size
     enumSize
 }

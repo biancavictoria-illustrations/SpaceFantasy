@@ -454,18 +454,18 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
                 UpdateBaseDescriptionValues();
                 return;
             case PermanentUpgradeType.StartingPotions:
-                upgradeName = "[POTIONS]";  // TODO: Update these values!
+                upgradeName = "Regenerative Draught";
                 upgradeBaseCost = 10;
-                costIncreasePerLevel = 5;
+                costIncreasePerLevel = 10;
                 totalUpgradeLevels = PermanentUpgradeManager.maxStartingHealthPotionQuantity;
                 baseDescription = "Increase your starting health potion quantity by 1.";
                 return;
             case PermanentUpgradeType.TimeLichKillerThing:
                 upgradeName = "Deus Ex Machina";
-                upgradeBaseCost = 100;
+                upgradeBaseCost = 90;
                 costIncreasePerLevel = 0;
                 totalUpgradeLevels = PermanentUpgradeManager.maxTimeLichThingLevels;
-                baseDescription = "The missing piece of the puzzle.";
+                baseDescription = "The missing piece of the puzzle: The Lich's phylactery.";
                 return;
         }
         Debug.LogWarning("No data found for upgrade type: " + upgradeType);

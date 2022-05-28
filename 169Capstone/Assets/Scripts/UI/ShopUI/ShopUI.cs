@@ -27,6 +27,7 @@ public class ShopUI : MonoBehaviour
 
         shopInventoryPanel.SetActive(true);
         hoverAlerts.DisableAllHoverAlerts();
+        InGameUIManager.instance.ToggleMiniMap(false);
 
         leaveShopButton.Select();
     }
@@ -37,6 +38,7 @@ public class ShopUI : MonoBehaviour
 
         shopInventoryPanel.SetActive(false);
         hoverAlerts.DisableAllHoverAlerts();
+        InGameUIManager.instance.ToggleMiniMap(true);
 
         AlertTextUI.instance.EnableShopAlert();
     }
