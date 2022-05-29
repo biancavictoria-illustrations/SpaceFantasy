@@ -8,11 +8,11 @@ public class AnimationStateController : MonoBehaviour
     public bool attackActive;
     public UnityEvent endAttack;
     public UnityEvent startAccessory;
-    public UnityEvent startCooldownAccessory;
+    public UnityEvent endCooldownAccessory;
     public UnityEvent endAccessory;
     public UnityEvent startLegs;
     public UnityEvent endLegs;
-    public UnityEvent startCooldownLegs;
+    public UnityEvent endCooldownLegs;
 
     public Animator animator;
 
@@ -33,34 +33,41 @@ public class AnimationStateController : MonoBehaviour
         endAttack.Invoke();
     }
 
+    // Use the ability, triggers duration
     public void StartAccessory()
     {
         startAccessory.Invoke();
     }
 
+    // Reset, triggers cooldown
     public void EndAccessory()
     {
         endAccessory.Invoke();
     }
 
-    public void StartCoolDownAccessory()
+    // Ends the cooldown itself, can use ability now
+    public void EndCoolDownAccessory()
     {
-        startCooldownAccessory.Invoke();
+        endCooldownAccessory.Invoke();
     }
 
+
+    // Use the ability, triggers duration
     public void StartLegs()
     {
         startLegs.Invoke();
     }
 
+    // Reset, triggers cooldown
     public void EndLegs()
     {
         endLegs.Invoke();
     }
 
-    public void StartCoolDownLegs()
+    // Ends the cooldown itself, can use ability now
+    public void EndCoolDownLegs()
     {
-        startCooldownLegs.Invoke();
+        endCooldownLegs.Invoke();
     }
 }
 

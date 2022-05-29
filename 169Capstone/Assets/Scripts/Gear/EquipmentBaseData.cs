@@ -9,7 +9,7 @@ public enum InventoryItemSlot
     Weapon,
     Helmet,
     Accessory,
-    Legs,  // Legwear?
+    Legs,
 
     enumSize
 }

@@ -10,7 +10,7 @@ public class ItemCooldownUI : MonoBehaviour
 
     public bool isActive {get; private set;}
 
-    public int counter;
+    public float counter;
 
     void Start()
     {
@@ -22,7 +22,7 @@ public class ItemCooldownUI : MonoBehaviour
         return itemSlot;
     }
 
-    public void StartCooldownCountdown(int value)
+    public void StartCooldownCountdown(float value)
     {
         isActive = true;
         counter = value;   
@@ -37,6 +37,6 @@ public class ItemCooldownUI : MonoBehaviour
 
     public void SetTextToCounterValue()
     {
-        cooldownText.text = counter + "";
+        cooldownText.text = UIUtils.GetTruncatedDecimalForUIDisplay(counter) + "";
     }
 }

@@ -2,31 +2,36 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Leg : NonWeaponItem
+public abstract class Leg : NonWeaponItem
 {
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        slot = 3;
+        slot = InventoryItemSlot.Legs;
     }
 
-    private void Update()
-    {
-        if(InputManager.instance.useLegs)
-        {
-            fire = true;
-        }
-    }
+    // START & UPDATE both implemented in children -> if we put anything here, it would get overriden unless we call base.Start() / base.Update()
 
-    public IEnumerator CoolDown()
-    {
-        yield return new WaitForSeconds(itemData.CoolDown());
-        anim.animator.SetTrigger("CooldownLegs");
-    }
+    // private void Update()
+    // {
+    //     if(InputManager.instance.useLegs)
+    //     {
+    //         fire = true;
+    //     }
+    // }
 
-    public IEnumerator Duration()
-    {
-        yield return new WaitForSeconds(itemData.Duration());
-        anim.animator.SetTrigger("DurationLegs");
-    }
+    // moving this stuff to NonWeaponItem.cs
+    
+    // public IEnumerator CoolDown()
+    // {
+    //     InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Legs, itemData.CoolDown());
+    //     yield return new WaitForSeconds(itemData.CoolDown());
+    //     anim.animator.SetTrigger("CooldownLegs");
+    // }
+
+    // public IEnumerator Duration()
+    // {
+    //     InGameUIManager.instance.SetItemIconColor(InventoryItemSlot.Legs, InGameUIManager.SLIME_GREEN_COLOR);
+    //     yield return new WaitForSeconds(itemData.Duration());
+    //     anim.animator.SetTrigger("DurationLegs");
+    // }
 }

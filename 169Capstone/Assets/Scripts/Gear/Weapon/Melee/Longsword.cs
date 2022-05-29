@@ -114,4 +114,13 @@ public class Longsword : Equipment
         if(bonusStackCounter > 0)
             attackSpeedRoutine = StartCoroutine(bonusDecayRoutine());
     }
+
+    public override void ManageCoroutinesOnUnequip()
+    {
+        // If the coroutine was running, stop it and revert the stat bonus
+        if(bonusStackCounter > 0 && attackSpeedRoutine != null){
+            player.stats.SetBonusForStat(this, StatType.AttackSpeed, EntityStats.BonusType.multiplier, 0);
+            StopCoroutine(attackSpeedRoutine);
+        }
+    }
 }
