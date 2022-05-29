@@ -32,12 +32,20 @@ public class AlertTextUI : MonoBehaviour
     private string openInventoryControlString;
     private bool openInventoryAlertIsActive = false;
 
+    private Sprite openMapControlIcon;
+    private string openMapControlString;
+    private bool openMapAlertIsActive = false;
+
     private Sprite openJournalControlIcon;
     private string openJournalControlString;
     private bool openJournalAlertIsActive = false;
     
+    // Primary Alerts
     [SerializeField] private InputActionReference interactAction;
     [SerializeField] private InputActionReference toggleInventoryAction;
+    [SerializeField] private InputActionReference toggleMapAction;
+
+    // Secondary Alerts (only journal)
     [SerializeField] private InputActionReference toggleJournalAction;
 
     void Awake()
@@ -151,6 +159,7 @@ public class AlertTextUI : MonoBehaviour
             primaryAlertTextIsActive = false;
             interactAlertIsActive = false;
             openInventoryAlertIsActive = false;
+            openMapAlertIsActive = false;
         }
 
         public void DisableSecondaryAlert()
@@ -249,6 +258,13 @@ public class AlertTextUI : MonoBehaviour
         }
     #endregion
 
+    public void EnableViewMapAlert()
+    {
+        SetPrimaryAlertText(true, openMapControlIcon, openMapControlString, "VIEW MAP");
+        primaryAlertTextIsActive = true;
+        openMapAlertIsActive = true;
+    }
+
     // If showing alerts for more than just interact, UPDATE this to include those as well
     public void UpdateAlertText()
     {
@@ -257,6 +273,9 @@ public class AlertTextUI : MonoBehaviour
 
         openInventoryControlIcon = GetIconForAction(ControlKeys.ToggleInventory);
         openInventoryControlString = "";
+
+        openMapControlIcon = GetIconForAction(ControlKeys.ToggleMinimap);
+        openMapControlString = "";
 
         openJournalControlIcon = GetIconForAction(ControlKeys.ToggleJournal);
         openJournalControlString = "";
@@ -270,18 +289,28 @@ public class AlertTextUI : MonoBehaviour
             openInventoryControlString = GetActionString(toggleInventoryAction);
             primaryAlertControlButtonText.text = openInventoryControlString;
         }
+        if(!openMapControlIcon){
+            openMapControlString = GetActionString(toggleMapAction);
+            primaryAlertControlButtonText.text = openMapControlString;
+        }
         if(!openJournalControlIcon){
             openJournalControlString = GetActionString(toggleJournalAction);
             secondaryAlertControlButtonText.text = openJournalControlString;
         }
 
+        // Primary Alerts
         if(openInventoryAlertIsActive){
             SetPrimaryAlertText(primaryAlertTextIsActive, openInventoryControlIcon, openInventoryControlString, primaryAlertText.text);
         }
         else if(interactAlertIsActive){
             SetPrimaryAlertText(primaryAlertTextIsActive, interactControlIcon, interactControlString, primaryAlertText.text);
         }
-        else if(openJournalAlertIsActive){
+        else if(openMapAlertIsActive){
+            SetPrimaryAlertText(primaryAlertTextIsActive, openMapControlIcon, openMapControlString, primaryAlertText.text);
+        }
+        
+        // Secondary Alerts
+        if(openJournalAlertIsActive){
             SetSecondaryAlertText(secondaryAlertTextIsActive, openJournalControlIcon, openJournalControlString, secondaryAlertText.text);
         }
     }

@@ -24,6 +24,8 @@ public enum DamageSourceType{
     FlameTrap,
     FloorSpikeTrap,
 
+    DeathPitTimeLichArena,
+
     enumSize
 }
 
@@ -141,7 +143,7 @@ public class EntityHealth : MonoBehaviour
     // Need a bool to check for slime pit otherwise you could DODGE falling in a slime pit and fall for eternity
     public bool Damage(float damage, DamageSourceType damageSource)
     {
-        if( gameObject.tag == "Player" && damageSource != DamageSourceType.DeathPit ){
+        if( gameObject.tag == "Player" && damageSource != DamageSourceType.DeathPit && damageSource != DamageSourceType.DefeatedTimeLichEndRunDeath ){
             // TEMP for dev
             if( tempPlayerGodModeToggle ){
                 return currentHitpoints <= 0;
@@ -177,9 +179,16 @@ public class EntityHealth : MonoBehaviour
 
         if(currentHitpoints <= 0)
         {
-            //Debug.Log("Dead");
             currentHitpoints = 0;
-            damageSourceCausedPlayerDeath = damageSource;
+
+            // If the player died in the lich arena but NOT to the lich himself OR after killing him OR to a death pit, set damageSource to lich instead
+            if( GameManager.instance.currentSceneName == GameManager.LICH_ARENA_STRING_NAME && damageSource != DamageSourceType.DeathPitTimeLichArena && damageSource != DamageSourceType.DefeatedTimeLichEndRunDeath ){
+                damageSourceCausedPlayerDeath = DamageSourceType.TimeLich;
+            }
+            else{   // Otherwise, set it to whatever it registered as
+                damageSourceCausedPlayerDeath = damageSource;
+            }
+            
             OnDeath.Invoke(this);
         }
 
@@ -255,26 +264,35 @@ public class EntityHealth : MonoBehaviour
         }
         else
         {
+            // Tell the story manager that this creature was killed
+            StoryManager.instance.KilledEventOccurred(enemyID, StoryBeatType.EnemyKilled);
+
             if(isBossEnemy){
                 InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(false);
 
                 if(enemyID == EnemyID.TimeLich){
-                    GameManager.instance.hasKilledTimeLich = true;
+                    // Story state things
+                    // If this is your first clear, make note of that
+                    if( !GameManager.instance.hasKilledTimeLich ){
+                        GameManager.instance.DocumentFirstClearInfo();
+                    }
 
+                    DialogueManager.instance.SetTimeLichDeathDialogueTriggered(true);
                     if( PermanentUpgradeManager.instance.GetSkillLevel(PermanentUpgradeType.TimeLichKillerThing) > 0 ){
                         GameManager.instance.epilogueTriggered = true;
                     }
+
+                    // Trigger auto dialogue from player since this script is about to get destroyed
+                    Player.instance.StartAutoDialogueFromPlayer();
                 }
             }
-
-            // Tell the story manager that this creature was killed
-            StoryManager.instance.KilledEventOccurred(enemyID, StoryBeatType.EnemyKilled);
             
-            if(enemyDropGenerator){
-                enemyDropGenerator.GetDrop(GameManager.instance.bossesKilled, transform);
-            }
-            else{
-                Debug.LogWarning("No enemy drop generator found for enemy: " + enemyID);
+            // If we're NOT in the lich fight, maybe drop something
+            if(GameManager.instance.currentSceneName != GameManager.LICH_ARENA_STRING_NAME){
+                if(enemyDropGenerator)
+                    enemyDropGenerator.GetDrop(GameManager.instance.bossesKilled, transform);
+                else
+                    Debug.LogWarning("No enemy drop generator found for enemy: " + enemyID);
             }
             
             for(int i = 0; i < TEMPCOINDROPAMOUNT; ++i)
@@ -288,6 +306,7 @@ public class EntityHealth : MonoBehaviour
             // If you killed the mini boss, trigger Stellan's comm to tell you to go to the elevator
             if(enemyID == EnemyID.BeetleBoss){
                 DialogueManager.instance.SetStellanCommTriggered(true);
+                // Have to do this in the player since this script is about to get destroyed and everything will get upset
                 Player.instance.StartAutoDialogueFromPlayer();
             }
 

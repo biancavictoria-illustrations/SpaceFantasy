@@ -3,12 +3,30 @@ tags:
 ---
 <<set $runNum to GetCurrentRunNum()>>
 // <<set $stellanCommTriggered to StellanCommTriggered()>>
-// <<set $epilogueTriggered to EpilogueTriggered()>>
+<<set $epilogueTriggered to EpilogueTriggered()>>
+<<set $timeLichDeathDialogueTriggered to TimeLichDeathDialogueTriggered()>>
 
+// If we just killed beetle boi
 <<if StellanCommTriggered()>>
     [[PlayerStellanCommTriggered]]
-<<elseif EpilogueTriggered()>>
+
+// If we just picked up the captain's log on run 1
+<<elseif CaptainsLogDialogueTriggered()>>
+    [[PlayerCaptainsLogDialogueTriggered]]
+
+// If we killed the time lich for the last time
+<<elseif $timeLichDeathDialogueTriggered and $epilogueTriggered>>
+    [[PlayerTimeLichDeathDialogueTriggeredFINAL]]
+
+// If we killed the time lich any old time
+<<elseif $timeLichDeathDialogueTriggered>>
+    [[PlayerTimeLichDeathDialogueTriggered]]
+
+// If we took the elevator back to the abandoned hub
+<<elseif $epilogueTriggered>>
     [[PlayerEpilogueIntro]]
+
+// Starting stuff
 <<elseif $runNum is 1 and not Visited("PlayerFirstRunIntro")>>
     [[PlayerFirstRunIntro]]
 <<elseif $runNum is 2 and not Visited("PlayerSecondRunIntro")>>
@@ -34,6 +52,14 @@ tags:
 <<SetSpeaker Player>>
 What...?
 I feel... different.
+===
+
+title: PlayerCaptainsLogDialogueTriggered
+tags:
+---
+<<SetSpeaker Player>>
+The Captain's Log...
+Looks pretty old, but maybe it has a map.
 ===
 
 
@@ -72,7 +98,6 @@ tags:
     Answer comm.
     <<SetSpeaker Stellan comm>>
     Same as last time: Take the elevator up.
-    <<SetSpeaker Stellan comm>>
     ... See you soon.
 <<endif>>
 ===
@@ -99,11 +124,80 @@ tags:
 
 
 
+title: PlayerTimeLichDeathDialogueTriggered
+tags:
+---
+<<if Visited("PlayerTimeLichDeathDialogueTriggered")>>
+    [[PlayerTimeLichDeathDialogueTriggered1]]
+<<elseif $runNum is 1>> // If you killed him for the first time on your FIRST run
+    <<SetSpeaker TimeLich>>
+    <i>Uugh</i>... How did you...?
+    <<SetSpeaker Player>>
+    run 1 death temp
+    <<SetSpeaker TimeLich>>
+    temp
+<<else>>
+    <<SetSpeaker Player>>
+    temp (first death)
+    <<SetSpeaker TimeLich>>
+    temp
+    <<SetSpeaker Player>>
+    temp
+<<endif>>
+===
+
+title: PlayerTimeLichDeathDialogueTriggered1
+tags:
+---
+<<if Visited("PlayerTimeLichDeathDialogueTriggered1")>>
+    [[PlayerTimeLichDeathDialogueTriggeredRepeatable]]
+<<else>>
+    <<SetSpeaker Player>>
+    temp (second death)
+    <<SetSpeaker TimeLich>>
+    temp
+    temp
+<<endif>>
+===
+
+title: PlayerTimeLichDeathDialogueTriggeredRepeatable
+tags:
+---
+// Get a random number 0-3
+<<set $num to RandomNum(4)>>
+<<if $num is 0>>
+    <<SetSpeaker TimeLich>>
+    ... Again... then...
+<<elseif $num is 1>>
+    <<SetSpeaker TimeLich>>
+    <i>Uugh</i>... I will see you... again...
+<<elseif $num is 2>>
+    <<SetSpeaker TimeLich>>
+    temp (repeatable)
+<<else>>
+    <<SetSpeaker TimeLich>>
+    temp (repeatable)
+<<endif>>
+===
+
+title: PlayerTimeLichDeathDialogueTriggeredFINAL
+tags:
+---
+<<SetSpeaker TimeLich>>
+TODO (death with deus ex)
+<<SetSpeaker Player>>
+TODO
+<<SetSpeaker TimeLich>>
+TODO
+===
+
+
+
 title: PlayerEpilogueIntro
 tags:
 ---
 <<SetSpeaker Player>>
-Stellan, we're free! I did it, he's gone!
+Stellan, I did it! He's gone, we can-
 ...
 ... Stellan?
 ===

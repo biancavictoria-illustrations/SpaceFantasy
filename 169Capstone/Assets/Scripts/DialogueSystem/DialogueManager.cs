@@ -28,12 +28,17 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private int numRunsThreshold = 4;   // Threshold for # runs beyond the exact num run that numRun dialogue can trigger
 
     public bool stellanCommTriggered {get; private set;}
+    public bool timeLichDeathDialogueTriggered {get; private set;}
+    public bool captainsLogDialogueTriggered {get; private set;}
+
     private bool hasBeenInitialized = false;
 
     public bool stopTime;
 
     public const float DEFAULT_TEXT_SPEED = 0.015f;
     public const float FAST_TEXT_SPEED = 0.008f;
+
+    public const float DEFAULT_AUTO_DIALOGUE_WAIT_TIME = 1.1f;
 
     void Awake()
     {
@@ -66,10 +71,22 @@ public class DialogueManager : MonoBehaviour
         stellanCommTriggered = false;
     }
 
-    public void SetStellanCommTriggered(bool set)
-    {
-        stellanCommTriggered = set;
-    }
+    #region No Active NPC Trigger Setters
+        public void SetStellanCommTriggered(bool set)
+        {
+            stellanCommTriggered = set;
+        }
+
+        public void SetTimeLichDeathDialogueTriggered(bool set)
+        {
+            timeLichDeathDialogueTriggered = set;
+        }
+
+        public void SetCaptainsLogDialogueTriggered(bool set)
+        {
+            captainsLogDialogueTriggered = set;
+        }
+    #endregion
 
     public void SetTextSpeed(float number)
     {
@@ -115,6 +132,26 @@ public class DialogueManager : MonoBehaviour
             }
         });
 
+        dialogueRunner.AddFunction("TimeLichDeathDialogueTriggered", 0, delegate (Yarn.Value[] parameters){
+            if(DialogueManager.instance.timeLichDeathDialogueTriggered){
+                DialogueManager.instance.SetTimeLichDeathDialogueTriggered(false);
+                return true;
+            }
+            else{
+                return false;
+            }
+        });
+
+        dialogueRunner.AddFunction("CaptainsLogDialogueTriggered", 0, delegate (Yarn.Value[] parameters){
+            if(DialogueManager.instance.captainsLogDialogueTriggered){
+                DialogueManager.instance.SetCaptainsLogDialogueTriggered(false);
+                return true;
+            }
+            else{
+                return false;
+            }
+        });
+
         dialogueRunner.AddFunction("EpilogueTriggered", 0, delegate (Yarn.Value[] parameters){
             return GameManager.instance.epilogueTriggered;
         });
@@ -125,6 +162,10 @@ public class DialogueManager : MonoBehaviour
 
         dialogueRunner.AddFunction("HasKilledTimeLich", 0, delegate (Yarn.Value[] parameters){
             return GameManager.instance.hasKilledTimeLich;
+        });
+
+        dialogueRunner.AddFunction("FirstClearRunNumber", 0, delegate (Yarn.Value[] parameters){
+            return GameManager.instance.firstClearRunNumber;
         });
 
 
@@ -223,11 +264,12 @@ public class DialogueManager : MonoBehaviour
                 }
             }
 
-            // TODO: This doesn't actually work bc every time NPC start runs it resets its num run dialogue list
+            // This doesn't actually work bc every time NPC start runs it resets its num run dialogue list
             // Is this necessary? It won't run again as long as it's marked complete, and it won't run to begin with unless the num run matches
-            if( sortedStoryBeats.Max.GetBeatType() == StoryBeatType.NumRuns ){
-                NPC.ActiveNPC.GetNumRunDialogueList().Remove(currentNumRunRemoveValue);
-            }
+            // CONFIRM this can be removed before deleting it completely
+            // if( sortedStoryBeats.Max.GetBeatType() == StoryBeatType.NumRuns ){
+            //     NPC.ActiveNPC.GetNumRunDialogueList().Remove(currentNumRunRemoveValue);
+            // }
 
             Debug.Log("PLAYING DIALOGUE INTERACTION for " + NPC.ActiveNPC.SpeakerData().SpeakerID() + ": " + sortedStoryBeats.Max.GetYarnHeadNode());
 
@@ -357,7 +399,6 @@ public class DialogueManager : MonoBehaviour
     // OR when we want to force dialogue when you walk into certain triggers at certain times (Time Lich, etc.)
     public void OnNPCInteracted()
     {
-        // Debug.Log("On NPC interacted");
         OnDialogueOpened();
 
         if(NPC.ActiveNPC){
@@ -407,6 +448,45 @@ public class DialogueManager : MonoBehaviour
                 InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(true, EnemyID.TimeLich);
             }
         }
+        // If there's no active NPC and we're in the lich fight room AND the epilogue has NOT been triggered, kill Atlan
+        else if( GameManager.instance.currentSceneName == GameManager.LICH_ARENA_STRING_NAME && !GameManager.instance.epilogueTriggered ){
+            Player.instance.health.Damage( Player.instance.health.maxHitpoints, DamageSourceType.DefeatedTimeLichEndRunDeath );
+        }
+        // If there's no active NPC, deal with not lich-fight post-auto dialogue stuff
+        else{
+            int runNum = GameManager.instance.currentRunNumber;
+            string scene = GameManager.instance.currentSceneName;
+
+            // Both of the following if statements are kinda awful but I needed a way to make sure it was the right dialogue interaction
+            // and that it wasn't just Stellan's comm auto dialogue after killing the beetle boi so
+
+            // Force mini map open after grabbing the captain's log
+            if(runNum == 1 && scene == GameManager.GAME_LEVEL1_STRING_NAME && PlayerInventory.hasCaptainsLog && !visitedNodes.Contains("PlayerStellanCommTriggered")){
+                InGameUIManager.instance.ToggleMiniMap(true);
+
+                // Journal alert
+                AlertTextUI.instance.EnableOpenJournalAlert();
+                StartCoroutine(AlertTextUI.instance.RemoveSecondaryAlertAfterSeconds());
+
+                // Expanded map alert
+                AlertTextUI.instance.EnableViewMapAlert();
+                StartCoroutine(AlertTextUI.instance.RemovePrimaryAlertAfterSeconds());
+            }
+            // Enable view stats alert after dialogue first time seeing stat reroll
+            else if(runNum == 2 && scene == GameManager.GAME_LEVEL1_STRING_NAME && !PlayerInventory.instance.ItemSlotIsFull(InventoryItemSlot.Weapon)){
+                AlertTextUI.instance.EnableViewStatsAlert();
+                StartCoroutine(AlertTextUI.instance.RemovePrimaryAlertAfterSeconds());
+            }
+        }
+    }
+
+    public IEnumerator AutoRunDialogueAfterTime(float timeToWait = DEFAULT_AUTO_DIALOGUE_WAIT_TIME)
+    {
+        InputManager.instance.ToggleDialogueOpenStatus(true);   // Remove player control while waiting
+        yield return new WaitForSeconds(timeToWait);
+
+        // Play dialogue
+        OnNPCInteracted();
     }
 }
 

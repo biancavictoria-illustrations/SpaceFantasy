@@ -23,6 +23,7 @@ public class Save
     #region Game Manager Stuff
         public int currentRunNumber;
         public bool hasKilledTimeLich;
+        public int firstClearRunNumber;
         public int bossesKilled;
     #endregion
 
@@ -81,6 +82,7 @@ public class Save
         // Game Manager Stuff
         currentRunNumber = gameManager.currentRunNumber;
         hasKilledTimeLich = gameManager.hasKilledTimeLich;
+        firstClearRunNumber = gameManager.firstClearRunNumber;
         bossesKilled = gameManager.bossesKilled;
 
         // Inventory stuff

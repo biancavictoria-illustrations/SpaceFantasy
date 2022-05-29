@@ -22,12 +22,12 @@ public class JournalUI : MonoBehaviour
         devPanel?.SetActive(!set);
 
         InGameUIManager.instance.SetGameUIActive(!set);
-        InGameUIManager.instance.ToggleMiniMap(!set);
 
-        if(!set){
-            if(GameManager.instance.currentSceneName == GameManager.MAIN_HUB_STRING_NAME){
-                InGameUIManager.instance.ToggleRunUI(false);
-            }
+        if(GameManager.instance.InSceneWithRandomGeneration())
+            InGameUIManager.instance.ToggleMiniMap(!set);
+
+        if(!set && GameManager.instance.currentSceneName == GameManager.MAIN_HUB_STRING_NAME){
+            InGameUIManager.instance.ToggleRunUI(false, false, false, false);
         }
         else{
             foreach( JournalSidebarTabGroup tabGroup in tabGroups ){

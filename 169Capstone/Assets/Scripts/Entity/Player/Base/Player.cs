@@ -59,7 +59,7 @@ public class Player : MonoBehaviour
         if(GameManager.instance.currentRunNumber == 1 || (GameManager.instance.currentSceneName == GameManager.GAME_LEVEL1_STRING_NAME && GameManager.instance.currentRunNumber == 2)){
             GameManager.instance.inElevatorAnimation = true;
             FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
-                StartAutoDialogueFromPlayer();
+                StartCoroutine(DialogueManager.instance.AutoRunDialogueAfterTime());
                 GameManager.instance.inElevatorAnimation = false;
             });
 
@@ -72,14 +72,10 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void StartAutoDialogueFromPlayer(float timeToWait = GameManager.DEFAULT_AUTO_DIALOGUE_WAIT_TIME)
+    // Use this when it's being called from something that's about to get destroyed, like an enemy
+    public void StartAutoDialogueFromPlayer()
     {
-        StartCoroutine(GameManager.instance.AutoRunDialogueAfterTime());
-        
-        if( GameManager.instance.currentRunNumber == 2 ){
-            AlertTextUI.instance.EnableViewStatsAlert();
-            StartCoroutine(AlertTextUI.instance.RemovePrimaryAlertAfterSeconds());
-        }
+        StartCoroutine(DialogueManager.instance.AutoRunDialogueAfterTime());
     }
 
     private IEnumerator DetectFall()
