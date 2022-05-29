@@ -17,6 +17,9 @@ public class NPC : MonoBehaviour
     private bool forceNextDialogueOnTriggerEnter = false;
     private float timeToWaitForAutoDialogue = 0f;
 
+    [Tooltip("False for Epilogue Stellan")]
+    [SerializeField] private bool displayNewDialogueAlert = true;
+
     void Start()
     {
         if(speakerData == null){
@@ -30,7 +33,7 @@ public class NPC : MonoBehaviour
         if(speakerData.SpeakerID() == SpeakerID.TimeLich || (speakerData.SpeakerID() == SpeakerID.Stellan && (GameManager.instance.currentRunNumber == 2 || GameManager.instance.currentRunNumber == 3))){
             forceNextDialogueOnTriggerEnter = true;
             if(speakerData.SpeakerID() == SpeakerID.Stellan){
-                timeToWaitForAutoDialogue = GameManager.DEFAULT_AUTO_DIALOGUE_WAIT_TIME;
+                timeToWaitForAutoDialogue = DialogueManager.DEFAULT_AUTO_DIALOGUE_WAIT_TIME;
             }
         }
 
@@ -42,8 +45,8 @@ public class NPC : MonoBehaviour
     {
         // If the collision was caused by the player
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
-            // If you've only completed ONE run and this is Stellan, don't open his shop this time
-            if(speakerData.SpeakerID() == SpeakerID.Stellan && GameManager.instance.currentRunNumber == 2 && haveTalkedToThisRun){
+            // If you've only completed ONE run and this is Stellan, don't open his shop this time (or if final run)
+            if(speakerData.SpeakerID() == SpeakerID.Stellan && haveTalkedToThisRun && (GameManager.instance.currentRunNumber == 2 || GameManager.instance.epilogueTriggered)){
                 return;
             }
 
@@ -52,7 +55,7 @@ public class NPC : MonoBehaviour
             // If they're marked to autoplay dialogue this time, immediately start dialogue on trigger enter
             if(forceNextDialogueOnTriggerEnter && !haveTalkedToThisRun){
                 forceNextDialogueOnTriggerEnter = false;
-                StartCoroutine(GameManager.instance.AutoRunDialogueAfterTime(timeToWaitForAutoDialogue));
+                StartCoroutine(DialogueManager.instance.AutoRunDialogueAfterTime(timeToWaitForAutoDialogue));
                 return;
             }
 
@@ -73,7 +76,7 @@ public class NPC : MonoBehaviour
         // If the player is no longer near this NPC
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
             ActiveNPC = null;
-            AlertTextUI.instance.DisableAlert();
+            AlertTextUI.instance.DisablePrimaryAlert();
         }
     }
 
@@ -81,8 +84,14 @@ public class NPC : MonoBehaviour
     {
         haveTalkedToThisRun = set;
 
-        // Check if it exists cuz presumably time lich won't have one so we don't need to set it
-        if(newDialogueAlert && !forceNextDialogueOnTriggerEnter){
+        // Check if it exists cuz time lich doesn't have one so we don't need to set it
+        if(newDialogueAlert && displayNewDialogueAlert){
+            // No matter what, if it's force on enter just disable the alert
+            if(forceNextDialogueOnTriggerEnter){
+                newDialogueAlert.SetActive(false);
+                return;
+            }
+
             newDialogueAlert.SetActive(!set);
         }
     }
@@ -99,10 +108,6 @@ public class NPC : MonoBehaviour
         }
         else if( speaker == SpeakerID.Rhian ){
             StoryManager.instance.talkedToRhian = true;
-            return;
-        }
-        else if( speaker == SpeakerID.Sorrel ){
-            StoryManager.instance.talkedToSorrel = true;
             return;
         }
         else if( speaker == SpeakerID.Doctor ){
@@ -129,9 +134,6 @@ public class NPC : MonoBehaviour
         }
         else if( speaker == SpeakerID.Rhian ){
             return StoryManager.instance.talkedToRhian;
-        }
-        else if( speaker == SpeakerID.Sorrel ){
-            return StoryManager.instance.talkedToSorrel;
         }
         else if( speaker == SpeakerID.Doctor ){
             return StoryManager.instance.talkedToDoctor;

@@ -5,70 +5,84 @@ using UnityEngine;
 [System.Serializable]
 public class Save
 {
-    // Game Manager Stuff
-    public int currentRunNumber;
-    public bool hasKilledTimeLich;
-    public int bossesKilled;
+    #region Journal Stuff
+        [System.Serializable] public struct JournalContentStatus{
+            public int contentID;
+            public bool isUnlocked;
+
+            // Constructor
+            public JournalContentStatus(int id, bool status){
+                contentID = id;
+                isUnlocked = status;
+            }
+        }
+
+        public JournalContentStatus[] journalContentSaveStatus;
+    #endregion
+
+    #region Game Manager Stuff
+        public int currentRunNumber;
+        public bool hasKilledTimeLich;
+        public int firstClearRunNumber;
+        public int bossesKilled;
+    #endregion
 
     // Inventory
     public int permanentCurrency;
 
-    // Permanent Upgrade Stuff
-    public int totalPermanentCurrencySpent;
+    #region Permanent Upgrade Stuff
+        public int totalPermanentCurrencySpent;
 
-    public int startingHealthPotionQuantity;
+        public int startingHealthPotionQuantity;
 
-    public int levelsInArmorPlating;
-    public int levelsInExtensiveTraining;
-    public int levelsInNatural20;
-    public int levelsInPrecisionDrive;
-    public int levelsInTimeLichKillerThing;
+        public int levelsInArmorPlating;
+        public int levelsInExtensiveTraining;
+        public int levelsInNatural20;
+        public int levelsInPrecisionDrive;
+        public int levelsInTimeLichKillerThing;
 
-    public int strMin;
-    public int strMax;
-    public int dexMin;
-    public int dexMax;
-    public int intMin;
-    public int intMax;
-    public int wisMin;
-    public int wisMax;
-    public int conMin;
-    public int conMax;
-    public int charismaMin;
-    public int charismaMax;
+        public int strMin;
+        public int strMax;
+        public int dexMin;
+        public int dexMax;
+        public int intMin;
+        public int intMax;
+        public int wisMin;
+        public int wisMax;
+        public int conMin;
+        public int conMax;
+        public int charismaMin;
+        public int charismaMax;
+    #endregion
 
-    // Dialogue Stuff
-    public bool talkedToStellan;
+    #region Dialogue Stuff
+        public bool talkedToStellan;
 
-    public string[] visistedNodes;
+        public string[] visistedNodes;
 
-    public int[] brynNumRunDialogueList;
-    public bool brynListInitialized;
-    public int[] stellanNumRunDialogueList;
-    public bool stellanListInitialized;
-    public int[] timeLichNumRunDialogueList;
-    public bool lichListInitialized;
-    // public int[] doctorNumRunDialogueList;
-    // public bool doctorListInitialized;
-    // public int[] rhianNumRunDialogueList;
-    // public bool rhianListInitialized;
+        public int[] brynNumRunDialogueList;
+        public bool brynListInitialized;
+        public int[] stellanNumRunDialogueList;
+        public bool stellanListInitialized;
+        public int[] timeLichNumRunDialogueList;
+        public bool lichListInitialized;
+    #endregion
 
-    // Story Beat Status Values
+    #region Story Beat Status Values
+        public StoryManager.BeatStatus[] storyBeatDatabaseStatuses;
+        public StoryManager.BeatStatus[] itemStoryBeatStatuses;
+        public StoryManager.BeatStatus[] genericStoryBeatStatuses;
 
-    // NOTE: Beat Statuses might NOT be able to be serialized like this
-    // If this doesn't work... going to need another system :(
-    public StoryManager.BeatStatus[] storyBeatDatabaseStatuses;
-    public StoryManager.BeatStatus[] itemStoryBeatStatuses;
-    public StoryManager.BeatStatus[] genericStoryBeatStatuses;
-
-    public string[] activeStoryBeatHeadNodes;
+        public string[] activeStoryBeatHeadNodes;
+    #endregion
 
     // Constructor
-    public Save(GameManager gameManager, PlayerInventory playerInventory, DialogueManager dialogueManager, StoryManager storyManager, PermanentUpgradeManager permanentUpgradeManager)
+    public Save(GameManager gameManager, PlayerInventory playerInventory, DialogueManager dialogueManager, StoryManager storyManager, PermanentUpgradeManager permanentUpgradeManager, JournalContentManager jcm)
     {
         // Game Manager Stuff
         currentRunNumber = gameManager.currentRunNumber;
         hasKilledTimeLich = gameManager.hasKilledTimeLich;
+        firstClearRunNumber = gameManager.firstClearRunNumber;
         bossesKilled = gameManager.bossesKilled;
 
         // Inventory stuff
@@ -111,14 +125,6 @@ public class Save
         stellanNumRunDialogueList = new int[storyManager.stellanNumRunDialogueList.Count];
         CharacterSpecificNumRunListToArray(SpeakerID.Stellan, storyManager.stellanNumRunDialogueList);
         
-        // doctorListInitialized = storyManager.doctorListInitialized;
-        // doctorNumRunDialogueList = new int[storyManager.doctorNumRunDialogueList.Count];
-        // CharacterSpecificNumRunListToArray(SpeakerID.Doctor, storyManager.doctorNumRunDialogueList);
-
-        // rhianListInitialized = storyManager.rhianListInitialized;
-        // rhianNumRunDialogueList = new int[storyManager.rhianNumRunDialogueList.Count];
-        // CharacterSpecificNumRunListToArray(SpeakerID.Rhian, storyManager.rhianNumRunDialogueList);
-        
         lichListInitialized = storyManager.lichListInitialized;
         timeLichNumRunDialogueList = new int[storyManager.timeLichNumRunDialogueList.Count];
         CharacterSpecificNumRunListToArray(SpeakerID.TimeLich, storyManager.timeLichNumRunDialogueList);
@@ -128,6 +134,9 @@ public class Save
 
         activeStoryBeatHeadNodes = new string[storyManager.activeStoryBeats.Count];
         SaveActiveStoryBeats(storyManager.activeStoryBeats);
+
+        // Journal status
+        SaveJournalStatus(jcm.journalUnlockStatusDatabase);
     }
 
     private void SaveVisitedNodes( HashSet<string> _visisted )
@@ -186,16 +195,22 @@ public class Save
                     stellanNumRunDialogueList[i] = numRunList[i];
                 }
                 return;
-            // case SpeakerID.Doctor:
-            //     for(int i = 0; i < numRunList.Count; i++){
-            //         doctorNumRunDialogueList[i] = numRunList[i];
-            //     }
-            //     return;
             case SpeakerID.TimeLich:
                 for(int i = 0; i < numRunList.Count; i++){
                     timeLichNumRunDialogueList[i] = numRunList[i];
                 }
                 return;
+        }
+    }
+
+    private void SaveJournalStatus( Dictionary<JournalContentID, bool> journalUnlockStatusDatabase )
+    {
+        journalContentSaveStatus = new JournalContentStatus[journalUnlockStatusDatabase.Count];
+
+        int i = 0;
+        foreach( KeyValuePair<JournalContentID, bool> contentStatus in journalUnlockStatusDatabase ){
+            journalContentSaveStatus[i] = new JournalContentStatus((int)contentStatus.Key, contentStatus.Value);
+            i++;
         }
     }
 }

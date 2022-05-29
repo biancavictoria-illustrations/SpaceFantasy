@@ -16,9 +16,16 @@ public class AnimationStateController : MonoBehaviour
 
     public Animator animator;
 
+    [SerializeField] private GameObject swordSlashVFX;
+
     public void ActivateHitbox(int active)
     {
         attackActive = active > 0;
+        if (attackActive)
+        {
+            Instantiate(swordSlashVFX, Player.instance.transform.position,transform.rotation);
+            Debug.Log("Slash VFX Instantiate");
+        }
     }
 
     public void EndAttack()

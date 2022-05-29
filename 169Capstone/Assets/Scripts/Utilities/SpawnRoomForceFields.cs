@@ -4,17 +4,53 @@ using UnityEngine;
 
 public class SpawnRoomForceFields : MonoBehaviour
 {
-    public List<GameObject> forceFields = new List<GameObject>();
+    [HideInInspector] public List<GameObject> forceFields = new List<GameObject>();
+    [SerializeField] private Room room;
+    [SerializeField] private GameObject startBow;
+    [SerializeField] private GameObject CaptainsLog;
+    [SerializeField] private GameObject swordLight;
 
-    [Tooltip("List of options of objects for the player to interact with in order to drop the force fields; for normal spawn room, should contain one of each weapon; for run 1 spawn room, the Captain's Log object")]
-    public List<GameObject> interactableObjectsToOpenRoom = new List<GameObject>();
+    // TODO: Activate force fields on generation complete?
 
-    // TODO: Activate force fields on generation complete
-
-    // TODO: Call this when you interacted with any of the objects in the interactableObjectsToOpenRoom list
+    void Start()
+    {
+        if(GameManager.instance.InSceneWithRandomGeneration())
+        {
+            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(StartOnGenerationComplete);
+        }
+        else
+        {
+            StartOnGenerationComplete();
+        }
+    }
     public void RoomOpenOnObjectInteracted()
     {
         foreach(GameObject ff in forceFields)
             ff.SetActive(false);
+    }
+
+    private void StartOnGenerationComplete()
+    {
+        if(!GameManager.generationComplete){
+            return;
+        }
+        // Enables the force field object
+        foreach(GameObject ff in forceFields)
+            ff.SetActive(true);
+
+        if(GameManager.instance.currentRunNumber == 1)
+        {
+            startBow.SetActive(false);
+            CaptainsLog.SetActive(true);
+            swordLight.SetActive(false);
+        }
+    }
+
+    public void AddForceField(GameObject forceField)
+    {
+        if(forceFields == null)
+            forceFields = new List<GameObject>();
+
+        forceFields.Add(forceField);
     }
 }

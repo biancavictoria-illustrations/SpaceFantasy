@@ -73,7 +73,7 @@ public class StoryManager : MonoBehaviour
 
     public static StoryManager instance;
 
-    [HideInInspector] public bool talkedToBryn, talkedToStellan, talkedToRhian, talkedToDoctor, talkedToSorrel, talkedToLich = false;
+    [HideInInspector] public bool talkedToBryn, talkedToStellan, talkedToRhian, talkedToDoctor, talkedToLich = false;
 
     [HideInInspector] public List<int> brynNumRunDialogueList = new List<int>();
     [HideInInspector] public bool brynListInitialized;
@@ -83,12 +83,6 @@ public class StoryManager : MonoBehaviour
 
     [HideInInspector] public List<int> timeLichNumRunDialogueList = new List<int>();
     [HideInInspector] public bool lichListInitialized;
-
-    // [HideInInspector] public List<int> doctorNumRunDialogueList = new List<int>();
-    // [HideInInspector] public bool doctorListInitialized;
-
-    // [HideInInspector] public List<int> rhianNumRunDialogueList = new List<int>();
-    // [HideInInspector] public bool rhianListInitialized;
 
     public Dictionary<StoryBeat,BeatStatus> storyBeatDatabase = new Dictionary<StoryBeat,BeatStatus>();     // All story beats of type Conversation or Killed
     public HashSet<StoryBeat> activeStoryBeats = new HashSet<StoryBeat>();    // For the DialogueManager to see just the active beats
@@ -119,8 +113,6 @@ public class StoryManager : MonoBehaviour
         brynListInitialized = false;
         stellanListInitialized = false;
         lichListInitialized = false;
-        // doctorListInitialized = false;
-        // rhianListInitialized = false;
 
         activeStoryBeats.Clear();
 
@@ -136,18 +128,36 @@ public class StoryManager : MonoBehaviour
         for(int i = 0; i < storyBeatDatabaseStatuses.Length; i++){
             BeatStatus status = storyBeatDatabaseStatuses[i];
             StoryBeat beat = FindBeatFromNodeNameAndType(status.storyBeatHeadNode, (StoryBeatType)status.storyBeatType);
+
+            if(!beat){
+                Debug.LogWarning("No story beat loaded for head node: " + status.storyBeatHeadNode + " with type: " + (StoryBeatType)status.storyBeatType);
+                continue;
+            }
+
             storyBeatDatabase[beat] = status;
         }
 
         for(int i = 0; i < itemStoryBeatStatuses.Length; i++){
             BeatStatus status = itemStoryBeatStatuses[i];
             StoryBeatItem beat = (StoryBeatItem)FindBeatFromNodeNameAndType(status.storyBeatHeadNode, (StoryBeatType)status.storyBeatType);
+            
+            if(!beat){
+                Debug.LogWarning("No story beat loaded for head node: " + status.storyBeatHeadNode + " with type: " + (StoryBeatType)status.storyBeatType);
+                continue;
+            }
+            
             itemStoryBeats[beat] = status;
         }
 
         for(int i = 0; i < genericStoryBeatStatuses.Length; i++){
             BeatStatus status = genericStoryBeatStatuses[i];
             StoryBeat beat = FindBeatFromNodeNameAndType(status.storyBeatHeadNode, (StoryBeatType)status.storyBeatType);
+
+            if(!beat){
+                Debug.LogWarning("No story beat loaded for head node: " + status.storyBeatHeadNode + " with type: " + (StoryBeatType)status.storyBeatType);
+                continue;
+            }
+            
             genericStoryBeats[beat] = status;
         }
 
@@ -160,7 +170,7 @@ public class StoryManager : MonoBehaviour
     private void LoadAllStoryBeats()
     {
         // Load in the StoryBeats (only of type Killed and Conversation) from the StoryBeats folder in Resources
-        Object[] storyBeatList = Resources.LoadAll("SpecificStoryBeats", typeof(StoryBeat));
+        Object[] storyBeatList = Resources.LoadAll("StoryBeats/SpecificStoryBeats", typeof(StoryBeat));
         foreach(Object s in storyBeatList){
             StoryBeat beat = (StoryBeat)s;
             
@@ -175,7 +185,7 @@ public class StoryManager : MonoBehaviour
         }
 
         // Load in the ItemDialogueTriggers from the ItemTriggers folder in Resources
-        Object[] itemDialogueList = Resources.LoadAll("ItemStoryBeats", typeof(StoryBeatItem));
+        Object[] itemDialogueList = Resources.LoadAll("StoryBeats/ItemStoryBeats", typeof(StoryBeatItem));
         foreach(Object i in itemDialogueList){
             StoryBeatItem beat = (StoryBeatItem)i;
 
@@ -189,7 +199,7 @@ public class StoryManager : MonoBehaviour
         }
 
         // Load in the generic story beats from the GenericStoryBeats folders in Resources
-        Object[] genericDialogueList = Resources.LoadAll("GenericStoryBeats", typeof (StoryBeat));
+        Object[] genericDialogueList = Resources.LoadAll("StoryBeats/GenericStoryBeats", typeof (StoryBeat));
         foreach(Object g in genericDialogueList){
             StoryBeat beat = (StoryBeat)g;
 
@@ -204,16 +214,13 @@ public class StoryManager : MonoBehaviour
     }
 
     // Called by Game Manager when you end a run
-    public void OnRunEndUpdateStory()
+    public void ResetAllNPCTalkedToValues()
     {
-        // TODO: Increment story beat values (i think that's already happening in the CheckForNewStoryBeats function???)
-
-        // When you end a run, reset all talked to bools
         talkedToBryn = false;
         talkedToStellan = false;
         talkedToRhian = false;
         talkedToDoctor = false;
-        talkedToSorrel = false;
+        // talkedToSorrel = false;
         talkedToLich = false;
     }
 
@@ -384,7 +391,7 @@ public class StoryManager : MonoBehaviour
                 genericStoryBeats[beat] = new BeatStatus( beat.GetYarnHeadNode(), setActive, storyBeatDatabase[beat].numberOfCompletions + incrementCompletionNum, storyBeatDatabase[beat].speakersWithComments, (int)beatType );
             }
         }
-        if(setActive && beat.JournalEntriesUnlocked().Length != 0){
+        if(setActive && beat.JournalEntriesUnlocked()?.Length > 0){
             GameManager.instance.journalContentManager.UnlockJournalEntry(beat.JournalEntriesUnlocked());
         }
     }

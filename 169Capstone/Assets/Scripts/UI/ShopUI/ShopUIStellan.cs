@@ -70,6 +70,8 @@ public class ShopUIStellan : MonoBehaviour
 
     [HideInInspector] public UpgradePanel activeUpgradeInFocus;
 
+    private bool lichUpgradeActive = false;
+
     void Start()
     {
         playerStats = FindObjectOfType<PlayerStats>();
@@ -79,67 +81,73 @@ public class ShopUIStellan : MonoBehaviour
             panel.InitializeUpgradeValues();
         }
 
-        if(GameManager.instance.hasKilledTimeLich){
+        // If we have killed the time lich and already saw the dialogue where Stellan is like "here i have an idea but it's expensive"
+        if(GameManager.instance.hasKilledTimeLich && DialogueManager.instance.visitedNodes.Contains("StellanEnemyKilledTimeLich")){
             killTimeLichItem.SetActive(true);
+            lichUpgradeActive = true;
         }
     }
 
-    public Color GetCanPurchaseTextColor()
-    {
-        return canPurchaseTextColor;
-    }
-
-    public Color GetCannotAffordTextColor()
-    {
-        return cannotAffordTextColor;
-    }
-
-    public Color GetCannotAffordIconColor()
-    {
-        return cannotAffordIconColor;
-    }
-
-    public Color GetMaxUpgradesReachedIconColor()
-    {
-        return maxUpgradesReachedIconColor;
-    }
-
-    public void SetFocusPanelValues(string _name, string _skillLevel, string _desc, string _cost, Sprite _icon, bool isStatUpgrade)
-    {
-        focusPanelName.text = _name;
-        focusSkillLevel.text = _skillLevel;
-        focusPanelDesc.text = _desc;
-
-        focusPanelCost.gameObject.SetActive(true);
-        focusPanelCost.text = _cost;
-        if(_cost == ""){
-            focusPanelStarShardIcon.gameObject.SetActive(false);
+    #region Color Getters
+        public Color GetCanPurchaseTextColor()
+        {
+            return canPurchaseTextColor;
         }
-        else{
-            focusPanelStarShardIcon.gameObject.SetActive(true);
+
+        public Color GetCannotAffordTextColor()
+        {
+            return cannotAffordTextColor;
         }
-        
-        focusPanelIcon.color = new Color(255,255,255,255);
-        focusPanelIcon.sprite = _icon;
-        focusPanelIcon.preserveAspect = true;
 
-        focusPanelToPurchaseMessage.SetActive(true);
-        SetPurchaseMessageButton(InputManager.instance.latestInputIsController, _cost=="");
-    }
+        public Color GetCannotAffordIconColor()
+        {
+            return cannotAffordIconColor;
+        }
 
-    public void ClearFocusPanel()
-    {
-        focusPanelName.text = "";
-        focusSkillLevel.text = "";
-        focusPanelDesc.text = "Hover over a skill to examine.";
-        
-        focusPanelCost.text = "";
-        focusPanelCost.gameObject.SetActive(false);
+        public Color GetMaxUpgradesReachedIconColor()
+        {
+            return maxUpgradesReachedIconColor;
+        }
+    #endregion
 
-        focusPanelIcon.color = new Color(255,255,255,0);
-        
-        focusPanelToPurchaseMessage.SetActive(false);
-    }
+    #region Focus Panel
+        public void SetFocusPanelValues(string _name, string _skillLevel, string _desc, string _cost, Sprite _icon, bool isStatUpgrade)
+        {
+            focusPanelName.text = _name;
+            focusSkillLevel.text = _skillLevel;
+            focusPanelDesc.text = _desc;
+
+            focusPanelCost.gameObject.SetActive(true);
+            focusPanelCost.text = _cost;
+            if(_cost == ""){
+                focusPanelStarShardIcon.gameObject.SetActive(false);
+            }
+            else{
+                focusPanelStarShardIcon.gameObject.SetActive(true);
+            }
+            
+            focusPanelIcon.color = new Color(255,255,255,255);
+            focusPanelIcon.sprite = _icon;
+            focusPanelIcon.preserveAspect = true;
+
+            focusPanelToPurchaseMessage.SetActive(true);
+            SetPurchaseMessageButton(InputManager.instance.latestInputIsController, _cost=="");
+        }
+
+        public void ClearFocusPanel()
+        {
+            focusPanelName.text = "";
+            focusSkillLevel.text = "";
+            focusPanelDesc.text = "Hover over a skill to examine.";
+            
+            focusPanelCost.text = "";
+            focusPanelCost.gameObject.SetActive(false);
+
+            focusPanelIcon.color = new Color(255,255,255,0);
+            
+            focusPanelToPurchaseMessage.SetActive(false);
+        }
+    #endregion
 
     public void UpdateAllUpgradePanels()
     {
@@ -150,6 +158,12 @@ public class ShopUIStellan : MonoBehaviour
 
     public void OpenShopUI()
     {
+        // Check here too in case that was THIS dialogue
+        if(!lichUpgradeActive && GameManager.instance.hasKilledTimeLich && DialogueManager.instance.visitedNodes.Contains("StellanEnemyKilledTimeLich")){
+            killTimeLichItem.SetActive(true);
+            lichUpgradeActive = true;
+        }
+
         InputManager.instance.shopIsOpen = true;
 
         shopInventoryPanel.SetActive(true);

@@ -5,10 +5,10 @@ using UnityEngine;
 public class JournalContentManager : MonoBehaviour
 {
     public Dictionary<JournalContentID, JournalContent> contentDatabase {get; private set;}
-
     public Dictionary<JournalContentID, bool> journalUnlockStatusDatabase {get; private set;}
 
-    // Start is called before the first frame update
+    [SerializeField] private Sprite journalLockedSprite;
+
     void Awake()
     {
         journalUnlockStatusDatabase = new Dictionary<JournalContentID, bool>();
@@ -39,14 +39,18 @@ public class JournalContentManager : MonoBehaviour
         Object[] journalContentList = Resources.LoadAll(location, typeof(JournalContent));
         foreach(Object c in journalContentList){
             JournalContent content = (JournalContent)c;
-            if(contentDatabase.ContainsKey(content.InternalID())){
-                continue;
+            if(!contentDatabase.ContainsKey(content.InternalID())){
+                contentDatabase.Add(content.InternalID(), content);
             }
-            contentDatabase.Add(content.InternalID(), content);
             journalUnlockStatusDatabase.Add(content.InternalID(), !content.LockedOnStart());
         }
     }
 
+    public Sprite JournalLockedSprite()
+    {
+        return journalLockedSprite;
+    }
+    
     public void UnlockJournalEntry(JournalContentID[] contentIDs)
     {
         bool flag = false;
@@ -62,16 +66,26 @@ public class JournalContentManager : MonoBehaviour
             // If any have not yet been set active, set flag to true so that we can enable the UI alert after
             flag = true;
 
-            // TODO: confirm this is working for ITEM type triggers... those are handled slightly differently so i'm not sure
-
-            // TODO: does the journal content display stuff need to be alerted? or does it check every time it's opened...?
-
             journalUnlockStatusDatabase[id] = true;
         }
 
         if(flag){
-            AlertTextUI.instance.EnableOpenJournalAlert();
-            StartCoroutine(AlertTextUI.instance.RemoveAlertAfterSeconds());
+            AlertTextUI.instance.EnableJournalUpdatedAlert();
+            StartCoroutine(AlertTextUI.instance.RemoveSecondaryAlertAfterSeconds());
         }        
+    }
+
+    public void SetJournalStatusOnLoad( Save.JournalContentStatus[] journalContentSaveStatus )
+    {
+        for(int i = 0; i < journalContentSaveStatus.Length; i++){
+            journalUnlockStatusDatabase[ (JournalContentID)journalContentSaveStatus[i].contentID ] = journalContentSaveStatus[i].isUnlocked;
+            // Debug.Log("Loading Journal Status w/ ID " + ((JournalContentID)i).ToString() + " isUnlocked: " + journalContentSaveStatus[i].isUnlocked);
+        }
+    }
+
+    public void ReloadDefaultJournalStatus()
+    {
+        journalUnlockStatusDatabase.Clear();
+        LoadAllJournalContentObjects();
     }
 }

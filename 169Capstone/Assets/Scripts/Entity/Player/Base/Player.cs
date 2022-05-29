@@ -28,7 +28,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         // Commenting this out because currently the Player is spawned after generation is already complete, causing StartOnGenerationCOmplete to not be run
@@ -60,20 +59,23 @@ public class Player : MonoBehaviour
         if(GameManager.instance.currentRunNumber == 1 || (GameManager.instance.currentSceneName == GameManager.GAME_LEVEL1_STRING_NAME && GameManager.instance.currentRunNumber == 2)){
             GameManager.instance.inElevatorAnimation = true;
             FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
-                StartAutoDialogueFromPlayer();
+                StartCoroutine(DialogueManager.instance.AutoRunDialogueAfterTime());
                 GameManager.instance.inElevatorAnimation = false;
             });
+
+            // If first run, auto-equip sword and note we don't have the Captain's Log yet
+            if(GameManager.instance.currentRunNumber == 1){
+                FindObjectOfType<StartWeaponSpawner>().itemObject.GetComponent<GeneratedEquipment>().EquipGeneratedItem();
+                PlayerInventory.hasCaptainsLog = false;
+                InGameUIManager.instance.ToggleMiniMap(false);
+            }
         }
     }
 
-    public void StartAutoDialogueFromPlayer(float timeToWait = GameManager.DEFAULT_AUTO_DIALOGUE_WAIT_TIME)
+    // Use this when it's being called from something that's about to get destroyed, like an enemy
+    public void StartAutoDialogueFromPlayer()
     {
-        StartCoroutine(GameManager.instance.AutoRunDialogueAfterTime());
-        
-        if( GameManager.instance.currentRunNumber == 2 ){
-            AlertTextUI.instance.EnableViewStatsAlert();
-            StartCoroutine(AlertTextUI.instance.RemoveAlertAfterSeconds());
-        }
+        StartCoroutine(DialogueManager.instance.AutoRunDialogueAfterTime());
     }
 
     private IEnumerator DetectFall()

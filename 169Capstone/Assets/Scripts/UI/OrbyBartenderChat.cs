@@ -27,9 +27,11 @@ public class OrbyBartenderChat : MonoBehaviour
     
     public const string annoyedOrbyDialogue1 = "<i>*fan whirring*</i>";
     public const string annoyedOrbyDialogue2 = "WHAAAAAAAA";
-    public const string angryOrbyDialogue = "<i><color=" + InGameUIManager.magentaColor + ">BEEP BEEP</color></i>";
+    public const string angryOrbyDialogue = "<i><color=red>BEEP BEEP</color></i>";
+    // public const string angryOrbyDialogue = "<i><color=" + InGameUIManager.magentaColor + ">BEEP BEEP</color></i>";
 
     private int numberOfInteracts = 0;
+    private const int INTERACTS_BEFORE_ORBY_PISSED = 9;
 
     void Awake()
     {
@@ -44,17 +46,17 @@ public class OrbyBartenderChat : MonoBehaviour
 
     private void PickNewOrbyDialogue()
     {
-        if(numberOfInteracts == 15){
+        if(numberOfInteracts == INTERACTS_BEFORE_ORBY_PISSED){
             chatText.text = annoyedOrbyDialogue1;
             return;
         }
-        else if(numberOfInteracts == 16){
+        else if(numberOfInteracts == INTERACTS_BEFORE_ORBY_PISSED + 1){
             chatText.text = annoyedOrbyDialogue2;
             return;
         }
-        else if(numberOfInteracts == 17){
+        else if(numberOfInteracts == INTERACTS_BEFORE_ORBY_PISSED + 2){
             canInteractWithOrby = false;
-            AlertTextUI.instance.DisableAlert();
+            AlertTextUI.instance.DisablePrimaryAlert();
             chatText.text = angryOrbyDialogue;
             return;
         }
@@ -127,7 +129,7 @@ public class OrbyBartenderChat : MonoBehaviour
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
             inOrbyRange = false;
             if(canInteractWithOrby){
-                AlertTextUI.instance.DisableAlert();
+                AlertTextUI.instance.DisablePrimaryAlert();
             }
         }
     }

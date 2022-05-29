@@ -149,8 +149,8 @@ public class InputManager : MonoBehaviour
         }
         // If nearby NPC is a shopkeeper and you HAVE talked to them already, just open the shop
         else if(NPC.ActiveNPC && NPC.ActiveNPC.SpeakerData().IsShopkeeper()){
-            // If we just completed the FIRST run, don't open Stellan's shop
-            if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Stellan && GameManager.instance.currentRunNumber == 2){
+            // If we just completed the FIRST or LAST run, don't open Stellan's shop
+            if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Stellan && (GameManager.instance.currentRunNumber == 2 || GameManager.instance.epilogueTriggered)){
                 return;
             }
             InGameUIManager.instance.OpenNPCShop(NPC.ActiveNPC.SpeakerData());
@@ -158,6 +158,8 @@ public class InputManager : MonoBehaviour
 
         // If you're in range of a door, walk through it
         else if(SceneTransitionDoor.ActiveDoor){
+            AlertTextUI.instance.DisablePrimaryAlert();
+            AlertTextUI.instance.DisableSecondaryAlert();
             SceneTransitionDoor.ActiveDoor.ChangeScene();
         }
 
@@ -170,6 +172,16 @@ public class InputManager : MonoBehaviour
         else if(OrbyBartenderChat.instance && OrbyBartenderChat.instance.inOrbyRange){
             OrbyBartenderChat.instance.OnOrbyInteracted();
         }
+
+        // If run 1 and you're in range of the captain's log
+        else if( SpawnRoomForceFieldUnlockItem.activeForceFieldUnlockItem && !SpawnRoomForceFieldUnlockItem.activeForceFieldUnlockItem.isWeapon ){
+            // Drop the force fields to unlock the spawn room
+            SpawnRoomForceFieldUnlockItem.activeForceFieldUnlockItem.UnlockForceFieldsOnPickUp();
+            
+            // Alert the dialogue manager we want to play this dialogue
+            DialogueManager.instance.SetCaptainsLogDialogueTriggered(true);
+            StartCoroutine(DialogueManager.instance.AutoRunDialogueAfterTime());
+        }
     }
 
     public void ToggleCompareItemUI(bool set, GeneratedEquipment item)
@@ -179,6 +191,14 @@ public class InputManager : MonoBehaviour
         RunGameTimer(set);
     }
 
+    public void OnCancel(InputValue input)
+    {
+        // If we're using controller, allow B button to close menus
+        if(latestInputIsController && (PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || GameManager.instance.statRerollUIOpen || mapIsOpen || journalIsOpen)){
+            OnPause(input);
+        }
+    }
+    
     public void OnSubmit(InputValue input)
     {
         ProgressDialogueOnInput(input);
@@ -230,43 +250,42 @@ public class InputManager : MonoBehaviour
         }
         
         if(PauseMenu.GameIsPaused){
-            InGameUIManager.instance.pauseMenu.ResumeGame();
-
-            if(GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME){
-                RunGameTimer(true);
-            }            
+            InGameUIManager.instance.pauseMenu.ResumeGame();       
         }
         else{
-            InGameUIManager.instance.pauseMenu.PauseGame();
-
-            if(GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME){
-                RunGameTimer(false);
-            }            
+            InGameUIManager.instance.pauseMenu.PauseGame();       
         }
     }
 
     public void OnToggleJournal(InputValue input)
     {
-        if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || inventoryIsOpen || mapIsOpen || isInMainMenu){
+        if(isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || inventoryIsOpen || mapIsOpen || isInMainMenu || !PlayerInventory.hasCaptainsLog){
             return;
         }
 
         journalIsOpen = !journalIsOpen;
         InGameUIManager.instance.journalUI.ToggleJournalActive(journalIsOpen);
 
-        if(GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME){
+        // Deal with timer if we're in a scene with the timer
+        if(GameManager.instance.InSceneWithGameTimer()){
             RunGameTimer(!journalIsOpen);
             InGameUIManager.instance.timerUI.SetTimerUIActive(!journalIsOpen);
         }
 
-        if(AlertTextUI.instance.alertTextIsActive){
-            AlertTextUI.instance.ToggleAlertText(!journalIsOpen);
+        if(AlertTextUI.instance.primaryAlertTextIsActive){
+            AlertTextUI.instance.TogglePrimaryAlertText(!journalIsOpen);
+        }
+        if(AlertTextUI.instance.secondaryAlertTextIsActive){
+            AlertTextUI.instance.ToggleSecondaryAlertText(!journalIsOpen);
         }
     }
 
+    // I did something dumb and changed the name of this one and thought it was broken so this is a friendly reminder
+    // that these names have to be the same as the ones in the control scheme and therefore this one HAS TO BE ToggleMinimap
+    // even tho for a sec I thought it would make more sense as "ToggleExpandedMap" instead
     public void OnToggleMinimap(InputValue input)
     {
-        if(!GameManager.instance.InSceneWithRandomGeneration() || isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || inventoryIsOpen || journalIsOpen){
+        if(!GameManager.instance.InSceneWithRandomGeneration() || isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || inventoryIsOpen || journalIsOpen || !PlayerInventory.hasCaptainsLog){
             return;
         }
 
@@ -276,8 +295,11 @@ public class InputManager : MonoBehaviour
         RunGameTimer(!mapIsOpen);
         InGameUIManager.instance.timerUI.SetTimerUIActive(!mapIsOpen);
 
-        if(AlertTextUI.instance.alertTextIsActive){
-            AlertTextUI.instance.ToggleAlertText(!mapIsOpen);
+        if(AlertTextUI.instance.primaryAlertTextIsActive){
+            AlertTextUI.instance.TogglePrimaryAlertText(!mapIsOpen);
+        }
+        if(AlertTextUI.instance.secondaryAlertTextIsActive){
+            AlertTextUI.instance.ToggleSecondaryAlertText(!mapIsOpen);
         }
     }
 
@@ -290,9 +312,17 @@ public class InputManager : MonoBehaviour
         InGameUIManager.instance.SetInventoryUIActive(!InGameUIManager.instance.inventoryIsOpen);
         inventoryIsOpen = !inventoryIsOpen;
 
-        RunGameTimer(!inventoryIsOpen);
-        if(AlertTextUI.instance.alertTextIsActive){
-            AlertTextUI.instance.ToggleAlertText(!inventoryIsOpen);
+        if(GameManager.instance.InSceneWithRandomGeneration())
+            InGameUIManager.instance.ToggleMiniMap(!inventoryIsOpen);
+
+        if(GameManager.instance.InSceneWithGameTimer())
+            RunGameTimer(!inventoryIsOpen);
+
+        if(AlertTextUI.instance.primaryAlertTextIsActive){
+            AlertTextUI.instance.TogglePrimaryAlertText(!inventoryIsOpen);
+        }
+        if(AlertTextUI.instance.secondaryAlertTextIsActive){
+            AlertTextUI.instance.ToggleSecondaryAlertText(!inventoryIsOpen);
         }
     }
 
@@ -313,6 +343,9 @@ public class InputManager : MonoBehaviour
         }
 
         useAccessory = true;
+
+        // TEMP - FOR TESTING (call this where the cooldown starts for the item using a variable of the cooldown duration instead of this)
+        InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Accessory, 4);
     }
 
     public void OnAccessoryAbilityCanceled()
@@ -328,6 +361,9 @@ public class InputManager : MonoBehaviour
         }
 
         useHead = true;
+
+        // TEMP - FOR TESTING (call this where the cooldown starts for the item using a variable of the cooldown duration instead of this)
+        InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Helmet, 8);
     }
 
     public void OnBootsAbility()
@@ -338,6 +374,9 @@ public class InputManager : MonoBehaviour
         }
 
         useLegs = true;
+
+        // TEMP - FOR TESTING (call this where the cooldown starts for the item using a variable of the cooldown duration instead of this)
+        InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Legs, 15);
     }
 
     public void OnPoint(InputValue input)
@@ -361,7 +400,7 @@ public class InputManager : MonoBehaviour
     {
         isInDialogue = set;
 
-        if(!NPC.ActiveNPC || NPC.ActiveNPC?.SpeakerData().SpeakerID() != SpeakerID.Stellan){
+        if(GameManager.instance.InSceneWithGameTimer()){
             RunGameTimer(!set, !set);
         }
     }

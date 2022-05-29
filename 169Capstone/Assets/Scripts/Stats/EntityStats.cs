@@ -228,17 +228,17 @@ public abstract class EntityStats : MonoBehaviour
         protected float hasteBase;
         protected float hasteFlatBonus;
 
-        protected float STRDamageFlatBonus;
-        protected float STRDamageMultiplier;
+        public float STRDamageFlatBonus {get; protected set;}
+        public float STRDamageMultiplier {get; protected set;}
 
-        protected float DEXDamageFlatBonus;
-        protected float DEXDamageMultiplier;
+        public float DEXDamageFlatBonus {get; protected set;}
+        public float DEXDamageMultiplier {get; protected set;}
         
-        protected float WISDamageFlatBonus;
-        protected float WISDamageMultiplier;
+        public float WISDamageFlatBonus {get; protected set;}
+        public float WISDamageMultiplier {get; protected set;}
         
-        protected float INTDamageFlatBonus;
-        protected float INTDamageMultiplier;        
+        public float INTDamageFlatBonus {get; protected set;}
+        public float INTDamageMultiplier {get; protected set;}
     #endregion
 
     #region Hit Points

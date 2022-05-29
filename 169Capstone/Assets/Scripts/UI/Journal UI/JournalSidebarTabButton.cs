@@ -13,6 +13,9 @@ public class JournalSidebarTabButton : Selectable, IPointerClickHandler, IEventS
 
     public JournalContentID contentID;
 
+    public Sprite buttonSprite;
+    [HideInInspector] public bool entryIsLocked;
+
     public UnityEvent onTabSelected;
     public UnityEvent onTabDeselcted;
 

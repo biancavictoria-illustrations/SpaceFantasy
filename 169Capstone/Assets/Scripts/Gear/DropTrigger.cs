@@ -18,7 +18,7 @@ public class DropTrigger : MonoBehaviour
         // If the collision was caused by the player
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
             ActiveGearDrop = GetComponent<GeneratedEquipment>();
-            AlertTextUI.instance.EnableItemPickupAlert();
+            AlertTextUI.instance.EnableItemExamineAlert();
         }
     }
 
@@ -27,7 +27,7 @@ public class DropTrigger : MonoBehaviour
         // If the collision was caused by the player
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
             ActiveGearDrop = null;
-            AlertTextUI.instance.DisableAlert();
+            AlertTextUI.instance.DisablePrimaryAlert();
         }
     }
 

@@ -27,7 +27,7 @@ public class PauseMenu : MonoBehaviour
         GameManager.instance.pauseMenuOpen = false;
         GameIsPaused = false;
 
-        if( GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME ){
+        if( GameManager.instance.InSceneWithGameTimer() ){
             InputManager.instance.RunGameTimer(true);
         }        
 
@@ -36,11 +36,6 @@ public class PauseMenu : MonoBehaviour
         }
         if(InGameUIManager.instance.gearSwapIsOpen){
             InGameUIManager.instance.gearSwapUI.SetSwapUIInteractable(true);
-        }
-        if(InputManager.instance.isInDialogue){
-            // Select the next button
-            DialogueManager.instance.nextButton.interactable = true;
-            DialogueManager.instance.nextButton.Select();
         }
         if(InputManager.instance.shopIsOpen){
             SetOpenShopUIInteractable(true);
@@ -62,7 +57,7 @@ public class PauseMenu : MonoBehaviour
 
     public void PauseGame()
     {
-        if( GameManager.instance.currentSceneName != GameManager.MAIN_HUB_STRING_NAME ){
+        if( GameManager.instance.InSceneWithGameTimer() ){
             InputManager.instance.RunGameTimer(false);
         }
 
@@ -77,11 +72,16 @@ public class PauseMenu : MonoBehaviour
         if(InGameUIManager.instance.gearSwapIsOpen){
             InGameUIManager.instance.gearSwapUI.SetSwapUIInteractable(false);
         }
-        if(InputManager.instance.isInDialogue){
-            DialogueManager.instance.nextButton.interactable = false;
-        }
         if(InputManager.instance.shopIsOpen){
             SetOpenShopUIInteractable(false);
+        }
+
+        // Quitting mid-dialogue causes problems so just disable quitting if in dialogue
+        if(InputManager.instance.isInDialogue){
+            quitButton.interactable = false;
+        }
+        else{
+            quitButton.interactable = true;
         }
     }
 
