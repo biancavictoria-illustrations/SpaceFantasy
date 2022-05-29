@@ -175,10 +175,12 @@ public class InputManager : MonoBehaviour
 
         // If run 1 and you're in range of the captain's log
         else if( SpawnRoomForceFieldUnlockItem.activeForceFieldUnlockItem && !SpawnRoomForceFieldUnlockItem.activeForceFieldUnlockItem.isWeapon ){
+            // Drop the force fields to unlock the spawn room
             SpawnRoomForceFieldUnlockItem.activeForceFieldUnlockItem.UnlockForceFieldsOnPickUp();
-            InGameUIManager.instance.ToggleMiniMap(true);
-            AlertTextUI.instance.EnableOpenJournalAlert();
-            StartCoroutine(AlertTextUI.instance.RemoveSecondaryAlertAfterSeconds());
+            
+            // Alert the dialogue manager we want to play this dialogue
+            DialogueManager.instance.SetCaptainsLogDialogueTriggered(true);
+            StartCoroutine(DialogueManager.instance.AutoRunDialogueAfterTime());
         }
     }
 

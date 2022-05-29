@@ -73,7 +73,7 @@ public class StoryManager : MonoBehaviour
 
     public static StoryManager instance;
 
-    [HideInInspector] public bool talkedToBryn, talkedToStellan, talkedToRhian, talkedToDoctor, talkedToSorrel, talkedToLich = false;
+    [HideInInspector] public bool talkedToBryn, talkedToStellan, talkedToRhian, talkedToDoctor, talkedToLich = false;
 
     [HideInInspector] public List<int> brynNumRunDialogueList = new List<int>();
     [HideInInspector] public bool brynListInitialized;
@@ -83,12 +83,6 @@ public class StoryManager : MonoBehaviour
 
     [HideInInspector] public List<int> timeLichNumRunDialogueList = new List<int>();
     [HideInInspector] public bool lichListInitialized;
-
-    // [HideInInspector] public List<int> doctorNumRunDialogueList = new List<int>();
-    // [HideInInspector] public bool doctorListInitialized;
-
-    // [HideInInspector] public List<int> rhianNumRunDialogueList = new List<int>();
-    // [HideInInspector] public bool rhianListInitialized;
 
     public Dictionary<StoryBeat,BeatStatus> storyBeatDatabase = new Dictionary<StoryBeat,BeatStatus>();     // All story beats of type Conversation or Killed
     public HashSet<StoryBeat> activeStoryBeats = new HashSet<StoryBeat>();    // For the DialogueManager to see just the active beats
@@ -119,8 +113,6 @@ public class StoryManager : MonoBehaviour
         brynListInitialized = false;
         stellanListInitialized = false;
         lichListInitialized = false;
-        // doctorListInitialized = false;
-        // rhianListInitialized = false;
 
         activeStoryBeats.Clear();
 

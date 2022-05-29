@@ -10,6 +10,10 @@ tags:
 <<if StellanCommTriggered()>>
     [[PlayerStellanCommTriggered]]
 
+// If we just picked up the captain's log on run 1
+<<elseif CaptainsLogDialogueTriggered()>>
+    [[PlayerCaptainsLogDialogueTriggered]]
+
 // If we killed the time lich for the last time
 <<elseif $timeLichDeathDialogueTriggered and $epilogueTriggered>>
     [[PlayerTimeLichDeathDialogueTriggeredFINAL]]
@@ -48,6 +52,14 @@ tags:
 <<SetSpeaker Player>>
 What...?
 I feel... different.
+===
+
+title: PlayerCaptainsLogDialogueTriggered
+tags:
+---
+<<SetSpeaker Player>>
+Huh. Retro tech.
+The captain's log... Maybe it has a map.
 ===
 
 
@@ -119,10 +131,8 @@ tags:
 <<if Visited("PlayerTimeLichDeathDialogueTriggered")>>
     [[PlayerTimeLichDeathDialogueTriggered1]]
 <<elseif $runNum > 1>>
-    <<SetSpeaker Player>>
-    temp
     <<SetSpeaker TimeLich>>
-    temp
+    <i>Uugh</i>... How did you...?
     <<SetSpeaker Player>>
     temp
     <<SetSpeaker TimeLich>>
@@ -147,7 +157,6 @@ tags:
     temp
     <<SetSpeaker TimeLich>>
     temp
-    <<SetSpeaker TimeLich>>
     temp
 <<endif>>
 ===

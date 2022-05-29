@@ -59,7 +59,7 @@ public class Player : MonoBehaviour
         if(GameManager.instance.currentRunNumber == 1 || (GameManager.instance.currentSceneName == GameManager.GAME_LEVEL1_STRING_NAME && GameManager.instance.currentRunNumber == 2)){
             GameManager.instance.inElevatorAnimation = true;
             FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
-                StartAutoDialogueFromPlayer();
+                StartCoroutine(DialogueManager.instance.AutoRunDialogueAfterTime());
                 GameManager.instance.inElevatorAnimation = false;
             });
 
@@ -69,16 +69,6 @@ public class Player : MonoBehaviour
                 PlayerInventory.hasCaptainsLog = false;
                 InGameUIManager.instance.ToggleMiniMap(false);
             }
-        }
-    }
-
-    public void StartAutoDialogueFromPlayer(float timeToWait = GameManager.DEFAULT_AUTO_DIALOGUE_WAIT_TIME)
-    {
-        StartCoroutine(GameManager.instance.AutoRunDialogueAfterTime());
-        
-        if( GameManager.instance.currentRunNumber == 2 ){
-            AlertTextUI.instance.EnableViewStatsAlert();
-            StartCoroutine(AlertTextUI.instance.RemovePrimaryAlertAfterSeconds());
         }
     }
 

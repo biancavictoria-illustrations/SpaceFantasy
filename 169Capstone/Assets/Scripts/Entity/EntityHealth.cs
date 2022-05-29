@@ -273,13 +273,17 @@ public class EntityHealth : MonoBehaviour
                 if(enemyID == EnemyID.TimeLich){
                     // Story state things
                     GameManager.instance.hasKilledTimeLich = true;
+                    if( GameManager.instance.currentRunNumber <= 4 ){
+                        GameManager.instance.killedTimeLichWithinFirstFourRuns = true;
+                    }
+
                     DialogueManager.instance.SetTimeLichDeathDialogueTriggered(true);
                     if( PermanentUpgradeManager.instance.GetSkillLevel(PermanentUpgradeType.TimeLichKillerThing) > 0 ){
                         GameManager.instance.epilogueTriggered = true;
                     }
 
                     // Trigger auto dialogue
-                    Player.instance.StartAutoDialogueFromPlayer();
+                    StartCoroutine(DialogueManager.instance.AutoRunDialogueAfterTime());
                 }
             }
             
@@ -302,7 +306,7 @@ public class EntityHealth : MonoBehaviour
             // If you killed the mini boss, trigger Stellan's comm to tell you to go to the elevator
             if(enemyID == EnemyID.BeetleBoss){
                 DialogueManager.instance.SetStellanCommTriggered(true);
-                Player.instance.StartAutoDialogueFromPlayer();
+                StartCoroutine(DialogueManager.instance.AutoRunDialogueAfterTime());
             }
 
             Destroy(gameObject);

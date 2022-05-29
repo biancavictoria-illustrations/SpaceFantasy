@@ -54,7 +54,7 @@ tags:
 
 <<else>>
     [[TimeLichRepeatable]]
-    ERROR: No head node found for {$headNode}!  // How does this throw errors? will this break everything or just alert us
+    ERROR: No head node found for {$headNode}!
 <<endif>>
 ===
 
@@ -71,7 +71,7 @@ tags:
 <<SetSpeaker TimeLich>>
 Did I not tell you your attempts were futile?
 <<SetSpeaker Player>>
-I’ve killed you before, I’ll do it again. As many times as it takes.    
+I’ve killed you before, I’ll do it again. As many times as it takes.
 // <<endif>>
 ===
 
@@ -169,13 +169,16 @@ tags:
 ---
 <<if Visited("TimeLichDefaultDialogue")>>
     [[TimeLichDefaultDialogue1]]
+<<elseif GetCurrentRunNum() is 1>>
+    <<SetSpeaker TimeLich>>
+    TODO (run 1)
 <<else>>
     <<SetSpeaker TimeLich>>
     How sad, for such a young hero to have made it this far only to die.
     <<SetSpeaker Player>>
     I’ve never considered myself much of a hero. Just an opportunist.
-    <<SetSpeaker Player>>
-    But you must be the Captain – or do you prefer Wizard? Nice tower you’ve got here. Are you aware it’s been overrun with slimes? Nasty little things. Don’t worry, I cleaned up a bit for you.
+    But you must be the Captain – or do you prefer Wizard? Nice tower you’ve got here.
+    Are you aware it’s been overrun with slimes? Nasty little things. Don’t worry, I cleaned up a bit for you.
     <<SetSpeaker TimeLich>>
     You will find I am not so easy to dispose of, charlatan. Come. It is time for us to begin.
 <<endif>>
@@ -190,7 +193,8 @@ tags:
     <<SetSpeaker TimeLich>>
     Your misguided altruism will get you nowhere. You cannot best me.
     <<SetSpeaker Player>>
-    Altruism has nothing to do with it, Cap’n. You see, I just couldn’t pass up the temptation of looting this fine spacecraft. As soon as I stepped foot inside, I got stuck like the rest of your crew. I’m just trying to save my own skin.
+    Altruism has nothing to do with it, Cap’n. You see, I just couldn’t pass up the temptation of looting this fine spacecraft.
+    As soon as I stepped foot inside, I got stuck like the rest of your crew. I’m just trying to save my own skin.
     <<SetSpeaker TimeLich>>
     Perhaps. Whatever your motivation, your attempts are futile.    
 <<endif>>

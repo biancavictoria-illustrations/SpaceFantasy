@@ -75,6 +75,14 @@ public class PauseMenu : MonoBehaviour
         if(InputManager.instance.shopIsOpen){
             SetOpenShopUIInteractable(false);
         }
+
+        // Quitting mid-dialogue causes problems so just disable quitting if in dialogue
+        if(InputManager.instance.isInDialogue){
+            quitButton.interactable = false;
+        }
+        else{
+            quitButton.interactable = true;
+        }
     }
 
     private void SetOpenShopUIInteractable(bool set)

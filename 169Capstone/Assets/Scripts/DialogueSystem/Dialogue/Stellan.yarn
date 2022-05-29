@@ -5,6 +5,8 @@ tags:
     [[StellanEpilogueDialogue]]
 <<endif>>
 
+<<set $killedLichDuringFirstFourRuns to KilledTimeLichDuringFirstFourRuns()>>
+
 <<set $visitedDefault to Visited("StellanDefaultDialogue")>>
 <<set $visitedDefault1 to Visited("StellanDefaultDialogue1")>>
 <<set $visitedDefault2 to Visited("StellanDefaultDialogue2")>>
@@ -183,38 +185,47 @@ test you killed the beetle boss again (twice)
 
 
 
-title: StellanDialogueCompletedStellanEnemyKilledTimeLich
-tags:
----
-<<SetSpeaker Player>><<BranchComplete DialogueCompleted DialogueCompletedStellanEnemyKilledTimeLich>>
-You didn’t actually think I could do it. You’ve been sending me to die over and over, just to collect these Star Shards for you.
-<<SetSpeaker Stellan>>
-I’ve never exactly hid my skepticism of your capabilities, nor have I tried to give you false hope.
-<<SetSpeaker Player>>
-You’re cruel.
-<<SetSpeaker Stellan>>
-I’m pragmatic.
-<<SetSpeaker Stellan>>
-… And for what it’s worth, you might have given me just a bit of hope, now that you’ve actually done it once. So let me help you stop all this.
-===
-
-
-
 title: StellanEnemyKilledTimeLich
 tags:
 ---
-<<SetSpeaker Stellan>><<BranchComplete EnemyKilled EnemyKilledTimeLich>>
-Well, that is certainly a concerning look. Tell me, what new horrors did you uncover on this ship last time, the likes of which presumably killed you in inventively horrific ways?
-<<SetSpeaker Player>>
-I killed him.
-<<SetSpeaker Stellan>>
-...
-<<SetSpeaker Stellan>>
-... What?
-<<SetSpeaker Player>>
-I killed the Lich. Why are we still here? What’s going on? If you know something, if you’re <i>hiding</i> something–
-<<SetSpeaker Stellan>>
-Tone down the aggression, Atlan. You’ve only made it this far because of me. … I have some theories, but I’ll need some time. And lots of Star Shards.
+<<BranchComplete EnemyKilled EnemyKilledTimeLich>>
+<<if $killedLichDuringFirstFourRuns>>
+    <<SetSpeaker Stellan>>
+    TODO
+<<else>>
+    <<SetSpeaker Stellan>>//<<BranchComplete EnemyKilled EnemyKilledTimeLich>>
+    Well, that is certainly a concerning look. Tell me, what new horrors did you uncover on this ship last time, the likes of which presumably killed you in inventively horrific ways?
+    <<SetSpeaker Player>>
+    I killed him.
+    <<SetSpeaker Stellan>>
+    ...
+    <<SetSpeaker Stellan>>
+    ... What?
+    <<SetSpeaker Player>>
+    I killed the Lich. Why did everything reset? Why are we still here? What’s going on? If you know something, if you’re <i>hiding</i> something–
+    <<SetSpeaker Stellan>>
+    Tone down the aggression, Atlan. You’ve only made it this far because of me. … I have some theories, but I’ll need some time. And lots of Star Shards.
+<<endif>>
+===
+
+title: StellanDialogueCompletedStellanEnemyKilledTimeLich
+tags:
+---
+<<if $killedLichDuringFirstFourRuns>>
+    <<SetSpeaker Stellan>>
+    TODO
+<<else>>
+    <<SetSpeaker Player>><<BranchComplete DialogueCompleted DialogueCompletedStellanEnemyKilledTimeLich>>
+    You didn’t actually think I could do it. You’ve been sending me to die over and over, just to collect these Star Shards for you.
+    <<SetSpeaker Stellan>>
+    I’ve never exactly hid my skepticism of your capabilities, nor have I tried to give you false hope.
+    <<SetSpeaker Player>>
+    You’re cruel.
+    <<SetSpeaker Stellan>>
+    I’m pragmatic.
+    <<SetSpeaker Stellan>>
+    … And for what it’s worth, you might have given me just a bit of hope, now that you’ve actually done it once. So let me help you stop all this.
+<<endif>>
 ===
 
 
@@ -222,8 +233,11 @@ Tone down the aggression, Atlan. You’ve only made it this far because of me. �
 title: StellanKilledByDeathPitTimeLichArena
 tags:
 ---
+<<if $killedLichDuringFirstFourRuns>>
+    <<SetSpeaker Stellan>>
+    TODO
 // If this was your first time facing the lich, play default lich death 1 first instead
-<<if not Visited("StellanKilledByTimeLich")>>
+<<elseif not Visited("StellanKilledByTimeLich")>>
     [[StellanKilledByTimeLich]]
 <<else>>
     <<SetSpeaker Stellan>><<BranchComplete KilledBy KilledByDeathPitTimeLichArena>>
@@ -240,6 +254,9 @@ tags:
 ---
 <<if Visited("StellanKilledByTimeLich")>>
     [[StellanKilledByTimeLich1]]
+<<elseif $killedLichDuringFirstFourRuns>>
+    <<SetSpeaker Stellan>>
+    TODO
 <<else>>
     <<SetSpeaker Player>>
     Found the Lich.
@@ -263,6 +280,9 @@ tags:
 ---
 <<if Visited("StellanKilledByTimeLich1")>>
     [[StellanKilledByTimeLich2]]
+<<elseif $killedLichDuringFirstFourRuns>>
+    <<SetSpeaker Stellan>>
+    TODO
 <<else>>
     <<SetSpeaker Player>>
     Stellan, you’ve been on this ship for… quite some time.
@@ -312,7 +332,8 @@ No, Atlan, listen to me. He wasn’t the Captain. This wasn’t his tower, origi
 <<SetSpeaker Player>>
 I don’t see how that changes much, personally.
 <<SetSpeaker Stellan>>
-… I have seen your desire for loot. For wealth. For fame. I tell you this to warn you, friend. Be cautious of ambition. It changes a person. Ambition alone has the power to twist a person into a monstrous shell of what he once was.
+… I have seen your desire for loot. For wealth. For fame. I tell you this to warn you, friend.
+Be cautious of ambition. It changes a person. Ambition alone has the power to twist a person into a monstrous shell of what he once was.
 ===
 
 
@@ -346,9 +367,9 @@ tags:
     <<SetSpeaker Stellan>>
     Is that… residual slime ooze clinging to your sleeve? You let yourself be killed by a slime?
     <<SetSpeaker Stellan>>
-    A SLIME, Atlan?
+    A <i>slime</i>, Atlan?
     <<SetSpeaker Player>>
-    A particularly FEROCIOUS slime, yes, Stellan. Your point?
+    A particularly <i>ferocious</i> slime, yes, Stellan. Your point?
     <<SetSpeaker Stellan>>
     You still think you stand a chance against <i>him</i>?
 <<endif>>
@@ -429,10 +450,30 @@ tags:
 ---
 <<if Visited("StellanDefaultDialogue")>>
     [[StellanDefaultDialogue1]]
-<<elseif HasKilledTimeLich()>>
+<<elseif $killedLichDuringFirstFourRuns>>
     <<SetSpeaker Stellan neutral ???>>
     How did you...?
-    // TODO: Add stuff to here and other nodes if you kill the lich too early
+    <<SetSpeaker Player>>
+    <i>Uugh</i>... I'm... alive?
+    <<SetSpeaker Stellan neutral ???>>
+    Yes, yes, it's a time loop. How miraculous and novel. Even death won't set us free.
+    Now, tell me. How did you <i>do</i> that?
+    <<SetSpeaker Player>>
+    What, kill the skeleton man?
+    <<SetSpeaker Stellan neutral ???>>
+    Lich.
+    You killed the lich.
+    You, some... wayward adventurer. A pirate. A mere <i>scoundrel,</i> and you board this ship out of <i>nowhere</i> and kill the lich. Who <i>are</i> you?
+    <<SetSpeaker Player>>
+    Name's Atlan. I just came in here looking for loot. Maybe some electrum, if anyone left any lying around. Now I'm just trying to get off this godsforsaken ship.
+    But then I died. And now I'm back.
+    <<SetSpeaker Stellan neutral ???>>
+    You're nothing but a common thief, yet you...
+    <<SetSpeaker Player>>
+    Listen, friend. You can't fault a man for trying to steal from an abandoned wizard's tower. Didn't realize it wouldn't be so abandoned on the inside.
+    <<SetSpeaker Stellan>>
+    ... I'm Stellan. You must know, whatever ambition brought you here, whatever misguided arrogance that you could handle whatever threats might lurk within...
+    Your apparent success against <i>him</i>? It was only a fluke. You're stuck here. Just like the rest of us.
 <<else>>
     <<SetSpeaker Stellan neutral ???>>
     Well, you certainly don’t belong here.
@@ -456,6 +497,16 @@ tags:
 ---
 <<if Visited("StellanDefaultDialogue1")>>
     [[StellanDefaultDialogue2]]
+<<elseif $killedLichDuringFirstFourRuns>>
+    <<SetSpeaker Stellan>>
+    Back again? Unsurprising. Just as I told you: You're stuck here.
+    <<SetSpeaker Player>>
+    <i>Uugh</i>... What happened to me out there? I felt... different as soon as I left this lounge.
+    <<SetSpeaker Stellan>>
+    Ah, yes. Everything is... twisted, within this ship. Continuously. I've been studying the time loop and its impact on the core qualities of a person for quite some time, but still many answers evade me.
+    <<SetSpeaker Stellan>>
+    If you're determined to keep dying out there, I may be willing to help in your endeavor to escape, for a cost. A, ah, mutually beneficial relationship.
+    I’m looking for Star Shards, and if you’re going beyond this lounge, you may be able to retrieve some for me. In turn… I have much to offer using the resources you source on my behalf.
 <<else>>
     <<SetSpeaker Stellan neutral ???>>
     Back again? Unsurprising. Just as I told you: You're stuck here.
@@ -474,6 +525,18 @@ tags:
 ---
 <<if Visited("StellanDefaultDialogue2")>>
     [[StellanDefaultDialogue3]]
+<<elseif $killedLichDuringFirstFourRuns>>
+    <<SetSpeaker Stellan>>
+    The inevitability of your death will continue if you don't stop being so careless.
+    <<SetSpeaker Player>>
+    Well, at least I'm doing <i>something</i> instead of wallowing in self-pity.
+    Make yourself useful and help me understand what's going on here. Who is the Captain of this ship? It didn't even ping on my radar, I assumed it was abandoned.
+    <<SetSpeaker Stellan>>
+    The Captain? The Wizard of this tower is long dead. I was once his apprentice. But the Lich rules this ship now.
+    <<SetSpeaker Player>>
+    Then why hasn't killing him broken us all out of this godsforsaken loop?
+    <<SetSpeaker Stellan>>
+    He's a <i>lich</i>, Atlan. He wields time as a weapon to use against us. Killing him doesn't matter while his loop keeps him from a true death.
 <<else>>
     <<SetSpeaker Stellan>>
     The inevitability of your death will continue if you don't stop being so careless.

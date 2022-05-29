@@ -79,7 +79,8 @@ public class ShopUIStellan : MonoBehaviour
             panel.InitializeUpgradeValues();
         }
 
-        if(GameManager.instance.hasKilledTimeLich){
+        // If we have killed the time lich and already saw the dialogue where Stellan is like "here i have an idea but it's expensive"
+        if(GameManager.instance.hasKilledTimeLich && DialogueManager.instance.visitedNodes.Contains("StellanEnemyKilledTimeLich")){
             killTimeLichItem.SetActive(true);
         }
     }
