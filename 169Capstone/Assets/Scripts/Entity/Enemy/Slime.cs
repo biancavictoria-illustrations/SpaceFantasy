@@ -73,6 +73,7 @@ public class Slime : Enemy
     private void DeathAnimation(EntityHealth health)
     {
         GameObject explosion = Instantiate(explosionObject);
+        Destroy(explosion, 3);
         explosion.transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
     }
 }
