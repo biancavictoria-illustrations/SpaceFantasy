@@ -21,10 +21,10 @@ public class AnimationStateController : MonoBehaviour
     public void ActivateHitbox(int active)
     {
         attackActive = active > 0;
-        if (attackActive)
+        if (active == 1)
         {
-            Instantiate(swordSlashVFX, Player.instance.transform.position,transform.rotation);
-            Debug.Log("Slash VFX Instantiate");
+            GameObject vfx = Instantiate(swordSlashVFX, Player.instance.transform.position,transform.rotation);
+            Destroy(vfx, 1);
         }
     }
 
