@@ -34,7 +34,24 @@ public class DropTrigger : MonoBehaviour
     // Called in the EnemyDropGenerator script (as well as inventory when you remove something?)
     public void DropItemModelIn3DSpace()
     {
+        GeneratedEquipment generatedEquipment = GetComponent<GeneratedEquipment>();
+
         // Instantiate the MODEL prefab as a child of THIS game object (the Drop Item Prefab)
-        Instantiate(GetComponent<GeneratedEquipment>().equipmentBaseData.ItemDropModelPrefab(), transform);
+        GameObject itemDrop = Instantiate(generatedEquipment.equipmentBaseData.ItemDropModelPrefab(), transform);
+
+        // Get FX that coordinates to type + rarity
+        foreach( GearManagerObject.ItemFXData fxData in GameManager.instance.GearManager().ItemFXDataList() ){
+            // Check if this item is a weapon or non-weapon gear
+            bool itemIsWeapon = generatedEquipment.equipmentBaseData.ItemSlot() == InventoryItemSlot.Weapon;
+
+            // If rarity and type matches, instantiate this FX
+            if( fxData.Rarity() == generatedEquipment.rarity && itemIsWeapon == fxData.ItemIsWeapon() ){
+                // Instantiate and return
+                GameObject fx = Instantiate( fxData.FXPrefab(), itemDrop.transform.position, Quaternion.identity );
+                fx.transform.parent = itemDrop.transform;
+                // Instantiate( fxData.FXPrefab(), Vector3.zero, Quaternion.identity, itemDrop.transform );
+                return;
+            }
+        }
     }
 }
