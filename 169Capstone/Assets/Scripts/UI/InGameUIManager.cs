@@ -342,7 +342,7 @@ public class InGameUIManager : MonoBehaviour
             }
         }
 
-        private ItemCooldownUI GetCooldownUIFromSlot(InventoryItemSlot slot)
+        public ItemCooldownUI GetCooldownUIFromSlot(InventoryItemSlot slot)
         {
             foreach(ItemCooldownUI cooldown in itemCooldownUI){
                 if(cooldown.GetItemSlot() == slot){
@@ -353,7 +353,7 @@ public class InGameUIManager : MonoBehaviour
             return null;
         }
 
-        public void StartCooldownForItem(InventoryItemSlot slot, int value)
+        public void StartCooldownForItem(InventoryItemSlot slot, float value)
         {
             if(!PlayerInventory.instance.gear[slot]){
                 return;
@@ -373,7 +373,7 @@ public class InGameUIManager : MonoBehaviour
             StartCoroutine(CooldownRoutine(cooldown, value));
         }
 
-        private IEnumerator CooldownRoutine(ItemCooldownUI cooldown, int value)
+        private IEnumerator CooldownRoutine(ItemCooldownUI cooldown, float value)
         {
             cooldown.StartCooldownCountdown(value);
             while(cooldown.counter > 0){

@@ -165,14 +165,16 @@ public class PlayerInventory : MonoBehaviour
             return;
         }
 
+        Equipment item = gear[slot];
+
         // Remove your passive upgrades from that item
-        RemoveStatBonusesFromItem(gear[slot].data);
+        RemoveStatBonusesFromItem(item.data);
 
         // Instantiate the item to drop on the ground
         GameObject dropItem = Instantiate(dropItemPrefab, Player.instance.transform.position, Quaternion.identity);
 
         // Give it the data of your currently equipped item
-        dropItem.GetComponent<GeneratedEquipment>().SetAllEquipmentData(gear[slot].data);
+        dropItem.GetComponent<GeneratedEquipment>().SetAllEquipmentData(item.data);
 
         // Drop it
         dropItem.GetComponent<DropTrigger>().DropItemModelIn3DSpace();
@@ -181,6 +183,9 @@ public class PlayerInventory : MonoBehaviour
         if(slot == InventoryItemSlot.Weapon){
             RemoveEquippedWeaponModel();
         }
+
+        // Deal with coroutines that were still running
+        item.ManageCoroutinesOnUnequip();
 
         // Delete the thing
         Destroy(gear[slot].gameObject);

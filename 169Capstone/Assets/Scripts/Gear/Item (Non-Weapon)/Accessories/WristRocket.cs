@@ -10,19 +10,16 @@ public class WristRocket : Accessories
     //private bool fire = false;
     [SerializeField] GameObject rocketPrefab;
 
-    // Start is called before the first frame update
     void Start()
     {
         player = Player.instance;
         movement = player.GetComponentInChildren<Movement>();
         anim = player.GetComponentInChildren<AnimationStateController>();
-        damage = itemData.Damage() * player.stats.getINTDamage();
+        // damage = itemData.Damage() * player.stats.getINTDamage();    // this can change depending on equips so we shouldn't save it in start, just get it each time
         anim.startAccessory.AddListener(LaunchRocket);
-        anim.endAccessory.AddListener(ResetRocket);
-        anim.startCooldownAccessory.AddListener(StartCooldown);
+        anim.endAccessory.AddListener(ResetItemAndTriggerCooldown);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(InputManager.instance.useAccessory && clearToFire)
@@ -42,15 +39,16 @@ public class WristRocket : Accessories
         movement.isAttacking = false;
     }
 
-    public void ResetRocket()
+    public override void ResetItemAndTriggerCooldown()
     {
         clearToFire = true;
+        StartCooldownRoutine();
     }
 
     private void Fire()
     {
         GameObject rocket = Instantiate(rocketPrefab, player.transform.position + Vector3.up * 2, player.transform.rotation);
         Projectile projectileScript = rocket.GetComponent<Projectile>();
-        projectileScript.Initialize("Enemy", damage, DamageSourceType.Player, InputManager.instance.cursorLookDirection, itemData.Radius(), 30);
+        projectileScript.Initialize("Enemy", player.stats.getINTDamage(), DamageSourceType.Player, InputManager.instance.cursorLookDirection, itemData.Radius(), 30);
     }
 }

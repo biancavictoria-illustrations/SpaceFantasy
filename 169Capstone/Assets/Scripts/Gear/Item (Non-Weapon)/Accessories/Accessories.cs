@@ -2,37 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Accessories : NonWeaponItem
+public abstract class Accessories : NonWeaponItem
 {
-    [HideInInspector] public float damage = -1;
-
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        slot = 1;
+        slot = InventoryItemSlot.Accessory;
     }
 
-    private void Update()
-    {
-        /*if(Input.GetButtonDown("Fire2"))
-        {
-            fire = true;
-        }*/
-        if(InputManager.instance.useAccessory)
-        {
-            Debug.Log("fire");
-            fire = true;
-        }
-    }
+    // START & UPDATE both implemented in children -> if we put anything here, it would get overriden unless we call base.Start() / base.Update()
 
-    public void Damage(EntityHealth health)
-    {
-        health.Damage(damage, DamageSourceType.Player);
-    }
+    // private void Update()
+    // {
+    //     if(InputManager.instance.useAccessory)
+    //     {
+    //         Debug.Log("fire");
+    //         fire = true;
+    //     }
+    // }
 
-    public IEnumerator CoolDown()
-    {
-        yield return new WaitForSeconds(itemData.CoolDown());
-        anim.animator.SetTrigger("CooldownAccessory");
-    }
+    // Moving this to NonWeaponItem
+
+    // public IEnumerator CoolDown()
+    // {
+    //     InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Accessory, itemData.CoolDown());
+    //     yield return new WaitForSeconds(itemData.CoolDown());
+    //     anim.animator.SetTrigger("CooldownAccessory");
+    // }
 }

@@ -337,15 +337,17 @@ public class InputManager : MonoBehaviour
 
     public void OnAccessoryAbility()
     {
-        if (!CanAcceptGameplayInput())
-        {
+        // If we can't move at all OR if this cooldown is currently active, return (using cooldown status from UI because we want to continue the cooldown if you swapped items)
+        if (!CanAcceptGameplayInput() || InGameUIManager.instance.GetCooldownUIFromSlot(InventoryItemSlot.Accessory).isActive){
+            return;
+        }
+
+        // If we have something equipped and it's currently active, return
+        if( PlayerInventory.instance.ItemSlotIsFull(InventoryItemSlot.Accessory) && ((NonWeaponItem)PlayerInventory.instance.gear[InventoryItemSlot.Accessory]).durationRoutine != null ){
             return;
         }
 
         useAccessory = true;
-
-        // TEMP - FOR TESTING (call this where the cooldown starts for the item using a variable of the cooldown duration instead of this)
-        InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Accessory, 4);
     }
 
     public void OnAccessoryAbilityCanceled()
@@ -355,28 +357,32 @@ public class InputManager : MonoBehaviour
 
     public void OnHelmetAbility()
     {
-        if(!CanAcceptGameplayInput())
-        {
+        // If we can't move at all OR if this cooldown is currently active, return (using cooldown status from UI because we want to continue the cooldown if you swapped items)
+        if(!CanAcceptGameplayInput() || InGameUIManager.instance.GetCooldownUIFromSlot(InventoryItemSlot.Helmet).isActive){
+            return;
+        }
+
+        // If we have something equipped and it's currently active, return
+        if( PlayerInventory.instance.ItemSlotIsFull(InventoryItemSlot.Helmet) && ((NonWeaponItem)PlayerInventory.instance.gear[InventoryItemSlot.Helmet]).durationRoutine != null ){
             return;
         }
 
         useHead = true;
-
-        // TEMP - FOR TESTING (call this where the cooldown starts for the item using a variable of the cooldown duration instead of this)
-        InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Helmet, 8);
     }
 
     public void OnBootsAbility()
     {
-        if(!CanAcceptGameplayInput())
-        {
+        // If we can't move at all OR if this cooldown is currently active, return (using cooldown status from UI because we want to continue the cooldown if you swapped items)
+        if(!CanAcceptGameplayInput() || InGameUIManager.instance.GetCooldownUIFromSlot(InventoryItemSlot.Legs).isActive){
+            return;
+        }
+
+        // If we have something equipped and it's currently active, return
+        if( PlayerInventory.instance.ItemSlotIsFull(InventoryItemSlot.Legs) && ((NonWeaponItem)PlayerInventory.instance.gear[InventoryItemSlot.Legs]).durationRoutine != null ){
             return;
         }
 
         useLegs = true;
-
-        // TEMP - FOR TESTING (call this where the cooldown starts for the item using a variable of the cooldown duration instead of this)
-        InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Legs, 15);
     }
 
     public void OnPoint(InputValue input)

@@ -8,13 +8,14 @@ public class TrousersOfFortitude : Leg
 
     private Player player;
 
+    public float slowDownValue = 0.25f; // Percent to slow movement speed by when activated
+
     private void Start()
     {
         player = Player.instance;
         anim = player.GetComponentInChildren<AnimationStateController>();
         anim.startLegs.AddListener(ActivateTrousers);
-        anim.endLegs.AddListener(ResetTrousers);
-        anim.startCooldownLegs.AddListener(StartCooldown);
+        anim.endLegs.AddListener(ResetItemAndTriggerCooldown);
     }
 
     private void Update()
@@ -31,18 +32,27 @@ public class TrousersOfFortitude : Leg
     {
         anim.animator.SetBool("IsUseLegs", false);
         UpdateStats(1);
-        StartCoroutine("Duration");
+        StartDurationRoutine();
     }
 
-    public void ResetTrousers()
+    public override void ResetItemAndTriggerCooldown()
     {
         UpdateStats(0);
         clearToFire = true;
+        StartCooldownRoutine();
     }
 
     private void UpdateStats(int fullBonus)
     {
-        player.stats.SetBonusForStat(this, StatType.Defense, EntityStats.BonusType.multiplier, 1 + fullBonus);
-        player.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, -0.25f * fullBonus);
+        player.stats.SetBonusForStat(this, StatType.Defense, EntityStats.BonusType.multiplier, fullBonus);
+        player.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, -slowDownValue * fullBonus);
+    }
+
+    public override void ManageCoroutinesOnUnequip()
+    {
+        base.ManageCoroutinesOnUnequip();
+
+        // Revert stat changes from activated ability
+        UpdateStats(0);
     }
 }

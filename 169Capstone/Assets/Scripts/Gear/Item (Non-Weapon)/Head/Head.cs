@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Head : NonWeaponItem
+public abstract class Head : NonWeaponItem
 {
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        slot = 2;
+        slot = InventoryItemSlot.Helmet;
     }
 
-    private void Update()
-    {
-        if(InputManager.instance.useHead)
-        {
-            fire = true;
-        }
-    }
+    // START & UPDATE both implemented in children -> if we put anything here, it would get overriden unless we call base.Start() / base.Update()
+
+    // private void Update()
+    // {
+    //     if(InputManager.instance.useHead)
+    //     {
+    //         fire = true;
+    //     }
+    // }
 }
