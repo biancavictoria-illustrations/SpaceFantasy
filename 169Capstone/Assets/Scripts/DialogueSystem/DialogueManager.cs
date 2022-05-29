@@ -164,8 +164,8 @@ public class DialogueManager : MonoBehaviour
             return GameManager.instance.hasKilledTimeLich;
         });
 
-        dialogueRunner.AddFunction("KilledTimeLichDuringFirstFourRuns", 0, delegate (Yarn.Value[] parameters){
-            return GameManager.instance.killedTimeLichWithinFirstFourRuns;
+        dialogueRunner.AddFunction("FirstClearRunNumber", 0, delegate (Yarn.Value[] parameters){
+            return GameManager.instance.firstClearRunNumber;
         });
 
 
@@ -264,11 +264,12 @@ public class DialogueManager : MonoBehaviour
                 }
             }
 
-            // TODO: This doesn't actually work bc every time NPC start runs it resets its num run dialogue list
+            // This doesn't actually work bc every time NPC start runs it resets its num run dialogue list
             // Is this necessary? It won't run again as long as it's marked complete, and it won't run to begin with unless the num run matches
-            if( sortedStoryBeats.Max.GetBeatType() == StoryBeatType.NumRuns ){
-                NPC.ActiveNPC.GetNumRunDialogueList().Remove(currentNumRunRemoveValue);
-            }
+            // CONFIRM this can be removed before deleting it completely
+            // if( sortedStoryBeats.Max.GetBeatType() == StoryBeatType.NumRuns ){
+            //     NPC.ActiveNPC.GetNumRunDialogueList().Remove(currentNumRunRemoveValue);
+            // }
 
             Debug.Log("PLAYING DIALOGUE INTERACTION for " + NPC.ActiveNPC.SpeakerData().SpeakerID() + ": " + sortedStoryBeats.Max.GetYarnHeadNode());
 
@@ -462,10 +463,16 @@ public class DialogueManager : MonoBehaviour
             // Force mini map open after grabbing the captain's log
             if(runNum == 1 && scene == GameManager.GAME_LEVEL1_STRING_NAME && PlayerInventory.hasCaptainsLog && !visitedNodes.Contains("PlayerStellanCommTriggered")){
                 InGameUIManager.instance.ToggleMiniMap(true);
+
+                // Journal alert
                 AlertTextUI.instance.EnableOpenJournalAlert();
                 StartCoroutine(AlertTextUI.instance.RemoveSecondaryAlertAfterSeconds());
+
+                // Expanded map alert
+                AlertTextUI.instance.EnableViewMapAlert();
+                StartCoroutine(AlertTextUI.instance.RemovePrimaryAlertAfterSeconds());
             }
-            // Enable view stats alert after first time seeing stat reroll
+            // Enable view stats alert after dialogue first time seeing stat reroll
             else if(runNum == 2 && scene == GameManager.GAME_LEVEL1_STRING_NAME && !PlayerInventory.instance.ItemSlotIsFull(InventoryItemSlot.Weapon)){
                 AlertTextUI.instance.EnableViewStatsAlert();
                 StartCoroutine(AlertTextUI.instance.RemovePrimaryAlertAfterSeconds());

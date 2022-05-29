@@ -72,6 +72,12 @@ public class Player : MonoBehaviour
         }
     }
 
+    // Use this when it's being called from something that's about to get destroyed, like an enemy
+    public void StartAutoDialogueFromPlayer()
+    {
+        StartCoroutine(DialogueManager.instance.AutoRunDialogueAfterTime());
+    }
+
     private IEnumerator DetectFall()
     {
         yield return new WaitUntil(() => transform.position.y <= -6);

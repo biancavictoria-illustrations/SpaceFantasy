@@ -241,7 +241,7 @@ public class InputManager : MonoBehaviour
             return;
         }
         else if(mapIsOpen){
-            OnToggleExpandedMap(input);
+            OnToggleMinimap(input);
             return;
         }
         else if(journalIsOpen){
@@ -280,7 +280,10 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    public void OnToggleExpandedMap(InputValue input)
+    // I did something dumb and changed the name of this one and thought it was broken so this is a friendly reminder
+    // that these names have to be the same as the ones in the control scheme and therefore this one HAS TO BE ToggleMinimap
+    // even tho for a sec I thought it would make more sense as "ToggleExpandedMap" instead
+    public void OnToggleMinimap(InputValue input)
     {
         if(!GameManager.instance.InSceneWithRandomGeneration() || isInDialogue || PauseMenu.GameIsPaused || shopIsOpen || compareItemIsOpen || inventoryIsOpen || journalIsOpen || !PlayerInventory.hasCaptainsLog){
             return;

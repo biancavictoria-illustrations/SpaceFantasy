@@ -18,6 +18,8 @@ public class EncounterRoomClose : MonoBehaviour
     private Color oldColor;
     private GameObject elevator;
 
+    private bool enemiesSpawned = false;
+
     void Start()
     {
         if(GameManager.instance.InSceneWithRandomGeneration()){
@@ -58,11 +60,17 @@ public class EncounterRoomClose : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if(enemiesSpawned){
+            return;
+        }
+
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             if(!GameManager.generationComplete){
                 return;
             }
+
+            enemiesSpawned = true;
 
             // Enables the force field object
             foreach(GameObject ff in forceFields)
@@ -100,7 +108,7 @@ public class EncounterRoomClose : MonoBehaviour
 
     private void RoomOpen(EntityHealth _)
     {
-        Debug.Log("Enemy Died");
+        // Debug.Log("Enemy Died");
         if (!room.hasEnemies())
         {
             foreach(GameObject ff in forceFields)
@@ -111,10 +119,10 @@ public class EncounterRoomClose : MonoBehaviour
                 elevator.GetComponent<Collider>().enabled = true;
 
                 sceneLight.color = oldColor;
-                Debug.Log("Room Open");
+                // Debug.Log("Room Open");
             }
 
-            Debug.Log("disable encounter room");
+            // Debug.Log("disable encounter room");
             gameObject.SetActive(false);
         }
     }

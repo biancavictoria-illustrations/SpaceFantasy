@@ -42,10 +42,10 @@ public class GameManager : MonoBehaviour
 
     // Set to true (permanently) once you have killed the Time Lich at least once
     // (Makes a new special item pop up in Stellan's shop)
-    [HideInInspector] public bool hasKilledTimeLich;
+    public bool hasKilledTimeLich {get; private set;}
 
-    // If killedTimeLichWithinFirstFourRuns, different Stellan dialogue in particular should play, maybe other people's too?
-    [HideInInspector] public bool killedTimeLichWithinFirstFourRuns;
+    // The run where the player first killed the time lich
+    public int firstClearRunNumber {get; private set;}
     
     [HideInInspector] public bool epilogueTriggered = false;
 
@@ -74,8 +74,14 @@ public class GameManager : MonoBehaviour
     {
         currentRunNumber = 1;
         hasKilledTimeLich = false;
-        killedTimeLichWithinFirstFourRuns = false;
+        firstClearRunNumber = -1;
         bossesKilled = 0;
+    }
+
+    public void DocumentFirstClearInfo()
+    {
+        hasKilledTimeLich = true;
+        firstClearRunNumber = currentRunNumber;
     }
 
     private void Update()
@@ -329,7 +335,7 @@ public class GameManager : MonoBehaviour
             // Game Manager Stuff
             currentRunNumber = saveData.currentRunNumber;
             hasKilledTimeLich = saveData.hasKilledTimeLich;
-            killedTimeLichWithinFirstFourRuns = saveData.killedTimeLichWithinFirstFourRuns;
+            firstClearRunNumber = saveData.firstClearRunNumber;
             bossesKilled = saveData.bossesKilled;
 
             // Inventory Stuff

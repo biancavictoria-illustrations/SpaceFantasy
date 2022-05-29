@@ -58,8 +58,8 @@ title: PlayerCaptainsLogDialogueTriggered
 tags:
 ---
 <<SetSpeaker Player>>
-Huh. Retro tech.
-The captain's log... Maybe it has a map.
+The Captain's Log...
+Looks pretty old, but maybe it has a map.
 ===
 
 
@@ -98,7 +98,6 @@ tags:
     Answer comm.
     <<SetSpeaker Stellan comm>>
     Same as last time: Take the elevator up.
-    <<SetSpeaker Stellan comm>>
     ... See you soon.
 <<endif>>
 ===
@@ -130,16 +129,16 @@ tags:
 ---
 <<if Visited("PlayerTimeLichDeathDialogueTriggered")>>
     [[PlayerTimeLichDeathDialogueTriggered1]]
-<<elseif $runNum > 1>>
+<<elseif $runNum is 1>> // If you killed him for the first time on your FIRST run
     <<SetSpeaker TimeLich>>
     <i>Uugh</i>... How did you...?
     <<SetSpeaker Player>>
-    temp
+    run 1 death temp
     <<SetSpeaker TimeLich>>
     temp
 <<else>>
     <<SetSpeaker Player>>
-    temp
+    temp (first death)
     <<SetSpeaker TimeLich>>
     temp
     <<SetSpeaker Player>>
@@ -154,7 +153,7 @@ tags:
     [[PlayerTimeLichDeathDialogueTriggeredRepeatable]]
 <<else>>
     <<SetSpeaker Player>>
-    temp
+    temp (second death)
     <<SetSpeaker TimeLich>>
     temp
     temp
@@ -168,16 +167,16 @@ tags:
 <<set $num to RandomNum(4)>>
 <<if $num is 0>>
     <<SetSpeaker TimeLich>>
-    temp
+    ... Again... then...
 <<elseif $num is 1>>
     <<SetSpeaker TimeLich>>
-    temp
+    <i>Uugh</i>... I will see you... again...
 <<elseif $num is 2>>
     <<SetSpeaker TimeLich>>
-    temp
+    temp (repeatable)
 <<else>>
     <<SetSpeaker TimeLich>>
-    temp
+    temp (repeatable)
 <<endif>>
 ===
 
@@ -185,7 +184,7 @@ title: PlayerTimeLichDeathDialogueTriggeredFINAL
 tags:
 ---
 <<SetSpeaker TimeLich>>
-TODO FINAL time lich death
+TODO (death with deus ex)
 <<SetSpeaker Player>>
 TODO
 <<SetSpeaker TimeLich>>
@@ -198,7 +197,7 @@ title: PlayerEpilogueIntro
 tags:
 ---
 <<SetSpeaker Player>>
-Stellan, we're free! I did it, he's gone!
+Stellan, I did it! He's gone, we can-
 ...
 ... Stellan?
 ===
