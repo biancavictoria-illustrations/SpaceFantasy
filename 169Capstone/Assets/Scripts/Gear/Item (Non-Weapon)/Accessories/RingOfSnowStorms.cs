@@ -15,4 +15,9 @@ public class RingOfSnowStorms : RingGeneric
     {
         
     }
+
+    public override void ResetItemAndTriggerCooldown()
+    {
+        StartCooldownRoutine();
+    }
 }

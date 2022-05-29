@@ -91,4 +91,10 @@ public class BowAndArrows : Equipment
         isAttacking = false;
         movement.isAttacking = false;
     }
+
+    public override void ManageCoroutinesOnUnequip()
+    {
+        // No coroutines to deal with (I think?)
+        // Can leave this blank
+    }
 }
