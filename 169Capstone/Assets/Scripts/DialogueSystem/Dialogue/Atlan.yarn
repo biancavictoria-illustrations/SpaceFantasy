@@ -49,7 +49,7 @@ Ah, well. As long as the loot's good.
 title: PlayerSecondRunIntro
 tags:
 ---
-<<SetSpeaker Player>>
+<<SetSpeaker Player>><<Emote Player surprise>>
 What...?
 I feel... different.
 ===
@@ -79,7 +79,7 @@ tags:
     <<SetSpeaker Stellan comm>>
     Take the elevator up, if you feel ready for the real challenge. But I have a feeling I will be seeing you face-to-face again soon.
 <<else>>
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player>><<Emote Player question>>
     I'm getting a comm? From who? ... Answer comm.
     <<SetSpeaker Stellan comm ???>>
     Not bad. Take the elevator up, if you feel ready for the real challenge. But I have a feeling I will be meeting you face-to-face soon.
@@ -130,7 +130,7 @@ tags:
 <<if Visited("PlayerTimeLichDeathDialogueTriggered")>>
     [[PlayerTimeLichDeathDialogueTriggered1]]
 <<elseif $runNum is 1>> // If you killed him for the first time on your FIRST run
-    <<SetSpeaker TimeLich>>
+    <<SetSpeaker TimeLich>><<Emote TimeLich question>>
     <i>Uugh</i>... How did you...?
     <<SetSpeaker Player>>
     run 1 death temp

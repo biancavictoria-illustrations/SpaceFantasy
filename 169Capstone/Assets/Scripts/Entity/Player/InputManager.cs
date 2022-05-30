@@ -180,7 +180,7 @@ public class InputManager : MonoBehaviour
             
             // Alert the dialogue manager we want to play this dialogue
             DialogueManager.instance.SetCaptainsLogDialogueTriggered(true);
-            StartCoroutine(DialogueManager.instance.AutoRunDialogueAfterTime());
+            StartCoroutine(DialogueManager.instance.AutoRunDialogueAfterTime(0.5f));
         }
     }
 

@@ -514,9 +514,9 @@ tags:
 <<if Visited("StellanDefaultDialogue")>>
     [[StellanDefaultDialogue1]]
 <<elseif $firstClearRunNumber > 0 and $firstClearRunNumber < 5>>
-    <<SetSpeaker Stellan neutral ???>>
+    <<SetSpeaker Stellan neutral ???>><<Emote Stellan question>>
     How did you...?
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player>><<Emote Player surprise>>
     <i>Uugh</i>... I'm... alive?
     <<SetSpeaker Stellan neutral ???>>
     Yes, yes, it's a time loop. How miraculous and novel. Even death won't set us free.
@@ -540,7 +540,7 @@ tags:
 <<else>>
     <<SetSpeaker Stellan neutral ???>>
     Well, you certainly don’t belong here.
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player>><<Emote Player surprise>>
     <i>Uugh</i>... I'm... alive?
     <<SetSpeaker Stellan neutral ???>>
     Yes, yes, it's a time loop. How miraculous and novel. Even death won't set us free. Now get on your feet and quit looking so ill. Who are you and what are you doing on this ship?
