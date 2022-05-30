@@ -171,9 +171,9 @@ public class EntityHealth : MonoBehaviour
         currentHitpoints -= damage;
         OnHit.Invoke(this, damage);
         if (gameObject.tag == "Player")
-            InGameUIManager.instance.ShowFloatingText(damage.ToString(), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "damage-player");
+            InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(damage), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "damage-player");
         else
-            InGameUIManager.instance.ShowFloatingText(damage.ToString(), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "damage-enemy");
+            InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(damage), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "damage-enemy");
         
         SetCurrentHealthUI();
 
@@ -198,7 +198,7 @@ public class EntityHealth : MonoBehaviour
     public void Heal(float health)
     {
         currentHitpoints += health;
-        InGameUIManager.instance.ShowFloatingText(health.ToString(), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "health");
+        InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(health), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "health");
 
         if(currentHitpoints > maxHitpoints)
         {
@@ -218,7 +218,8 @@ public class EntityHealth : MonoBehaviour
         // Calculate new current by adding the same amount you gained or lost
         currentHitpoints += maxHitpoints - oldMax;
 
-        InGameUIManager.instance.ShowFloatingText(maxHitpoints.ToString(), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "health");
+        // Don't show floating text when you upgrade max health (Chase designer decision)
+        // InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(maxHitpoints), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "health");
 
         SetMaxHealthUI();
         SetCurrentHealthUI();
@@ -317,6 +318,6 @@ public class EntityHealth : MonoBehaviour
 
     private void onPlayerCrit(EntityHealth health, float critDamage)
     {
-        InGameUIManager.instance.ShowFloatingText(critDamage.ToString(), 35, transform.position + (Vector3.up * 3), Vector3.up * 25, 1.5f, gameObject, "crit");
+        InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(critDamage), 35, transform.position + (Vector3.up * 3), Vector3.up * 25, 1.5f, gameObject, "crit");
     }
 }
