@@ -32,17 +32,19 @@ public class InGameUIManager : MonoBehaviour
 
     [SerializeField] private List<ItemCooldownUI> itemCooldownUI = new List<ItemCooldownUI>();
 
-    [SerializeField] private Sprite emptySlotWeaponIcon;
-    [SerializeField] private Sprite emptySlotAccessoryIcon;
-    [SerializeField] private Sprite emptySlotHelmetIcon;
-    [SerializeField] private Sprite emptySlotBootsIcon;
+    #region Icons
+        [SerializeField] private Sprite emptySlotWeaponIcon;
+        [SerializeField] private Sprite emptySlotAccessoryIcon;
+        [SerializeField] private Sprite emptySlotHelmetIcon;
+        [SerializeField] private Sprite emptySlotBootsIcon;
 
-    [SerializeField] private Sprite strSprite;
-    [SerializeField] private Sprite dexSprite;
-    [SerializeField] private Sprite intSprite;
-    [SerializeField] private Sprite wisSprite;
-    [SerializeField] private Sprite conSprite;
-    [SerializeField] private Sprite chaSprite;
+        [SerializeField] private Sprite strSprite;
+        [SerializeField] private Sprite dexSprite;
+        [SerializeField] private Sprite intSprite;
+        [SerializeField] private Sprite wisSprite;
+        [SerializeField] private Sprite conSprite;
+        [SerializeField] private Sprite chaSprite;
+    #endregion
 
     [SerializeField] private GameObject darkBackgroundPanel;
 

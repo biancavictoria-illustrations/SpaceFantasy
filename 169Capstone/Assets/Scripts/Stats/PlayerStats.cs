@@ -338,6 +338,7 @@ public class PlayerStats : EntityStats
         moveSpeedBase = 1;
         hasteBase = 1;
 
+        critChanceMultiplier = 1;
         critDamageMultiplier = 1;
         maxHitPointsMultiplier = 1;
         attackSpeedMultiplier = 1;
