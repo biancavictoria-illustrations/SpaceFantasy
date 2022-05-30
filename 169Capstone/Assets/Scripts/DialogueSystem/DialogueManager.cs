@@ -363,6 +363,12 @@ public class DialogueManager : MonoBehaviour
             }
         }
 
+        /* In yarn files, call AddEmoteForSpeaker like:
+            
+        <<Emote Stellan question>>
+        <<Emote Player surprise>>
+            
+        */
         private void AddEmoteForSpeaker(string[] info)
         {
             // First parameter: SpeakerID

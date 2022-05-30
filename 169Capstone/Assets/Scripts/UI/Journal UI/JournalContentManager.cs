@@ -53,6 +53,10 @@ public class JournalContentManager : MonoBehaviour
     
     public void UnlockJournalEntry(JournalContentID[] contentIDs)
     {
+        if(!PlayerInventory.hasCaptainsLog){
+            return;
+        }
+
         bool flag = false;
         foreach(JournalContentID id in contentIDs){
             if(!journalUnlockStatusDatabase.ContainsKey(id)){

@@ -38,7 +38,7 @@ public class SpawnRoomForceFields : MonoBehaviour
         foreach(GameObject ff in forceFields)
             ff.SetActive(true);
 
-        if(GameManager.instance.currentRunNumber == 1)
+        if(GameManager.instance.currentRunNumber == 1 && GameManager.instance.currentSceneName == GameManager.GAME_LEVEL1_STRING_NAME)
         {
             startBow.SetActive(false);
             CaptainsLog.SetActive(true);
