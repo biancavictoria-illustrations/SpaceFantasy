@@ -11,6 +11,21 @@ public class GearManagerObject : ScriptableObject
     [SerializeField] private List<EquipmentBaseData> head;
     [SerializeField] private List<EquipmentBaseData> legs;
 
+    [System.Serializable]
+    public class ItemFXData{
+        [Tooltip("Specify if weapon or otherwise")]
+        [SerializeField] private bool itemIsWeapon;
+        [SerializeField] private ItemRarity rarity;
+        [SerializeField] GameObject fxPrefab;
+
+        public bool ItemIsWeapon(){return itemIsWeapon;}
+        public ItemRarity Rarity(){return rarity;}
+        public GameObject FXPrefab(){return fxPrefab;}
+        
+    }
+
+    [SerializeField] private List<ItemFXData> itemFXDataList = new List<ItemFXData>();
+
     public List<EquipmentBaseData> Weapons()
     {
         return weapons;
@@ -29,5 +44,10 @@ public class GearManagerObject : ScriptableObject
     public List<EquipmentBaseData> Legs()
     {
         return legs;
+    }
+
+    public List<ItemFXData> ItemFXDataList()
+    {
+        return itemFXDataList;
     }
 }

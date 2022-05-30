@@ -194,41 +194,39 @@ public class GeneratedEquipment : MonoBehaviour
     }
 
     #region UI Stuff
+        public string GetPlayerFacingStatName(StatType type)
+        {
+            switch(type){
+                case StatType.CritChance:
+                    return "Crit Chance";
+                case StatType.CritDamage:
+                    return "Crit Damage";
+                case StatType.AttackSpeed:
+                    return "Attack Speed";
+                case StatType.Defense:
+                    return "Defense";
+                case StatType.MoveSpeed:
+                    return "Movement Speed";
+                case StatType.TrapDamageResist:
+                    return "Trap Damage Resist";
+                case StatType.DodgeChance:
+                    return "Dodge Chance";
+                case StatType.HitPoints:
+                    return "Hit Points";        // TODO: What do we want to call this???
+                case StatType.Haste:
+                    return "Haste";
 
-    public string GetPlayerFacingStatName(StatType type)
-    {
-        switch(type){
-            case StatType.CritChance:
-                return "Crit Chance";
-            case StatType.CritDamage:
-                return "Crit Damage";
-            case StatType.AttackSpeed:
-                return "Attack Speed";
-            case StatType.Defense:
-                return "Defense";
-            case StatType.MoveSpeed:
-                return "Movement Speed";
-            case StatType.TrapDamageResist:
-                return "Trap Damage Resist";
-            case StatType.DodgeChance:
-                return "Dodge Chance";
-            case StatType.HitPoints:
-                return "Hit Points";        // TODO: What do we want to call this???
-            case StatType.Haste:
-                return "Haste";
-
-            case StatType.STRDamage:
-                return "STR Damage";
-            case StatType.DEXDamage:
-                return "DEX Damage";
-            case StatType.INTDamage:
-                return "INT Damage";
-            case StatType.WISDamage:
-                return "WIS Damage";
+                case StatType.STRDamage:
+                    return "STR Damage";
+                case StatType.DEXDamage:
+                    return "DEX Damage";
+                case StatType.INTDamage:
+                    return "INT Damage";
+                case StatType.WISDamage:
+                    return "WIS Damage";
+            }
+            Debug.LogError("No stat string found for stat type: " + type);
+            return "ERROR";
         }
-        Debug.LogError("No stat string found for stat type: " + type);
-        return "ERROR";
-    }
-
     #endregion
 }
