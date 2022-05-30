@@ -25,8 +25,8 @@ public enum SpeakerID
 [CreateAssetMenu(menuName = "Narrative/Speaker")]
 public class SpeakerData : ScriptableObject
 {
-    public const string EMOTION_NEUTRAL = "neutral";
-    public const string SPRITE_COMM = "comm";
+    public const string PORTRAIT_NEUTRAL = "neutral";
+    public const string PORTRAIT_COMM = "comm";
 
     [Tooltip("The name that shows up to payers")]
     [SerializeField] private string speakerName;
@@ -47,10 +47,10 @@ public class SpeakerData : ScriptableObject
     {
         switch(emotion)
         {
-            case SPRITE_COMM:
+            case PORTRAIT_COMM:
                 return portraitComm;
             default:
-            case EMOTION_NEUTRAL:
+            case PORTRAIT_NEUTRAL:
                 return portraitNeutral;
         }
     }
