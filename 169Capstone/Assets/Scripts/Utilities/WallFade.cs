@@ -41,6 +41,9 @@ public class WallFade : MonoBehaviour
 
     void Update()
     {
+        if(!GameManager.instance.InSceneWithRandomGeneration())
+            return;
+
         // If the player exists
         if(Player.instance != null)
         {
