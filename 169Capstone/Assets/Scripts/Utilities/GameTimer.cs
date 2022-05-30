@@ -1,19 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameTimer : MonoBehaviour
 { 
+    private const float secondsPerEnemyTier = 30f;
+
+    public class EnemyTierIncrease : UnityEvent<int> {}
+
+    private int enemyTier;
     private float time;
     [HideInInspector] public bool runTimer;
     public int minutes {get; private set;}
     public int seconds {get; private set;}
+
+    public EnemyTierIncrease OnTierIncrease;
 
     public float totalTimePlayedOnThisSaveFile {get; private set;}
     [HideInInspector] public bool runTotalTimer = false;    // Set to true when we're NOT in the Main Menu
 
     void Awake()
     {
+        OnTierIncrease = new EnemyTierIncrease();
         totalTimePlayedOnThisSaveFile = 0;
         runTimer = true;
         ResetTimer();
@@ -25,6 +34,12 @@ public class GameTimer : MonoBehaviour
         {
             time += Time.deltaTime;
             setDisplayTime();
+
+            if(Mathf.FloorToInt(time / secondsPerEnemyTier) > enemyTier)
+            {
+                ++enemyTier;
+                OnTierIncrease.Invoke(enemyTier);
+            }
         }
 
         if(runTotalTimer){
