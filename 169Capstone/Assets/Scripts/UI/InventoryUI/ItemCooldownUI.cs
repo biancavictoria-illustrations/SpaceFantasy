@@ -37,6 +37,7 @@ public class ItemCooldownUI : MonoBehaviour
 
     public void SetTextToCounterValue()
     {
-        cooldownText.text = UIUtils.GetTruncatedDecimalForUIDisplay(counter) + "";
+        // cooldownText.text = UIUtils.GetTruncatedDecimalForUIDisplay(counter) + "";
+        cooldownText.text = Mathf.CeilToInt(counter) + "";
     }
 }

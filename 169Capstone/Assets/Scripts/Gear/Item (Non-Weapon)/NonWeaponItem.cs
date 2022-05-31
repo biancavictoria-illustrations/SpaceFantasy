@@ -29,22 +29,24 @@ public abstract class NonWeaponItem : Equipment
         durationRoutine = StartCoroutine(Duration());
     }
 
-    // Always triggered at the end of the item's Reset function, which is called once Duration is complete
-    private IEnumerator CoolDown()
-    {
-        InGameUIManager.instance.StartCooldownForItem(slot, itemData.CoolDown());
-        yield return new WaitForSeconds(itemData.CoolDown());
-
-        // NOTE: For this to work (& the one in Duration), this trigger has to use the item slot exactly as it's spelled in the type
-        // (in the animator, make sure to use the InventoryItemSlot values exactly as: "Helmet", "Accessory", "Legs")
-        anim.animator.SetTrigger("Cooldown" + slot.ToString());
-    }
-
     private IEnumerator Duration()
     {
         InGameUIManager.instance.SetItemIconColor(slot, InGameUIManager.SLIME_GREEN_COLOR);
         yield return new WaitForSeconds(itemData.Duration());
         anim.animator.SetTrigger("Duration" + slot.ToString());
+    }
+
+    // Always triggered at the end of the item's Reset function, which is called once Duration is complete
+    private IEnumerator CoolDown()
+    {
+        float cooldown = itemData.CoolDown() * (1 / Player.instance.stats.getHaste());
+
+        InGameUIManager.instance.StartCooldownForItem(slot, cooldown);
+        yield return new WaitForSeconds(cooldown);
+
+        // NOTE: For this to work (& the one in Duration), this trigger has to use the item slot exactly as it's spelled in the type
+        // (in the animator, make sure to use the InventoryItemSlot values exactly as: "Helmet", "Accessory", "Legs")
+        anim.animator.SetTrigger("Cooldown" + slot.ToString());
     }
 
     // Any children with specific coroutines to deal with also need their own version of this with base.ManageCoroutinesOnUnequip(); at the beginning
@@ -56,7 +58,7 @@ public abstract class NonWeaponItem : Equipment
             StopCoroutine(durationRoutine);
             anim.animator.SetTrigger("Duration" + slot.ToString());
             anim.animator.SetTrigger("Cooldown" + slot.ToString());
-            InGameUIManager.instance.StartCooldownForItem(slot, itemData.CoolDown());
+            InGameUIManager.instance.StartCooldownForItem(slot, itemData.CoolDown() * (1 / Player.instance.stats.getHaste()));
         }
 
         // If mid-cooldown, just stop the cooldown coroutine (but continue the UI)
