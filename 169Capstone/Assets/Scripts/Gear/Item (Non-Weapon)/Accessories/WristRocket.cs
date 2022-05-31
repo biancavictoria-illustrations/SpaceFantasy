@@ -4,51 +4,38 @@ using UnityEngine;
 
 public class WristRocket : Accessories
 {
-    private Player player;
     private Movement movement;
-    //private AnimationStateController anim;
-    //private bool fire = false;
     [SerializeField] GameObject rocketPrefab;
 
-    void Start()
+    protected override void Start()
     {
-        player = Player.instance;
+        base.Start();
+
         movement = player.GetComponentInChildren<Movement>();
-        anim = player.GetComponentInChildren<AnimationStateController>();
-        // damage = itemData.Damage() * player.stats.getINTDamage();    // this can change depending on equips so we shouldn't save it in start, just get it each time
-        anim.startAccessory.AddListener(LaunchRocket);
-        anim.endAccessory.AddListener(ResetItemAndTriggerCooldown);
     }
 
-    void Update()
+    protected override void TriggerAbility()
     {
-        if(InputManager.instance.useAccessory && clearToFire)
+        base.TriggerAbility();
+        
+        if(clearToFire)
         {
-            clearToFire = false;
             movement.isAttacking = true;
-            anim.animator.SetBool("IsLaunchRocket", true);
-            //fire = true;
-            InputManager.instance.useAccessory = false; // temp
         }
     }
 
-    public void LaunchRocket()
+    protected override void ActivateAccessory()
     {
-        Fire();
-        anim.animator.SetBool("IsLaunchRocket", false);
-        movement.isAttacking = false;
-    }
+        base.ActivateAccessory();
 
-    public override void ResetItemAndTriggerCooldown()
-    {
-        clearToFire = true;
-        StartCooldownRoutine();
+        movement.isAttacking = false;
+        Fire();
     }
 
     private void Fire()
     {
         GameObject rocket = Instantiate(rocketPrefab, player.transform.position + Vector3.up * 2, player.transform.rotation);
         Projectile projectileScript = rocket.GetComponent<Projectile>();
-        projectileScript.Initialize("Enemy", player.stats.getINTDamage(), DamageSourceType.Player, InputManager.instance.cursorLookDirection, itemData.Radius(), 30);
+        projectileScript.Initialize("Enemy", player.stats.getINTDamage(), DamageSourceType.Player, InputManager.instance.cursorLookDirection, radius: itemData.Radius(), speed: 30);
     }
 }

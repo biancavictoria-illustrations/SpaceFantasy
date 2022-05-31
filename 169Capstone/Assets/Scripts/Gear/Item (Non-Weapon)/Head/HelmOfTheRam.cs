@@ -4,28 +4,13 @@ using UnityEngine;
 
 public class HelmOfTheRam : Head
 {
-    private float damage;
-    private float knockBack;
-    private Player player;
     private Collider hitCollider;
 
-    // Start is called before the first frame update
-    void Start()
+    protected override void ActivateHelmet()
     {
-        player = Player.instance;
-        // damage = itemData.Damage() * player.stats.getSTRDamage();    // this can change depending on equips so we shouldn't save it, just get it each time
-        // knockBack = 0.5f * player.stats.Strength();      // also should be calculated when used bc stats can change
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        base.ActivateHelmet();
         
-    }
-
-    public override void ResetItemAndTriggerCooldown()
-    {
-        StartCooldownRoutine();
+        // make the player do the charge thing
     }
 
     private bool DetectCollision()

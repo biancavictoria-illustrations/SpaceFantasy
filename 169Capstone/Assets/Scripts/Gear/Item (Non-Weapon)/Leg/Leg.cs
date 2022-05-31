@@ -4,34 +4,22 @@ using UnityEngine;
 
 public abstract class Leg : NonWeaponItem
 {
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         slot = InventoryItemSlot.Legs;
     }
 
-    // START & UPDATE both implemented in children -> if we put anything here, it would get overriden unless we call base.Start() / base.Update()
+    protected virtual void Start()
+    {
+        InputManager.instance.useLegs.AddListener(TriggerAbility);
 
-    // private void Update()
-    // {
-    //     if(InputManager.instance.useLegs)
-    //     {
-    //         fire = true;
-    //     }
-    // }
+        anim.startLegs.AddListener(ActivateLegs);
+        anim.endLegs.AddListener(ResetItemAndTriggerCooldown);
+    }
 
-    // moving this stuff to NonWeaponItem.cs
-    
-    // public IEnumerator CoolDown()
-    // {
-    //     InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Legs, itemData.CoolDown());
-    //     yield return new WaitForSeconds(itemData.CoolDown());
-    //     anim.animator.SetTrigger("CooldownLegs");
-    // }
-
-    // public IEnumerator Duration()
-    // {
-    //     InGameUIManager.instance.SetItemIconColor(InventoryItemSlot.Legs, InGameUIManager.SLIME_GREEN_COLOR);
-    //     yield return new WaitForSeconds(itemData.Duration());
-    //     anim.animator.SetTrigger("DurationLegs");
-    // }
+    protected virtual void ActivateLegs()
+    {
+        StartDurationRoutine();
+    }
 }

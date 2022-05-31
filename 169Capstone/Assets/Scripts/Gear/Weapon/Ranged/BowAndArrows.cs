@@ -80,7 +80,7 @@ public class BowAndArrows : Equipment
         else
             damageMultiplier = Mathf.Lerp(minDamagePercent, maxDamagePercent, heldTime/maxHoldTime);
         
-        projectileScript.Initialize(LayerMask.NameToLayer("Enemy"), player.stats.getDEXDamage() * damageMultiplier, DamageSourceType.Player, InputManager.instance.cursorLookDirection, 20 * Mathf.Lerp(1, 2, heldTime/maxHoldTime));
+        projectileScript.Initialize(LayerMask.NameToLayer("Enemy"), player.stats.getDEXDamage() * damageMultiplier, DamageSourceType.Player, InputManager.instance.cursorLookDirection, speed: 20 * Mathf.Lerp(1, 2, heldTime/maxHoldTime));
 
         playerAnim.animator.SetBool("IsBowAttacking", false);
         heldTime = 0;

@@ -6,40 +6,20 @@ public class TrousersOfFortitude : Leg
 {
     // Doubles Defense for the duration. reduces movement speed by 25%.
 
-    private Player player;
-
     public float slowDownValue = 0.25f; // Percent to slow movement speed by when activated
 
-    private void Start()
+    protected override void ActivateLegs()
     {
-        player = Player.instance;
-        anim = player.GetComponentInChildren<AnimationStateController>();
-        anim.startLegs.AddListener(ActivateTrousers);
-        anim.endLegs.AddListener(ResetItemAndTriggerCooldown);
-    }
+        base.ActivateLegs();
 
-    private void Update()
-    {
-        if(InputManager.instance.useLegs && clearToFire)
-        {
-            clearToFire = false;
-            anim.animator.SetBool("IsUseLegs", true);
-            InputManager.instance.useLegs = false;
-        }
-    }
-
-    public void ActivateTrousers()
-    {
-        anim.animator.SetBool("IsUseLegs", false);
         UpdateStats(1);
-        StartDurationRoutine();
     }
 
     public override void ResetItemAndTriggerCooldown()
     {
+        base.ResetItemAndTriggerCooldown();
+        
         UpdateStats(0);
-        clearToFire = true;
-        StartCooldownRoutine();
     }
 
     private void UpdateStats(int fullBonus)

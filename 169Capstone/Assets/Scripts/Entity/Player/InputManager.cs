@@ -8,6 +8,8 @@ using UnityEngine.Events;
 
 public class InputManager : MonoBehaviour
 {
+    public class OnAbilityEvent : UnityEvent {}
+
     public static InputManager instance;
 
     [HideInInspector] public bool isInDialogue = false;
@@ -18,9 +20,9 @@ public class InputManager : MonoBehaviour
     [HideInInspector] public bool mapIsOpen = false;
 
     [HideInInspector] public bool isAttacking = false;
-    [HideInInspector] public bool useAccessory = false;
-    [HideInInspector] public bool useHead = false;
-    [HideInInspector] public bool useLegs = false;
+    [HideInInspector] public OnAbilityEvent useAccessory;
+    [HideInInspector] public OnAbilityEvent useHelmet;
+    [HideInInspector] public OnAbilityEvent useLegs;
 
     [HideInInspector] public bool isInMainMenu = false;
 
@@ -48,6 +50,10 @@ public class InputManager : MonoBehaviour
             instance = this;
         }
         UpdateLatestInputDevice();
+
+        useAccessory = new OnAbilityEvent();
+        useHelmet = new OnAbilityEvent();
+        useLegs = new OnAbilityEvent();
     }
 
     void Start()
@@ -347,12 +353,7 @@ public class InputManager : MonoBehaviour
             return;
         }
 
-        useAccessory = true;
-    }
-
-    public void OnAccessoryAbilityCanceled()
-    {
-        useAccessory = false;
+        useAccessory.Invoke();
     }
 
     public void OnHelmetAbility()
@@ -367,7 +368,7 @@ public class InputManager : MonoBehaviour
             return;
         }
 
-        useHead = true;
+        useHelmet.Invoke();
     }
 
     public void OnBootsAbility()
@@ -382,7 +383,7 @@ public class InputManager : MonoBehaviour
             return;
         }
 
-        useLegs = true;
+        useLegs.Invoke();
     }
 
     public void OnPoint(InputValue input)

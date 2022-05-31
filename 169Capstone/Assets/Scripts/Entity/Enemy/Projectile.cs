@@ -21,19 +21,14 @@ public class Projectile : MonoBehaviour
     // Projectile's owner
     private DamageSourceType damageSource;
 
-    public void Initialize(string enemyLayer, float damage, DamageSourceType damageSource, Vector3 direction, float? speed = null)
+    public void Initialize(string enemyLayer, float damage, DamageSourceType damageSource, Vector3 direction, int radius = 0, float? speed = null)
     {
-        Initialize(LayerMask.NameToLayer(enemyLayer), damage, damageSource, direction, speed);
+        Initialize(LayerMask.NameToLayer(enemyLayer), damage, damageSource, direction, radius, speed);
     }
 
-    public void Initialize(string enemyLayer, float damage, DamageSourceType damageSource, Vector3 direction, int radius, float? speed = null)
+    public void Initialize(int enemyLayer, float damage, DamageSourceType damageSource, Vector3 direction, int radius = 0, float? speed = null)
     {
         _radius = radius;
-        Initialize(LayerMask.NameToLayer(enemyLayer), damage, damageSource, direction, speed);
-    }
-
-    public void Initialize(int enemyLayer, float damage, DamageSourceType damageSource, Vector3 direction, float? speed = null)
-    {
         rb = GetComponent<Rigidbody>();
         if(rb == null)
         {
@@ -69,46 +64,49 @@ public class Projectile : MonoBehaviour
             EntityHealth enemyHealth = other.GetComponent<EntityHealth>();
             if(enemyHealth)
                 enemyHealth.Damage(damage, damageSource);
-            Explode();
+
+            if(_radius != 0)
+            {
+                Explode();
+            }
             Destroy(gameObject);
         }
         else if(other.gameObject.layer == LayerMask.NameToLayer("Prop"))
         {
             other.GetComponent<PropJumpBreak>().BreakProp();
-            Explode();
+
             if(_radius != 0)
             {
-                Destroy(gameObject);
+                Explode();
             }
+            Destroy(gameObject);
         }
         else if(other.gameObject.layer == LayerMask.NameToLayer("Environment"))
         {
-            Explode();
+            if(_radius != 0)
+            {
+                Explode();
+            }
             Destroy(gameObject);
         }
     }
 
     private void Explode()
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        GameObject[] props = GameObject.FindGameObjectsWithTag("Prop");
+        Collider[] hits = Physics.OverlapSphere(transform.position, _radius, LayerMask.GetMask(LayerMask.LayerToName(enemyLayer), "Prop"), QueryTriggerInteraction.UseGlobal);
 
-        for(int i = 0; i < enemies.Length; i++)
+        foreach(Collider hit in hits)
         {
-            if(Vector3.Distance(transform.position, enemies[i].transform.position) <= _radius)
+            EntityHealth enemyHealth = hit.GetComponent<EntityHealth>();
+            if(enemyHealth)
             {
-                EntityHealth enemyHealth = enemies[i].GetComponent<EntityHealth>();
-                if(enemyHealth)
-                {
-                    enemyHealth.Damage(damage, damageSource);
-                }
+                enemyHealth.Damage(damage, damageSource);
             }
-        }
-        for(int i = 0; i < props.Length; i++)
-        {
-            if(Vector3.Distance(transform.position, props[i].transform.position) <= _radius)
+            
+            PropJumpBreak propBreak = hit.GetComponent<PropJumpBreak>();
+            if(propBreak)
             {
-                props[i].GetComponent<PropJumpBreak>().BreakProp();
+                propBreak.BreakProp();
             }
         }
     }

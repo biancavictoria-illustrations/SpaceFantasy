@@ -4,28 +4,22 @@ using UnityEngine;
 
 public abstract class Accessories : NonWeaponItem
 {
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         slot = InventoryItemSlot.Accessory;
     }
 
-    // START & UPDATE both implemented in children -> if we put anything here, it would get overriden unless we call base.Start() / base.Update()
+    protected virtual void Start()
+    {
+        InputManager.instance.useAccessory.AddListener(TriggerAbility);
 
-    // private void Update()
-    // {
-    //     if(InputManager.instance.useAccessory)
-    //     {
-    //         Debug.Log("fire");
-    //         fire = true;
-    //     }
-    // }
+        anim.startAccessory.AddListener(ActivateAccessory);
+        anim.endAccessory.AddListener(ResetItemAndTriggerCooldown);
+    }
 
-    // Moving this to NonWeaponItem
-
-    // public IEnumerator CoolDown()
-    // {
-    //     InGameUIManager.instance.StartCooldownForItem(InventoryItemSlot.Accessory, itemData.CoolDown());
-    //     yield return new WaitForSeconds(itemData.CoolDown());
-    //     anim.animator.SetTrigger("CooldownAccessory");
-    // }
+    protected virtual void ActivateAccessory()
+    {
+        StartDurationRoutine();
+    }
 }

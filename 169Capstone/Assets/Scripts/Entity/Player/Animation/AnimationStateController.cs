@@ -7,12 +7,18 @@ public class AnimationStateController : MonoBehaviour
 {
     public bool attackActive;
     public UnityEvent endAttack;
+
     public UnityEvent startAccessory;
-    public UnityEvent endCooldownAccessory;
     public UnityEvent endAccessory;
+    public UnityEvent endCooldownAccessory;
+
     public UnityEvent startLegs;
     public UnityEvent endLegs;
     public UnityEvent endCooldownLegs;
+
+    public UnityEvent startHelmet;
+    public UnityEvent endHelmet;
+    public UnityEvent endCooldownHelmet;
 
     public Animator animator;
 
@@ -68,6 +74,25 @@ public class AnimationStateController : MonoBehaviour
     public void EndCoolDownLegs()
     {
         endCooldownLegs.Invoke();
+    }
+
+
+    // Use the ability, triggers duration
+    public void StartHelmet()
+    {
+        startHelmet.Invoke();
+    }
+
+    // Reset, triggers cooldown
+    public void EndHelmet()
+    {
+        endHelmet.Invoke();
+    }
+
+    // Ends the cooldown itself, can use ability now
+    public void EndCoolDownHelmet()
+    {
+        endCooldownHelmet.Invoke();
     }
 }
 

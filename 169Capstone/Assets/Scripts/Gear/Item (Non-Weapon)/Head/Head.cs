@@ -4,18 +4,22 @@ using UnityEngine;
 
 public abstract class Head : NonWeaponItem
 {
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         slot = InventoryItemSlot.Helmet;
     }
 
-    // START & UPDATE both implemented in children -> if we put anything here, it would get overriden unless we call base.Start() / base.Update()
+    protected virtual void Start()
+    {
+        InputManager.instance.useHelmet.AddListener(TriggerAbility);
 
-    // private void Update()
-    // {
-    //     if(InputManager.instance.useHead)
-    //     {
-    //         fire = true;
-    //     }
-    // }
+        anim.startHelmet.AddListener(ActivateHelmet);
+        anim.endHelmet.AddListener(ResetItemAndTriggerCooldown);
+    }
+
+    protected virtual void ActivateHelmet()
+    {
+        StartDurationRoutine();
+    }
 }

@@ -15,18 +15,40 @@ public abstract class NonWeaponItem : Equipment
 
     public Coroutine cooldownRoutine {get; protected set;}
     public Coroutine durationRoutine {get; protected set;}
+    
+    protected Player player;
 
-    // AWAKE, START, & UPDATE implemented in children -> if we put anything here, it would get overriden unless we call base.Start(), etc.
-
-    // Call these in the children to activate the cooldown & duration routines
-    protected void StartCooldownRoutine()
+    protected virtual void Awake()
     {
-        cooldownRoutine = StartCoroutine(CoolDown());
+        player = Player.instance;
+        anim = player.GetComponentInChildren<AnimationStateController>();
     }
 
+    // This gets called when this ability's key first gets pressed
+    protected virtual void TriggerAbility()
+    {
+        Debug.Log(itemData.name + " is clear to fire: " + clearToFire);
+        if(clearToFire)
+        {
+            clearToFire = false;
+            anim.animator.SetBool("IsUse" + slot, true);
+        }
+    }
+
+    // This gets called when this ability's duration begins
     protected void StartDurationRoutine()
     {
+        Debug.Log("Duration started for " + itemData.name);
+        anim.animator.SetBool("IsUse" + slot, false);
         durationRoutine = StartCoroutine(Duration());
+    }
+
+    // This gets called when this ability's duration ends and its cooldown begins
+    public virtual void ResetItemAndTriggerCooldown()
+    {
+        Debug.Log("Cooldown started for " + itemData.name);
+        cooldownRoutine = StartCoroutine(CoolDown());
+        clearToFire = true;
     }
 
     private IEnumerator Duration()
@@ -34,6 +56,8 @@ public abstract class NonWeaponItem : Equipment
         InGameUIManager.instance.SetItemIconColor(slot, InGameUIManager.SLIME_GREEN_COLOR);
         yield return new WaitForSeconds(itemData.Duration());
         anim.animator.SetTrigger("Duration" + slot.ToString());
+
+        durationRoutine = null;
     }
 
     // Always triggered at the end of the item's Reset function, which is called once Duration is complete
@@ -47,6 +71,8 @@ public abstract class NonWeaponItem : Equipment
         // NOTE: For this to work (& the one in Duration), this trigger has to use the item slot exactly as it's spelled in the type
         // (in the animator, make sure to use the InventoryItemSlot values exactly as: "Helmet", "Accessory", "Legs")
         anim.animator.SetTrigger("Cooldown" + slot.ToString());
+
+        cooldownRoutine = null;
     }
 
     // Any children with specific coroutines to deal with also need their own version of this with base.ManageCoroutinesOnUnequip(); at the beginning
@@ -67,6 +93,4 @@ public abstract class NonWeaponItem : Equipment
             anim.animator.SetTrigger("Cooldown" + slot.ToString());
         }
     }
-
-    public abstract void ResetItemAndTriggerCooldown();
 }
