@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class SlowCircle : MonoBehaviour
 {
@@ -119,17 +120,29 @@ public class SlowCircle : MonoBehaviour
     private IEnumerator fadeSprite(float duration, bool fadeIn)
     {
         float fadeProgress = 0;
-        SpriteRenderer renderer = GetComponentInChildren<SpriteRenderer>();
-        if(renderer == null)
-            yield break;
-
-        while(fadeProgress < 1)
+        MeshRenderer renderer = GetComponentInChildren<MeshRenderer>();
+        VisualEffect vfx = GetComponentInChildren<VisualEffect>();
+        if(renderer)
         {
-            fadeProgress += Time.deltaTime/duration;
-            Color newColor = renderer.color;
-            newColor.a = fadeIn ? fadeProgress : 1 - fadeProgress;
-            renderer.color = newColor;
-            yield return null;
+            while(fadeProgress < 1)
+            {
+                fadeProgress += Time.deltaTime/duration;
+                Color newColor = renderer.material.color;
+                newColor.a = fadeIn ? fadeProgress : 1 - fadeProgress;
+                renderer.material.color = newColor;
+                yield return null;
+            }
+        }
+        else if(vfx)
+        {
+            if(fadeIn)
+            {
+                // Set the vfx lifetime to the lifetime of the slowCircle
+            }
+            else
+            {
+                vfx.Stop();
+            }
         }
 
         _canSlow = fadeIn;
@@ -167,7 +180,7 @@ public class SlowCircle : MonoBehaviour
             if(enable)
                 Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, -speedChangePercent);
             else
-                Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, 1);
+                Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, 0);
         }
         else if(pathScript != null)
         {
@@ -197,7 +210,7 @@ public class SlowCircle : MonoBehaviour
             if(enable)
                 Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, speedChangePercent);
             else
-                Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, 1);
+                Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, 0);
         }
         else if(pathScript != null)
         {
