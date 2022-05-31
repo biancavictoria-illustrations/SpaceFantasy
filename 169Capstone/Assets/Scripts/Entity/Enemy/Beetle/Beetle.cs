@@ -141,7 +141,8 @@ public class Beetle : Enemy
         float distance = Vector3.Distance(player.transform.position, transform.position);
         if(distance < nextAttack.attackRange * (1 + 0.25f * shockwaveCount))
         {
-            player.GetComponent<EntityHealth>().Damage(logic.baseDamage * nextAttack.damageMultiplier, DamageSourceType.BeetleBoss);
+            float damageAmount = logic.baseDamage * nextAttack.damageMultiplier * (1 + damageIncreasePerTier * currentTier);
+            player.GetComponent<EntityHealth>().Damage(damageAmount, DamageSourceType.BeetleBoss);
             Movement movement = player.GetComponent<Movement>();
             movement.ApplyExternalVelocity((player.transform.position - transform.position).normalized * Mathf.Lerp(20f, 40f, distance/nextAttack.attackRange));
             float jumpSpeed = movement.jumpSpeed;
@@ -178,7 +179,8 @@ public class Beetle : Enemy
                 towardsPlayer.y = 0;
                 GameObject missile = Instantiate(missilePrefab, transform.position + transform.up + transform.forward*4, Quaternion.FromToRotation(transform.position, player.transform.position));
                 missile.transform.localScale *= 2;
-                missile.GetComponent<Projectile>().Initialize("Player", logic.baseDamage * nextAttack.damageMultiplier, DamageSourceType.BeetleBoss, towardsPlayer);
+                float damageAmount = logic.baseDamage * nextAttack.damageMultiplier * (1 + damageIncreasePerTier * currentTier);
+                missile.GetComponent<Projectile>().Initialize("Player", damageAmount, DamageSourceType.BeetleBoss, towardsPlayer);
             }
         }));
     }
@@ -213,7 +215,8 @@ public class Beetle : Enemy
 
             if(hit.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
-                player.GetComponent<EntityHealth>().Damage(logic.baseDamage * nextAttack.damageMultiplier, DamageSourceType.BeetleBoss);
+                float damageAmount = logic.baseDamage * nextAttack.damageMultiplier * (1 + damageIncreasePerTier * currentTier);
+                player.GetComponent<EntityHealth>().Damage(damageAmount, DamageSourceType.BeetleBoss);
                 player.GetComponent<Movement>().ApplyExternalVelocity(direction * speed * 2);
             }
 
@@ -243,7 +246,10 @@ public class Beetle : Enemy
         while(count < nextAttack.duration/slamDebrisFrequency)
         {
             GameObject debris = Instantiate(debrisPrefab, transform.position, Quaternion.identity);
-            debris.GetComponent<FallingDebris>().damage = logic.baseDamage * nextAttack.damageMultiplier;
+            
+            float damageAmount = logic.baseDamage * nextAttack.damageMultiplier * (1 + damageIncreasePerTier * currentTier);
+            debris.GetComponent<FallingDebris>().damage = damageAmount;
+
             ++count;
             yield return new WaitForSeconds(slamDebrisFrequency);
         }
