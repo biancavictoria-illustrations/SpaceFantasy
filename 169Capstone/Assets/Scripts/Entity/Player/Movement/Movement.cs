@@ -357,7 +357,8 @@ public class Movement : MonoBehaviour
                 model.rotation = Quaternion.Euler(0, angle, 0);
         }
 
-        if(!isJumping && Physics.Raycast(transform.position, Vector3.down, 0.1f, LayerMask.GetMask("Environment")))
+        RaycastHit hit;
+        if(!isJumping && Physics.SphereCast(transform.position + Vector3.up * player.radius, player.radius, Vector3.down, out hit, 0.1f, LayerMask.GetMask("Environment")))
         {
             fallingVelocity = -10000;
             isGrounded = true;
