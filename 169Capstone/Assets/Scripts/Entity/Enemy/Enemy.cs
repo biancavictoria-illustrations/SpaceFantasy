@@ -4,6 +4,9 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
 {
+    protected const float healthIncreasePerTier = 0.2f;
+    protected const float damageIncreasePerTier = 0.5f;
+
     public EnemyLogic logic;
     public GameObject timerPrefab;
 
@@ -14,10 +17,12 @@ public abstract class Enemy : MonoBehaviour
     [SerializeField] protected Animator animator;
 
     protected EnemyStats stats;
-    protected bool windUpRunning = false;
     protected EntityHealth health;
-    protected float currentHitPoints = 0;
     protected AttackLogic nextAttack;
+
+    protected bool windUpRunning = false;
+    protected float currentHitPoints = 0;
+    protected int currentTier;
 
     protected abstract IEnumerator EnemyLogic(); 
 
@@ -29,8 +34,9 @@ public abstract class Enemy : MonoBehaviour
         if(stats)
             stats.initializeStats();
 
-        health.maxHitpoints = stats.getMaxHitPoints();
-        health.currentHitpoints = stats.getMaxHitPoints();
+        float maxHitPoints = Mathf.FloorToInt(stats.getMaxHitPoints() * (1 + healthIncreasePerTier * currentTier));
+        health.maxHitpoints = maxHitPoints;
+        health.currentHitpoints = maxHitPoints;
     }
 
     // Start is called before the first frame update
@@ -43,6 +49,8 @@ public abstract class Enemy : MonoBehaviour
 
         nextAttack = logic.attacks[Random.Range(0, logic.attacks.Count)];
         path.attackRadius = nextAttack.attackRange;
+
+        GameManager.instance.gameTimer.OnTierIncrease.AddListener(OnTierIncrease);
     }
 
     void Update()
@@ -89,5 +97,16 @@ public abstract class Enemy : MonoBehaviour
     public void DisableWindUpRunning()
     {
         windUpRunning = false;
+    }
+
+    protected virtual void OnTierIncrease(int newTier)
+    {
+        currentTier = newTier;
+
+        float newMaxHitPoints = Mathf.FloorToInt(stats.getMaxHitPoints() * (1 + healthIncreasePerTier * currentTier));
+        float hitPointDiff = newMaxHitPoints - health.maxHitpoints;
+        health.maxHitpoints = newMaxHitPoints;
+        health.currentHitpoints += hitPointDiff;
+        health.SetStartingHealthUI();
     }
 }

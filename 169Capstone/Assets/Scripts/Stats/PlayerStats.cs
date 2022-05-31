@@ -338,6 +338,7 @@ public class PlayerStats : EntityStats
         moveSpeedBase = 1;
         hasteBase = 1;
 
+        critChanceMultiplier = 1;
         critDamageMultiplier = 1;
         maxHitPointsMultiplier = 1;
         attackSpeedMultiplier = 1;
@@ -349,7 +350,7 @@ public class PlayerStats : EntityStats
         WISDamageMultiplier = 1;
         INTDamageMultiplier = 1;
 
-        float relativeWeight = 2;
+        // float relativeWeight = 2;
 
         int numSkillPoints = Mathf.CeilToInt((pum.strMin + pum.strMax + pum.dexMin + pum.dexMax + pum.conMin + pum.conMax + pum.intMin + pum.intMax + pum.wisMin + pum.wisMax + pum.charismaMin + pum.charismaMax) / 2f);
         
