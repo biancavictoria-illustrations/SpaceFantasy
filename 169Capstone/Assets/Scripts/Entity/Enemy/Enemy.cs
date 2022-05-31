@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
 {
-    protected const float healthIncreasePerTier = 0.1f;
+    protected const float healthIncreasePerTier = 0.2f;
     protected const float damageIncreasePerTier = 0.5f;
 
     public EnemyLogic logic;
@@ -103,9 +103,10 @@ public abstract class Enemy : MonoBehaviour
     {
         currentTier = newTier;
 
-        float maxHitPoints = Mathf.FloorToInt(stats.getMaxHitPoints() * (1 + healthIncreasePerTier * currentTier));
-        health.maxHitpoints = maxHitPoints;
-        health.currentHitpoints = maxHitPoints;
+        float newMaxHitPoints = Mathf.FloorToInt(stats.getMaxHitPoints() * (1 + healthIncreasePerTier * currentTier));
+        float hitPointDiff = newMaxHitPoints - health.maxHitpoints;
+        health.maxHitpoints = newMaxHitPoints;
+        health.currentHitpoints += hitPointDiff;
         health.SetStartingHealthUI();
     }
 }
