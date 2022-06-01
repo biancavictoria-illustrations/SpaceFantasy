@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class NonWeaponItem : Equipment
 {
     public GameObject timerPrefab;
-    public ActivatedItemData itemData;
+    // public ActivatedItemData itemData;   // DEPRICATED
     public InventoryItemSlot slot {get; protected set;}
     public bool fire = false;
     [HideInInspector] public bool clearToFire = true;
@@ -27,7 +27,7 @@ public abstract class NonWeaponItem : Equipment
     // This gets called when this ability's key first gets pressed
     protected virtual void TriggerAbility()
     {
-        Debug.Log(itemData.name + " is clear to fire: " + clearToFire);
+        Debug.Log(data.equipmentBaseData.name + " is clear to fire: " + clearToFire);
         if(clearToFire)
         {
             clearToFire = false;
@@ -38,7 +38,7 @@ public abstract class NonWeaponItem : Equipment
     // This gets called when this ability's duration begins
     protected void StartDurationRoutine()
     {
-        Debug.Log("Duration started for " + itemData.name);
+        Debug.Log("Duration started for " + data.equipmentBaseData.name);
         anim.animator.SetBool("IsUse" + slot, false);
         durationRoutine = StartCoroutine(Duration());
     }
@@ -46,7 +46,7 @@ public abstract class NonWeaponItem : Equipment
     // This gets called when this ability's duration ends and its cooldown begins
     public virtual void ResetItemAndTriggerCooldown()
     {
-        Debug.Log("Cooldown started for " + itemData.name);
+        Debug.Log("Cooldown started for " + data.equipmentBaseData.name);
         cooldownRoutine = StartCoroutine(CoolDown());
         clearToFire = true;
     }
@@ -54,7 +54,7 @@ public abstract class NonWeaponItem : Equipment
     private IEnumerator Duration()
     {
         InGameUIManager.instance.SetItemIconColor(slot, InGameUIManager.SLIME_GREEN_COLOR);
-        yield return new WaitForSeconds(itemData.Duration());
+        yield return new WaitForSeconds(data.equipmentBaseData.Duration());
         anim.animator.SetTrigger("Duration" + slot.ToString());
 
         durationRoutine = null;
@@ -63,7 +63,7 @@ public abstract class NonWeaponItem : Equipment
     // Always triggered at the end of the item's Reset function, which is called once Duration is complete
     private IEnumerator CoolDown()
     {
-        float cooldown = itemData.CoolDown() * (1 / Player.instance.stats.getHaste());
+        float cooldown = data.equipmentBaseData.BaseCooldownValue() * (1 / Player.instance.stats.getHaste());
 
         InGameUIManager.instance.StartCooldownForItem(slot, cooldown);
         yield return new WaitForSeconds(cooldown);
@@ -84,7 +84,7 @@ public abstract class NonWeaponItem : Equipment
             StopCoroutine(durationRoutine);
             anim.animator.SetTrigger("Duration" + slot.ToString());
             anim.animator.SetTrigger("Cooldown" + slot.ToString());
-            InGameUIManager.instance.StartCooldownForItem(slot, itemData.CoolDown() * (1 / Player.instance.stats.getHaste()));
+            InGameUIManager.instance.StartCooldownForItem(slot, data.equipmentBaseData.BaseCooldownValue() * (1 / Player.instance.stats.getHaste()));
         }
 
         // If mid-cooldown, just stop the cooldown coroutine (but continue the UI)

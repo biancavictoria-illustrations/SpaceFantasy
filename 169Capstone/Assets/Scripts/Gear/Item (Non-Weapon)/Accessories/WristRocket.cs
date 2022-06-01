@@ -36,6 +36,6 @@ public class WristRocket : Accessories
     {
         GameObject rocket = Instantiate(rocketPrefab, player.transform.position + Vector3.up * 2, player.transform.rotation);
         Projectile projectileScript = rocket.GetComponent<Projectile>();
-        projectileScript.Initialize("Enemy", player.stats.getINTDamage(), DamageSourceType.Player, InputManager.instance.cursorLookDirection, radius: itemData.Radius(), speed: 30);
+        projectileScript.Initialize("Enemy", player.stats.getINTDamage(), DamageSourceType.Player, InputManager.instance.cursorLookDirection, radius: data.equipmentBaseData.Radius(), speed: 30);
     }
 }

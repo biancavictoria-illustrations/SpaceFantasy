@@ -351,9 +351,6 @@ MonoBehaviour:
   journalIsOpen: 0
   mapIsOpen: 0
   isAttacking: 0
-  useAccessory: 0
-  useHead: 0
-  useLegs: 0
   isInMainMenu: 0
   cursorLookDirection: {x: 0, y: 0, z: 0}
   moveDirection: {x: 0, y: 0}
@@ -440,10 +437,10 @@ MonoBehaviour:
   startAccessory:
     m_PersistentCalls:
       m_Calls: []
-  startCooldownAccessory:
+  endAccessory:
     m_PersistentCalls:
       m_Calls: []
-  endAccessory:
+  endCooldownAccessory:
     m_PersistentCalls:
       m_Calls: []
   startLegs:
@@ -452,7 +449,16 @@ MonoBehaviour:
   endLegs:
     m_PersistentCalls:
       m_Calls: []
-  startCooldownLegs:
+  endCooldownLegs:
+    m_PersistentCalls:
+      m_Calls: []
+  startHelmet:
+    m_PersistentCalls:
+      m_Calls: []
+  endHelmet:
+    m_PersistentCalls:
+      m_Calls: []
+  endCooldownHelmet:
     m_PersistentCalls:
       m_Calls: []
   animator: {fileID: 3497098114046577830}
@@ -571,6 +577,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3300262536678425580}
     m_Modifications:
+    - target: {fileID: 1714239637879883110, guid: 28a446c5b0482664286af443d0d392b5,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4463351827660370700, guid: 28a446c5b0482664286af443d0d392b5,
         type: 3}
       propertyPath: m_RootOrder
