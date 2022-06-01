@@ -269,7 +269,7 @@ public class EntityHealth : MonoBehaviour
             StoryManager.instance.KilledEventOccurred(enemyID, StoryBeatType.EnemyKilled);
 
             // Update total # enemies killed this run and maybe increase gear tier
-            GameManager.instance.UpdateGearTierValuesOnEnemyKilled();
+            GameManager.instance.UpdateGearTierValuesOnEnemyKilled(enemyID == EnemyID.BeetleBoss);
 
             if(isBossEnemy){
                 InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(false);
