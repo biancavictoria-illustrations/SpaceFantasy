@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// MIGHT BE DEPRECATED??????
+
 public class ObjectManager : MonoBehaviour
 {
     // gear and titles should be in the same order

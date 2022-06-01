@@ -24,7 +24,6 @@ public class Save
         public int currentRunNumber;
         public bool hasKilledTimeLich;
         public int firstClearRunNumber;
-        public int bossesKilled;
     #endregion
 
     // Inventory
@@ -83,7 +82,6 @@ public class Save
         currentRunNumber = gameManager.currentRunNumber;
         hasKilledTimeLich = gameManager.hasKilledTimeLich;
         firstClearRunNumber = gameManager.firstClearRunNumber;
-        bossesKilled = gameManager.bossesKilled;
 
         // Inventory stuff
         permanentCurrency = playerInventory.permanentCurrency;

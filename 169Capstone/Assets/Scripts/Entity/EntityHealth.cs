@@ -268,6 +268,9 @@ public class EntityHealth : MonoBehaviour
             // Tell the story manager that this creature was killed
             StoryManager.instance.KilledEventOccurred(enemyID, StoryBeatType.EnemyKilled);
 
+            // Update total # enemies killed this run and maybe increase gear tier
+            GameManager.instance.UpdateGearTierValuesOnEnemyKilled();
+
             if(isBossEnemy){
                 InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(false);
 
@@ -291,7 +294,7 @@ public class EntityHealth : MonoBehaviour
             // If we're NOT in the lich fight, maybe drop something
             if(GameManager.instance.currentSceneName != GameManager.LICH_ARENA_STRING_NAME){
                 if(enemyDropGenerator)
-                    enemyDropGenerator.GetDrop(GameManager.instance.bossesKilled, transform);
+                    enemyDropGenerator.GetDrop(GameManager.instance.gearTier, transform);
                 else
                     Debug.LogWarning("No enemy drop generator found for enemy: " + enemyID);
             }

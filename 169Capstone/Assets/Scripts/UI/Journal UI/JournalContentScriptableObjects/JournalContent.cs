@@ -42,18 +42,23 @@ public enum JournalContentID{
     LichBossRoom,
     Galaxy,
 
-    // ITEMS
+    // === ITEMS ===
+    // Currency
     Electrum,
     StarShards,
+    // Weapons
     Longsword,
     Bow,
     NanoKnuckles,
     RayGun,
+    // Accessories
     WristRocket,
     MurphysClaw,
+    // Helmets
     HelmOfSnowstorms,
     HelmOfTheRam,
     HoloHUDGlasses,
+    // Legs
     PropulsionHeels,
     TrousersOfFortitude,
 

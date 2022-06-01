@@ -36,7 +36,8 @@ public class GameManager : MonoBehaviour
     public JournalContentManager journalContentManager;
 
     [HideInInspector] public bool playerDeath = false;
-    [HideInInspector] public int bossesKilled;
+    [HideInInspector] public int enemiesKilledThisRun;
+    public int gearTier {get; private set;}
 
     public GameTimer gameTimer;
 
@@ -75,7 +76,9 @@ public class GameManager : MonoBehaviour
         currentRunNumber = 1;
         hasKilledTimeLich = false;
         firstClearRunNumber = -1;
-        bossesKilled = 0;
+
+        enemiesKilledThisRun = 0;
+        gearTier = 0;
     }
 
     public void DocumentFirstClearInfo()
@@ -123,6 +126,21 @@ public class GameManager : MonoBehaviour
         
         // Increment run # -> once in main hub, run # always = # of your NEXT run (not previous)
         currentRunNumber++;
+
+        // Reset gear tier values
+        enemiesKilledThisRun = 0;
+        gearTier = 0;
+    }
+
+    public void UpdateGearTierValuesOnEnemyKilled()
+    {
+        enemiesKilledThisRun++;
+
+        if( enemiesKilledThisRun % 40 == 0 && (ItemRarity)gearTier < ItemRarity.enumSize ){
+            gearTier++;
+        }
+        // check how gear tiers are supposed to work
+        // in some places (like shops, MAYBE enemy drops) things might get weird if it drops tier and tier+1 cuz legendary+1 would be enumSize
     }
 
     #region Scene Load Stuff
@@ -274,26 +292,6 @@ public class GameManager : MonoBehaviour
         }
     #endregion
 
-    // public IEnumerator AutoRunDialogueAfterTime(float timeToWait = DEFAULT_AUTO_DIALOGUE_WAIT_TIME, bool enableViewStatsAlertAfter = false, bool manuallyEnableMinimapAfter = false)
-    // {
-    //     InputManager.instance.ToggleDialogueOpenStatus(true);   // Remove player control while waiting
-    //     yield return new WaitForSeconds(timeToWait);
-
-    //     // Play dialogue
-    //     DialogueManager.instance.OnNPCInteracted();
-
-    //     // Force mini map open after
-    //     if(manuallyEnableMinimapAfter){
-    //         InGameUIManager.instance.ToggleMiniMap(true);
-    //     }
-
-    //     // Enable view stats alert after
-    //     if( enableViewStatsAlertAfter && GameManager.instance.currentRunNumber == 2 ){
-    //         AlertTextUI.instance.EnableViewStatsAlert();
-    //         StartCoroutine(AlertTextUI.instance.RemovePrimaryAlertAfterSeconds());
-    //     }
-    // }
-
     public GearManagerObject GearManager()
     {
         return gearManager;
@@ -336,7 +334,6 @@ public class GameManager : MonoBehaviour
             currentRunNumber = saveData.currentRunNumber;
             hasKilledTimeLich = saveData.hasKilledTimeLich;
             firstClearRunNumber = saveData.firstClearRunNumber;
-            bossesKilled = saveData.bossesKilled;
 
             // Inventory Stuff
             PlayerInventory.instance.SetPermanentCurrency(saveData.permanentCurrency, false);

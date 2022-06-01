@@ -163,6 +163,13 @@ public class InventoryUIItemPanel : MonoBehaviour
             // Swap out that part of the string for the value
             generatedDescription = generatedDescription.Replace(matchString, newStringValue);
         }
+
+        if(itemSlot != InventoryItemSlot.Weapon){
+            // TEMP (will need to do stuff to factor in haste, but in a way similar to calculating damage cuz it depends on current/potential equips/unequips)
+            generatedDescription += "\n\n<b>Base Cooldown:</b> " + itemData.equipmentBaseData.BaseCooldownValue() + "s";
+        }
+        
+
         generatedDescription += GetStatModifierDescription();
 
         return generatedDescription;
