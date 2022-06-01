@@ -12,6 +12,7 @@ public class InputManager : MonoBehaviour
 
     public static InputManager instance;
 
+    [HideInInspector] public bool preventInputOverride = false;
     [HideInInspector] public bool isInDialogue = false;
     [HideInInspector] public bool inventoryIsOpen = false;
     [HideInInspector] public bool shopIsOpen = false;
@@ -122,7 +123,7 @@ public class InputManager : MonoBehaviour
 
     public bool CanAcceptGameplayInput()
     {
-        if(isInDialogue || PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || mapIsOpen || journalIsOpen || isInMainMenu || GameManager.instance.statRerollUIOpen || GameManager.instance.inElevatorAnimation){
+        if(preventInputOverride || isInDialogue || PauseMenu.GameIsPaused || inventoryIsOpen || shopIsOpen || compareItemIsOpen || mapIsOpen || journalIsOpen || isInMainMenu || GameManager.instance.statRerollUIOpen || GameManager.instance.inElevatorAnimation){
             return false;
         }
         return true;
