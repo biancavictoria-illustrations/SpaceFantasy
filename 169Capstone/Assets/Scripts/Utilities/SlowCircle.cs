@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -119,7 +119,7 @@ public class SlowCircle : MonoBehaviour
 
     private IEnumerator fadeSprite(float duration, bool fadeIn)
     {
-        float fadeProgress = 0;
+       float fadeProgress = 0;
         MeshRenderer renderer = GetComponentInChildren<MeshRenderer>();
         VisualEffect vfx = GetComponentInChildren<VisualEffect>();
         if(renderer)
@@ -137,14 +137,14 @@ public class SlowCircle : MonoBehaviour
         {
             if(fadeIn)
             {
-                // Set the vfx lifetime to the lifetime of the slowCircle
+                // Set the vfx lifetime to the lifetime of the hurtCircle
+                vfx.SetFloat("GDLifetime", duration);
             }
             else
             {
                 vfx.Stop();
             }
         }
-
         _canSlow = fadeIn;
     }
 
@@ -180,7 +180,7 @@ public class SlowCircle : MonoBehaviour
             if(enable)
                 Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, -speedChangePercent);
             else
-                Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, 0);
+                Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, 1);
         }
         else if(pathScript != null)
         {
@@ -210,7 +210,7 @@ public class SlowCircle : MonoBehaviour
             if(enable)
                 Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, speedChangePercent);
             else
-                Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, 0);
+                Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, 1);
         }
         else if(pathScript != null)
         {

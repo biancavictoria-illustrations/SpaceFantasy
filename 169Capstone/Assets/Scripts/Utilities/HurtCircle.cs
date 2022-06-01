@@ -94,6 +94,7 @@ public class HurtCircle : MonoBehaviour
             if(fadeIn)
             {
                 // Set the vfx lifetime to the lifetime of the hurtCircle
+                vfx.SetFloat("GDLifetime", duration);
             }
             else
             {

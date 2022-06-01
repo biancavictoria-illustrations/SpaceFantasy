@@ -51,7 +51,7 @@ public enum JournalContentID{
     RayGun,
     WristRocket,
     MurphysClaw,
-    RingOfSnowstorms,
+    HelmOfSnowstorms,
     HelmOfTheRam,
     HoloHUDGlasses,
     PropulsionHeels,
