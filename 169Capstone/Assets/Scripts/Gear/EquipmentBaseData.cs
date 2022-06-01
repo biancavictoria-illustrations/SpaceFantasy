@@ -41,7 +41,7 @@ public enum ItemID
 
     // Accessories
     WristRocket,
-    RingOfSnowstorms,
+    HelmOfSnowstorms,
     MurphysClaw,
     QuantumKunai,
 
