@@ -11,7 +11,8 @@ public class WallFade : MonoBehaviour
 
     private Vector3 towardsCameraNoY;
     private MeshRenderer renderer;
-    private Material material;
+    [SerializeField] private Material transparentMat;
+    [SerializeField] private Material opaqueMat;
 
     private float alpha;
     private bool shouldBeOpaque;
@@ -21,8 +22,8 @@ public class WallFade : MonoBehaviour
         renderer = GetComponent<MeshRenderer>();
 
         // This makes it so that changing the transparency for this wall won't also change the transparency for every other wall in every scene for all time everywhere forever
-        material = new Material(renderer.material);
-        renderer.material = material;
+        transparentMat = new Material(transparentMat);
+        renderer.material = opaqueMat;
 
         alpha = 1;
         shouldBeOpaque = true;
@@ -60,20 +61,29 @@ public class WallFade : MonoBehaviour
         {
             alpha += fadeRate * Time.deltaTime;
 
-            if(alpha > 1)
+            if(alpha >= 1)
+            {
                 alpha = 1;
+                renderer.material = opaqueMat;
+            }
 
-            material.color = new Color(material.color.r, material.color.g, material.color.b, alpha);
+
+            transparentMat.color = new Color(transparentMat.color.r, transparentMat.color.g, transparentMat.color.b, alpha);
         }
 
         if(!shouldBeOpaque && alpha > minAlpha)
         {
+            if(renderer.material != transparentMat)
+            {
+                renderer.material = transparentMat;
+            }
+
             alpha -= fadeRate * Time.deltaTime;
             
             if(alpha < minAlpha)
                 alpha = minAlpha;
                 
-            material.color = new Color(material.color.r, material.color.g, material.color.b, alpha);
+            transparentMat.color = new Color(transparentMat.color.r, transparentMat.color.g, transparentMat.color.b, alpha);
         }
     }
 }
