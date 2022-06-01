@@ -13,18 +13,37 @@ public class Shop : MonoBehaviour
 
     public List<GeneratedEquipment> inventory {get; private set;}
 
-
     void Start()
     {
-        GenerateShopInventory();
+        inventory = new List<GeneratedEquipment>();
+
+        // Add a listener so that we regenerate shop inventory each time we gear tier up
+        GameManager.instance.OnTierIncreased.AddListener(GenerateShopInventory);
+        // Then generate starting tier 0 inventory
+        GenerateShopInventory( GameManager.instance.gearTier );
     }
 
-    public void GenerateShopInventory()
+    public void ClearShopInventory()
     {
+        // TODO: Destroy all the actual game objects
+        // for(int i = 0; i < inventory.Count; i++){
+        //     Destroy(inventory[i].gameObject);
+        // }
+
+        // Clear the list
+        inventory.Clear();
+    }
+
+    public void GenerateShopInventory(int tier)
+    {
+        // If this is NOT the first time we've generated the inventory, clear it and start again
+        if( inventory.Count > 0 ){
+            ClearShopInventory();
+        }
+
         indexes = new HashSet<int>();
 
         inventoryList = new List<RarityAssignmentTier>();
-        inventory = new List<GeneratedEquipment>();
 
         inventoryList.Add(shopKeeper.Slot1());
         inventoryList.Add(shopKeeper.Slot2());
@@ -33,9 +52,9 @@ public class Shop : MonoBehaviour
         inventoryList.Add(shopKeeper.Slot5());
 
         // Most of the shop items generate as the CURRENT gear tier # value
-        int tier1 = GameManager.instance.gearTier;
+        int tier1 = tier;
         // Fewer generate as that value + 1 (so Uncommon if gear tier = Common, etc.)
-        int tier2 = GameManager.instance.gearTier + 1;
+        int tier2 = tier + 1;
 
         // If Legendary, there's nothing above so make the less frequent version one tier down (Epic)
         if( (ItemRarity)tier1 == ItemRarity.Legendary ){

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
@@ -36,8 +37,15 @@ public class GameManager : MonoBehaviour
     public JournalContentManager journalContentManager;
 
     [HideInInspector] public bool playerDeath = false;
-    [HideInInspector] public int enemiesKilledThisRun;
-    public int gearTier {get; private set;}
+
+    #region Gear Tier Management
+        public class GearTierIncreaseEvent : UnityEvent<int> {}
+
+        public GearTierIncreaseEvent OnTierIncreased {get; private set;}
+
+        [HideInInspector] public int nonBossEnemiesKilledThisRun;
+        public int gearTier {get; private set;}
+    #endregion
 
     public GameTimer gameTimer;
 
@@ -68,6 +76,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         AudioManager.Instance.playMusic(AudioManager.MusicTrack.TitleMusic);
+        OnTierIncreased = new GearTierIncreaseEvent();
     }
 
     // Called when you start a new game to set values to default
@@ -77,7 +86,7 @@ public class GameManager : MonoBehaviour
         hasKilledTimeLich = false;
         firstClearRunNumber = -1;
 
-        enemiesKilledThisRun = 0;
+        nonBossEnemiesKilledThisRun = 0;
         gearTier = 0;
     }
 
@@ -128,19 +137,32 @@ public class GameManager : MonoBehaviour
         currentRunNumber++;
 
         // Reset gear tier values
-        enemiesKilledThisRun = 0;
+        nonBossEnemiesKilledThisRun = 0;
         gearTier = 0;
     }
 
-    public void UpdateGearTierValuesOnEnemyKilled()
+    public void UpdateGearTierValuesOnEnemyKilled( bool beetleBossKilled = false )
     {
-        enemiesKilledThisRun++;
+        // If we're already at Legendary it's already max so just return
+        if((ItemRarity)gearTier == ItemRarity.Legendary){
+            return;
+        }
 
-        if( enemiesKilledThisRun % 40 == 0 && (ItemRarity)gearTier < ItemRarity.enumSize ){
+        // If this is the beetle boss, go up a tier automatically
+        if(beetleBossKilled){
             gearTier++;
+            OnTierIncreased.Invoke(gearTier);
+            return;
+        }
+
+        nonBossEnemiesKilledThisRun++;
+
+        if( nonBossEnemiesKilledThisRun % 25 == 0 && (ItemRarity)gearTier < ItemRarity.Legendary ){
+            gearTier++;
+            OnTierIncreased.Invoke(gearTier);
         }
         // check how gear tiers are supposed to work
-        // in some places (like shops, MAYBE enemy drops) things might get weird if it drops tier and tier+1 cuz legendary+1 would be enumSize
+        // in some places (like shops (already dealt with, maybe correctly), MAYBE enemy drops) things might get weird if it drops tier and tier+1 cuz legendary+1 would be enumSize
     }
 
     #region Scene Load Stuff
