@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
         public GearTierIncreaseEvent OnTierIncreased {get; private set;}
 
         [HideInInspector] public int nonBossEnemiesKilledThisRun;
+        public int enemiesKilledToGearTierUp = 3;
         public int gearTier {get; private set;}
     #endregion
 
@@ -156,8 +157,9 @@ public class GameManager : MonoBehaviour
         }
 
         nonBossEnemiesKilledThisRun++;
+        InGameUIManager.instance.lootTierUI.IncrementTierUI();
 
-        if( nonBossEnemiesKilledThisRun % 25 == 0 && (ItemRarity)gearTier < ItemRarity.Legendary ){
+        if( nonBossEnemiesKilledThisRun % enemiesKilledToGearTierUp == 0 && (ItemRarity)gearTier < ItemRarity.Legendary ){
             gearTier++;
             OnTierIncreased.Invoke(gearTier);
         }

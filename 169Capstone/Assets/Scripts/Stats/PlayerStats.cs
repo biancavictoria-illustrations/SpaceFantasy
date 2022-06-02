@@ -376,7 +376,7 @@ public class PlayerStats : EntityStats
             charisma = numSkillPoints;
         }
 
-        healingEfficacyBase = 0.25f;
+        healingEfficacyBase = 0.2f;
         healingEfficacyFlatBonus = 0;
     }
 

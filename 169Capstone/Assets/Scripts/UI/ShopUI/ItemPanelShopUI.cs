@@ -57,42 +57,48 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
         PlayerInventory.instance.SetTempCurrency(PlayerInventory.instance.tempCurrency - currentCostValue);
     }
 
-    private void CalculateCurrentCost()
+    private void CalculateCurrentCost(int numberOfDoctorShopPurchases = 0)
     {
-        float cost = baseCost;      // Set base cost
-
+        // Set base cost
+        float cost = baseCost * Mathf.Pow(2, numberOfDoctorShopPurchases);
+        
         // Set the rarity multiplier (rarity multiplier base to a power of the ItemRarity value)
         float rarityMultiplier = Mathf.Pow(rarityMultiplierBase, (int)rarity);
-
-        // Set coeff to (time factor * time in min) * stage factor
-        int playerFactor = 1;
-        float timeInMin = GameManager.instance.gameTimer.minutes;
-        float stageFactor = 1f;     // TODO: Set to stage factor
-        float coeff = (playerFactor + timeInMin * timeFactor) * stageFactor;
-
-        // Raise coeff to the power of the costPowerValue
-        coeff = Mathf.Pow(coeff,costPowerValue);
-
-        cost = cost * coeff * rarityMultiplier;     // Multiply base cost by coeff and rarity multiplier
-        currentCostValue = (int)Mathf.Floor(cost);       // Get int using Floor to round
+        cost = cost * rarityMultiplier;
 
         // Factor in CHA stat
-        currentCostValue = (int)(currentCostValue*(1 - Player.instance.stats.getShopPriceReduction()));
+        currentCostValue = (int)(Mathf.Floor(cost) * (1 - Player.instance.stats.getShopPriceReduction()));
+
+        // OLD (in case we need it idk)
+        // Set coeff to (time factor * time in min) * stage factor
+        // int playerFactor = 1;
+        // float timeInMin = GameManager.instance.gameTimer.minutes;
+        // float stageFactor = 1f;     // Unnecessary because we only have one level
+        // float coeff = playerFactor + timeInMin * timeFactor;  // * stageFactor;
+        // Raise coeff to the power of the costPowerValue
+        // coeff = Mathf.Pow(coeff,costPowerValue);
+        // cost = cost * coeff * rarityMultiplier;     // Multiply base cost by coeff and rarity multiplier
+        // currentCostValue = (int)Mathf.Floor(cost);       // Get int using Floor to round
     }
 
     // Updates both cost value and UI
-    public void UpdateCurrentCost(bool recalculateCost=true)
+    public void UpdateCurrentCost(bool recalculateCost=true, int numberOfDoctorShopPurchases = 0)
     {
         if(recalculateCost){
-            CalculateCurrentCost();
+            CalculateCurrentCost(numberOfDoctorShopPurchases);
+        }
+
+        string sizeCode = "";
+        if(currentCostValue > 1000){
+            sizeCode = "<size=70%>";
         }
 
         if(PlayerInventory.instance.tempCurrency - currentCostValue >= 0){
-            costText.text = "" + currentCostValue;
+            costText.text = sizeCode + currentCostValue;
             canAffordItem = true;
         }
         else{
-            costText.text = "<color=" + InGameUIManager.MAGENTA_COLOR + ">" + currentCostValue + "</color>";
+            costText.text = sizeCode + "<color=" + InGameUIManager.MAGENTA_COLOR + ">" + currentCostValue + "</color>";
             canAffordItem = false;
         }
     }
