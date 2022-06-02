@@ -79,7 +79,7 @@ public class EquipmentBaseData : ScriptableObject
     [SerializeField] private GameObject equippedWeaponModelPrefab;
 
     [SerializeField] private InventoryItemSlot itemSlot;
-    [SerializeField] private int baseCost = 10;
+    private int itemBaseCost = 20;  // Same value for all items
 
     [Header("--- UI STUFF ---")]
     [TextArea(4,20)]
@@ -140,7 +140,7 @@ public class EquipmentBaseData : ScriptableObject
 
     public int BaseCost()
     {
-        return baseCost;
+        return itemBaseCost;
     }
 
     public string ShortDescription()

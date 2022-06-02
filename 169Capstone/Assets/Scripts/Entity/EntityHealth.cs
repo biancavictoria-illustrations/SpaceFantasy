@@ -221,6 +221,11 @@ public class EntityHealth : MonoBehaviour
         // Don't show floating text when you upgrade max health (Chase designer decision)
         // InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(maxHitpoints), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "health");
 
+        // If you unequipped something that gave you a HP buff and now you would have <= 0 HP, instead set HP to 1
+        if(currentHitpoints <= 0){
+            currentHitpoints = 1;
+        }
+
         SetMaxHealthUI();
         SetCurrentHealthUI();
     }
