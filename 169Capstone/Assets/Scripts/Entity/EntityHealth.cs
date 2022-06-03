@@ -221,6 +221,11 @@ public class EntityHealth : MonoBehaviour
         // Don't show floating text when you upgrade max health (Chase designer decision)
         // InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(maxHitpoints), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "health");
 
+        // If you unequipped something that gave you a HP buff and now you would have <= 0 HP, instead set HP to 1
+        if(currentHitpoints <= 0){
+            currentHitpoints = 1;
+        }
+
         SetMaxHealthUI();
         SetCurrentHealthUI();
     }
@@ -268,6 +273,9 @@ public class EntityHealth : MonoBehaviour
             // Tell the story manager that this creature was killed
             StoryManager.instance.KilledEventOccurred(enemyID, StoryBeatType.EnemyKilled);
 
+            // Update total # enemies killed this run and maybe increase gear tier
+            GameManager.instance.UpdateGearTierValuesOnEnemyKilled(enemyID == EnemyID.BeetleBoss);
+
             if(isBossEnemy){
                 InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(false);
 
@@ -291,7 +299,7 @@ public class EntityHealth : MonoBehaviour
             // If we're NOT in the lich fight, maybe drop something
             if(GameManager.instance.currentSceneName != GameManager.LICH_ARENA_STRING_NAME){
                 if(enemyDropGenerator)
-                    enemyDropGenerator.GetDrop(GameManager.instance.bossesKilled, transform);
+                    enemyDropGenerator.GetDrop(GameManager.instance.gearTier, transform);
                 else
                     Debug.LogWarning("No enemy drop generator found for enemy: " + enemyID);
             }

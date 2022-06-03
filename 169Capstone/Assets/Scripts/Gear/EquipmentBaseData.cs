@@ -57,7 +57,7 @@ public enum ItemID
 
 #endregion
 
-[CreateAssetMenu(menuName = "Gear/EquipmentData")]
+[CreateAssetMenu(menuName = "Gear/EquipmentBaseData")]
 public class EquipmentBaseData : ScriptableObject
 {
     [Tooltip("Player facing item name")]
@@ -79,8 +79,9 @@ public class EquipmentBaseData : ScriptableObject
     [SerializeField] private GameObject equippedWeaponModelPrefab;
 
     [SerializeField] private InventoryItemSlot itemSlot;
-    [SerializeField] private int baseCost = 10;
+    private int itemBaseCost = 20;  // Same value for all items
 
+    [Header("--- UI STUFF ---")]
     [TextArea(4,20)]
     [SerializeField] private string shortDescription;
     [TextArea(15,20)]
@@ -88,10 +89,20 @@ public class EquipmentBaseData : ScriptableObject
 
     [SerializeField] private Sprite icon;
 
+    [Header("--- STAT VALUES ---")]
     [SerializeField] private PlayerStatName primaryStat;
 
     [SerializeField] private StatType primaryItemLine;
 
+    [Header("--- ACTIVATED ITEM DATA ---")]
+    [Tooltip("FOR NON-WEAPONS")]
+    [SerializeField] private float duration;
+    [Tooltip("FOR NON-WEAPONS; 'Base' because it's then affected by Haste")]
+    [SerializeField] private float baseCooldownValue;
+    [Tooltip("Most items should calculate damage when attacking from player stats, rather than using a pre-set damage value. Leave this 0 unless you have a very specific reason for using it!")]
+    [SerializeField] private float damage;
+    [SerializeField] private int radius;
+    [SerializeField] private float range;
 
     public string ItemName()
     {
@@ -129,7 +140,7 @@ public class EquipmentBaseData : ScriptableObject
 
     public int BaseCost()
     {
-        return baseCost;
+        return itemBaseCost;
     }
 
     public string ShortDescription()
@@ -160,5 +171,30 @@ public class EquipmentBaseData : ScriptableObject
     public JournalContentID[] JournalEntriesUnlocked()
     {
         return journalEntriesUnlocked;
+    }
+
+    public float Duration()
+    {
+        return duration;
+    }
+
+    public float BaseCooldownValue()
+    {
+        return baseCooldownValue;
+    }
+
+    public float BaseDamage()
+    {
+        return damage;
+    }
+
+    public int Radius()
+    {
+        return radius;
+    }  
+
+    public float Range()
+    {
+        return range;
     }
 }

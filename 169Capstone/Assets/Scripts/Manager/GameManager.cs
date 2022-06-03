@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
@@ -36,7 +37,16 @@ public class GameManager : MonoBehaviour
     public JournalContentManager journalContentManager;
 
     [HideInInspector] public bool playerDeath = false;
-    [HideInInspector] public int bossesKilled;
+
+    #region Gear Tier Management
+        public class GearTierIncreaseEvent : UnityEvent<int> {}
+
+        public GearTierIncreaseEvent OnTierIncreased {get; private set;}
+
+        [HideInInspector] public int nonBossEnemiesKilledThisRun;
+        public int enemiesKilledToGearTierUp = 3;
+        public int gearTier {get; private set;}
+    #endregion
 
     public GameTimer gameTimer;
 
@@ -67,6 +77,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         AudioManager.Instance.playMusic(AudioManager.MusicTrack.TitleMusic);
+        OnTierIncreased = new GearTierIncreaseEvent();
     }
 
     // Called when you start a new game to set values to default
@@ -75,7 +86,9 @@ public class GameManager : MonoBehaviour
         currentRunNumber = 1;
         hasKilledTimeLich = false;
         firstClearRunNumber = -1;
-        bossesKilled = 0;
+
+        nonBossEnemiesKilledThisRun = 0;
+        gearTier = 0;
     }
 
     public void DocumentFirstClearInfo()
@@ -123,6 +136,35 @@ public class GameManager : MonoBehaviour
         
         // Increment run # -> once in main hub, run # always = # of your NEXT run (not previous)
         currentRunNumber++;
+
+        // Reset gear tier values
+        nonBossEnemiesKilledThisRun = 0;
+        gearTier = 0;
+    }
+
+    public void UpdateGearTierValuesOnEnemyKilled( bool beetleBossKilled = false )
+    {
+        // If we're already at Legendary it's already max so just return
+        if((ItemRarity)gearTier == ItemRarity.Legendary){
+            return;
+        }
+
+        // If this is the beetle boss, go up a tier automatically
+        if(beetleBossKilled){
+            gearTier++;
+            OnTierIncreased.Invoke(gearTier);
+            return;
+        }
+
+        nonBossEnemiesKilledThisRun++;
+        InGameUIManager.instance.lootTierUI.IncrementTierUI();
+
+        if( nonBossEnemiesKilledThisRun % enemiesKilledToGearTierUp == 0 && (ItemRarity)gearTier < ItemRarity.Legendary ){
+            gearTier++;
+            OnTierIncreased.Invoke(gearTier);
+        }
+        // check how gear tiers are supposed to work
+        // in some places (like shops (already dealt with, maybe correctly), MAYBE enemy drops) things might get weird if it drops tier and tier+1 cuz legendary+1 would be enumSize
     }
 
     #region Scene Load Stuff
@@ -274,26 +316,6 @@ public class GameManager : MonoBehaviour
         }
     #endregion
 
-    // public IEnumerator AutoRunDialogueAfterTime(float timeToWait = DEFAULT_AUTO_DIALOGUE_WAIT_TIME, bool enableViewStatsAlertAfter = false, bool manuallyEnableMinimapAfter = false)
-    // {
-    //     InputManager.instance.ToggleDialogueOpenStatus(true);   // Remove player control while waiting
-    //     yield return new WaitForSeconds(timeToWait);
-
-    //     // Play dialogue
-    //     DialogueManager.instance.OnNPCInteracted();
-
-    //     // Force mini map open after
-    //     if(manuallyEnableMinimapAfter){
-    //         InGameUIManager.instance.ToggleMiniMap(true);
-    //     }
-
-    //     // Enable view stats alert after
-    //     if( enableViewStatsAlertAfter && GameManager.instance.currentRunNumber == 2 ){
-    //         AlertTextUI.instance.EnableViewStatsAlert();
-    //         StartCoroutine(AlertTextUI.instance.RemovePrimaryAlertAfterSeconds());
-    //     }
-    // }
-
     public GearManagerObject GearManager()
     {
         return gearManager;
@@ -336,7 +358,6 @@ public class GameManager : MonoBehaviour
             currentRunNumber = saveData.currentRunNumber;
             hasKilledTimeLich = saveData.hasKilledTimeLich;
             firstClearRunNumber = saveData.firstClearRunNumber;
-            bossesKilled = saveData.bossesKilled;
 
             // Inventory Stuff
             PlayerInventory.instance.SetPermanentCurrency(saveData.permanentCurrency, false);

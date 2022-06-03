@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ShopUIDoctor : ShopUI
 {
-    public int upgradeBaseCost = 10;
+    private int upgradeBaseCost = 20;
     private bool haveOpenedShop = false;
 
     public override void OpenShopUI()
@@ -32,7 +32,7 @@ public class ShopUIDoctor : ShopUI
     public void UpdateAllPanelsAfterPurchasing()
     {
         foreach(ItemPanelDoctor panel in itemPanels){
-            panel.UpdateCurrentCost(false);
+            panel.UpdateCurrentCost(false); // Don't recalculate, we just wanna pay attention to afford status
             panel.SetInteractableAndCostDisplayValuesBasedOnStatus();
         }
     }

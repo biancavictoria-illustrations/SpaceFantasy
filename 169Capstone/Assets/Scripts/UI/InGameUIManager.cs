@@ -86,6 +86,9 @@ public class InGameUIManager : MonoBehaviour
     public BossHealthBar bossHealthBar;
     public TimerUI timerUI;
 
+    public TierUI lootTierUI;
+    public TierUI enemyTierUI;
+
     public FloatingTextManager floatingTextManager;
     
 

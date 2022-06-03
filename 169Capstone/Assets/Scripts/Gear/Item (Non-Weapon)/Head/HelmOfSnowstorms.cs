@@ -27,14 +27,14 @@ public class HelmOfSnowstorms : Head
         hurtCircleScript = circle.GetComponentInChildren<HurtCircle>();
 
         // Initialize the scripts so they know what to do
-        slowCircleScript.Initialize("Enemy", "Pit", .20f, itemData.Duration(), itemData.Radius());
-        hurtCircleScript.Initialize("Enemy", player.stats.getWISDamage(false) * itemData.Damage(), 
-                                                itemData.Duration(), DamageSourceType.Player, itemData.Radius());
+        slowCircleScript.Initialize("Enemy", "Pit", .20f, data.equipmentBaseData.Duration(), data.equipmentBaseData.Radius());
+        hurtCircleScript.Initialize("Enemy", player.stats.getWISDamage(false) * data.equipmentBaseData.BaseDamage(), 
+                                                data.equipmentBaseData.Duration(), DamageSourceType.Player, data.equipmentBaseData.Radius());
         
         // set the lifetime of the ground decal to the duration from the item
-        snowVFX.SetFloat("GDLifetime", itemData.Duration());
+        snowVFX.SetFloat("GDLifetime", data.equipmentBaseData.Duration());
 
-        StartCoroutine(destroyEffectCountdown(itemData.Duration(), circle, fadeOutTime));
+        StartCoroutine(destroyEffectCountdown(data.equipmentBaseData.Duration(), circle, fadeOutTime));
     }
 
     private IEnumerator destroyEffectCountdown(float lifetime, GameObject circle, float fadeOutDuration = 0)

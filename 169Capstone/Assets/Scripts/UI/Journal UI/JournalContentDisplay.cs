@@ -111,8 +111,11 @@ public class JournalContentDisplay : MonoBehaviour
             contentSectionSubTitleRight.text = ID_PREFIX + content.EntryID();
 
             // Right Panel
-            if(content.ProfilePicture() && contentImage){
-                contentImage.sprite = content.ProfilePicture();
+            if(contentImage){
+                if(content.ProfilePicture())
+                    contentImage.sprite = content.ProfilePicture();
+                else
+                    contentImage.sprite = null;
             }
         }
 
