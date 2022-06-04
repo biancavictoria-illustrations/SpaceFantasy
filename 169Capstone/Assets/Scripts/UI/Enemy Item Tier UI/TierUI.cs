@@ -35,6 +35,8 @@ public class TierUI : MonoBehaviour
 
         // ENEMY TIERS
         else if(tierUIType == TierUIType.ThreatLevel){
+            GameManager.instance.gameTimer.SetEnemyTierUI(this);
+            tierSlider.maxValue = GameTimer.secondsPerEnemyTier;
             GameManager.instance.gameTimer.OnTierIncrease.AddListener(UpdateEnemyTierUIOnTierUp);
             UpdateTierUIOnTierUp(1 + "", 2 + "", InGameUIManager.MAGENTA_COLOR);
         }
@@ -93,9 +95,7 @@ public class TierUI : MonoBehaviour
         }
     }
 
-    // TODO: find where/how to increment the enemy tier version
-
-    public void IncrementTierUI()
+    public void IncrementTierUI(float value = 1)
     {
         if(lootTierIsLegendary){
             return;
@@ -105,6 +105,6 @@ public class TierUI : MonoBehaviour
             Debug.Log("Max tier slider value reached");
             return;
         }
-        tierSlider.value++;
+        tierSlider.value += value;
     }
 }

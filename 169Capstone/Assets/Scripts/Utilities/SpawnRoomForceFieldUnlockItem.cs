@@ -36,6 +36,10 @@ public class SpawnRoomForceFieldUnlockItem : MonoBehaviour
     public void UnlockForceFieldsOnPickUp()
     {
         activeForceFieldUnlockItem = null;
+        
+        // Start the game timer
+        GameTimer.timerHasStartedForRun = true;
+        InputManager.instance.RunGameTimer(true,true);
 
         if(spawnRoomForceFields)
             spawnRoomForceFields.RoomOpenOnObjectInteracted();

@@ -391,10 +391,12 @@ public class InputManager : MonoBehaviour
         mousePos = input.Get<Vector2>();
     }
 
-    public void RunGameTimer(bool set, bool setTimerUIActive = true)
+    public void RunGameTimer(bool runTimer, bool setTimerUIActive = true)
     {
         InGameUIManager.instance.timerUI.SetTimerUIActive(setTimerUIActive);
-        GameManager.instance.gameTimer.runTimer = set;
+
+        if(GameTimer.timerHasStartedForRun)
+            GameManager.instance.gameTimer.runTimer = runTimer;
     }
 
     public void ToggleShopOpenStatus(bool set)

@@ -5587,7 +5587,6 @@ RectTransform:
   - {fileID: 1810989308308858782}
   - {fileID: 7798765468201008184}
   - {fileID: 1576394482943253121}
-  - {fileID: 5759180076506594161}
   - {fileID: 8735357772655712297}
   - {fileID: 4240549545320788534}
   m_Father: {fileID: 5502841540183021712}
@@ -25745,7 +25744,7 @@ RectTransform:
   - {fileID: 5908751193045089639}
   - {fileID: 2336822677706557386}
   m_Father: {fileID: 974030797592532193}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -26137,12 +26136,12 @@ RectTransform:
   m_Children:
   - {fileID: 1023177545024391496}
   - {fileID: 9094030893312363823}
-  m_Father: {fileID: 974030797592532193}
-  m_RootOrder: 5
+  m_Father: {fileID: 7793719625577546258}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 116.55, y: -32.42}
+  m_AnchoredPosition: {x: 116.54817, y: -32.42122}
   m_SizeDelta: {x: 233.1015, y: 64.84299}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3522329647333441332
@@ -46991,7 +46990,7 @@ RectTransform:
   - {fileID: 3296880736157799833}
   - {fileID: 3690344273640316598}
   m_Father: {fileID: 974030797592532193}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -48983,6 +48982,7 @@ MonoBehaviour:
   shopLineTable: {fileID: 11400000, guid: c53fecea666ba834fbe94696b24b40af, type: 2}
   shopItemPrefab: {fileID: 9100742484145792425, guid: 543e384ef38c836409099e5aee9155dd,
     type: 3}
+  shopJustRestocked: 0
 --- !u!1 &7533642516343420378
 GameObject:
   m_ObjectHideFlags: 0
@@ -55027,7 +55027,8 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 5759180076506594161}
   m_Father: {fileID: 1576394482943253121}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -55063,7 +55064,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '##:##'
+  m_text: 00:00
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9cda209ade196a044b353ee60e663307, type: 2}
   m_sharedMaterial: {fileID: 8871024186659087495, guid: 9cda209ade196a044b353ee60e663307,
@@ -55488,6 +55489,7 @@ MonoBehaviour:
   shopLineTable: {fileID: 11400000, guid: c53fecea666ba834fbe94696b24b40af, type: 2}
   shopItemPrefab: {fileID: 9100742484145792425, guid: 543e384ef38c836409099e5aee9155dd,
     type: 3}
+  shopJustRestocked: 0
 --- !u!1 &8937238602217838515
 GameObject:
   m_ObjectHideFlags: 0
