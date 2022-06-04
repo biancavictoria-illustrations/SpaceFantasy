@@ -421,7 +421,7 @@ public class GameManager : MonoBehaviour
             // Load scene after fade to black
             ScreenFade fade = FindObjectOfType<ScreenFade>();
             fade.AddListenerToFadeEnd( () => {
-                SceneManager.LoadScene(GameManager.MAIN_HUB_STRING_NAME);
+                SceneManager.LoadScene(MAIN_HUB_STRING_NAME);
             });
             fade.FadeOut(0.5f);
 
@@ -439,7 +439,7 @@ public class GameManager : MonoBehaviour
             // If starting a new game, load level 1 scene (new game) after fade to black
             ScreenFade fade = FindObjectOfType<ScreenFade>();
             fade.AddListenerToFadeEnd( () => {
-                SceneManager.LoadScene(GameManager.GAME_LEVEL1_STRING_NAME);
+                LoadScreen.instance.LoadSceneWithLoadScreen(GAME_LEVEL1_STRING_NAME);
             });
             fade.FadeOut(1f);
 

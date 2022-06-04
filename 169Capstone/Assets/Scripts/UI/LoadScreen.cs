@@ -35,6 +35,8 @@ public class LoadScreen : MonoBehaviour
 
     public void LoadSceneWithLoadScreen( string sceneToLoad )
     {
+        string currentSceneName = GameManager.instance.currentSceneName;
+
         sceneIsLoading = true;
 
         // We already faded to black so now get rid of that for the load screen
@@ -42,7 +44,11 @@ public class LoadScreen : MonoBehaviour
 
         // Activate the load screen
         loadScreenContentHolder.SetActive(true);
-        InGameUIManager.instance.gameObject.SetActive(false);
+
+        if(currentSceneName == GameManager.TITLE_SCREEN_STRING_NAME)
+            FindObjectOfType<MainMenu>().DeactivateMainMenuUI();
+        else if(currentSceneName == GameManager.MAIN_HUB_STRING_NAME)
+            InGameUIManager.instance.gameObject.SetActive(false);
 
         // Load the scene
         SceneManager.LoadScene(sceneToLoad);
