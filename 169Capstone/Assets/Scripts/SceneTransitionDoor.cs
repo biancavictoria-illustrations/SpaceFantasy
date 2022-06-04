@@ -38,7 +38,13 @@ public class SceneTransitionDoor : MonoBehaviour
                 PlayerInventory.instance.ClearRunInventory();
             }
 
-            SceneManager.LoadScene(goToSceneName);
+            if(goToSceneName == GameManager.GAME_LEVEL1_STRING_NAME){
+                // If we're going to the main level, load the scene and start the load screen
+                LoadScreen.instance.LoadSceneWithLoadScreen(goToSceneName);
+            }
+            else{
+                SceneManager.LoadScene(goToSceneName);
+            }
         });
         elevatorHelper.StartExitAnimation();
     }

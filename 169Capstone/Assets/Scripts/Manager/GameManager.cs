@@ -195,10 +195,13 @@ public class GameManager : MonoBehaviour
             else if(currentSceneName == GAME_LEVEL1_STRING_NAME){
                 PlayerInventory.instance.SetRunStartHealthPotionQuantity();            
                 // AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, false);
-                fade.opaqueOnStart = true;
+
+                InGameUIManager.instance.gameObject.SetActive(false);   // Activated in RemoveLoadScreen()
                 
                 FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener( () =>
                 {
+                    fade.SetOpaque();
+                    LoadScreen.instance.RemoveLoadScreen();
                     fade.FadeIn(1f);
 
                     // For an average run (beyond run # 1)
@@ -212,7 +215,6 @@ public class GameManager : MonoBehaviour
                             inElevatorAnimation = false;
                         });
                     }
-
                     // If first run, skip reroll
                     else{
                         InGameUIManager.instance.ToggleRunUI(true, true, true, false);
