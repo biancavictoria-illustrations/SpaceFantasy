@@ -9,6 +9,8 @@ public class PauseMenu : MonoBehaviour
     public static bool GameIsPaused = false;
     public GameObject pauseMenuUI;
 
+    [SerializeField] private ControlsMenu controlsMenu;
+
     public GameObject pauseMenuPanel;
     public GameObject settingsMenuPanel;
     public GameObject controlsMenuPanel;
@@ -21,7 +23,7 @@ public class PauseMenu : MonoBehaviour
 
     public Button areYouSureNoButton;
 
-    public void ResumeGame()
+    public void ResumeGame(bool unpauseWithEsc = false)
     {
         ResetPauseUI();
         GameManager.instance.pauseMenuOpen = false;
@@ -40,6 +42,9 @@ public class PauseMenu : MonoBehaviour
         if(InputManager.instance.shopIsOpen){
             SetOpenShopUIInteractable(true);
         }
+
+        if(unpauseWithEsc)
+            controlsMenu.UpdateControlAlertUI();
     }
 
     private void ResetPauseUI()

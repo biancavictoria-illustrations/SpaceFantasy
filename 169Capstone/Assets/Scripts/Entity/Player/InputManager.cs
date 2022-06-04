@@ -264,7 +264,7 @@ public class InputManager : MonoBehaviour
         }
         
         if(PauseMenu.GameIsPaused){
-            InGameUIManager.instance.pauseMenu.ResumeGame();       
+            InGameUIManager.instance.pauseMenu.ResumeGame(true);       
         }
         else{
             InGameUIManager.instance.pauseMenu.PauseGame();       

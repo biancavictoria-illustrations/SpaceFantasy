@@ -286,9 +286,7 @@ public class ControlsMenu : MonoBehaviour
     {
         saveLoadControls.StoreControlOverrides();
         
-        // Update control UI elsewhere
-        AlertTextUI.instance.UpdateAlertText();
-        InGameUIManager.instance.UpdateAllItemControlButtons();
+        UpdateControlAlertUI();
 
         SetControlPanelActive(false);
     }
@@ -300,6 +298,13 @@ public class ControlsMenu : MonoBehaviour
         UpdateAllButtonText();
     }
 
+    public void UpdateControlAlertUI()
+    {
+        // Update control UI elsewhere
+        AlertTextUI.instance.UpdateAlertText();
+        InGameUIManager.instance.UpdateAllItemControlButtons();
+    }
+
     public void ResetControlsToDefault()
     {
         Debug.Log("Resetting controls to default values...");
@@ -307,6 +312,11 @@ public class ControlsMenu : MonoBehaviour
         foreach(InputActionMap map in controls.actionMaps){
             map.RemoveAllBindingOverrides();
         }
+
+        saveLoadControls.StoreControlOverrides();
+        
+        UpdateControlAlertUI();
+
         UpdateAllButtonText();
     }
 
