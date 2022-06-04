@@ -195,10 +195,13 @@ public class GameManager : MonoBehaviour
             else if(currentSceneName == GAME_LEVEL1_STRING_NAME){
                 PlayerInventory.instance.SetRunStartHealthPotionQuantity();            
                 // AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, false);
-                fade.opaqueOnStart = true;
+
+                InGameUIManager.instance.gameObject.SetActive(false);   // Activated in RemoveLoadScreen()
                 
                 FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener( () =>
                 {
+                    fade.SetOpaque();
+                    LoadScreen.instance.RemoveLoadScreen();
                     fade.FadeIn(1f);
 
                     // For an average run (beyond run # 1)
@@ -212,7 +215,6 @@ public class GameManager : MonoBehaviour
                             inElevatorAnimation = false;
                         });
                     }
-
                     // If first run, skip reroll
                     else{
                         InGameUIManager.instance.ToggleRunUI(true, true, true, false);
@@ -419,7 +421,7 @@ public class GameManager : MonoBehaviour
             // Load scene after fade to black
             ScreenFade fade = FindObjectOfType<ScreenFade>();
             fade.AddListenerToFadeEnd( () => {
-                SceneManager.LoadScene(GameManager.MAIN_HUB_STRING_NAME);
+                SceneManager.LoadScene(MAIN_HUB_STRING_NAME);
             });
             fade.FadeOut(0.5f);
 
@@ -437,7 +439,7 @@ public class GameManager : MonoBehaviour
             // If starting a new game, load level 1 scene (new game) after fade to black
             ScreenFade fade = FindObjectOfType<ScreenFade>();
             fade.AddListenerToFadeEnd( () => {
-                SceneManager.LoadScene(GameManager.GAME_LEVEL1_STRING_NAME);
+                LoadScreen.instance.LoadSceneWithLoadScreen(GAME_LEVEL1_STRING_NAME);
             });
             fade.FadeOut(1f);
 
