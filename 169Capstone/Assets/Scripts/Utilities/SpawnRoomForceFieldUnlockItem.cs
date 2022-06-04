@@ -38,7 +38,7 @@ public class SpawnRoomForceFieldUnlockItem : MonoBehaviour
         activeForceFieldUnlockItem = null;
         
         // Start the game timer
-        GameTimer.timerHasStartedForRun = true;
+        GameManager.instance.gameTimer.timerHasStartedForRun = true;
         InputManager.instance.RunGameTimer(true,true);
 
         if(spawnRoomForceFields)

@@ -40,7 +40,6 @@ public class GameManager : MonoBehaviour
 
     #region Gear Tier Management
         public class GearTierIncreaseEvent : UnityEvent<int> {}
-
         public GearTierIncreaseEvent OnTierIncreased {get; private set;}
 
         private const int DEFAULT_ENEMIES_KILLED_GEAR_TIER_VALUE = 25;

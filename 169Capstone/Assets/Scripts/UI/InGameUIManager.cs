@@ -69,6 +69,7 @@ public class InGameUIManager : MonoBehaviour
 
     [HideInInspector] public bool stellanShopIsOpen = false;
 
+    [SerializeField] private GameObject currencyContainer;
     [SerializeField] private TMP_Text permanentCurrencyValue;
     [SerializeField] private TMP_Text tempCurrencyValue;
 
@@ -394,108 +395,129 @@ public class InGameUIManager : MonoBehaviour
     #endregion
 
     #region Currency UI
+        public void SetPermanentCurrencyValue(int money)
+        {
+            permanentCurrencyValue.text = "" + money;
 
-    public void SetPermanentCurrencyValue(int money)
-    {
-        permanentCurrencyValue.text = "" + money;
-
-        if(stellanShopIsOpen){
-            stellanShopUI.permanentCurrency.text = "" + money;
+            if(stellanShopIsOpen){
+                stellanShopUI.permanentCurrency.text = "" + money;
+            }
         }
-    }
 
-    public void SetTempCurrencyValue(int money)
-    {
-        tempCurrencyValue.text = "" + money;
-    }
+        public void SetTempCurrencyValue(int money)
+        {
+            tempCurrencyValue.text = "" + money;
+        }
 
-    public void TogglePermanentCurrencyUI(bool set)
-    {
-        permanentCurrencyValue.gameObject.SetActive(set);
-    }
+        public void TogglePermanentCurrencyUI(bool set)
+        {
+            permanentCurrencyValue.gameObject.SetActive(set);
+        }
 
+        public void MoveCurrencyToForegroundOfShop( SpeakerID shopkeeper, bool set )
+        {
+            ShopUI shopUI = null;
+            switch(shopkeeper){
+                case SpeakerID.Bryn:
+                    shopUI = brynShopUI;
+                    break;
+                case SpeakerID.Rhian:
+                    shopUI = weaponsShopUI;
+                    break;
+                case SpeakerID.Doctor:
+                    shopUI = doctorShopUI;
+                    break;                    
+            }
+            if(shopUI == null){
+                Debug.LogWarning("No shop UI found to parent/unparent currency UI");
+                return;
+            }
+
+            if(set){
+                currencyContainer.GetComponent<RectTransform>().SetParent(shopUI.transform, worldPositionStays:false);
+            }
+            else{
+                currencyContainer.GetComponent<RectTransform>().SetParent(inGameUIPanel.transform, worldPositionStays:false);
+            }
+        }
     #endregion
 
     #region Health UI
+        public void SetCurrentHealthValue(float _NewCurrentHP)
+        {
+            currentHPValue = _NewCurrentHP;
 
-    public void SetCurrentHealthValue(float _NewCurrentHP)
-    {
-        currentHPValue = _NewCurrentHP;
+            if( _NewCurrentHP > maxHealthValue ){
+                Debug.LogWarning("Current HP set greater than max HP!");
+                currentHPValue = maxHealthValue;
+            }
 
-        if( _NewCurrentHP > maxHealthValue ){
-            Debug.LogWarning("Current HP set greater than max HP!");
-            currentHPValue = maxHealthValue;
+            healthText.text = Mathf.CeilToInt(currentHPValue) + " / " + Mathf.CeilToInt(maxHealthValue);
+
+            healthSlider.value = currentHPValue;        
         }
 
-        healthText.text = Mathf.CeilToInt(currentHPValue) + " / " + Mathf.CeilToInt(maxHealthValue);
+        public void SetMaxHealthValue(float _NewMaxHP)
+        {
+            maxHealthValue = _NewMaxHP;
+            healthSlider.maxValue = _NewMaxHP;
 
-        healthSlider.value = currentHPValue;        
-    }
+            healthText.text = Mathf.CeilToInt(currentHPValue) + " / " + Mathf.CeilToInt(maxHealthValue);
 
-    public void SetMaxHealthValue(float _NewMaxHP)
-    {
-        maxHealthValue = _NewMaxHP;
-        healthSlider.maxValue = _NewMaxHP;
-
-        healthText.text = Mathf.CeilToInt(currentHPValue) + " / " + Mathf.CeilToInt(maxHealthValue);
-
-        if(currentHPValue != 0){
-            SetCurrentHealthValue(currentHPValue);
+            if(currentHPValue != 0){
+                SetCurrentHealthValue(currentHPValue);
+            }
         }
-    }
 
-    public void SetHealthPotionValue(int numPotions)
-    {
-        healthPotionValue.text = "" + numPotions;
-    }
-
+        public void SetHealthPotionValue(int numPotions)
+        {
+            healthPotionValue.text = "" + numPotions;
+        }
     #endregion  
 
     #region NPC Shop Stuff
+        public void OpenNPCShop(SpeakerData shopkeeper)
+        {
+            AlertTextUI.instance.DisablePrimaryAlert();
+            AlertTextUI.instance.DisableSecondaryAlert();
 
-    public void OpenNPCShop(SpeakerData shopkeeper)
-    {
-        AlertTextUI.instance.DisablePrimaryAlert();
-        AlertTextUI.instance.DisableSecondaryAlert();
+            if(shopkeeper.SpeakerID() == SpeakerID.Bryn){
+                brynShopUI.OpenShopUI();
+            }
+            else if(shopkeeper.SpeakerID() == SpeakerID.Stellan){
+                stellanShopUI.OpenShopUI();
+            }
+            else if(shopkeeper.SpeakerID() == SpeakerID.Doctor){
+                doctorShopUI.OpenShopUI();
+            }
+            else if(shopkeeper.SpeakerID() == SpeakerID.Rhian){
+                weaponsShopUI.OpenShopUI();
+            }
+            else{
+                Debug.LogError("Failed to open shop for NPC " + shopkeeper.SpeakerID());
+            }
+        }
 
-        if(shopkeeper.SpeakerID() == SpeakerID.Bryn){
-            brynShopUI.OpenShopUI();
-        }
-        else if(shopkeeper.SpeakerID() == SpeakerID.Stellan){
-            stellanShopUI.OpenShopUI();
-        }
-        else if(shopkeeper.SpeakerID() == SpeakerID.Doctor){
-            doctorShopUI.OpenShopUI();
-        }
-        else if(shopkeeper.SpeakerID() == SpeakerID.Rhian){
-            weaponsShopUI.OpenShopUI();
-        }
-        else{
-            Debug.LogError("Failed to open shop for NPC " + shopkeeper.SpeakerID());
-        }
-    }
+        public void CloseNPCShop(SpeakerData shopkeeper, bool closeWithESCKey = false)
+        {
+            AlertTextUI.instance.EnableShopAlert();        
 
-    public void CloseNPCShop(SpeakerData shopkeeper, bool closeWithESCKey = false)
-    {
-        AlertTextUI.instance.EnableShopAlert();        
-
-        if(shopkeeper.SpeakerID() == SpeakerID.Bryn){
-            brynShopUI.CloseShopUI(closeWithESCKey);
+            if(shopkeeper.SpeakerID() == SpeakerID.Bryn){
+                brynShopUI.CloseShopUI(closeWithESCKey);
+            }
+            else if(shopkeeper.SpeakerID() == SpeakerID.Stellan){
+                stellanShopUI.CloseShopUI();
+            }
+            else if(shopkeeper.SpeakerID() == SpeakerID.Doctor){
+                doctorShopUI.CloseShopUI(closeWithESCKey);
+            }
+            else if(shopkeeper.SpeakerID() == SpeakerID.Rhian){
+                weaponsShopUI.CloseShopUI(closeWithESCKey);
+            }
+            else{
+                Debug.LogError("Failed to close shop for NPC " + shopkeeper.SpeakerID());
+            }
         }
-        else if(shopkeeper.SpeakerID() == SpeakerID.Stellan){
-            stellanShopUI.CloseShopUI();
-        }
-        else if(shopkeeper.SpeakerID() == SpeakerID.Doctor){
-            doctorShopUI.CloseShopUI(closeWithESCKey);
-        }
-        else if(shopkeeper.SpeakerID() == SpeakerID.Rhian){
-            weaponsShopUI.CloseShopUI(closeWithESCKey);
-        }
-        else{
-            Debug.LogError("Failed to close shop for NPC " + shopkeeper.SpeakerID());
-        }
-    }
-
     #endregion
 
     public Sprite GetSpriteFromStatType( PlayerStatName statName )

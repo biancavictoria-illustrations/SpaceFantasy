@@ -21,7 +21,7 @@ public class GameTimer : MonoBehaviour
     public float totalTimePlayedOnThisSaveFile {get; private set;}
     [HideInInspector] public bool runTotalTimer = false;    // Set to true when we're NOT in the Main Menu
 
-    public static bool timerHasStartedForRun = false;
+    public bool timerHasStartedForRun = false;
 
     void Awake()
     {

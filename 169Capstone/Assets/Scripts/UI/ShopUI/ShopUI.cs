@@ -14,6 +14,8 @@ public class ShopUI : MonoBehaviour
     [SerializeField] protected List<ItemPanelShopUI> itemPanels = new List<ItemPanelShopUI>();
     [SerializeField] protected ShopHoverAlerts hoverAlerts;
 
+    [SerializeField] protected SpeakerID shopkeeper;
+
     void Start()
     {
         foreach(ItemPanelShopUI panel in itemPanels){
@@ -30,6 +32,8 @@ public class ShopUI : MonoBehaviour
         InGameUIManager.instance.ToggleMiniMap(false);
 
         leaveShopButton.Select();
+
+        InGameUIManager.instance.MoveCurrencyToForegroundOfShop(shopkeeper, true);
     }
   
     public virtual void CloseShopUI( bool closeWithESCKey = false )
@@ -41,6 +45,8 @@ public class ShopUI : MonoBehaviour
         InGameUIManager.instance.ToggleMiniMap(true);
 
         AlertTextUI.instance.EnableShopAlert();
+
+        InGameUIManager.instance.MoveCurrencyToForegroundOfShop(shopkeeper, false);
     }
 
     public virtual void SetShopUIInteractable(bool set)
