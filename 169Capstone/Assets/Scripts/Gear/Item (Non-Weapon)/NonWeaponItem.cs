@@ -54,6 +54,8 @@ public abstract class NonWeaponItem : Equipment
     private IEnumerator Duration()
     {
         InGameUIManager.instance.SetItemIconColor(slot, InGameUIManager.SLIME_GREEN_COLOR);
+        InGameUIManager.instance.EnableCooldownStateForControlButtonUI(slot, true);
+
         yield return new WaitForSeconds(data.equipmentBaseData.Duration());
         anim.animator.SetTrigger("Duration" + slot.ToString());
 

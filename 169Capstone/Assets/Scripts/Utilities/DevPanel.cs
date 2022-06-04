@@ -11,12 +11,16 @@ public class DevPanel : MonoBehaviour
     public Toggle noDamageToggle;
     public Toggle skipStatRerollToggle;
     public Toggle superJumpToggle;
+    public Toggle fastGearTierToggle;
+
     public Toggle devPanelToggle;
 
     private static bool speedBoost = false;
     private static bool godMode = false;
     private static bool skipStatReroll = false;
     private static bool superJump = false;
+    private static bool fastGearTier = false;
+
     private static bool devPanelOpen = false;
     
     [Tooltip("SET TO FALSE FOR BUILDS")]
@@ -50,6 +54,15 @@ public class DevPanel : MonoBehaviour
             EnableSuperJump();
         }
 
+        if(fastGearTier){
+            fastGearTierToggle.isOn = true;   
+            ToggleFastGearTier();
+        }
+        else{
+            fastGearTierToggle.isOn = false;   
+            ToggleFastGearTier();
+        }
+
         if(devPanelOpen){
             devPanelToggle.isOn = true;   
             ToggleDevPanel();
@@ -57,6 +70,21 @@ public class DevPanel : MonoBehaviour
         else{
             devPanelToggle.isOn = false;   
             ToggleDevPanel();
+        }
+    }
+
+    // Toggle
+    public void ToggleFastGearTier()
+    {
+        if(fastGearTierToggle.isOn){
+            GameManager.instance.SetEnemiesKilledToGearTierUpValue(2);
+            UIUtils.SetImageColorFromHex( fastGearTierToggle.GetComponent<Image>(), InGameUIManager.TURQUOISE_COLOR );
+            fastGearTier = true;
+        }
+        else{
+            GameManager.instance.SetEnemiesKilledToGearTierUpValue();
+            UIUtils.SetImageColorFromHex( fastGearTierToggle.GetComponent<Image>(), "#FFFFFF" );
+            fastGearTier = false;
         }
     }
 

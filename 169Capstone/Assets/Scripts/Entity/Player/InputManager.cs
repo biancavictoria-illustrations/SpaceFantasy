@@ -27,7 +27,7 @@ public class InputManager : MonoBehaviour
     [HideInInspector] public bool isInMainMenu = false;
 
     public bool latestInputIsController {get; private set;}
-    public InputDevice currentDevice {get; private set;}
+    // public InputDevice currentDevice {get; private set;}
 
     [HideInInspector] public Vector3 cursorLookDirection;
 
@@ -49,7 +49,7 @@ public class InputManager : MonoBehaviour
         else{
             instance = this;
         }
-        UpdateLatestInputDevice();
+        // UpdateLatestInputDevice();
 
         useAccessory = new OnAbilityEvent();
         useHelmet = new OnAbilityEvent();
@@ -71,9 +71,33 @@ public class InputManager : MonoBehaviour
             controls.FindAction("AttackPrimary").canceled += x => OnAttackPrimaryCanceled();
         }
 
+        UserDeviceManager.OnInputDeviceChanged.AddListener(OnInputDeviceChangedEvent);
+
+        if(GameManager.instance.InSceneWithRandomGeneration()){
+            FindObjectOfType<ControlsMenu>().SetupControlIconsOnStart();
+            AlertTextUI.instance.SetupAlertTextOnStart();
+            InGameUIManager.instance.SetupAllItemControlButtons();
+        }
+
         if(!devPanel){
             devPanel = FindObjectOfType<DevPanel>();
         }
+    }
+
+    public void OnInputDeviceChangedEvent(InputDevice device)
+    {
+        if(device == InputDevice.KeyboardMouse){
+            latestInputIsController = false;
+        }
+        else{
+            latestInputIsController = true;
+        }
+
+        // TEMP
+        if(!devPanel){
+            devPanel = FindObjectOfType<DevPanel>();
+        }
+        devPanel?.ToggleInteractabilityOnDeviceChange( !latestInputIsController );
     }
 
     void Update()
@@ -102,22 +126,6 @@ public class InputManager : MonoBehaviour
     public void SetLookDirectionVertical( float value)
     {
         moveDirection.y = value;
-    }
-
-    public void UpdateLatestInputDevice()
-    {
-        if((int)UserDeviceManager.currentControlDevice == 0){
-            latestInputIsController = false;
-            currentDevice = InputDevice.KeyboardMouse;
-        }
-        else{
-            latestInputIsController = true;
-        }
-
-        if(!devPanel){
-            devPanel = FindObjectOfType<DevPanel>();
-        }
-        devPanel?.ToggleInteractabilityOnDeviceChange( !latestInputIsController );   // TEMP
     }
 
     public bool CanAcceptGameplayInput()
@@ -391,10 +399,12 @@ public class InputManager : MonoBehaviour
         mousePos = input.Get<Vector2>();
     }
 
-    public void RunGameTimer(bool set, bool setTimerUIActive = true)
+    public void RunGameTimer(bool runTimer, bool setTimerUIActive = true)
     {
         InGameUIManager.instance.timerUI.SetTimerUIActive(setTimerUIActive);
-        GameManager.instance.gameTimer.runTimer = set;
+
+        if(GameManager.instance.gameTimer.timerHasStartedForRun)
+            GameManager.instance.gameTimer.runTimer = runTimer;
     }
 
     public void ToggleShopOpenStatus(bool set)

@@ -75,7 +75,6 @@ public class StatRerollUI : MonoBehaviour
     {
         statRerollPanel.SetActive(set);
         GameManager.instance.statRerollUIOpen = set;
-        InputManager.instance.RunGameTimer(!set,!set);
     }
 
     // Called once the animation is complete to set the actual value you rolled

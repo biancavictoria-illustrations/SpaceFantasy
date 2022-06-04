@@ -58,7 +58,9 @@ public class LoadScreen : MonoBehaviour
     {
         sceneIsLoading = false;
         loadScreenContentHolder.SetActive(false);
+        
         InGameUIManager.instance.gameObject.SetActive(true);
+        InGameUIManager.instance.StartOnGenerationComplete();
     }
 
     private IEnumerator EllipsesAnimationRoutine()

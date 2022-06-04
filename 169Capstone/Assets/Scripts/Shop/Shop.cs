@@ -11,6 +11,8 @@ public class Shop : MonoBehaviour
     [SerializeField] private LineTable shopLineTable;
     [SerializeField] private GameObject shopItemPrefab;
 
+    [HideInInspector] public bool shopJustRestocked = false;
+
     public List<GeneratedEquipment> inventory {get; private set;}
 
     void Start()
@@ -70,6 +72,8 @@ public class Shop : MonoBehaviour
                 inventory.Add( GenerateItem((ItemRarity)tier2) );
             }
         }
+
+        shopJustRestocked = true;
     }
 
     private GeneratedEquipment GenerateItem(ItemRarity rarity)

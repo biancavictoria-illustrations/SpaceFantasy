@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using TMPro;
 
 public class ItemCooldownUI : MonoBehaviour
@@ -8,9 +10,11 @@ public class ItemCooldownUI : MonoBehaviour
     [SerializeField] private TMP_Text cooldownText;
     [SerializeField] private InventoryItemSlot itemSlot;
 
+    [SerializeField] private ItemControlButton itemControlButton;
+
     public bool isActive {get; private set;}
 
-    public float counter;
+    [HideInInspector] public float counter;
 
     void Start()
     {
@@ -26,13 +30,15 @@ public class ItemCooldownUI : MonoBehaviour
     {
         isActive = true;
         counter = value;   
-        SetTextToCounterValue();     
+        SetTextToCounterValue();
     }
 
     public void EndCooldownCountdown()
     {
         isActive = false;
         gameObject.SetActive(false);
+
+        itemControlButton.EnableCooldownState(false);
     }
 
     public void SetTextToCounterValue()

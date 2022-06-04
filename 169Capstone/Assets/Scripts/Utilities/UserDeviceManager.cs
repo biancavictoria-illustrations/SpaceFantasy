@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Events;
 
 public enum InputDevice{
     KeyboardMouse,
@@ -21,11 +22,21 @@ public class UserDeviceManager : MonoBehaviour
 {
     PlayerInput _controls;
     public static InputDevice currentControlDevice;
-    private string currentControlScheme;
+    private static string currentControlScheme;
+
+    public class InputDeviceChangedEvent : UnityEvent<InputDevice> {}
+    public static InputDeviceChangedEvent OnInputDeviceChanged {get; private set;}
     
+    void Awake()
+    {
+        OnInputDeviceChanged = new InputDeviceChangedEvent();
+    }
+
     void Start()
     {
         _controls = FindObjectOfType<PlayerInput>();
+
+        currentControlScheme = "Keyboard";
         OnControlSchemeChanged();
     }
 
@@ -34,7 +45,6 @@ public class UserDeviceManager : MonoBehaviour
         if (_controls.currentControlScheme != currentControlScheme)
         {
             OnControlSchemeChanged();
-            currentControlScheme = _controls.currentControlScheme;
         }
     }
 
@@ -43,32 +53,16 @@ public class UserDeviceManager : MonoBehaviour
         if (_controls.currentControlScheme == "Gamepad"){
             if (currentControlDevice != InputDevice.Gamepad){
                 currentControlDevice = InputDevice.Gamepad;
-                UpdateInputDeviceValues();
-
-                // Send Event
-                // EventHandler.ExecuteEvent("DeviceChanged", currentControlDevice);
+                currentControlScheme = _controls.currentControlScheme;
+                OnInputDeviceChanged.Invoke(currentControlDevice);
             }
         }
         else{
             if (currentControlDevice != InputDevice.KeyboardMouse){
                 currentControlDevice = InputDevice.KeyboardMouse;
-                UpdateInputDeviceValues();
-                
-                // Send Event
-                // EventHandler.ExecuteEvent("DeviceChanged", currentControlDevice);
+                currentControlScheme = _controls.currentControlScheme;
+                OnInputDeviceChanged.Invoke(currentControlDevice);
             }
         }
-    }
-
-    private void UpdateInputDeviceValues()
-    {
-        // Tell the InputManager we have a new input device
-        InputManager.instance.UpdateLatestInputDevice();
-
-        // Tell the controls UI it's changed
-        ControlsMenu.inputDeviceChanged = true;
-
-        // Also the alert text UI
-        AlertTextUI.inputDeviceChanged = true;
     }
 }

@@ -16,7 +16,6 @@ public class ShopUIGear : ShopUI
 
     [SerializeField] private Shop shopInventory;
 
-
     public override void OpenShopUI()
     {
         base.OpenShopUI();
@@ -35,7 +34,7 @@ public class ShopUIGear : ShopUI
         // From the list of items this shop currently carries, set all item values
         int i = 0;
         foreach(GeneratedEquipment item in shopInventory.inventory){
-            ( (ItemPanelGearShop)(itemPanels[i]) ).SetGearItemValues(item);
+            ( (ItemPanelGearShop)(itemPanels[i]) ).SetGearItemValues(item, shopInventory.shopJustRestocked);
 
             i++;
 
@@ -43,6 +42,7 @@ public class ShopUIGear : ShopUI
                 Debug.LogError("More than five shop items found!");
             }
         }
+        shopInventory.shopJustRestocked = false;
     }
 
     public void ToggleShopInventoryOn( bool closeWithESCKey = false )
