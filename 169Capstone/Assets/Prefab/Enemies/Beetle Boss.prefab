@@ -138,6 +138,7 @@ MonoBehaviour:
   attackRadius: 0
   speed: 1
   attacking: 0
+  canMove: 1
 --- !u!114 &4153667464727692523
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,6 +156,7 @@ MonoBehaviour:
   attackRadius: 0
   speed: 1
   attacking: 0
+  canMove: 1
   nearAttackRange: 7
   needsLOS: 1
 --- !u!114 &8875741005484749923
@@ -176,11 +178,12 @@ MonoBehaviour:
   canAttack: 1
   coroutineRunning: 0
   animator: {fileID: 145690342985362840}
+  bossRoomScript: {fileID: 0}
   phase1logic: {fileID: 11400000, guid: ea152a11b97ed6d489bc07a0e07bca01, type: 2}
   phase2logic: {fileID: 11400000, guid: 124dd8f3461095149bc7168e9419a172, type: 2}
   debrisPrefab: {fileID: 6971681032639802214, guid: 6b9a4410e97732d43ba67555f335b967,
     type: 3}
-  missilePrefab: {fileID: 6270841779879546812, guid: 7da86968875144a45a50135cb08b9867,
+  missilePrefab: {fileID: 6270841779879546812, guid: 0724734d069c1764d81887e9368935d9,
     type: 3}
   hurtCirclePrefab: {fileID: 6071023717173504654, guid: 58f5768d8f5958242a4f182d85b7933a,
     type: 3}
@@ -203,6 +206,7 @@ MonoBehaviour:
     type: 3}
   starShardPrefab: {fileID: 2207105199061856247, guid: 29b3dbaab14d2f74891aeae9638a35ee,
     type: 3}
+  tempPlayerGodModeToggle: 0
 --- !u!114 &3968121517102043045
 MonoBehaviour:
   m_ObjectHideFlags: 0
