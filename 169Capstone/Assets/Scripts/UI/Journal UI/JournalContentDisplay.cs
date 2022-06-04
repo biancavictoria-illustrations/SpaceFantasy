@@ -44,6 +44,9 @@ public class JournalContentDisplay : MonoBehaviour
         [Header("Right Panel")]
         [SerializeField] private Image contentImage;
 
+        [Header("Crew Panel Options")]
+        [SerializeField] private GameObject captainPanel;
+
         [Header("Stat Panel Options")]
         [SerializeField] private GameObject secondaryStatPanel;
 
@@ -57,7 +60,7 @@ public class JournalContentDisplay : MonoBehaviour
 
         switch(contentType){
             case ContentType.Crew:
-                activePageID = JournalContentID.Stellan;
+                activePageID = JournalContentID.Captain;
                 break;
             case ContentType.Locations:
                 activePageID = JournalContentID.TheOrbis;
@@ -121,6 +124,14 @@ public class JournalContentDisplay : MonoBehaviour
 
         private void SetCrewValues(JournalContentCrew content)
         {
+            bool isCaptainPanel = content.InternalID() == JournalContentID.Captain;
+            captainPanel.SetActive(isCaptainPanel);
+            mainContentPanel.SetActive(!isCaptainPanel);
+
+            if(isCaptainPanel){
+                return;
+            }
+
             SetDefaultValues(content);
 
             // Top Header Panel
