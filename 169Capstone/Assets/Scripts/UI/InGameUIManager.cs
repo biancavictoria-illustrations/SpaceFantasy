@@ -413,7 +413,7 @@ public class InGameUIManager : MonoBehaviour
             }
 
             cooldown.gameObject.SetActive(true);
-            SetItemIconColor(slot, DARK_TURQUOISE_COLOR);
+            SetItemIconColor(slot, DARK_GRAY_COLOR);
             
             StartCoroutine(CooldownRoutine(cooldown, value));
         }

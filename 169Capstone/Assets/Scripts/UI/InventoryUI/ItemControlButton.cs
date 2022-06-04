@@ -44,10 +44,13 @@ public class ItemControlButton : MonoBehaviour
             return;
         }
 
-        if(setActive)
-            controlIcon.color = new Color(255,255,255,65);
-        else
-            controlIcon.color = new Color(255,255,255,200);
+        if(setActive){
+            controlIcon.color = new Color(1,1,1,0);
+        }
+        else{     
+            controlIcon.color = new Color(1,1,1,1);
+            // TODO: flourish
+        }
     }
 
     public void UpdateItemTriggerIcon()
@@ -56,7 +59,7 @@ public class ItemControlButton : MonoBehaviour
 
         if(s == null){
             Debug.LogWarning("No icon found; failed to set item trigger icon");
-            controlIcon.color = new Color(255,255,255,0);
+            controlIcon.color = new Color(1,1,1,0);
             controlIconIsActive = false;
             return;
         }
