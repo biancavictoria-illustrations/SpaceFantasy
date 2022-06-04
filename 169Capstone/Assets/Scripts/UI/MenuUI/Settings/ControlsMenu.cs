@@ -284,8 +284,11 @@ public class ControlsMenu : MonoBehaviour
 
     public void ApplyControlsChange()
     {
-        saveLoadControls.StoreControlOverrides();        
+        saveLoadControls.StoreControlOverrides();
+        
+        // Update control UI elsewhere
         AlertTextUI.instance.UpdateAlertText();
+        InGameUIManager.instance.UpdateAllItemControlButtons();
 
         SetControlPanelActive(false);
     }

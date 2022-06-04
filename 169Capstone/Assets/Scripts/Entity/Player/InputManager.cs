@@ -76,6 +76,7 @@ public class InputManager : MonoBehaviour
         if(GameManager.instance.InSceneWithRandomGeneration()){
             FindObjectOfType<ControlsMenu>().SetupControlIconsOnStart();
             AlertTextUI.instance.SetupAlertTextOnStart();
+            InGameUIManager.instance.SetupAllItemControlButtons();
         }
 
         if(!devPanel){

@@ -31,6 +31,7 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private Image inGameBootsIMG;
 
     [SerializeField] private List<ItemCooldownUI> itemCooldownUI = new List<ItemCooldownUI>();
+    [SerializeField] private List<ItemControlButton> itemControlButtonUI = new List<ItemControlButton>();
 
     #region Icons
         [SerializeField] private Sprite emptySlotWeaponIcon;
@@ -348,6 +349,42 @@ public class InGameUIManager : MonoBehaviour
                     Debug.LogError("No item icon found for slot: " + itemSlot.ToString());
                     return null;
             }
+        }
+
+        public void UpdateAllItemControlButtons()
+        {
+            foreach(ItemControlButton controlButton in itemControlButtonUI){
+                controlButton.UpdateItemTriggerIcon();
+            }
+        }
+
+        public void SetupAllItemControlButtons()
+        {
+            foreach(ItemControlButton controlButton in itemControlButtonUI){
+                controlButton.SetupControlUIOnStart();
+            }
+        }
+
+        public void EnableCooldownStateForControlButtonUI(InventoryItemSlot slot, bool set)
+        {
+            foreach(ItemControlButton controlButton in itemControlButtonUI){
+                if(controlButton.GetItemSlot() == slot){
+                    controlButton.EnableCooldownState(set);
+                    return;
+                }
+            }
+            Debug.LogError("No control button UI found for slot: " + slot);
+        }
+
+        public ItemControlButton GetItemControlButtonUIFromSlot(InventoryItemSlot slot)
+        {
+            foreach(ItemControlButton controlButton in itemControlButtonUI){
+                if(controlButton.GetItemSlot() == slot){
+                    return controlButton;
+                }
+            }
+            Debug.LogError("No control button UI found for slot: " + slot);
+            return null;
         }
 
         public ItemCooldownUI GetCooldownUIFromSlot(InventoryItemSlot slot)
