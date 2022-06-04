@@ -22,8 +22,8 @@ public class EnemyGen : MonoBehaviour
 
     public void spawnEnemies()
     {
-        int upperRange = Mathf.CeilToInt(maxTarget / 2);
-        int lowerRange = Mathf.FloorToInt(maxTarget / 2);
+        int upperRange = Mathf.CeilToInt(maxTarget / 2.0f);
+        int lowerRange = Mathf.FloorToInt(maxTarget / 2.0f);
         System.Random r = new System.Random();
         int rand = r.Next(0, 2);
 
