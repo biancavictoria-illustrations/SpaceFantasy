@@ -86,6 +86,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
     {
         // === Generate Description Text ===
         if( category == UpgradeShopCategory.HealthPotion ){
+            currentStatValue = PlayerInventory.instance.healthPotionQuantity;   // In case it has changed (if we left and took a potion and then came back)
             secondaryDescription.text = "<b>Potions:</b>   " + currentStatValue + "  ->  <color=" + InGameUIManager.SLIME_GREEN_COLOR + ">" + (currentStatValue+1);
             return "Increases <b>Health Potion</b> quantity by 1.";
         }

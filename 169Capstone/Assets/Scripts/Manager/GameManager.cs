@@ -43,8 +43,10 @@ public class GameManager : MonoBehaviour
 
         public GearTierIncreaseEvent OnTierIncreased {get; private set;}
 
+        private const int DEFAULT_ENEMIES_KILLED_GEAR_TIER_VALUE = 25;
+
         [HideInInspector] public int nonBossEnemiesKilledThisRun;
-        public int enemiesKilledToGearTierUp = 3;
+        public int enemiesKilledToGearTierUp {get; private set;}
         public int gearTier {get; private set;}
     #endregion
 
@@ -72,12 +74,19 @@ public class GameManager : MonoBehaviour
         }
         DontDestroyOnLoad(this.gameObject);        
         SceneManager.sceneLoaded += OnSceneLoad;
+
+        enemiesKilledToGearTierUp = DEFAULT_ENEMIES_KILLED_GEAR_TIER_VALUE;
     }
 
     void Start()
     {
         AudioManager.Instance.playMusic(AudioManager.MusicTrack.TitleMusic);
         OnTierIncreased = new GearTierIncreaseEvent();
+    }
+
+    public void SetEnemiesKilledToGearTierUpValue(int value = DEFAULT_ENEMIES_KILLED_GEAR_TIER_VALUE)
+    {
+        enemiesKilledToGearTierUp = value;
     }
 
     // Called when you start a new game to set values to default

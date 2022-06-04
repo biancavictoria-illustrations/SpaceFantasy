@@ -13,15 +13,15 @@ public class ItemPanelGearShop : ItemPanelShopUI
 
     public GeneratedEquipment item {get; private set;}
 
-    [SerializeField] private ShopUIGear shopUI;
+    [SerializeField] private ShopUIGear shopUI;    
 
-    private const float rarityMultiplierBase = 1.2f;
-    private const float costPowerValue = 1.25f;
-    private const float timeFactor = 0.0606f;
-    
-
-    public void SetGearItemValues(GeneratedEquipment _item)
+    public void SetGearItemValues(GeneratedEquipment _item, bool shopRestock = false)
     {
+        if(shopRestock){
+            itemIsAvailable = true;
+            itemCardButton.interactable = true;
+        }
+
         ToggleElectrumIconActive(itemIsAvailable);
         if(!itemIsAvailable){
             return;

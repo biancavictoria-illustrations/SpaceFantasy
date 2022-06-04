@@ -11,6 +11,9 @@ public class HelmOfSnowstorms : Head
     private SlowCircle slowCircleScript;
     private HurtCircle hurtCircleScript;
     private VisualEffect snowVFX;
+
+    private Coroutine destroyEffectCountdownRoutine;
+    private GameObject circle;
      
      protected override void Awake()
      {
@@ -20,7 +23,7 @@ public class HelmOfSnowstorms : Head
     {
         base.ActivateHelmet();
         // Save the instance of the snow circle
-        GameObject circle = Instantiate(effectPrefab, player.transform.position, Quaternion.identity);
+        circle = Instantiate(effectPrefab, player.transform.position, Quaternion.identity);
         // find and save the vfx and scrip components
         snowVFX = circle.GetComponentInChildren<VisualEffect>();
         slowCircleScript = circle.GetComponentInChildren<SlowCircle>();
@@ -34,10 +37,10 @@ public class HelmOfSnowstorms : Head
         // set the lifetime of the ground decal to the duration from the item
         snowVFX.SetFloat("GDLifetime", data.equipmentBaseData.Duration());
 
-        StartCoroutine(destroyEffectCountdown(data.equipmentBaseData.Duration(), circle, fadeOutTime));
+        destroyEffectCountdownRoutine = StartCoroutine(destroyEffectCountdown(data.equipmentBaseData.Duration(), fadeOutTime));
     }
 
-    private IEnumerator destroyEffectCountdown(float lifetime, GameObject circle, float fadeOutDuration = 0)
+    private IEnumerator destroyEffectCountdown(float lifetime, float fadeOutDuration = 0)   //GameObject circle, 
     {
         Debug.Log("Coroutine Started");
         // after the duration is over, stop vfx from spawning so they can fad out
@@ -49,5 +52,15 @@ public class HelmOfSnowstorms : Head
         yield return new WaitForSeconds(fadeOutDuration);
         Destroy(circle);
         Debug.Log("Destroy Called");
+    }
+
+    public override void ManageCoroutinesOnUnequip()
+    {
+        base.ManageCoroutinesOnUnequip();
+
+        if(destroyEffectCountdownRoutine != null){
+            StopCoroutine(destroyEffectCountdownRoutine);
+            Destroy(circle);
+        }
     }
 }

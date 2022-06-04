@@ -118,7 +118,7 @@ public class InGameUIManager : MonoBehaviour
         inGameUIPanel.SetActive(set);
     }
 
-    private void StartOnGenerationComplete()
+    public void StartOnGenerationComplete()
     {
         SetTempCurrencyValue(PlayerInventory.instance.tempCurrency);
         SetPermanentCurrencyValue(PlayerInventory.instance.permanentCurrency);
@@ -164,9 +164,11 @@ public class InGameUIManager : MonoBehaviour
         // Health potions
         SetHealthPotionValue(PlayerInventory.instance.healthPotionQuantity);
 
-        // Health bar
-        SetMaxHealthValue(Player.instance.health.maxHitpoints);
-        SetCurrentHealthValue(Player.instance.health.currentHitpoints);
+        // Health bar (don't do this if setting values after load screen drops)
+        if(GameManager.instance.currentSceneName != GameManager.GAME_LEVEL1_STRING_NAME){
+            SetMaxHealthValue(Player.instance.health.maxHitpoints);
+            SetCurrentHealthValue(Player.instance.health.currentHitpoints);
+        }
 
         // Sidebar item panel
         foreach( KeyValuePair<InventoryItemSlot, Equipment> item in PlayerInventory.instance.gear ){
