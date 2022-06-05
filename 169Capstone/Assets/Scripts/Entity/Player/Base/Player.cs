@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
         // }
         // else{
         //     StartOnGenerationComplete();
-        // }  
+        // }
 
         StartOnGenerationComplete();      
     }

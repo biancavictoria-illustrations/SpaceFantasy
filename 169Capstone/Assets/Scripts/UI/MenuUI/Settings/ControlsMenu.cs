@@ -41,38 +41,51 @@ public class ControlsMenu : MonoBehaviour
 
     [SerializeField] private DeviceButtonSpritesObject spritesForKeyboardControls;
     [SerializeField] private DeviceButtonSpritesObject spritesForXboxControls;
-    // [SerializeField] private DeviceButtonSpritesObject spritesForPlayStationControls;
-    // [SerializeField] private DeviceButtonSpritesObject spritesForSwitchJoyconControls;
-    // [SerializeField] private DeviceButtonSpritesObject spritesForSwitchProControls;
 
     public static Dictionary<ControlKeys, Sprite> currentControlButtonSpritesForKeyboard {get; private set;}
     public static Dictionary<ControlKeys, Sprite> currentControlButtonSpritesForController {get; private set;}
 
-    public static bool inputDeviceChanged = false;
     [HideInInspector] public bool currentlyRebinding = false;
 
-    // Keybinding buttons
-    [SerializeField] private ControlRebindButton moveUp;
-    [SerializeField] private ControlRebindButton moveDown;
-    [SerializeField] private ControlRebindButton moveLeft;
-    [SerializeField] private ControlRebindButton moveRight;
-    [SerializeField] private ControlRebindButton jump;
-    
-    [SerializeField] private ControlRebindButton primaryAttack;
-    [SerializeField] private ControlRebindButton accessoryAbility;
-    [SerializeField] private ControlRebindButton helmetAbility;
-    [SerializeField] private ControlRebindButton bootsAbility;
+    #region Keybinding Buttons
+        [SerializeField] private ControlRebindButton moveUp;
+        [SerializeField] private ControlRebindButton moveDown;
+        [SerializeField] private ControlRebindButton moveLeft;
+        [SerializeField] private ControlRebindButton moveRight;
+        [SerializeField] private ControlRebindButton jump;
+        
+        [SerializeField] private ControlRebindButton primaryAttack;
+        [SerializeField] private ControlRebindButton accessoryAbility;
+        [SerializeField] private ControlRebindButton helmetAbility;
+        [SerializeField] private ControlRebindButton bootsAbility;
 
-    [SerializeField] private ControlRebindButton useHealthPotion;
-    [SerializeField] private ControlRebindButton interact;
-    [SerializeField] private ControlRebindButton toggleInventory;
-    [SerializeField] private ControlRebindButton toggleJournal;
-    [SerializeField] private ControlRebindButton toggleMinimap;
-    [SerializeField] private ControlRebindButton pause;
-
+        [SerializeField] private ControlRebindButton useHealthPotion;
+        [SerializeField] private ControlRebindButton interact;
+        [SerializeField] private ControlRebindButton toggleInventory;
+        [SerializeField] private ControlRebindButton toggleJournal;
+        [SerializeField] private ControlRebindButton toggleMinimap;
+        [SerializeField] private ControlRebindButton pause;
+    #endregion
 
     void Start()
     {
+        // If we're in a scene with random generation, the InputManager calls this instead
+        if(!GameManager.instance.InSceneWithRandomGeneration()){
+            SetupControlIconsOnStart();
+        }
+    }
+
+    public void OnInputDeviceChangedEvent(InputDevice device)
+    {
+        if(!currentlyRebinding){
+            UpdateAllButtonText();
+        }
+    }
+
+    public void SetupControlIconsOnStart()
+    {
+        UserDeviceManager.OnInputDeviceChanged.AddListener(OnInputDeviceChangedEvent);
+
         currentControlButtonSpritesForKeyboard = new Dictionary<ControlKeys, Sprite>();
         currentControlButtonSpritesForController = new Dictionary<ControlKeys, Sprite>();
 
@@ -104,14 +117,6 @@ public class ControlsMenu : MonoBehaviour
 
         if(AlertTextUI.instance){
             AlertTextUI.instance.UpdateAlertText();
-        }        
-    }
-
-    void Update()
-    {
-        if(inputDeviceChanged && !currentlyRebinding){
-            UpdateAllButtonText();
-            inputDeviceChanged = false;
         }
     }
 
@@ -209,17 +214,6 @@ public class ControlsMenu : MonoBehaviour
         currentlyRebinding = false;
     }
 
-    // private bool BindingIsInvalid(ControlKeys key, InputAction action)
-    // {
-    //     if( InputManager.instance.latestInputIsController && InputControlPath.MatchesPrefix("<Keyboard>", action.activeControl) ){
-    //         return true;
-    //     }
-    //     else if( !InputManager.instance.latestInputIsController && InputControlPath.MatchesPrefix("<Gamepad>", action.activeControl) ){
-    //         return true;
-    //     }
-    //     return false;
-    // }
-
     private bool IsDuplicateBinding(ControlKeys key, InputAction action, int bindingIndex)
     {  
         InputBinding newBinding = action.bindings[bindingIndex];
@@ -290,8 +284,9 @@ public class ControlsMenu : MonoBehaviour
 
     public void ApplyControlsChange()
     {
-        saveLoadControls.StoreControlOverrides();        
-        AlertTextUI.instance.UpdateAlertText();
+        saveLoadControls.StoreControlOverrides();
+        
+        UpdateControlAlertUI();
 
         SetControlPanelActive(false);
     }
@@ -303,6 +298,13 @@ public class ControlsMenu : MonoBehaviour
         UpdateAllButtonText();
     }
 
+    public void UpdateControlAlertUI()
+    {
+        // Update control UI elsewhere
+        AlertTextUI.instance.UpdateAlertText();
+        InGameUIManager.instance.UpdateAllItemControlButtons();
+    }
+
     public void ResetControlsToDefault()
     {
         Debug.Log("Resetting controls to default values...");
@@ -310,10 +312,12 @@ public class ControlsMenu : MonoBehaviour
         foreach(InputActionMap map in controls.actionMaps){
             map.RemoveAllBindingOverrides();
         }
+
+        saveLoadControls.StoreControlOverrides();
+        
+        UpdateControlAlertUI();
+
         UpdateAllButtonText();
-        // could make it so that this is permanent and have a "are you sure?" popup, and then add the line below to set it
-        // actually I think it already is permanent...?
-        // PlayerPrefs.DeleteKey("ControlOverrides");
     }
 
     public void SetControlPanelActive(bool set)

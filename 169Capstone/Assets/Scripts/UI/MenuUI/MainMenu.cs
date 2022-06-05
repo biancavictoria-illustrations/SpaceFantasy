@@ -18,6 +18,8 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Button areYouSureNoButton;
     private int activeDeletePanel = 0;
 
+    [SerializeField] private GameObject titleScreenCanvas;
+
     void Awake()
     {
         if( instance ){
@@ -89,5 +91,10 @@ public class MainMenu : MonoBehaviour
         GameManager.instance.DeleteSaveFile(activeDeletePanel);
 
         ToggleAreYouSureYouWantToDeleteSaveFilePanel(false, 0);
+    }
+
+    public void DeactivateMainMenuUI()
+    {
+        titleScreenCanvas.SetActive(false);
     }
 }

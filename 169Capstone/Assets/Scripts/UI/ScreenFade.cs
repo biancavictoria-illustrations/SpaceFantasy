@@ -23,14 +23,24 @@ public class ScreenFade : MonoBehaviour
     {
         if(opaqueOnStart)
         {
-            image.color = new Color(0, 0, 0, 1);
-            image.enabled = true;
+            SetOpaque();
         }
         else
         {
-            image.color = new Color(0, 0, 0, 0);
-            image.enabled = false;
+            SetTransparent();
         }
+    }
+
+    public void SetOpaque()
+    {
+        image.color = new Color(0, 0, 0, 1);
+        image.enabled = true;
+    }
+
+    public void SetTransparent()
+    {
+        image.color = new Color(0, 0, 0, 0);
+        image.enabled = false;
     }
 
     public void FadeIn(float fadeInDuration)

@@ -22,8 +22,6 @@ public class AlertTextUI : MonoBehaviour
     [HideInInspector] public bool primaryAlertTextIsActive = false;
     [HideInInspector] public bool secondaryAlertTextIsActive = false;
 
-    public static bool inputDeviceChanged = false;
-
     private Sprite interactControlIcon;
     private string interactControlString;
     private bool interactAlertIsActive = false;
@@ -60,28 +58,25 @@ public class AlertTextUI : MonoBehaviour
 
     void Start()
     {
-        if(GameManager.instance.InSceneWithRandomGeneration()){
-            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(StartOnGenerationComplete);
-        }        
-        else{
-            StartOnGenerationComplete();
+        // Called in InputManager otherwise
+        if(!GameManager.instance.InSceneWithRandomGeneration()){
+            SetupAlertTextOnStart();
         }
     }
 
-    private void StartOnGenerationComplete()
+    public void SetupAlertTextOnStart()
     {
         primaryAlertTextIsActive = false;
         secondaryAlertTextIsActive = false;
+
+        UserDeviceManager.OnInputDeviceChanged.AddListener(OnInputDeviceChangedEvent);
+
         UpdateAlertText();
     }
 
-    // TODO: DO THIS NOT IN UPDATE!!!
-    void Update()
+    public void OnInputDeviceChangedEvent(InputDevice device)
     {
-        if(inputDeviceChanged){
-            UpdateAlertText();
-            inputDeviceChanged = false;
-        }
+        UpdateAlertText();
     }
 
     #region Set Alert Values

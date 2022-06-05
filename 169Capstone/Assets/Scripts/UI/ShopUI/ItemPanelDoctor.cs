@@ -25,11 +25,13 @@ public class ItemPanelDoctor : ItemPanelShopUI
     [SerializeField] private GameObject secondaryDescriptionHolder;
     [SerializeField] private TMP_Text secondaryDescription;
 
-    [SerializeField] private int healingBonusValue = 25;    // Amount it's incremented each time you purchase
+    private int healingBonusValue = 10;    // Amount it's incremented each time you purchase
 
     private PlayerStats stats;
 
     [SerializeField] private ShopUIDoctor shopUI;
+
+    private int numberOfPurchases = 0;
 
     // Called JUST first time you visit this shop per run
     public void GenerateNewDoctorUpgradeValues(int _baseCost)
@@ -84,6 +86,7 @@ public class ItemPanelDoctor : ItemPanelShopUI
     {
         // === Generate Description Text ===
         if( category == UpgradeShopCategory.HealthPotion ){
+            currentStatValue = PlayerInventory.instance.healthPotionQuantity;   // In case it has changed (if we left and took a potion and then came back)
             secondaryDescription.text = "<b>Potions:</b>   " + currentStatValue + "  ->  <color=" + InGameUIManager.SLIME_GREEN_COLOR + ">" + (currentStatValue+1);
             return "Increases <b>Health Potion</b> quantity by 1.";
         }
@@ -166,15 +169,21 @@ public class ItemPanelDoctor : ItemPanelShopUI
     {
         currentStatValue++;
         descriptionText.text = GenerateDescription();
-        UpdateCurrentCost();
         SetInteractableAndCostDisplayValuesBasedOnStatus();
     }
 
     private void IncrementHealingEfficacy()
     {
         currentStatValue += healingBonusValue;
-        descriptionText.text = GenerateDescription();
-        UpdateCurrentCost();
+
+        if(currentStatValue >= 100){
+            itemIsAvailable = false;
+            descriptionText.text = "Maximum Healing Efficacy reached";
+        }
+        else{
+            descriptionText.text = GenerateDescription();
+        }
+        
         SetInteractableAndCostDisplayValuesBasedOnStatus();
     }
 
@@ -221,6 +230,8 @@ public class ItemPanelDoctor : ItemPanelShopUI
             }
         }
 
+        numberOfPurchases++;
+        UpdateCurrentCost(true, numberOfPurchases); // For just this one, recalculate the cost
         shopUI.UpdateAllPanelsAfterPurchasing();
     }
 
@@ -233,10 +244,11 @@ public class ItemPanelDoctor : ItemPanelShopUI
     }
 
     // Update prices and descriptions if necessary but don't generate new stats for purchase
+    // Only called to update values when you've already talked to him before and open the shop again
     public void UpdateValues()
     {
         descriptionText.text = GenerateDescription();
-        UpdateCurrentCost();    // Updates cost value as well as UI
+        UpdateCurrentCost(true, numberOfPurchases);    // Updates cost value as well as UI
         GetCurrentStatValue();
         SetInteractableAndCostDisplayValuesBasedOnStatus();
     }

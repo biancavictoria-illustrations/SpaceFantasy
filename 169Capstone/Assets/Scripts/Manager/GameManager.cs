@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
@@ -36,8 +37,17 @@ public class GameManager : MonoBehaviour
     public JournalContentManager journalContentManager;
 
     [HideInInspector] public bool playerDeath = false;
-    [HideInInspector] public int enemiesKilledThisRun;
-    public int gearTier {get; private set;}
+
+    #region Gear Tier Management
+        public class GearTierIncreaseEvent : UnityEvent<int> {}
+        public GearTierIncreaseEvent OnTierIncreased {get; private set;}
+
+        private const int DEFAULT_ENEMIES_KILLED_GEAR_TIER_VALUE = 25;
+
+        [HideInInspector] public int nonBossEnemiesKilledThisRun;
+        public int enemiesKilledToGearTierUp {get; private set;}
+        public int gearTier {get; private set;}
+    #endregion
 
     public GameTimer gameTimer;
 
@@ -63,11 +73,19 @@ public class GameManager : MonoBehaviour
         }
         DontDestroyOnLoad(this.gameObject);        
         SceneManager.sceneLoaded += OnSceneLoad;
+
+        enemiesKilledToGearTierUp = DEFAULT_ENEMIES_KILLED_GEAR_TIER_VALUE;
     }
 
     void Start()
     {
         AudioManager.Instance.playMusic(AudioManager.MusicTrack.TitleMusic);
+        OnTierIncreased = new GearTierIncreaseEvent();
+    }
+
+    public void SetEnemiesKilledToGearTierUpValue(int value = DEFAULT_ENEMIES_KILLED_GEAR_TIER_VALUE)
+    {
+        enemiesKilledToGearTierUp = value;
     }
 
     // Called when you start a new game to set values to default
@@ -77,7 +95,7 @@ public class GameManager : MonoBehaviour
         hasKilledTimeLich = false;
         firstClearRunNumber = -1;
 
-        enemiesKilledThisRun = 0;
+        nonBossEnemiesKilledThisRun = 0;
         gearTier = 0;
     }
 
@@ -128,19 +146,33 @@ public class GameManager : MonoBehaviour
         currentRunNumber++;
 
         // Reset gear tier values
-        enemiesKilledThisRun = 0;
+        nonBossEnemiesKilledThisRun = 0;
         gearTier = 0;
     }
 
-    public void UpdateGearTierValuesOnEnemyKilled()
+    public void UpdateGearTierValuesOnEnemyKilled( bool beetleBossKilled = false )
     {
-        enemiesKilledThisRun++;
+        // If we're already at Legendary it's already max so just return
+        if((ItemRarity)gearTier == ItemRarity.Legendary){
+            return;
+        }
 
-        if( enemiesKilledThisRun % 40 == 0 && (ItemRarity)gearTier < ItemRarity.enumSize ){
+        // If this is the beetle boss, go up a tier automatically
+        if(beetleBossKilled){
             gearTier++;
+            OnTierIncreased.Invoke(gearTier);
+            return;
+        }
+
+        nonBossEnemiesKilledThisRun++;
+        InGameUIManager.instance.lootTierUI.IncrementTierUI();
+
+        if( nonBossEnemiesKilledThisRun % enemiesKilledToGearTierUp == 0 && (ItemRarity)gearTier < ItemRarity.Legendary ){
+            gearTier++;
+            OnTierIncreased.Invoke(gearTier);
         }
         // check how gear tiers are supposed to work
-        // in some places (like shops, MAYBE enemy drops) things might get weird if it drops tier and tier+1 cuz legendary+1 would be enumSize
+        // in some places (like shops (already dealt with, maybe correctly), MAYBE enemy drops) things might get weird if it drops tier and tier+1 cuz legendary+1 would be enumSize
     }
 
     #region Scene Load Stuff
@@ -171,10 +203,13 @@ public class GameManager : MonoBehaviour
             else if(currentSceneName == GAME_LEVEL1_STRING_NAME){
                 PlayerInventory.instance.SetRunStartHealthPotionQuantity();            
                 // AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, false);
-                fade.opaqueOnStart = true;
+
+                InGameUIManager.instance.gameObject.SetActive(false);   // Activated in RemoveLoadScreen()
                 
                 FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener( () =>
                 {
+                    fade.SetOpaque();
+                    LoadScreen.instance.RemoveLoadScreen();
                     fade.FadeIn(1f);
 
                     // For an average run (beyond run # 1)
@@ -188,7 +223,6 @@ public class GameManager : MonoBehaviour
                             inElevatorAnimation = false;
                         });
                     }
-
                     // If first run, skip reroll
                     else{
                         InGameUIManager.instance.ToggleRunUI(true, true, true, false);
@@ -395,7 +429,7 @@ public class GameManager : MonoBehaviour
             // Load scene after fade to black
             ScreenFade fade = FindObjectOfType<ScreenFade>();
             fade.AddListenerToFadeEnd( () => {
-                SceneManager.LoadScene(GameManager.MAIN_HUB_STRING_NAME);
+                SceneManager.LoadScene(MAIN_HUB_STRING_NAME);
             });
             fade.FadeOut(0.5f);
 
@@ -413,7 +447,7 @@ public class GameManager : MonoBehaviour
             // If starting a new game, load level 1 scene (new game) after fade to black
             ScreenFade fade = FindObjectOfType<ScreenFade>();
             fade.AddListenerToFadeEnd( () => {
-                SceneManager.LoadScene(GameManager.GAME_LEVEL1_STRING_NAME);
+                LoadScreen.instance.LoadSceneWithLoadScreen(GAME_LEVEL1_STRING_NAME);
             });
             fade.FadeOut(1f);
 
