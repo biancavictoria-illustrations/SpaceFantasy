@@ -1,16 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class HelmOfTheRam : Head
 {
     private const float baseChargeSpeed = 25f;
     private float chargeSpeed { get { return baseChargeSpeed * Player.instance.stats.getMoveSpeed(); } }
 
+    [SerializeField] private GameObject chargeVFX;
+
+    private Pathing enemyPathing;
     private Movement movement;
     private Vector3 direction;
     private Coroutine routine;
+    private Coroutine pushRoutine;
     private CharacterController controller;
+    private GameObject chargeVFXInstance;
 
     protected override void Start()
     {
@@ -23,6 +29,9 @@ public class HelmOfTheRam : Head
     protected override void ActivateHelmet()
     {
         base.ActivateHelmet();
+
+        Transform model = player.GetComponent<Movement>().model;
+        chargeVFXInstance = Instantiate(chargeVFX, player.transform.position, model.rotation, model);
         
         movement.isAttacking = true;
         movement.animator.SetBool("IsRunning", true);
@@ -54,6 +63,17 @@ public class HelmOfTheRam : Head
             StopCoroutine(routine);
             EndCharge();
         }
+
+        if(pushRoutine != null)
+        {
+            StopCoroutine(pushRoutine);
+
+            if(enemyPathing != null)
+            {
+                enemyPathing.enabled = true;
+                enemyPathing.agent.enabled = true;
+            }
+        }
     }
 
     private IEnumerator chargeRoutine()
@@ -72,16 +92,55 @@ public class HelmOfTheRam : Head
 
             yield return new WaitForFixedUpdate();
         }
+
+        if(hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            EntityHealth enemy = hit.collider.GetComponent<EntityHealth>();
+            enemy.Damage(player.stats.getSTRDamage(false) * 2, DamageSourceType.Player);
+
+            Pathing path = enemy.GetComponent<Pathing>();
+            if(path != null)
+                pushRoutine = StartCoroutine(pushEnemyRoutine(path));
+        }
         
         StopCoroutine(durationRoutine);
+        durationRoutine = null;
+
         anim.animator.SetTrigger("Duration" + slot.ToString());
         EndCharge();
     }
 
     private void EndCharge()
     {
+        if(chargeVFXInstance != null)
+            Destroy(chargeVFXInstance);
+
         movement.isAttacking = false;
         InputManager.instance.preventInputOverride = false;
         movement.animator.SetBool("IsRunning", false);
+    }
+
+    private IEnumerator pushEnemyRoutine(Pathing enemyPathing)
+    {
+        float startTime = Time.time;
+        this.enemyPathing = enemyPathing;
+
+        enemyPathing.enabled = false;
+        enemyPathing.agent.enabled = false;
+
+        while(Time.time < startTime + 0.2f)
+        {
+            if(enemyPathing == null)
+                yield break;
+
+            yield return new WaitForFixedUpdate();
+            enemyPathing.transform.Translate(direction.normalized * 15 * Time.fixedDeltaTime, Space.World);
+        }
+
+        if(enemyPathing != null)
+        {
+            enemyPathing.enabled = true;
+            enemyPathing.agent.enabled = true;
+        }
     }
 }
