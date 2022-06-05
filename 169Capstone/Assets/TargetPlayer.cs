@@ -6,7 +6,8 @@ public class TargetPlayer : MonoBehaviour
 {
 
     public float damage = 5f;
-    public float turnRate = 90.0f;
+    public float turnRate = 10.0f;//90.0f;
+    public float turnIntervalRate = 5.0f;
     public Transform playerTransform;
     public GameObject projectilePrefab;
     public Transform projectileSpawnPoint;
@@ -14,29 +15,56 @@ public class TargetPlayer : MonoBehaviour
     public Transform projectileSpawnPoint3;
     public Transform projectileSpawnPoint4;
     private float timer = 5;
+    private float timeCount = 0;
+    private Vector3 from;
+    private Vector3 to = new Vector3(0, 90, 0);
+    private bool turn = true;
 
     void Start()
     {
         playerTransform = Player.instance.transform;
+        from = transform.localRotation.eulerAngles;
     }
 
     // Start is called before the first frame update
     private void Update()
     {
+        //Debug.Log(transform.localRotation.eulerAngles);
         timer -=Time.deltaTime;
+        if (turn)
+        {
+            transform.localRotation = Quaternion.Lerp(Quaternion.Euler(from), Quaternion.Euler(to), timeCount * turnRate);
+            timeCount += Time.deltaTime;
+        }
+
+        if(transform.localRotation.eulerAngles == to && turn)
+        {
+            turn = false;
+            //Debug.Log("here");
+            //Debug.Log(to);
+            from = to;
+            to.y += 90;
+
+            if (to.y == 360)
+                to.y = 0;
+
+            timeCount = 0;
+
+            StartCoroutine(waitInterval());
+        }
         
     }
 
-    private void FixedUpdate()
+    private void FixedUpdate() //need to adjujst this
     {
-        Vector3 localTargetPos = transform.InverseTransformPoint(playerTransform.position);
+        /*Vector3 localTargetPos = transform.InverseTransformPoint(playerTransform.position);
         localTargetPos.y = 0.0f;
         Quaternion rotationGoal = Quaternion.LookRotation(localTargetPos);
         
         Quaternion newRotation = Quaternion.RotateTowards(transform.localRotation, rotationGoal, turnRate * Time.deltaTime);
 
         // Set the new rotation of the base.
-        transform.localRotation = newRotation;
+        transform.localRotation = newRotation;*/
     }
 
     private void OnTriggerEnter(Collider other)
@@ -122,5 +150,12 @@ public class TargetPlayer : MonoBehaviour
         
         
         
+    }
+
+    private IEnumerator waitInterval()
+    {
+        yield return new WaitForSeconds(turnIntervalRate);
+
+        turn = true;
     }
 }
