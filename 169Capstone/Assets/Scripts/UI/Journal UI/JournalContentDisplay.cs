@@ -138,13 +138,19 @@ public class JournalContentDisplay : MonoBehaviour
             contentSectionSubTitleLeft.text = content.JobTitle();
 
             // Body Panel
-            bodyContent1.text = "<b>DoB:</b> " + content.Birthday();
+            bodyContent1.text = "<b>AGE:</b> " + content.Age();
             bodyContent2.text = "<b>HOME PLANET:</b> " + content.PlaceOfBirth();
             bodyContent3.text = "<b>RACE:</b> " + content.Race();
             bodyContent4.text = "<b>HEIGHT:</b> " + content.Height();
             bodyContent5.text = "<b>STRENGTHS:</b> " + content.Strengths();
             bodyContent6.text = "<b>WEAKNESSES:</b> " + content.Weaknesses();
-            mainBodyContent.text = "<b>PERFORMANCE REVIEW:</b>\n" + content.ReportNotes();
+
+            if(content.InternalID() != JournalContentID.Atlan){
+                mainBodyContent.text = "<b>REPORT NOTES:</b>\n" + content.ReportNotes();
+            }
+            else{
+                mainBodyContent.text = "<b>PERFORMANCE REVIEW:</b>\n" + content.ReportNotes();
+            }
         }
 
         private void SetStatValues(JournalContentStat content)
