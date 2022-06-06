@@ -23,12 +23,26 @@ public class TargetPlayer : MonoBehaviour
     public float delayRate = 2.0f;
     public float shootRate = 3.0f;
 
+    void Awake()
+    {
+        // If main level (do this in awake to add a listener)
+        if(GameManager.instance.InSceneWithRandomGeneration()){
+            FloorGenerator generator = FindObjectOfType<FloorGenerator>();
+            if(generator){  // If we already completed generation, just run start; if not, add a listener
+                if(generator.generationComplete){
+                    StartOnGenerationComplete();
+                }
+                else{
+                    generator.OnGenerationComplete.AddListener(StartOnGenerationComplete);
+                }
+            }
+        }
+    }
+
     void Start()
     {
-        if(GameManager.instance.InSceneWithRandomGeneration()){
-            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(StartOnGenerationComplete);
-        }
-        else{
+        // If lich fight arena or something
+        if(!GameManager.instance.InSceneWithRandomGeneration()){
             StartOnGenerationComplete();
         }
     }
