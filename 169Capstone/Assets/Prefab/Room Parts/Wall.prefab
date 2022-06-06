@@ -18,7 +18,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 1
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &3946516517227142990
 Transform:
@@ -27,7 +27,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 601728984807013723}
-  m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 10, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 2}
   m_Children:
@@ -135,13 +135,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4211599992189763743}
-  m_LocalRotation: {x: -0.69766134, y: -0.11518964, z: 0.11518964, w: 0.69766134}
-  m_LocalPosition: {x: -0.12, y: 0.91, z: 0}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 6.5, y: 1.42, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3946516517227142990}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -108.751, y: 89.99999, z: -90}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!108 &7687864285973374119
 Light:
   m_ObjectHideFlags: 0
@@ -151,13 +151,13 @@ Light:
   m_GameObject: {fileID: 4211599992189763743}
   m_Enabled: 1
   serializedVersion: 10
-  m_Type: 2
+  m_Type: 0
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
-  m_Range: 15
-  m_SpotAngle: 30
-  m_InnerSpotAngle: 21.80208
+  m_Intensity: 33.2
+  m_Range: 7.67813
+  m_SpotAngle: 97.3154
+  m_InnerSpotAngle: 53.16443
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2
@@ -319,6 +319,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: MinimapSprite
+      objectReference: {fileID: 0}
+    - target: {fileID: 8380942714834779484, guid: 28a446c5b0482664286af443d0d392b5,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 28a446c5b0482664286af443d0d392b5, type: 3}
