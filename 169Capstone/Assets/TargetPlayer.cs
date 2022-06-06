@@ -14,11 +14,14 @@ public class TargetPlayer : MonoBehaviour
     public Transform projectileSpawnPoint2;
     public Transform projectileSpawnPoint3;
     public Transform projectileSpawnPoint4;
-    private float timer = 5;
+    public float timer;// = 5;
     private float timeCount = 0;
     private Vector3 from;
     private Vector3 to = new Vector3(0, 90, 0);
-    private bool turn = true;
+    public bool turn = true;
+    public bool shootPlayer = false;
+    public float delayRate = 2.0f;
+    public float shootRate = 3.0f;
 
     void Start()
     {
@@ -29,19 +32,19 @@ public class TargetPlayer : MonoBehaviour
     // Start is called before the first frame update
     private void Update()
     {
-        //Debug.Log(transform.localRotation.eulerAngles);
-        timer -=Time.deltaTime;
-        if (turn)
+        Debug.Log(timer);
+        //Debug.Log("turn: " + turn.ToString());
+        //Debug.Log("shootPlayer: " + shootPlayer.ToString());
+        //timer -=Time.deltaTime;
+        if (turn && !shootPlayer)
         {
             transform.localRotation = Quaternion.Lerp(Quaternion.Euler(from), Quaternion.Euler(to), timeCount * turnRate);
             timeCount += Time.deltaTime;
         }
 
-        if(transform.localRotation.eulerAngles == to && turn)
+        if(transform.localRotation.eulerAngles == to && turn && !shootPlayer)
         {
             turn = false;
-            //Debug.Log("here");
-            //Debug.Log(to);
             from = to;
             to.y += 90;
 
@@ -52,20 +55,30 @@ public class TargetPlayer : MonoBehaviour
 
             StartCoroutine(waitInterval());
         }
+
+        if(shootPlayer && timer <= 0)
+        {
+            timer = shootRate;
+            ShootProjectile();
+        }
+        else if(shootPlayer)
+        {
+            timer -= Time.deltaTime;
+        }
         
     }
 
-    private void FixedUpdate() //need to adjujst this
+    /*private void FixedUpdate() //need to adjujst this
     {
-        /*Vector3 localTargetPos = transform.InverseTransformPoint(playerTransform.position);
+        Vector3 localTargetPos = transform.InverseTransformPoint(playerTransform.position);
         localTargetPos.y = 0.0f;
         Quaternion rotationGoal = Quaternion.LookRotation(localTargetPos);
         
         Quaternion newRotation = Quaternion.RotateTowards(transform.localRotation, rotationGoal, turnRate * Time.deltaTime);
 
         // Set the new rotation of the base.
-        transform.localRotation = newRotation;*/
-    }
+        transform.localRotation = newRotation;
+    }*/
 
     private void OnTriggerEnter(Collider other)
     {
@@ -74,14 +87,14 @@ public class TargetPlayer : MonoBehaviour
             playerTransform = Player.instance.transform;
         }
 
-        timer = 5;
+        /*timer = 5;
         if (other.tag == "Player")
         {
             ShootProjectile();
-        }
+        }*/
     }
 
-    private void OnTriggerStay(Collider other)
+    /*private void OnTriggerStay(Collider other)
     {
 
         if (other.tag == "Player")
@@ -94,7 +107,7 @@ public class TargetPlayer : MonoBehaviour
             
         }
 
-    }
+    }*/
 
     public void ShootProjectile()
     {
