@@ -39,7 +39,10 @@ public class PropulsionHeels : Leg
         base.ManageCoroutinesOnUnequip();
 
         InputManager.instance.preventInputOverride = false;
-        StopCoroutine(routine);
+
+        if(routine != null){
+            StopCoroutine(routine);
+        }
     }
 
     private IEnumerator dashRoutine()
