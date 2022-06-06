@@ -91,6 +91,8 @@ public class InGameUIManager : MonoBehaviour
     public TierUI lootTierUI;
     public TierUI enemyTierUI;
 
+    public DamageUIOverlay damageUIOverlay;
+
     public FloatingTextManager floatingTextManager;
     
 

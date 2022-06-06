@@ -197,8 +197,7 @@ public class PlayerStats : EntityStats
             // Haste = Cooldown Reduction
             public virtual float getHaste()
             {
-                return hasteBase + hasteFlatBonus 
-                        + (wisdom * hastePerWisdomPoint);
+                return (hasteBase + hasteFlatBonus + (wisdom * hastePerWisdomPoint)) * hasteMultiplier;
             }
         #endregion
 
@@ -338,6 +337,8 @@ public class PlayerStats : EntityStats
         moveSpeedBase = 1;
         hasteBase = 1;
 
+        hasteMultiplier = 1;
+        dodgeChanceMultiplier = 1;
         critChanceMultiplier = 1;
         critDamageMultiplier = 1;
         maxHitPointsMultiplier = 1;

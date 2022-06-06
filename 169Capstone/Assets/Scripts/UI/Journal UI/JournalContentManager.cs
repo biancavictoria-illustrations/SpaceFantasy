@@ -73,6 +73,7 @@ public class JournalContentManager : MonoBehaviour
             journalUnlockStatusDatabase[id] = true;
         }
 
+        // TODO: Fix this! not calling the alert when it's a dialogue interaction trigger to unlock...?
         if(flag){
             AlertTextUI.instance.EnableJournalUpdatedAlert();
             StartCoroutine(AlertTextUI.instance.RemoveSecondaryAlertAfterSeconds());

@@ -4,14 +4,11 @@ using UnityEngine;
 
 public abstract class NonWeaponItem : Equipment
 {
-    public GameObject timerPrefab;
-    // public ActivatedItemData itemData;   // DEPRICATED
     public InventoryItemSlot slot {get; protected set;}
     public bool fire = false;
     [HideInInspector] public bool clearToFire = true;
 
     [HideInInspector] public AnimationStateController anim;
-    //[HideInInspector] public Timer timer;
 
     public Coroutine cooldownRoutine {get; protected set;}
     public Coroutine durationRoutine {get; protected set;}
