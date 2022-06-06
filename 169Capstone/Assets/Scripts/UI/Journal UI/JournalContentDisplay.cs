@@ -44,6 +44,9 @@ public class JournalContentDisplay : MonoBehaviour
         [Header("Right Panel")]
         [SerializeField] private Image contentImage;
 
+        [Header("Crew Panel Options")]
+        [SerializeField] private GameObject captainPanel;
+
         [Header("Stat Panel Options")]
         [SerializeField] private GameObject secondaryStatPanel;
 
@@ -57,7 +60,7 @@ public class JournalContentDisplay : MonoBehaviour
 
         switch(contentType){
             case ContentType.Crew:
-                activePageID = JournalContentID.Stellan;
+                activePageID = JournalContentID.Captain;
                 break;
             case ContentType.Locations:
                 activePageID = JournalContentID.TheOrbis;
@@ -121,19 +124,33 @@ public class JournalContentDisplay : MonoBehaviour
 
         private void SetCrewValues(JournalContentCrew content)
         {
+            bool isCaptainPanel = content.InternalID() == JournalContentID.Captain;
+            captainPanel.SetActive(isCaptainPanel);
+            mainContentPanel.SetActive(!isCaptainPanel);
+
+            if(isCaptainPanel){
+                return;
+            }
+
             SetDefaultValues(content);
 
             // Top Header Panel
             contentSectionSubTitleLeft.text = content.JobTitle();
 
             // Body Panel
-            bodyContent1.text = "<b>DoB:</b> " + content.Birthday();
+            bodyContent1.text = "<b>AGE:</b> " + content.Age();
             bodyContent2.text = "<b>HOME PLANET:</b> " + content.PlaceOfBirth();
             bodyContent3.text = "<b>RACE:</b> " + content.Race();
             bodyContent4.text = "<b>HEIGHT:</b> " + content.Height();
             bodyContent5.text = "<b>STRENGTHS:</b> " + content.Strengths();
             bodyContent6.text = "<b>WEAKNESSES:</b> " + content.Weaknesses();
-            mainBodyContent.text = "<b>PERFORMANCE REVIEW:</b>\n" + content.ReportNotes();
+
+            if(content.InternalID() != JournalContentID.Atlan){
+                mainBodyContent.text = "<b>PERFORMANCE REVIEW:</b>\n" + content.ReportNotes();
+            }
+            else{
+                mainBodyContent.text = RESEARCH_PREFIX + content.ReportNotes();
+            }
         }
 
         private void SetStatValues(JournalContentStat content)

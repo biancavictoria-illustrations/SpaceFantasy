@@ -7,7 +7,7 @@ public class JournalContentCrew : JournalContent
 {
     [Header("Crew Data")]
     [SerializeField] private string jobTitle;
-    [SerializeField] private string birthday;
+    [SerializeField] private string age;
     [SerializeField] private string placeOfBirth;
     [SerializeField] private string race;
     [SerializeField] private string height;
@@ -22,9 +22,9 @@ public class JournalContentCrew : JournalContent
         return jobTitle;
     }
 
-    public string Birthday()
+    public string Age()
     {
-        return birthday;
+        return age;
     }
 
     public string PlaceOfBirth()
