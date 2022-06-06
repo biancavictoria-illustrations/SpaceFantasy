@@ -408,7 +408,11 @@ MonoBehaviour:
   projectileSpawnPoint2: {fileID: 882512237}
   projectileSpawnPoint3: {fileID: 924004631}
   projectileSpawnPoint4: {fileID: 1494181229}
+  timer: 0
+  turn: 1
   shootPlayer: 0
+  delayRate: 2
+  shootRate: 3
 --- !u!1 &1435330418803965314
 GameObject:
   m_ObjectHideFlags: 0
@@ -900,6 +904,8 @@ GameObject:
   - component: {fileID: 2040657361206279724}
   - component: {fileID: 3489207290415531003}
   - component: {fileID: 6210123414269619427}
+  - component: {fileID: 2302056952965947475}
+  - component: {fileID: 5571191889680629054}
   m_Layer: 0
   m_Name: Interaction
   m_TagString: Untagged
@@ -968,3 +974,29 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!135 &2302056952965947475
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9139429665978690195}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 2.9923358
+  m_Center: {x: 0, y: 0, z: -0.000000029802322}
+--- !u!114 &5571191889680629054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9139429665978690195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81d010a3a190047a69ec5876bcda6571, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trap: {fileID: 820429675}
