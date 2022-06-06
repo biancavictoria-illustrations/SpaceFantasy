@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class GameTimer : MonoBehaviour
 { 
-    public const float secondsPerEnemyTier = 30f;
+    public const float secondsPerEnemyTier = 60f;
 
     public class EnemyTierIncrease : UnityEvent<int> {}
 

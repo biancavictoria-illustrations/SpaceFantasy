@@ -25,6 +25,16 @@ public class TargetPlayer : MonoBehaviour
 
     void Start()
     {
+        if(GameManager.instance.InSceneWithRandomGeneration()){
+            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(StartOnGenerationComplete);
+        }
+        else{
+            StartOnGenerationComplete();
+        }
+    }
+
+    public void StartOnGenerationComplete()
+    {
         playerTransform = Player.instance.transform;
         from = transform.localRotation.eulerAngles;
     }
@@ -32,7 +42,7 @@ public class TargetPlayer : MonoBehaviour
     // Start is called before the first frame update
     private void Update()
     {
-        Debug.Log(timer);
+        // Debug.Log(timer);
         //Debug.Log("turn: " + turn.ToString());
         //Debug.Log("shootPlayer: " + shootPlayer.ToString());
         //timer -=Time.deltaTime;
