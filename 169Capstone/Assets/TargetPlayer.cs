@@ -17,7 +17,7 @@ public class TargetPlayer : MonoBehaviour
     public float timer;// = 5;
     private float timeCount = 0;
     private Vector3 from;
-    private Vector3 to = new Vector3(0, 90, 0);
+    private Vector3 to;
     public bool turn = true;
     public bool shootPlayer = false;
     public float delayRate = 2.0f;
@@ -51,14 +51,13 @@ public class TargetPlayer : MonoBehaviour
     {
         playerTransform = Player.instance.transform;
         from = transform.localRotation.eulerAngles;
+        to = from;
+        to.y += 90;
     }
 
     // Start is called before the first frame update
     private void Update()
     {
-        // Debug.Log(timer);
-        //Debug.Log("turn: " + turn.ToString());
-        //Debug.Log("shootPlayer: " + shootPlayer.ToString());
         //timer -=Time.deltaTime;
         if (turn && !shootPlayer)
         {
