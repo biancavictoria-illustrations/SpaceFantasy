@@ -145,7 +145,7 @@ public class PlayerStats : EntityStats
         #region Constitution
             private int constitution;
 
-            const float maxHitPointBonusPerConstitutionPoint = 3f;
+            public const float maxHitPointBonusPerConstitutionPoint = 3f;
             const float trapDamageResistBonusPerConstitutionPoint = 0.01f;
 
             public int Constitution()
@@ -170,7 +170,7 @@ public class PlayerStats : EntityStats
             private int wisdom;
 
             const float wisdomDamagePerWisdomPoint = 1f;
-            const float hastePerWisdomPoint = 0.01f;
+            public const float hastePerWisdomPoint = 0.01f;
 
             public int Wisdom()
             {
