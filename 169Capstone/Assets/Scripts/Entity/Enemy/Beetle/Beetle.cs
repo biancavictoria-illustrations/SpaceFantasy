@@ -293,14 +293,14 @@ public class Beetle : Enemy
         attackToPathType.Clear();
         attackToPathType.Add(logic.attacks[0], rangedPath);
         attackToPathType.Add(logic.attacks[1], meleePath);
+        // attackToPathType.Add(logic.attacks[2], rangedPath);
         attackToPathType.Add(logic.attacks[2], rangedPath);
-        attackToPathType.Add(logic.attacks[3], rangedPath);
         
         attackToAnimationTrigger.Clear();
         attackToAnimationTrigger.Add(logic.attacks[0], "isCharge");
         attackToAnimationTrigger.Add(logic.attacks[1], "isShockwave");
-        attackToAnimationTrigger.Add(logic.attacks[2], "isSlam");
-        attackToAnimationTrigger.Add(logic.attacks[3], "isArcaneMissiles");
+        // attackToAnimationTrigger.Add(logic.attacks[2], "isSlam");
+        attackToAnimationTrigger.Add(logic.attacks[2], "isArcaneMissiles");
     }
 
     private void checkForHalfHealth(EntityHealth health, float damage)

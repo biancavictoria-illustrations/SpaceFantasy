@@ -101,6 +101,8 @@ public class EntityHealth : MonoBehaviour
     private const int TEMPCOINDROPAMOUNT = 5;
     private const float TEMPSTARSHARDDROPCHANCE = 0.25f;
 
+    private const float LOW_HP_THRESHOLD_FOR_UI = 0.2f;
+
     public bool tempPlayerGodModeToggle = false;    // FOR TESTING - REMOVE THIS FOR FINAL BUILD
 
     void Awake()
@@ -166,6 +168,9 @@ public class EntityHealth : MonoBehaviour
                 float trapDamageResist = Player.instance.stats.getTrapDamageResist();
                 damage *= 1 - trapDamageResist;
             }
+
+            // Enable hit UI
+            InGameUIManager.instance.damageUIOverlay.StartDamageOverlayRoutine();
         }
 
         currentHitpoints -= damage;
@@ -191,6 +196,8 @@ public class EntityHealth : MonoBehaviour
             
             OnDeath.Invoke(this);
         }
+        
+        ManageLowHealthOverlay();
 
         return currentHitpoints <= 0;
     }
@@ -204,6 +211,8 @@ public class EntityHealth : MonoBehaviour
         {
             currentHitpoints = maxHitpoints;
         }
+        
+        ManageLowHealthOverlay();
 
         SetCurrentHealthUI();
     }
@@ -226,10 +235,29 @@ public class EntityHealth : MonoBehaviour
             currentHitpoints = 1;
         }
 
+        ManageLowHealthOverlay();
+
         SetMaxHealthUI();
         SetCurrentHealthUI();
     }
-    
+
+    public void ManageLowHealthOverlay()
+    {
+        if(gameObject.tag != "Player"){
+            return;
+        }
+
+        // If the player's HP is > the low HP threshold, tell the low health overlay to go away IF it's
+        // currently active
+        if( currentHitpoints > maxHitpoints * LOW_HP_THRESHOLD_FOR_UI ){
+            InGameUIManager.instance.damageUIOverlay.EnableLowHealthOverlay(false);
+        }
+        else{ // if( currentHitpoints <= maxHitpoints * LOW_HP_THRESHOLD_FOR_UI ){
+            // If the player is <= 20% health, enable crit HP UI
+            InGameUIManager.instance.damageUIOverlay.EnableLowHealthOverlay(true);
+        }
+    }
+
     public void SetCurrentHealthUI()
     {
         if(gameObject.tag == "Player"){

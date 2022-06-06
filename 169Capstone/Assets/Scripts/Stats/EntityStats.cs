@@ -166,11 +166,15 @@ public abstract class EntityStats : MonoBehaviour
                 case StatType.DodgeChance:
                     if(bonusType == BonusType.flat)
                         dodgeChanceFlatBonus = total;
+                    else
+                        dodgeChanceMultiplier = total;
                     break;
 
                 case StatType.CritChance:
                     if(bonusType == BonusType.flat)
                         critChanceFlatBonus = total;
+                    else
+                        critChanceMultiplier = total;
                     break;
 
                 case StatType.CritDamage:
@@ -190,6 +194,8 @@ public abstract class EntityStats : MonoBehaviour
                 case StatType.Haste:
                     if(bonusType == BonusType.flat)
                         hasteFlatBonus = total;
+                    else
+                        hasteMultiplier = total;
                     break;
 
                 case StatType.STRDamage:
@@ -227,6 +233,7 @@ public abstract class EntityStats : MonoBehaviour
         // Need to be stored here due to enum & bonus management reasons
         protected float hasteBase;
         protected float hasteFlatBonus;
+        protected float hasteMultiplier;
 
         public float STRDamageFlatBonus {get; protected set;}
         public float STRDamageMultiplier {get; protected set;}
