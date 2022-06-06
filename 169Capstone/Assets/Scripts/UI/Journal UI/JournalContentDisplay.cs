@@ -146,10 +146,10 @@ public class JournalContentDisplay : MonoBehaviour
             bodyContent6.text = "<b>WEAKNESSES:</b> " + content.Weaknesses();
 
             if(content.InternalID() != JournalContentID.Atlan){
-                mainBodyContent.text = "<b>REPORT NOTES:</b>\n" + content.ReportNotes();
+                mainBodyContent.text = "<b>PERFORMANCE REVIEW:</b>\n" + content.ReportNotes();
             }
             else{
-                mainBodyContent.text = "<b>PERFORMANCE REVIEW:</b>\n" + content.ReportNotes();
+                mainBodyContent.text = RESEARCH_PREFIX + content.ReportNotes();
             }
         }
 
