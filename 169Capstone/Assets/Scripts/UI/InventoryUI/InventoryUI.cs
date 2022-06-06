@@ -118,14 +118,25 @@ public class InventoryUI : MonoBehaviour
 
         FindPlayerStats();
 
-        attackSpeed.text = "Attack Speed: " + UIUtils.GetTruncatedDecimalForUIDisplay(stats.getAttackSpeed()*100) + "%";
-        moveSpeed.text = "Move Speed: " + UIUtils.GetTruncatedDecimalForUIDisplay(stats.getMoveSpeed()*100) + "%";
+        // -1 so that it's < 100
+        attackSpeed.text = "Attack Speed: +" + UIUtils.GetTruncatedDecimalForUIDisplay((stats.getAttackSpeed()-1)*100) + "%";
+
+        // -1 so that it's < 100
+        moveSpeed.text = "Move Speed: +" + UIUtils.GetTruncatedDecimalForUIDisplay((stats.getMoveSpeed()-1)*100) + "%";
+
+        // Displayed as is
         defense.text = "Defense: " + UIUtils.GetTruncatedDecimalForUIDisplay(stats.getDefense()*100) + "%";
         dodgeChance.text = "Dodge Chance: " + UIUtils.GetTruncatedDecimalForUIDisplay(stats.getDodgeChance()*100) + "%";
         critChance.text = "Crit Chance: " + UIUtils.GetTruncatedDecimalForUIDisplay(stats.getCritChance()*100) + "%";
         critDamage.text = "Crit Damage: " + UIUtils.GetTruncatedDecimalForUIDisplay(stats.getCritDamage()*100) + "%";
+        
+        // Displayed as is
         trapDamageResist.text = "Trap Damage Resist: " + UIUtils.GetTruncatedDecimalForUIDisplay(stats.getTrapDamageResist()*100) + "%";
-        haste.text = "Haste: " + UIUtils.GetTruncatedDecimalForUIDisplay(stats.getHaste()*100) + "%";
+
+        // -1 so that it's < 100
+        haste.text = "Haste: +" + UIUtils.GetTruncatedDecimalForUIDisplay((stats.getHaste()-1)*100) + "%";
+
+        // Displayed as is
         healingEfficacy.text = "Healing Efficacy: " + UIUtils.GetTruncatedDecimalForUIDisplay(stats.getHealingEfficacy()*100) + "%";
     }
 

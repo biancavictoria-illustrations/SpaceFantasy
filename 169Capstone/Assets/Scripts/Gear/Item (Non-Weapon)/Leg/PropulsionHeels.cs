@@ -23,7 +23,7 @@ public class PropulsionHeels : Leg
 
         direction = controller.velocity.normalized;
         InputManager.instance.preventInputOverride = true;
-        StartCoroutine(dashRoutine());
+        routine = StartCoroutine(dashRoutine());
     }
 
     public override void ResetItemAndTriggerCooldown()
@@ -31,7 +31,9 @@ public class PropulsionHeels : Leg
         base.ResetItemAndTriggerCooldown();
         
         InputManager.instance.preventInputOverride = false;
-        StopCoroutine(routine);
+        if(routine != null){
+            StopCoroutine(routine);
+        }
     }
 
     public override void ManageCoroutinesOnUnequip()
@@ -39,7 +41,6 @@ public class PropulsionHeels : Leg
         base.ManageCoroutinesOnUnequip();
 
         InputManager.instance.preventInputOverride = false;
-
         if(routine != null){
             StopCoroutine(routine);
         }

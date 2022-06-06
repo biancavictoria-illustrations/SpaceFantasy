@@ -166,13 +166,53 @@ public class InventoryUIItemPanel : MonoBehaviour
 
         if(itemSlot != InventoryItemSlot.Weapon){
             // TEMP (will need to do stuff to factor in haste, but in a way similar to calculating damage cuz it depends on current/potential equips/unequips)
-            generatedDescription += "\n\n<b>Base Cooldown:</b> " + itemData.equipmentBaseData.BaseCooldownValue() + "s";
+            generatedDescription += "\n\n<b>Cooldown:</b> " + GetCooldownValueWithHasteMod(itemData.equipmentBaseData.BaseCooldownValue());
         }
         
-
         generatedDescription += GetStatModifierDescription();
 
         return generatedDescription;
+    }
+
+    private string GetCooldownValueWithHasteMod(float baseCooldownValue)
+    {
+        PlayerStats stats = Player.instance.stats;
+
+        // The haste bonus this item gives
+        float thisItemHaste = itemData.GetLineValueFromStatType(StatType.Haste);
+
+        // If this is the currently equipped item, just get the haste color mod and return factoring in current haste
+        if( itemPanelType == ItemPanelType.CurrentlyEquippedCompareItem || itemPanelType == ItemPanelType.EquippedGeneric ){
+            return "<color=" + InGameUIManager.TURQUOISE_COLOR + ">" + baseCooldownValue / stats.getHaste() + "s</color>";
+        }
+        
+        // If this is the new item we're looking at...
+        float newItemCooldownValue;
+
+        // Get your current haste stats
+        float baseHasteValue = stats.hasteBase;
+        float hasteMultiplier = stats.hasteMultiplier;
+        float hasteFlatBonus = stats.hasteFlatBonus;
+
+        // If there's nothing equipped to compare to (nothing equipped in that slot), set it to green and factor in both current haste and this item's haste
+        if(!PlayerInventory.instance.ItemSlotIsFull(itemSlot)){
+            newItemCooldownValue = baseCooldownValue / ((baseHasteValue + (hasteFlatBonus + thisItemHaste) + (stats.Wisdom() * PlayerStats.hastePerWisdomPoint)) * hasteMultiplier);
+        }
+        else{
+            // Now knowing we have something equipped, get the haste value from the currently equipped item
+            GeneratedEquipment currentlyEquippedItem = PlayerInventory.instance.gear[itemSlot].data;
+            float? currentItemHasteBonus = stats.GetBonusForStat( currentlyEquippedItem.equipmentBaseData, StatType.Haste, EntityStats.BonusType.multiplier );
+
+            // If the currently equipped item has haste, make sure to factor it OUT of the calculation
+            if(currentItemHasteBonus.HasValue){
+                newItemCooldownValue = baseCooldownValue / ((baseHasteValue + (hasteFlatBonus - currentItemHasteBonus.Value + thisItemHaste) + (stats.Wisdom() * PlayerStats.hastePerWisdomPoint)) * hasteMultiplier);
+            }
+            else{
+                newItemCooldownValue = baseCooldownValue / ((baseHasteValue + (hasteFlatBonus + thisItemHaste) + (stats.Wisdom() * PlayerStats.hastePerWisdomPoint)) * hasteMultiplier);
+            }
+        }
+        
+        return "<color=" + InGameUIManager.TURQUOISE_COLOR + ">" + UIUtils.GetTruncatedDecimalForUIDisplay(newItemCooldownValue) + "s</color>";
     }
 
     private string GetStatModifierDescription()
@@ -256,13 +296,74 @@ public class InventoryUIItemPanel : MonoBehaviour
 
         // Check for overlap with primary/secondary lines (non-weapons only)
         // This way if something has 2 movement speed values, we factor in both when picking colors
-        if( itemSlot != InventoryItemSlot.Weapon ){
+        if(itemSlot == InventoryItemSlot.Helmet){
+            if( type == StatType.HitPoints ){
+                float maxHPWithoutCurrentHelmet = GetPlayerMaxHPWithoutCurrentHelmet();
+
+                // If this is the % HP increase from a primary line, set the compare values to the flat HP increase from the % * max HP
+                if(primaryLine){
+                    compareItemValue = maxHPWithoutCurrentHelmet * compareItemValue;
+                    thisBonusValue = maxHPWithoutCurrentHelmet * thisBonusValue;
+                }
+
+                // Add bonus values
+                compareItemValue += GetPrimaryLineOverlapForHelmets( compareItem, primaryLine, maxHPWithoutCurrentHelmet );
+                thisBonusValue += GetPrimaryLineOverlapForHelmets( itemData, primaryLine, maxHPWithoutCurrentHelmet );
+            }
+        }
+        else if( itemSlot != InventoryItemSlot.Weapon ){
             compareItemValue += GetPrimaryLineOverlapForNonWeapons( compareItem, type, primaryLine );
             thisBonusValue += GetPrimaryLineOverlapForNonWeapons( itemData, type, primaryLine );
         }
 
         return GetColorCodeFromComparison(thisBonusValue, compareItemValue);
     }
+
+    #region Handle HP Bonus Overlap For Helmets
+        private float GetPlayerMaxHPWithoutCurrentHelmet()
+        {
+            // If nothing's equipped, just return your current HP
+            if( !PlayerInventory.instance.ItemSlotIsFull(InventoryItemSlot.Helmet) ){
+                return Player.instance.health.maxHitpoints;
+            }
+
+            PlayerStats stats = Player.instance.stats;
+
+            float con = stats.Constitution();
+            float hpBonusPerCon = PlayerStats.maxHitPointBonusPerConstitutionPoint;
+            float hpMultiplier = stats.maxHitPointsMultiplier;
+            float hpFlatBonus = stats.maxHitPointsFlatBonus;
+
+            GeneratedEquipment currentlyEquippedHelmet = PlayerInventory.instance.gear[InventoryItemSlot.Helmet].data;
+            float? currentHelmetHPMultiplier = stats.GetBonusForStat( currentlyEquippedHelmet.equipmentBaseData, StatType.HitPoints, EntityStats.BonusType.multiplier );
+            float? currentHelmetHPFlatBonus = stats.GetBonusForStat( currentlyEquippedHelmet.equipmentBaseData, StatType.HitPoints, EntityStats.BonusType.flat );
+
+            if(!currentHelmetHPMultiplier.HasValue){
+                currentHelmetHPMultiplier = 0f;
+            }
+            if(!currentHelmetHPFlatBonus.HasValue){
+                currentHelmetHPFlatBonus = 0f;
+            }
+
+            return (con * hpBonusPerCon) * (hpMultiplier - currentHelmetHPMultiplier.Value) + (hpFlatBonus - currentHelmetHPFlatBonus.Value);
+        }
+
+        // Handle things differently if HP bc 1 is a % and the other flat
+        private float GetPrimaryLineOverlapForHelmets( GeneratedEquipment item, bool primaryLine, float maxHP )
+        {
+            // If this is the primary line % HP increase, check for secondary flat HP increase and add that
+            if(primaryLine){
+                // flatHPIncrease
+                return item.GetLineValueFromStatType( StatType.HitPoints, false );
+            }
+
+            // If this is the secondary version of the primary line, add the primary
+            else{
+                float percentHPIncrease = item.GetLineValueFromStatType( StatType.HitPoints, true );
+                return maxHP * percentHPIncrease;
+            }
+        }
+    #endregion
 
     private float GetPrimaryLineOverlapForNonWeapons( GeneratedEquipment item, StatType type, bool primaryLine )
     {
@@ -389,7 +490,7 @@ public class InventoryUIItemPanel : MonoBehaviour
             }
         }
 
-        private string GetColorCodeFromComparison( ItemID thisID)
+        private string GetColorCodeFromComparison(ItemID thisID)
         {
             if( itemPanelType == ItemPanelType.CurrentlyEquippedCompareItem && thisID == GearSwapUI.newItem.equipmentBaseData.ItemID() ){
                 return InGameUIManager.TURQUOISE_COLOR;

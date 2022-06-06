@@ -231,9 +231,9 @@ public abstract class EntityStats : MonoBehaviour
 
     #region Player Stat Values
         // Need to be stored here due to enum & bonus management reasons
-        protected float hasteBase;
-        protected float hasteFlatBonus;
-        protected float hasteMultiplier;
+        public float hasteBase {get; protected set;}
+        public float hasteFlatBonus {get; protected set;}
+        public float hasteMultiplier {get; protected set;}
 
         public float STRDamageFlatBonus {get; protected set;}
         public float STRDamageMultiplier {get; protected set;}
@@ -250,8 +250,8 @@ public abstract class EntityStats : MonoBehaviour
 
     #region Hit Points
         protected float maxHitPointsBase;
-        protected float maxHitPointsMultiplier;
-        protected float maxHitPointsFlatBonus;
+        public float maxHitPointsMultiplier {get; protected set;}
+        public float maxHitPointsFlatBonus {get; protected set;}
 
         public virtual float getMaxHitPoints()
         {
