@@ -40,19 +40,19 @@ public class FloatingTextManager : MonoBehaviour
         {
             case "damage-player":
                 floatingText.stat += float.Parse(msg);
-                floatingText.txt.text = "<color=" + InGameUIManager.MAGENTA_COLOR + ">" + floatingText.stat.ToString() + "</color>";
+                floatingText.txt.text = "<color=" + InGameUIManager.MAGENTA_COLOR + ">" + UIUtils.GetTruncatedDecimalForUIDisplay(floatingText.stat) + "</color>";
                 break;
             case "damage-enemy":
                 floatingText.stat += float.Parse(msg);
-                floatingText.txt.text = floatingText.stat.ToString();
+                floatingText.txt.text = UIUtils.GetTruncatedDecimalForUIDisplay(floatingText.stat);
                 break;
             case "crit":
                 floatingText.stat += float.Parse(msg);
-                floatingText.txt.text = "<color=" + InGameUIManager.STR_GOLD_COLOR + ">" + floatingText.stat.ToString() + "</color>";
+                floatingText.txt.text = "<color=" + InGameUIManager.STR_GOLD_COLOR + ">" + UIUtils.GetTruncatedDecimalForUIDisplay(floatingText.stat) + "</color>";
                 break;
             case "health":
                 floatingText.stat += float.Parse(msg);
-                floatingText.txt.text = "<color=" + InGameUIManager.SLIME_GREEN_COLOR + ">" + floatingText.stat.ToString() + "</color>";
+                floatingText.txt.text = "<color=" + InGameUIManager.SLIME_GREEN_COLOR + ">" + UIUtils.GetTruncatedDecimalForUIDisplay(floatingText.stat) + "</color>";
                 break;
             default:
                 floatingText.txt.text = msg;

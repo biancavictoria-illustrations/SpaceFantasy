@@ -183,7 +183,7 @@ public class InventoryUIItemPanel : MonoBehaviour
 
         // If this is the currently equipped item, just get the haste color mod and return factoring in current haste
         if( itemPanelType == ItemPanelType.CurrentlyEquippedCompareItem || itemPanelType == ItemPanelType.EquippedGeneric ){
-            return "<color=" + InGameUIManager.TURQUOISE_COLOR + ">" + baseCooldownValue / stats.getHaste() + "s</color>";
+            return "<color=" + InGameUIManager.TURQUOISE_COLOR + ">" + UIUtils.GetTruncatedDecimalForUIDisplay(baseCooldownValue / stats.getHaste()) + "s</color>";
         }
         
         // If this is the new item we're looking at...
@@ -473,7 +473,7 @@ public class InventoryUIItemPanel : MonoBehaviour
                 startColor += GetColorCodeFromComparison((int)rarity, (int)compareRarity) + ">";
             }
         }
-        return startColor + Mathf.Abs(totalValue) + "</color>";
+        return startColor + UIUtils.GetTruncatedDecimalForUIDisplay(Mathf.Abs(totalValue)) + "</color>";
     }
 
     #region Color Compare Helpers

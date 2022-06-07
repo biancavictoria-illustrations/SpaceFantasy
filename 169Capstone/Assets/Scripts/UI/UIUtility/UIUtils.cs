@@ -18,10 +18,12 @@ public class UIUtils : MonoBehaviour
 
     public static string GetTruncatedDecimalForUIDisplay( float number )
     {
-        number *= 10;
-        int value = (int)Mathf.Round( number );
-        float truncatedValue = value / 10f;
-        return truncatedValue + "";
+        return string.Format("{0:0.#}", number);
+
+        // number *= 10;
+        // int value = (int)Mathf.Round( number );
+        // float truncatedValue = value / 10f;
+        // return truncatedValue + "";
     }
 
     public static string GetColorFromRarity(ItemRarity rarity)
