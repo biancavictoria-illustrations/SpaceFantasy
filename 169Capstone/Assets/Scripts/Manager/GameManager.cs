@@ -47,6 +47,8 @@ public class GameManager : MonoBehaviour
         [HideInInspector] public int nonBossEnemiesKilledThisRun;
         public int enemiesKilledToGearTierUp {get; private set;}
         public int gearTier {get; private set;}
+
+        public float gearTierUISaveValue;
     #endregion
 
     public GameTimer gameTimer;
@@ -191,7 +193,7 @@ public class GameManager : MonoBehaviour
                 fade.opaqueOnStart = true;
                 fade.FadeIn(0.5f);
 
-                // TODO: play main hub music
+                // TODO: play main hub music / sounds
 
                 // TODO: Play animation of you falling or something Idk (or like phasing in)
 
@@ -201,11 +203,10 @@ public class GameManager : MonoBehaviour
 
             // === LEVEL ===
             else if(currentSceneName == GAME_LEVEL1_STRING_NAME){
-                PlayerInventory.instance.SetRunStartHealthPotionQuantity();            
-                // AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, false);
+                PlayerInventory.instance.SetRunStartHealthPotionQuantity();
 
                 InGameUIManager.instance.gameObject.SetActive(false);   // Activated in RemoveLoadScreen()
-                
+
                 FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener( () =>
                 {
                     fade.SetOpaque();
@@ -232,8 +233,6 @@ public class GameManager : MonoBehaviour
 
             // === LICH FIGHT ROOM ===
             else if(currentSceneName == LICH_ARENA_STRING_NAME){
-                // TODO: Play lich music
-
                 inElevatorAnimation = true;
                 FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
                     inElevatorAnimation = false;

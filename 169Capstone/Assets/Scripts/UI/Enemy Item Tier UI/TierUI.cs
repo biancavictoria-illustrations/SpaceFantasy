@@ -31,6 +31,11 @@ public class TierUI : MonoBehaviour
             tierSlider.maxValue = GameManager.instance.enemiesKilledToGearTierUp;
             GameManager.instance.OnTierIncreased.AddListener(UpdateLootTierUIOnTierUp);
             UpdateTierUIOnTierUp(1 + "", 2 + "", UIUtils.GetColorFromRarity(ItemRarity.Common));
+
+            if(GameManager.instance.currentSceneName != GameManager.GAME_LEVEL1_STRING_NAME){
+                UpdateLootTierUIOnTierUp(GameManager.instance.gearTier);
+                tierSlider.value = GameManager.instance.gearTierUISaveValue;
+            }
         }
 
         // ENEMY TIERS
@@ -39,6 +44,11 @@ public class TierUI : MonoBehaviour
             tierSlider.maxValue = GameTimer.secondsPerEnemyTier;
             GameManager.instance.gameTimer.OnTierIncrease.AddListener(UpdateEnemyTierUIOnTierUp);
             UpdateTierUIOnTierUp(1 + "", 2 + "", InGameUIManager.MAGENTA_COLOR);
+
+            if(GameManager.instance.currentSceneName != GameManager.GAME_LEVEL1_STRING_NAME){
+                UpdateEnemyTierUIOnTierUp(GameManager.instance.gameTimer.enemyTier);
+                tierSlider.value = GameManager.instance.gameTimer.enemyTierUISaveValue;
+            }
         }
     }
 
@@ -97,14 +107,24 @@ public class TierUI : MonoBehaviour
 
     public void IncrementTierUI(float value = 1)
     {
-        if(lootTierIsLegendary){
+        if(lootTierIsLegendary || GameManager.instance.currentSceneName == GameManager.LICH_ARENA_STRING_NAME){
             return;
         }
 
         if(tierSlider.value == tierSlider.maxValue){
-            Debug.Log("Max tier slider value reached");
             return;
         }
         tierSlider.value += value;
+    }
+
+    // When the scene changes, save our current slider position in case we're going to the lich arena
+    void OnDisable()
+    {
+        if(GameManager.instance.InSceneWithRandomGeneration()){
+            if(tierUIType == TierUIType.ThreatLevel)
+                GameManager.instance.gameTimer.enemyTierUISaveValue = tierSlider.value;
+            else
+                GameManager.instance.gearTierUISaveValue = tierSlider.value;
+        }
     }
 }
