@@ -7,6 +7,8 @@ public class LichMusicManager : MonoBehaviour
     public Transform startOfHallway;
     public Transform endOfHallway;
 
+    public EntityHealth lichHealth;
+
     private Vector3 hallwayVector;
     private bool hasStartedFight;
 
@@ -20,6 +22,13 @@ public class LichMusicManager : MonoBehaviour
         }
 
         hasStartedFight = false;
+
+        // Dialogue music triggers
+        DialogueManager.instance.dialogueUI.onDialogueStart.AddListener(PlayLichDialogueMusic);
+        DialogueManager.instance.dialogueUI.onDialogueEnd.AddListener(PlayLichFightMusic);
+
+        // Lich death trigger
+        lichHealth.OnDeath.AddListener(PlayLichVictoryMusic);
     }
 
     void Update()
@@ -44,7 +53,7 @@ public class LichMusicManager : MonoBehaviour
         AudioManager.Instance.setLichMusicStage(2);
     }
 
-    public void PlayLichVictoryMusic()
+    public void PlayLichVictoryMusic(EntityHealth health)
     {
         AudioManager.Instance.setLichMusicStage(3);
     }
