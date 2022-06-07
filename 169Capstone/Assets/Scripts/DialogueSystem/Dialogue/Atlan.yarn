@@ -69,7 +69,7 @@ tags:
 ---
 <<if Visited("PlayerStellanCommTriggered")>>
     [[PlayerStellanCommTriggered1]]
-<<elseif $runNum > 1>>
+<<elseif $runNum > 2>>  // Normal
     <<SetSpeaker Player>>
     Huh. A comm from Stellan. ... Answer comm.
     <<SetSpeaker Stellan comm>>
@@ -78,13 +78,20 @@ tags:
     I think you mean <i>impressed.</i>
     <<SetSpeaker Stellan comm>>
     Take the elevator up, if you feel ready for the real challenge. But I have a feeling I will be seeing you face-to-face again soon.
-<<else>>
+<<elseif $runNum is 1>>  // If you've never met Stellan before (first run)
     <<SetSpeaker Player>><<Emote Player question>>
     I'm getting a comm? From who? ... Answer comm.
     <<SetSpeaker Stellan comm ???>>
     Not bad. Take the elevator up, if you feel ready for the real challenge. But I have a feeling I will be meeting you face-to-face soon.
     <<SetSpeaker Player>>
     Huh. Maybe he's the Wizard of this tower.
+<<else>>    // Second run
+    <<SetSpeaker Player>><<Emote Player question>>
+    I'm getting a comm? From who? ... Answer comm.
+    <<SetSpeaker Stellan comm ???>>
+    Not bad. Take the elevator up, if you feel ready for the real challenge. But I have a feeling I will be seeing you face-to-face soon.
+    <<SetSpeaker Player>>
+    Huh.
 <<endif>>
 ===
 
@@ -93,6 +100,12 @@ tags:
 ---
 <<if Visited("PlayerStellanCommTriggered1")>>
     [[PlayerStellanCommTriggeredRepeatable]]
+<<elseif $runNum is 2 and FirstClearRunNumber() < 1>>   // If it's your second run and you HAVEN'T CLEARED YET, you still don't know Stellan's name
+    <<SetSpeaker Player>>
+    Him again... Answer comm.
+    <<SetSpeaker Stellan comm ???>>
+    Same as last time: Take the elevator up.
+    ... See you soon.
 <<else>>
     <<SetSpeaker Player>>
     Answer comm.
@@ -133,16 +146,17 @@ tags:
     <<SetSpeaker TimeLich>><<Emote TimeLich question>>
     <i>Uugh</i>... How did you...?
     <<SetSpeaker Player>>
-    run 1 death temp
+    I thought you said you'd be more of a challenge, old man.
+    It seems your infinite time has made you weak.
     <<SetSpeaker TimeLich>>
-    temp
+    You know... nothing... of what is truly at stake...
 <<else>>
+    <<SetSpeaker TimeLich>><<Emote TimeLich question>>
+    <i>Uugh</i>... How did you...?
     <<SetSpeaker Player>>
-    temp (first death)
+    Your reign here is over. I'm getting out of this cursed tower.
     <<SetSpeaker TimeLich>>
-    temp
-    <<SetSpeaker Player>>
-    temp
+    It is not... time...
 <<endif>>
 ===
 
@@ -152,19 +166,20 @@ tags:
 <<if Visited("PlayerTimeLichDeathDialogueTriggered1")>>
     [[PlayerTimeLichDeathDialogueTriggeredRepeatable]]
 <<else>>
+    <<SetSpeaker TimeLich>><<Emote TimeLich question>>
+    You... again...
     <<SetSpeaker Player>>
-    temp (second death)
+    As many times as it takes.
     <<SetSpeaker TimeLich>>
-    temp
-    temp
+    I will see you... again... then...
 <<endif>>
 ===
 
 title: PlayerTimeLichDeathDialogueTriggeredRepeatable
 tags:
 ---
-// Get a random number 0-3
-<<set $num to RandomNum(4)>>
+// Get a random number 0-4
+<<set $num to RandomNum(5)>>
 <<if $num is 0>>
     <<SetSpeaker TimeLich>>
     ... Again... then...
@@ -173,10 +188,13 @@ tags:
     <i>Uugh</i>... I will see you... again...
 <<elseif $num is 2>>
     <<SetSpeaker TimeLich>>
-    temp (repeatable)
+    It is not... time...
+<<elseif $num is 3>>
+    <<SetSpeaker TimeLich>>
+    You cannot... kill... time itself...
 <<else>>
     <<SetSpeaker TimeLich>>
-    temp (repeatable)
+    Accept... your fate...
 <<endif>>
 ===
 
@@ -184,11 +202,14 @@ title: PlayerTimeLichDeathDialogueTriggeredFINAL
 tags:
 ---
 <<SetSpeaker TimeLich>>
-TODO (death with deus ex)
+<i>Uugh!</i>
+... How...?
 <<SetSpeaker Player>>
-TODO
+All the time in the world made you complacent, old man.
 <<SetSpeaker TimeLich>>
-TODO
+At last... you achieved your goal...
+... Freedom... Power...
+But no ambition... is without consequence...
 ===
 
 

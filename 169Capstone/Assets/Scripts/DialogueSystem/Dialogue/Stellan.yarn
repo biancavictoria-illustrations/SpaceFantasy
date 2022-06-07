@@ -62,6 +62,11 @@ tags:
 <<elseif $headNode is "DialogueCompletedStellanEnemyKilledTimeLich">>
     [[StellanDialogueCompletedStellanEnemyKilledTimeLich]]
 
+<<elseif $headNode is "DialogueCompletedBrynDefaultDialogue">>
+    [[StellanDialogueCompletedBrynDefaultDialogue]]
+<<elseif $headNode is "DialogueCompletedRhianDefaultDialogue1">>
+    [[StellanDialogueCompletedRhianDefaultDialogue1]]
+
 // === Generic Stuff ===
 
 <<elseif $headNode is "NumRuns">>
@@ -75,6 +80,30 @@ tags:
     [[StellanRepeatable]]
     ERROR: No head node found for {$headNode}!
 <<endif>>
+===
+
+
+
+title: StellanDialogueCompletedBrynDefaultDialogue
+tags:
+---
+<<SetSpeaker Player>><<BranchComplete DialogueCompleted DialogueCompletedBrynDefaultDialogue>>
+(met Bryn dialogue)
+<<SetSpeaker Stellan>>
+???
+<<SetSpeaker Player>>
+???
+===
+
+title: StellanDialogueCompletedRhianDefaultDialogue1
+tags:
+---
+<<SetSpeaker Player>><<BranchComplete DialogueCompleted DialogueCompletedRhianDefaultDialogue1>>
+(met Rhian dialogue)
+<<SetSpeaker Stellan>>
+???
+<<SetSpeaker Player>>
+???
 ===
 
 
@@ -653,7 +682,8 @@ tags:
     Yes. Without the magic having taken hold. Thus wasting our limited supply of Star Shards – the second limiting factor here, as I can only do so much as the resources you bring me allow.
     <<SetSpeaker Stellan>>
     And finally… because I can’t turn you into a <i>god,</i> Atlan. I can only enhance or unlock hidden potential. Believe me. There are boundaries of the arcane that should not be crossed.
-    We all must learn that lesson at some point.
+    <<SetSpeaker Stellan sad>>
+    If the Lich has taught me anything, it's to learn that lesson before it's too late.
 <<endif>>
 ===
 
