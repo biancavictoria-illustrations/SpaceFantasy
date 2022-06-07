@@ -16,7 +16,8 @@ public class GameTimer : MonoBehaviour
     public int seconds {get; private set;}
 
     public EnemyTierIncrease OnTierIncrease;
-    private TierUI enemyTierUI;
+    public TierUI enemyTierUI {get; private set;}
+    public float enemyTierUISaveValue;
 
     public float totalTimePlayedOnThisSaveFile {get; private set;}
     [HideInInspector] public bool runTotalTimer = false;    // Set to true when we're NOT in the Main Menu
@@ -37,9 +38,11 @@ public class GameTimer : MonoBehaviour
             time += Time.deltaTime;
             setDisplayTime();
 
-            enemyTierUI?.IncrementTierUI(Time.deltaTime);
+            // Don't increment the enemy tier in the lich fight room
+            if(GameManager.instance.InSceneWithRandomGeneration())
+                enemyTierUI?.IncrementTierUI(Time.deltaTime);
 
-            if(Mathf.FloorToInt(time / secondsPerEnemyTier) > enemyTier)
+            if(Mathf.FloorToInt(time / secondsPerEnemyTier) > enemyTier && GameManager.instance.InSceneWithRandomGeneration())
             {
                 ++enemyTier;
                 OnTierIncrease.Invoke(enemyTier);
@@ -62,6 +65,7 @@ public class GameTimer : MonoBehaviour
         time = 0;
         minutes = 0;
         seconds = 0;
+        enemyTier = 0;
     }
 
     private void setDisplayTime()
