@@ -9,7 +9,8 @@ public class AudioManager : MonoBehaviour
         {
             TitleMusic,
             Level1,
-            BossMusic
+            BossMusic,
+            LichMusic
         }
     #endregion
 
@@ -38,6 +39,7 @@ public class AudioManager : MonoBehaviour
         [SerializeField][FMODUnity.EventRef] private string titleMusic;
         [SerializeField][FMODUnity.EventRef] private string level1MusicTrack;
         [SerializeField][FMODUnity.EventRef] private string bossMusicTrack;
+        [SerializeField][FMODUnity.EventRef] private string lichMusicTrack;
 
         //VCAs
         private const string masterVCAPath = "vca:/Master";
@@ -127,6 +129,12 @@ public class AudioManager : MonoBehaviour
                 musicInstance.release();
                 musicInstance = FMODUnity.RuntimeManager.CreateInstance(bossMusicTrack);
                 break;
+
+            case MusicTrack.LichMusic:
+                musicInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                musicInstance.release();
+                musicInstance = FMODUnity.RuntimeManager.CreateInstance(lichMusicTrack);
+                break;
         }
         musicInstance.start();
     }
@@ -146,6 +154,17 @@ public class AudioManager : MonoBehaviour
         // Debug.Log("Set combat to: " + isInCombat);
         this.isInCombat = isInCombat;
         musicInstance.setParameterByName("Combat", isInCombat ? 1 : 0);
+    }
+
+    public void setLichHallwayProgress(float progress)
+    {
+        musicInstance.setParameterByName("HallwayProgress", progress);
+    }
+
+
+    public void setLichMusicStage(int stage)
+    {
+        musicInstance.setParameterByName("LichMusicStage", stage);
     }
 
     public void queueMusicAfterFadeOut(MusicTrack track, bool isCombat = false)
