@@ -132,6 +132,9 @@ public class JournalContentDisplay : MonoBehaviour
                 return;
             }
 
+            // TODO: If Cap panel is active and then go to REDACTED, it's not deactivating
+            // cap panel
+
             SetDefaultValues(content);
 
             // Top Header Panel
