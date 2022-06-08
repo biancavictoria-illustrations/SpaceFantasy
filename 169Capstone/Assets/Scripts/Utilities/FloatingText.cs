@@ -16,7 +16,7 @@ public class FloatingText
     public void Show()
     {
         active = true;
-        lastShown = Time.time;
+        //lastShown = Time.time;
         go.SetActive(active);
     }
 

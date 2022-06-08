@@ -34,7 +34,7 @@ public class FloatingTextManager : MonoBehaviour
 
     public void Show(string msg, int fontSize, Vector3 position, Vector3 motion, float duration, GameObject parent, string type)
     {
-        FloatingText floatingText = GetFloatingText(parent, type);
+        FloatingText floatingText = GetFloatingText(parent, type, duration);
 
         switch(type)
         {
@@ -54,6 +54,9 @@ public class FloatingTextManager : MonoBehaviour
                 floatingText.stat += float.Parse(msg);
                 floatingText.txt.text = "<color=" + InGameUIManager.SLIME_GREEN_COLOR + ">" + UIUtils.GetTruncatedDecimalForUIDisplay(floatingText.stat) + "</color>";
                 break;
+            case "dodge":
+                floatingText.txt.text = "<color=" + InGameUIManager.TURQUOISE_COLOR + ">DODGE</color>";
+                break;
             default:
                 floatingText.txt.text = msg;
                 break;
@@ -68,7 +71,7 @@ public class FloatingTextManager : MonoBehaviour
         floatingText.Show();
     }
 
-    private FloatingText GetFloatingText(GameObject parent, string type)
+    private FloatingText GetFloatingText(GameObject parent, string type, float duration)
     {
         FloatingText txt = floatingTexts.Find(t => t.active && t.parent == parent && t.type == type);
 
@@ -83,6 +86,8 @@ public class FloatingTextManager : MonoBehaviour
             txt.txt = txt.go.GetComponent<TMP_Text>();
             txt.parent = parent;
             txt.type = type;
+            txt.lastShown = Time.time;
+            //txt.duration = duration;
 
             floatingTexts.Add(txt);
         }
@@ -90,6 +95,8 @@ public class FloatingTextManager : MonoBehaviour
         {
             txt.parent = parent;
             txt.type = type;
+            txt.lastShown = Time.time;
+            //txt.duration = duration;
         }
 
         return txt;
