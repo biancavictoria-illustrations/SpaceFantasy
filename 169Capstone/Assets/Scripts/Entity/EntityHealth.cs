@@ -156,6 +156,7 @@ public class EntityHealth : MonoBehaviour
             float rolledChance = Random.Range(0.0f, 1f);
             if( rolledChance <= dodgeChance ){
                 // TODO: Trigger dodge floating text!
+                InGameUIManager.instance.ShowFloatingText(null, 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1f, gameObject, "dodge");
                 return currentHitpoints <= 0;
             }
 
@@ -176,9 +177,9 @@ public class EntityHealth : MonoBehaviour
         currentHitpoints -= damage;
         OnHit.Invoke(this, damage);
         if (gameObject.tag == "Player")
-            InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(damage), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "damage-player");
+            InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(damage), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1f, gameObject, "damage-player");
         else
-            InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(damage), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "damage-enemy");
+            InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(damage), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1f, gameObject, "damage-enemy");
         
         SetCurrentHealthUI();
 
@@ -205,7 +206,7 @@ public class EntityHealth : MonoBehaviour
     public void Heal(float health)
     {
         currentHitpoints += health;
-        InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(health), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1.5f, gameObject, "health");
+        InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(health), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1f, gameObject, "health");
 
         if(currentHitpoints > maxHitpoints)
         {
