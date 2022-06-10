@@ -62,6 +62,11 @@ tags:
 <<elseif $headNode is "DialogueCompletedStellanEnemyKilledTimeLich">>
     [[StellanDialogueCompletedStellanEnemyKilledTimeLich]]
 
+<<elseif $headNode is "DialogueCompletedBrynDefaultDialogue">>
+    [[StellanDialogueCompletedBrynDefaultDialogue]]
+<<elseif $headNode is "DialogueCompletedRhianDefaultDialogue1">>
+    [[StellanDialogueCompletedRhianDefaultDialogue1]]
+
 // === Generic Stuff ===
 
 <<elseif $headNode is "NumRuns">>
@@ -75,6 +80,99 @@ tags:
     [[StellanRepeatable]]
     ERROR: No head node found for {$headNode}!
 <<endif>>
+===
+
+
+
+title: StellanDialogueCompletedBrynDefaultDialogue
+tags:
+---
+<<if Visited("StellanDialogueCompletedBrynDefaultDialogue")>>
+    [[StellanDialogueCompletedBrynDefaultDialogue1]]
+<<else>>
+    <<SetSpeaker Player>>
+    So, Bryn - the engineer - what's his deal?
+    <<SetSpeaker Stellan>>
+    His "deal"?
+    <<SetSpeaker Player>>
+    Yeah, I mean... he seems nice and all, but... Y'know. What's his <i>deal</i>?
+    <<SetSpeaker Stellan>>
+    Are you so shocked that someone might actually, genuinely just be a wonderful person?
+    The criminal life of thievery clearly has taken its toll on you.
+<<endif>>
+===
+
+title: StellanDialogueCompletedBrynDefaultDialogue1
+tags:
+---
+<<SetSpeaker Stellan>><<BranchComplete DialogueCompleted DialogueCompletedBrynDefaultDialogue>>
+Bryn is... joyful. And kind. And outgoing - so incredibly, annoyingly outgoing.
+If he so much as hears you walk by his station, you cannot avoid a conversation with him.
+... But he always has something uplifting to say.
+<<SetSpeaker Player>>
+Is that... genuine fondness in your voice? Coming from <i>you</i>, Stellan?
+<<SetSpeaker Stellan>> // Rolls eyes
+... Perhaps. Don't make me take it back.
+===
+
+
+
+title: StellanDialogueCompletedRhianDefaultDialogue1
+tags:
+---
+<<if Visited("StellanDialogueCompletedRhianDefaultDialogue1")>>
+    [[StellanDialogueCompletedRhianDefaultDialogue11]]
+<<else>>
+    <<SetSpeaker Player>>
+    You know a "Rhian" on this ship?
+    <<SetSpeaker Stellan>>
+    Ah, so you met our esteemed weapons specialist. She is... certainly <i>enthusiastic</i> about her work.
+    Be sure to stay on her good side. She has a habit of using those she is less fond of as target practice.
+    <<SetSpeaker Player>>
+    Speaking from personal experience on that one?
+    <<SetSpeaker Stellan>>
+    Nonsense. She did, however, once light my cloak on fire.
+    I believe that may be a sign of affection, coming from her.
+<<endif>>
+===
+
+title: StellanDialogueCompletedRhianDefaultDialogue11
+tags:
+---
+<<if Visited("StellanDialogueCompletedRhianDefaultDialogue11")>>
+    [[StellanDialogueCompletedRhianDefaultDialogue12]]
+<<else>>
+    <<SetSpeaker Player>>
+    So... Rhian once set your cloak on fire? I have to hear more.
+    <<SetSpeaker Stellan>>
+    She used to visit my lab and "help" with my arcane research.
+    In her case, "helping" meant "setting various substances on fire," or combining two arcane reagents that I <i>explicitly</i> told her not to combine, just to see what dangers I had been hiding from her.
+    <<SetSpeaker Player>>
+    Sounds like Rhi.
+    <<SetSpeaker Stellan>>
+    "Rhi"?
+    You're getting awfully comfortable on this ship, Atlan.
+    <<SetSpeaker Player>>
+    Can't fault a man for trying to make the best of a bad situation.
+    <<SetSpeaker Stellan sad>>
+    ... Be cautious of getting too attached.
+<<endif>>
+===
+
+title: StellanDialogueCompletedRhianDefaultDialogue12
+tags:
+---
+<<SetSpeaker Player>><<BranchComplete DialogueCompleted DialogueCompletedRhianDefaultDialogue1>>
+You were close with them. The other crew members.
+<<SetSpeaker Stellan>>
+They were my coworkers-
+<<SetSpeaker Player>>
+Shut up, Stellan, you clearly speak of them as <i>friends</i>. Don't try to act like you've always been this detached from everyone and everything on this ship.
+You were the <i>Captain's apprentice</i>. You must have known... everyone.
+<<SetSpeaker Stellan sad>>
+...
+<<SetSpeaker Stellan>>
+A lot has happened since then.
 ===
 
 
@@ -180,22 +278,22 @@ tags:
     <<SetSpeaker Player angry>>
     How many times must I kill the Lich before you tell me what's really going on here?
     Why does everything still reset, even when I beat him? Why are we still here? If you know something, if you’re <i>hiding</i> something–
-    <<SetSpeaker Stellan>>
+    <<SetSpeaker Stellan>>  // rolling eyes, for the first one
     Tone down the aggression, Atlan.
     … I have some theories, but I’ll need some time. And lots of Star Shards.
 <<else>>
     <<SetSpeaker Stellan>>
     Well, that is certainly a concerning look. Tell me, what new horrors did you uncover on this ship, the likes of which presumably killed you in inventively horrific ways?
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>>
     I killed him.
     <<SetSpeaker Stellan>>
     ...
     ... What?
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>>
     I killed the Lich.
     <<SetSpeaker Player angry>>
     Why did everything reset? Why are we still here? What’s going on? If you know something, if you’re <i>hiding</i> something–
-    <<SetSpeaker Stellan>>
+    <<SetSpeaker Stellan>>  // rolling eyes, for the first one
     Tone down the aggression, Atlan. You’ve only made it this far because of me.
     … I have some theories, but I’ll need some time. And lots of Star Shards.
 <<endif>>
@@ -476,7 +574,8 @@ tags:
         [[StellanRepeatable]]
     <<else>>
         <<SetSpeaker Stellan>>
-        You must be quite the optimist, to keep trying like this. Either that, or just plain stupid. I haven’t quite figured out which yet.
+        You must be quite the optimist, to keep trying like this. Either that, or just plain stupid with a magnificent death wish.
+        I haven’t quite figured out which yet.
         <<SetSpeaker Player>>
         Let me know once you do.
     <<endif>>
@@ -653,7 +752,8 @@ tags:
     Yes. Without the magic having taken hold. Thus wasting our limited supply of Star Shards – the second limiting factor here, as I can only do so much as the resources you bring me allow.
     <<SetSpeaker Stellan>>
     And finally… because I can’t turn you into a <i>god,</i> Atlan. I can only enhance or unlock hidden potential. Believe me. There are boundaries of the arcane that should not be crossed.
-    We all must learn that lesson at some point.
+    <<SetSpeaker Stellan sad>>
+    If the Lich has taught me anything, it's to learn that lesson before it's too late.
 <<endif>>
 ===
 
@@ -797,24 +897,34 @@ The hardest part is knowing a loss was preventable, if only different choices ha
 title: StellanEpilogueDialogue
 tags:
 ---
-<<SetSpeaker Player>>
+<<SetSpeaker Player confused>>
 Play recording.
 <<SetSpeaker Stellan comm>>
 Hello, friend. A message for you, before you finally leave this place for good.
+<<SetSpeaker Stellan commSad>>
 I… Hmm.
 Where to begin?
+<<SetSpeaker Stellan comm>>
 I, like everyone on this ship, was plucked from a very specific moment in my life. A defining moment, for me. A… a crossroads.
 Only I, unlike the others, had the unique opportunity to see how one of the possible choices that lay before me would play out if -- when -- I chose it.
+<<SetSpeaker Stellan commSad>>
 How it <i>did</i> play out. In my future.
+<<SetSpeaker Stellan comm>>
 You didn't recognize me in him, did you? Or perhaps you did, you just didn't want to admit it. To me or to yourself.
-Admittedly, I cannot be sure which is worse: Not a trace of me remaining within him… or that monster being, still, unmistakenly me. <i>Me</i> that <i>monster</i>.
+Admittedly, I cannot be sure which is worse: Not a trace of me remaining within him…
+<<SetSpeaker Stellan commSad>>
+... Or that monster being, still, unmistakenly me. <i>Me</i> that <i>monster</i>.
+<<SetSpeaker Stellan comm>>
 In all my time for endless contemplation here in this prison, I never could have predicted you getting stuck in here with all of us. A hell of my own creation, yet still you managed to break in and set us all free.
 Perhaps my mother was right, after all. Perhaps the caelarae were watching over me, yet.
 You died too much, suffered too much for my punishment. No amount of suffering could ever bring me close to enough to repay you for what you've done here, but…
 I can only hope, through all of this, that you know I have suffered, too, watching you fail time and time again. To know that with each of your deaths, the blood was always on my own hands.
+<<SetSpeaker Stellan commSad>>
 ...
+<<SetSpeaker Stellan comm>>
 … I understand if you can never find it in yourself to forgive me. I would not wish the burden of yet another task I myself have yet found insurmountable upon you.
 But I hope -- I do hope -- that you will know the deepest extents of my gratitude for putting an end to all of this.
+<<SetSpeaker Stellan commSad>>
 … Thank you, friend. For giving me the chance to atone.
 ===
 
