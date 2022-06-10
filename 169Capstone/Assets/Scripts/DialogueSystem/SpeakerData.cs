@@ -32,6 +32,7 @@ public class SpeakerData : ScriptableObject
     
     public const string PORTRAIT_ANGRY = "angry";
     public const string PORTRAIT_SAD = "sad";
+    public const string PORTRAIT_SHOCKED = "shocked";
     public const string PORTRAIT_CONFUSED = "confused";
     public const string PORTRAIT_CRINGE = "cringe";
     public const string PORTRAIT_ANNOYED = "annoyed";
@@ -57,6 +58,7 @@ public class SpeakerData : ScriptableObject
 
     [SerializeField] private Sprite portraitAngry;
     [SerializeField] private Sprite portraitSad;
+    [SerializeField] private Sprite portraitShocked;
     [SerializeField] private Sprite portraitConfused;
     [SerializeField] private Sprite portraitCringe;
     [SerializeField] private Sprite portraitAnnoyed;
@@ -75,6 +77,9 @@ public class SpeakerData : ScriptableObject
 
             case PORTRAIT_SAD:
                 return portraitSad;
+
+            case PORTRAIT_SHOCKED:
+                return portraitShocked;
 
             case PORTRAIT_CONFUSED:
                 return portraitConfused;
