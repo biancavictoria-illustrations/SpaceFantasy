@@ -26,32 +26,27 @@ public enum ItemRarity
 }
 
 // Every item has its own unique ID (name)
+// NO LONGER IN ORDER OF TYPE - if adding stuff, add stuff AT THE END regardless of type or else IDs will get messed up in scriptable objects and stuff
+// Also don't remove things, but changing the name of something is OK
 public enum ItemID
 {
-    // Weapons
-    BerserkersZweihander,
+    BerserkersBlade,
     BowAndArrows,
     NanoKnuckles,
     Rapier,
     RayGun,
-
-    // Helmets
     HelmOfTheRam,
     HoloGlasses,
-
-    // Accessories
     WristRocket,
     HelmOfSnowstorms,
     MurphysClaw,
     QuantumKunai,
-
-    // Boots
     WingedBoots,
     QuantumLeggings,
     PropulsionHeels,
     TrousersOfFortitude,
 
-    // Default
+    // For looping and stuff
     enumSize
 }
 

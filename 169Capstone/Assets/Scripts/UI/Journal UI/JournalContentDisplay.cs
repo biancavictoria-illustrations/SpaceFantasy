@@ -149,7 +149,7 @@ public class JournalContentDisplay : MonoBehaviour
                 mainBodyContent.text = "<b>PERFORMANCE REVIEW:</b>\n" + content.ReportNotes();
             }
             else{
-                mainBodyContent.text = RESEARCH_PREFIX + content.ReportNotes();
+                mainBodyContent.text = content.ReportNotes();
             }
         }
 
