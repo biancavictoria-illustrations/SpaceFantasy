@@ -91,8 +91,13 @@ public class ItemPanelDoctor : ItemPanelShopUI
             return "Increases <b>Health Potion</b> quantity by 1.";
         }
         else if( category == UpgradeShopCategory.PotionEfficacy ){
-            secondaryDescription.text = "<b>Healing:</b>   " + currentStatValue + "%  ->  <color=" + InGameUIManager.SLIME_GREEN_COLOR + ">" + (currentStatValue + healingBonusValue) + "%";
-            return "Increases <b>Health Potion</b> efficacy by " + healingBonusValue + "%.";
+            if(itemIsAvailable){
+                secondaryDescription.text = "<b>Healing:</b>   " + currentStatValue + "%  ->  <color=" + InGameUIManager.SLIME_GREEN_COLOR + ">" + (currentStatValue + healingBonusValue) + "%";
+                return "Increases <b>Health Potion</b> efficacy by " + healingBonusValue + "%.";
+            }
+            else{
+                return "<color=" + InGameUIManager.MAGENTA_COLOR + ">Maximum Healing Efficacy reached</color>";
+            }
         }
         else{
             string s = statName.ToString();
@@ -178,11 +183,9 @@ public class ItemPanelDoctor : ItemPanelShopUI
 
         if(currentStatValue >= 100){
             itemIsAvailable = false;
-            descriptionText.text = "Maximum Healing Efficacy reached";
         }
-        else{
-            descriptionText.text = GenerateDescription();
-        }
+
+        descriptionText.text = GenerateDescription();
         
         SetInteractableAndCostDisplayValuesBasedOnStatus();
     }

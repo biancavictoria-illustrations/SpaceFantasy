@@ -186,6 +186,11 @@ public class DevPanel : MonoBehaviour
         PlayerInventory.instance.SetTempCurrency( PlayerInventory.instance.tempCurrency + 10 );
     }
 
+    public void Give1000Electrum()
+    {
+        PlayerInventory.instance.SetTempCurrency( PlayerInventory.instance.tempCurrency + 1000 );
+    }
+
     public void Give10StarShards()
     {
         PlayerInventory.instance.SetPermanentCurrency( PlayerInventory.instance.permanentCurrency + 10 );
