@@ -190,15 +190,24 @@ public class GameManager : MonoBehaviour
             if(currentSceneName == MAIN_HUB_STRING_NAME){
                 InGameUIManager.instance.ToggleRunUI(false, false, true, false);
 
-                fade.opaqueOnStart = true;
-                fade.FadeIn(0.5f);
-
                 // TODO: play main hub music / sounds
 
+                fade.opaqueOnStart = true;
+
+                // Remove player control until fade / hypothetical animation ends
+                InputManager.instance.preventInputOverride = true;
                 // TODO: Play animation of you falling or something Idk (or like phasing in)
 
-                // Autosave in main hub!
-                SaveGame();
+                // Add a listener to reenable player control when fade ends
+                // (Have to do this so that you don't end up in Stellan's shop UI half-faded and unable to click anything)
+                fade.AddListenerToFadeEnd( () => {
+                    InputManager.instance.preventInputOverride = false;
+                });
+
+                // Trigger the fade in
+                fade.FadeIn(0.5f);
+
+                SaveGame();     // Autosave in main hub!
             }
 
             // === LEVEL ===
