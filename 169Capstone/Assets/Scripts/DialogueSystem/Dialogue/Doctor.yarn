@@ -55,14 +55,18 @@ tags:
 <<SetSpeaker Player>><<BranchComplete KilledBy KilledByTimeLich>>
 Doc, do you know how the Captain… became what he became?
 <<SetSpeaker Doctor>>
-The Wizard? The Wizard died long ago. Not long ago. Recently. Too recent, too far. He… tried to stop it, but… it was too late. And then the Lich was all we had.    
+The Wizard? The Wizard died long ago. Not long ago. Recently. Too recent, too far.
+<<Emote Doctor sad>>
+He… tried to stop it, but… it was too late. And then the Lich was all we had.
 ===
 
 title: DoctorKilledByTimeLich5
 tags:
 ---
 <<SetSpeaker Doctor>><<BranchComplete KilledBy KilledByTimeLich5>>
-Atlan, you must listen to me, very carefully, very, <i>very</i> carefully, are you listening? <i>He is not your friend, Atlan.</i> Do not trust the Lich, you already know what he becomes.
+Atlan, you must listen to me, very carefully, very, <i>very</i> carefully, are you listening?
+<<Emote Doctor sad>>
+<i>He is not your friend, Atlan.</i> Do not trust the Lich, you already know what he becomes.
 <<SetSpeaker Player>>
 I don’t trust him. I know he’s the bad guy here. What are you saying, Doc?
 <<SetSpeaker Doctor>>
@@ -81,7 +85,7 @@ tags:
     … Just a smidgen to the left, and…
     <<SetSpeaker Player>>
     Hello…?
-    <<SetSpeaker Doctor neutral ???>>
+    <<SetSpeaker Doctor neutral ???>><<Emote Doctor surprise>>
     OW! Ahh! Not quite… right…
     Oh? A customer! A patient? Or perhaps… a subject? No matter, for now!
     <<SetSpeaker Doctor>>
@@ -105,7 +109,7 @@ tags:
     Physically or mentally? Or perhaps metaphysically?
     <<SetSpeaker Player>>
     No, I mean… on this ship? Seems an odd place for an elf of your particular interests. Wouldn’t you get more customers on, y’know, a <i>planet?</i>
-    <<SetSpeaker Doctor>>
+    <<SetSpeaker Doctor>><<Emote Doctor sad>>
     Ah. Yes, well, you see, my dear Atlan, I was once quite misguided in that I thought I wanted to be a <i>medic</i> for the crew of a ship. Merely tending to trivial wounds and placid diseases.
     I have since learned the error of my ways, and branched out into areas of medicine with far more practical applications!
 <<endif>>
@@ -123,24 +127,26 @@ tags:
     Should I be concerned or flattered?
     <<SetSpeaker Doctor>>
     Are you aware you are not… exclusively human?
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player shocked>><<Emote Player question>>
     I… what?
     <<SetSpeaker Doctor>>
-    Now, I would hate to distract you from your goals. So why don’t I fix you up and send you on your way, and we can revisit this another time, hmm? After all, we’ve got plenty of time to spare.
+    Now, I would hate to distract you from your goals. So why don’t I fix you up and send you on your way, and we can revisit this another time, hmm?
+    After all, we’ve got plenty of time to spare.
 <<endif>>
 ===
 
 title: DoctorDialogueCompletedDoctorDefaultDialogue2
 tags:
 --- // Special interaction higher prio that should play after the above /almost/ no matter what
-<<SetSpeaker Player>><<BranchComplete DialogueCompleted DialogueCompletedDoctorDefaultDialogue2>>
+<<SetSpeaker Player shocked>><<BranchComplete DialogueCompleted DialogueCompletedDoctorDefaultDialogue2>>
 I’m not <i>human?</i> I’m from Planet Petra, and as far as I know, both my parents were, too – what do you mean I’m not <i>human?</i>
 <<SetSpeaker Doctor>>
 Well, you’re <i>human.</i> You’re just not <i>only</i> human.
-<<SetSpeaker Player>>
+<<SetSpeaker Player shocked>><<Emote Player surprise>>
 What <i>am</i> I?
-<<SetSpeaker Doctor>>
-Ah, yes, well. You see. <i>That</i> part is proving to be… a bit more challenging to unravel. But I will certainly get back to you with my findings as soon as I… well… find them.
+<<SetSpeaker Doctor>><<Emote Doctor sweat>>
+Ah, yes, well. You see. <i>That</i> part is proving to be… a bit more challenging to unravel.
+But I will certainly get back to you with my findings as soon as I… well… find them.
 ===
 
 title: DoctorDefaultDialogue3
@@ -153,9 +159,9 @@ tags:
     Tell me, Doc, why didn’t you leave this place once you realized you didn’t want to be a boring old ship medic anymore?
     <<SetSpeaker Doctor>>
     Well! You see, I–
-    <<SetSpeaker Doctor>>
+    <<SetSpeaker Doctor>><<Emote Doctor sweat>>
     ...
-    <<SetSpeaker Doctor>>
+    <<SetSpeaker Doctor>><<Emote Doctor sad>>
     I can’t. I– … I can’t.
 <<endif>>
 ===
@@ -168,8 +174,9 @@ tags:
 <<else>>
     <<SetSpeaker Player>>
     Everything alright, Doc? I don’t mean to pry, but… you seemed pretty rattled when I tried to ask why you never left this ship before.
-    <<SetSpeaker Doctor>>
-    Oh. Yes. That. Well. You see! I mustn’t gossip. But the Captain, he– Well, you know. And after… I was allowed certain <i>freedoms,</i> freedoms that one does not often find in my line of work.
+    <<SetSpeaker Doctor>><<Emote Doctor sad>>
+    Oh. Yes. That. Well. You see! I mustn’t gossip. But the Captain, he– Well, you know.
+    And after… I was allowed certain <i>freedoms,</i> freedoms that one does not often find in my line of work.
     Freedoms and opportunities. I simply could not pass that up.
 <<endif>>
 ===
@@ -180,16 +187,16 @@ tags:
 <<if Visited("DoctorDefaultDialogue5")>>
     [[DoctorDefaultDialogue6]]
 <<else>>
-    <<SetSpeaker Doctor>>
+    <<SetSpeaker Doctor>><<Emote Doctor happy>>
     Atlan! Wonderful news. I have discovered what is in your blood. You know, beyond the human part.
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>>
     So this is a good thing then?
     <<SetSpeaker Doctor>>
     Ah, well, I suppose that depends on your perception of ancient astral beings. <i>Caelarae,</i> to be precise.
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player shocked>>
     … I’m gonna be honest with you, Doc, I’m gonna need you to spell that out for me a little more directly.
-    <<SetSpeaker Doctor>>
-    Admittedly, I don’t know much about them myself! They’re present in fairy tales told to elven children, but that’s about all I know!
+    <<SetSpeaker Doctor>><<Emote Doctor sweat>>
+    Admittedly, I don’t know much about them myself! They’re present in fairy tales told to elven children, but... I wasn't raised on Planet Silvestria, and it has been a long time since I have heard those stories.
     Perhaps there’s someone else you could ask who is more interested in the theoretical rather than the tangible?
 <<endif>>
 ===
@@ -201,9 +208,11 @@ tags:
     [[DoctorDefaultDialogue7]]
 <<else>>
     <<SetSpeaker Player>>
-    Those freedoms you once spoke of. Newfound opportunities on this ship. Are we talking research opportunities? Freedom to conduct your experiments using the resources on this ship?
+    So about those freedoms you once spoke of, Doc. The "newfound opportunities" on this ship.
+    Are we talking research opportunities? Freedom to conduct your experiments using the resources on this ship?
     <<SetSpeaker Doctor>>
     Ah, yes. The <i>resources.</i> Yes, yes.
+    <<Emote Doctor surprise>>
     Quite valuable resources, and far more encouragement than I was used to receiving for my pet projects. It seems I was not the only one interested in stretching boundaries.
 <<endif>>
 ===
@@ -214,11 +223,10 @@ tags:
 <<if Visited("DoctorDefaultDialogue7")>>
     [[DoctorDefaultDialogue8]]
 <<else>>
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>>
     Doc, were the resources you had on this ship for conducting your experiments… <i>people?</i>
-    <<SetSpeaker Doctor>>
+    <<SetSpeaker Doctor>><<Emote Doctor sad>>
     … At one point, perhaps.
-    <<SetSpeaker Doctor>>
     Though it seems we all lose some of our humanity eventually on this ship.
 <<endif>>
 ===
@@ -226,7 +234,7 @@ tags:
 title: DoctorDefaultDialogue8
 tags:
 ---
-<<SetSpeaker Doctor>><<BranchComplete DefaultDialogue DefaultDialogue>>
+<<SetSpeaker Doctor>><<Emote Doctor surprise>><<BranchComplete DefaultDialogue DefaultDialogue>>
 AHHHHHHHHHHHHHHHHHHHHHHHH!
 ...
 Oh, it’s just you. Welcome, Atlan!
@@ -298,9 +306,9 @@ tags:
 <<if Visited("DoctorLowHealth")>>
     [[DoctorLowHealth1]]
 <<else>>
-    <<SetSpeaker Doctor>>
+    <<SetSpeaker Doctor>><<Emote Doctor surprise>>
     My <i>gods,</i> Atlan, what’s happened to you? Truly, you look terrible.
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>><<Emote Player sweat>>
     … Thanks, Doc.
     <<SetSpeaker Doctor>>
     You got here just in time! Come, let us discuss your options.
@@ -315,7 +323,7 @@ tags:
 <<else>>
     <<SetSpeaker Doctor>>
     Well, that certainly is a healthy coating of blood covering you from head to toe, though, just so you’re aware, the blood is supposed to stay <i>inside</i> your body, in order for it to do its job.
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>><<Emote Player sweat>>
     I’ll try to keep that in mind next time.
     <<SetSpeaker Doctor>>
     Good, very good. Until then, let’s see if I can present some, ah, alternative solutions.
@@ -330,7 +338,7 @@ tags:
 <<else>>
     <<SetSpeaker Doctor>>
     Atlan! My, what a lovely new cloak. I never thought you were a <i>crimson</i> sort of guy, but it suits you!
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>><<Emote Player sweat>>
     ...
     <<SetSpeaker Doctor>>
     Oh! That’s blood.
@@ -345,7 +353,7 @@ tags:
 <<else>>
     <<SetSpeaker Doctor>>
     Remarkable. Truly, remarkable. For a moment there, I thought you were a walking corpse! I’m not sure that I’ve ever seen so much gore on the exterior of a living person!
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>><<Emote Player sweat>>
     Can we see about getting me patched up, Doc?
     <<SetSpeaker Doctor>>
     I suppose. If we must. Though how fascinating it would be to see just how far you could go before crumpling to the ground as a heap of insentient flesh!
@@ -358,7 +366,7 @@ tags:
 <<if Visited("DoctorLowHealth4")>>
     [[DoctorLowHealth5]]
 <<else>>
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>><<Emote Player sweat>>
     Hey Doc, does this look normal to you?
     <<SetSpeaker Doctor>>
     Not in the slightest! How thrilling. I was hoping for a reason to get out my <i>good</i> scalpel today!
@@ -388,8 +396,11 @@ tags:
 <<else>>
     <<SetSpeaker Player>>
     I gotta be honest, Doc. Your services are pretty pricey. What’s a heroic adventurer like me gotta do to get a discount around here?
-    <<SetSpeaker Doctor>>
-    My, my, Atlan, are you… volunteering for my newest experimental procedures!? Why, I’m sure something could be arranged if you’re open to, ah, something <i>still in the works?</i>
+    <<SetSpeaker Doctor>><<Emote Doctor blush>>
+    My, my, Atlan, are you...
+    <<Emote Doctor happy>>
+    ... volunteering for my newest experimental procedures!?
+    Why, I’m sure something could be arranged if you’re open to, ah, something <i>still in the works?</i>
     <<SetSpeaker Player>>
     For the right price, I can be.
 <<endif>>
@@ -402,10 +413,11 @@ tags:
 Tell me, Doc… what do you know about what’s going on here?
 <<SetSpeaker Doctor>>
 Not a thing! Certainly, not a <i>single</i> thing.
-<<SetSpeaker Doctor>>
-Why? Did you… find something? Perhaps something that you somehow believe might be connected to me in all of this? Er, all of this <i>completely normal</i> stuff going on here, on this <i>completely normal</i> spacecraft?
+<<Emote Doctor question>>
+Why? Did you… find something? Perhaps something that you somehow believe might be connected to me in all of this?
+Er, all of this <i>completely normal</i> stuff going on here, on this <i>completely normal</i> spacecraft?
 <<SetSpeaker Player>>
 … You got something to share, Doc?
-<<SetSpeaker Doctor>>
+<<SetSpeaker Doctor>><<Emote Doctor sweat>>
 Only… a discount for you, my dear Atlan! Look at these prices! Can’t beat ‘em.
 ===

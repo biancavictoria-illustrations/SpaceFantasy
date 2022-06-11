@@ -63,13 +63,14 @@ tags:
 <<if Visited("BrynEnemyKilledTimeLich")>>
     [[BrynEnemyKilledTimeLich1]]
 <<else>>
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player angry>>
     Why are you still here?
-    <<SetSpeaker Bryn>>
-    What? I… I’m here to help you, best friend. Here, I have some gear for you to–
-    <<SetSpeaker Player>>
+    <<SetSpeaker Bryn>><<Emote Bryn sad>>
+    What? I… I’m here to help you, best friend.
+    Here, I have some gear for you to–
+    <<SetSpeaker Player shocked>>
     You still don’t get it, Bryn! I’m trying to get you out of here so I don’t have to keep <i>killing</i>–
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>>
     … Fine. Let me see what you have.
 <<endif>>
 ===
@@ -82,7 +83,9 @@ Hey, you okay there, best friend? You seemed pretty shaken up last time we chatt
 <<SetSpeaker Player>>
 Just… running into some hiccups with this quest.
 <<SetSpeaker Bryn>>
-I know you’re getting tired. But you can do this! I believe in you! 
+I know you’re getting tired...
+<<Emote Bryn happy>>
+But you can do this! I believe in you! 
 ===
 
 title: BrynEnemyKilledSlime50
@@ -92,8 +95,9 @@ tags:
 Is that Atlan, the Great Slime Slayer?
 <<SetSpeaker Player>>
 Uh, yes?
-<<SetSpeaker Bryn>>
-Congratulations, best friend! You’ve killed <i>fifty</i> slimes! That’s… that’s a <i>lot</i> of slimes!
+<<SetSpeaker Bryn>><<Emote Bryn happy>>
+Congratulations, best friend! You’ve killed <i>fifty</i> slimes!
+That’s… that’s a <i>lot</i> of slimes!
 <<SetSpeaker Player>>
 Thanks?
 <<SetSpeaker Bryn>>
@@ -109,7 +113,7 @@ tags:
     [[BrynKilledByTimeLich1]]
 <<else>>
     <<SetSpeaker Player>>
-    You said the captain is a good guy, right? A “big softie”?
+    You said the Captain is a good guy, right? A “big softie”?
     <<SetSpeaker Bryn>>
     He sure is! Why do you ask?
     <<SetSpeaker Player>>
@@ -121,12 +125,18 @@ title: BrynKilledByTimeLich1
 tags:
 ---
 <<SetSpeaker Player>><<BranchComplete KilledBy KilledByTimeLich>>
-So about the captain. What happened to him?
+So about the Captain. What happened to him?
 <<SetSpeaker Bryn>>
-I’m not sure I’m following. What happened to the captain? Is he in trouble? Does he need our help? Is that why you’re here – is your quest to save him?
+I’m not sure I’m following. What happened to the Captain?
+<<Emote Bryn question>>
+Is he in trouble?
+<<Emote Bryn sweat>>
+Does he need our help?
+<<Emote Bryn surprise>>
+Is that why you’re here – is your quest to save him?
 <<SetSpeaker Player>>
 No, I’m–
-<<SetSpeaker Player>>
+<<SetSpeaker Player confused>>
 … You know, I’m not even sure anymore.
 ===
 
@@ -138,8 +148,10 @@ tags:
 <<SetSpeaker Player>><<BranchComplete Item ItemHelmOfTheRam>>
 I found this helmet out there. Thought you might want to check it out.
 <<SetSpeaker Bryn>>
-The Helm of the Ram… Fine dwarvish make. The original prototype was crafted nearly a century ago by my own grandfather!
-<<SetSpeaker Bryn>>
+The Helm of the Ram… Fine dwarvish make.
+<<Emote Bryn heart>>
+The original prototype was crafted nearly a century ago by my own grandfather!
+<<Emote Bryn happy>>
 Atlan, I’m not sure you could find a better helmet in all the galaxy!
 ===
 
@@ -158,7 +170,9 @@ tags:
         <<SetSpeaker Player>>
         Back again.
         <<SetSpeaker Bryn>>
-        Keep it up, Atlan! Try to have some patience with yourself, you’re making progress even if you can’t see it! Just remember: <i>Du skal kravle, før du kan gå!</i>
+        Keep it up, Atlan! Try to have some patience with yourself, you’re making progress even if you can’t see it!
+        <<Emote Bryn happy>>
+        Just remember: <i>Du skal kravle, før du kan gå!</i>
     <<endif>>
 <<endif>>
 ===
@@ -172,11 +186,13 @@ tags:
     <<if Visited("BrynNumRuns9")>>
         [[BrynRepeatable]]
     <<else>>
-        <<SetSpeaker Player>>
+        <<SetSpeaker Player angry>><<Emote Player angry>>
         I shouldn’t be taking this long! I should’ve finished my quest by now.
         <<SetSpeaker Bryn>>
-        Hey, woah woah woah, I don’t like the sound of that! Remember, best friend: <i>Kemst þó hægt fari!</i>
-        <<SetSpeaker Player>>
+        Hey, woah woah woah, I don’t like the sound of that!
+        <<Emote Bryn heart>>
+        Remember, best friend: <i>Kemst þó hægt fari!</i>
+        <<SetSpeaker Player confused>>
         You got a dwarvish dictionary somewhere?
     <<endif>>
 <<endif>>
@@ -185,12 +201,13 @@ tags:
 title: BrynNumRuns20
 tags:
 ---
-<<SetSpeaker Bryn>><<BranchComplete NumRuns NumRuns>>
+<<SetSpeaker Bryn>><<Emote Bryn happy>><<BranchComplete NumRuns NumRuns>>
 Keep trying, Atlan! I believe in you!
 <<SetSpeaker Player>>
 Bryn, I must’ve come through here twenty times by now, and you still think I’m not fighting a losing battle?
 <<SetSpeaker Bryn>>
-Best friend, I’ve fought in many battles, and not one started out as a “winning” battle! There would be no “battle” to begin with if you simply got to win! To battle IS to fight, to fight is to struggle. But how can you overcome if you did not first struggle?
+Best friend, I’ve fought in many battles, and not one started out as a “winning” battle!
+There would be no “battle” to begin with if you simply got to win! To battle IS to fight, to fight is to struggle. But how can you overcome if you did not first struggle?
 ===
 
 
@@ -201,10 +218,12 @@ tags:
 <<if Visited("BrynLowHealth")>>
     [[BrynLowHealth1]]
 <<else>>
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>><<Emote Player sweat>>
     I’m feeling pretty rough, Bryn. Got anything to help?
     <<SetSpeaker Bryn>>
-    Oh no! I hope something here can help the rest of your journey go smoother!
+    Oh no!
+    <<Emote Bryn heart>>
+    I hope something here can help the rest of your journey go smoother!
 <<endif>>
 ===
 
@@ -214,11 +233,11 @@ tags:
 <<if Visited("BrynLowHealth1")>>
     [[BrynLowHealth2]]
 <<else>>
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>>
     I don’t know how much longer I’m going to last, Bryn.
-    <<SetSpeaker Bryn>>
+    <<SetSpeaker Bryn>><<Emote Bryn happy>>
     Don’t say that! Just remember the old dwarvish saying: <i>Det är som mörkast innan gryningen!</i>
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>><<Emote Player sweat>>
     … Right.
 <<endif>>
 ===
@@ -229,7 +248,7 @@ tags:
 <<if Visited("BrynLowHealth2")>>
     [[BrynLowHealth3]]
 <<else>>
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>><<Emote Player sweat>>
     Bryn. <i>Ah.</i> I need some help.
     <<SetSpeaker Bryn>>
     You don’t sound so good, best friend. Not to fear! You came to the right place!
@@ -242,17 +261,19 @@ tags:
 <<if Visited("BrynLowHealth3")>>
     [[BrynLowHealth4]]
 <<else>>
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>><<Emote Player sweat>>
     Feeling a little, <i>ugh,</i> rough. Got anything to help with that?
     <<SetSpeaker Bryn>>
-    Of course I do! Let’s get you outfitted so that you can get back out there! You’ve got this, best friend! We say NO to death!
+    Of course I do! Let’s get you outfitted so that you can get back out there!
+    <<Emote Bryn happy>>
+    You’ve got this, best friend! We say NO to death!
 <<endif>>
 ===
 
 title: BrynLowHealth4
 tags:
 ---
-<<SetSpeaker Player>><<BranchComplete LowHealth LowHealth>>
+<<SetSpeaker Player confused>><<Emote Player sweat>><<BranchComplete LowHealth LowHealth>>
 Uh, Bryn? I’m bleeding. A lot.
 <<SetSpeaker Bryn>>
 Not to worry! No best friend of mine will bleed out on my shop floor!
@@ -274,7 +295,7 @@ tags:
     Oh, I don’t know you! Are you a new crewmate? My name’s Brynjar, but you can call me Bryn, as you just heard! And, also as you just heard, I am here to help with all your engineering needs!
     <<SetSpeaker Player>>
     Name’s Atlan. I’m just passing through. On a bit of a quest, actually.
-    <<SetSpeaker Bryn>>
+    <<SetSpeaker Bryn>><<Emote Bryn happy>>
     A quest? That’s fantastic! You’ve come to the right place!
 <<endif>>
 ===
@@ -291,8 +312,9 @@ tags:
     Oh, Atlan, hi! Most of it, I’ve made or altered myself.
     <<SetSpeaker Player>>
     That’s… impressive, Bryn. You’re quite the craftsman.
-    <<SetSpeaker Bryn>>
-    Atlan, you might just be my best friend. Is that okay? Are you comfortable with me calling you my best friend?
+    <<SetSpeaker Bryn>><<Emote Bryn heart>>
+    Atlan, you might just be my best friend.
+    Is that okay? Are you comfortable with me calling you my best friend?
     <<SetSpeaker Player>>
     … Sure?
 <<endif>>
@@ -307,7 +329,9 @@ tags:
     <<SetSpeaker Player>>
     Tell me, Bryn, do you ever want to get off this ship? Visit planets, experience the galaxy up close and personal?
     <<SetSpeaker Bryn>>
-    Sure, eventually! Sounds like a great adventure! For now, though, I’m perfectly content right where I’m at. Because it means I get to help you out, best friend!
+    Sure, eventually! Sounds like a great adventure!
+    <<Emote Bryn happy>>
+    For now, though, I’m perfectly content right where I’m at. Because it means I get to help you out, best friend!
 <<endif>>
 ===
 
@@ -318,9 +342,9 @@ tags:
     [[BrynDefaultDialogue4]]
 <<else>>
     <<SetSpeaker Player>>
-    Bryn, what do you know of the captain of this ship?
-    <<SetSpeaker Bryn>>
-    Oh, the captain is just the best guy! He can seem intimidating at first, but I promise he’s a big softie once you get to know him!
+    Bryn, what do you know of the Captain of this ship?
+    <<SetSpeaker Bryn>><<Emote Bryn heart>>
+    Oh, the Captain is just the best guy! He can seem intimidating at first, but I promise he’s a big softie once you get to know him!
 <<endif>>
 ===
 
@@ -334,13 +358,11 @@ tags:
     Bryn, I’ve been meaning to ask… How much do you know about what’s going on here?
     <<SetSpeaker Bryn>>
     Not much, but that’s alright! There seems to be something strange going on, but… I’m just along for the ride!
-    <<SetSpeaker Bryn>>
     My grandfather used to tell me <i>“tíðin rennur sum streymur í á”</i> – “time runs like the river current.” I’ve always taken it to mean I should just go with the flow!
     <<SetSpeaker Player>>
     But what if the current changes?
     <<SetSpeaker Bryn>>
     Well, then I guess we change with it, or we get left behind.
-    <<SetSpeaker Bryn>>
     … Woah. That’s pretty deep, huh?
 <<endif>>
 ===
@@ -353,8 +375,9 @@ tags:
 <<else>>
     <<SetSpeaker Player>>
     What exactly is your job on this ship, Bryn?
-    <<SetSpeaker Bryn>>
-    This arcane reactor here is the fuel core of the ship – like its heart! It’s my job to make sure the Orbis is feeling alright, and in my spare time I work on my side projects! Speaking of which, you’re going to love what I have in store for you today!
+    <<SetSpeaker Bryn>><<Emote Bryn heart>>
+    This arcane reactor here is the fuel core of the ship – like its heart! It’s my job to make sure the Orbis is feeling alright, and in my spare time I work on my side projects!
+    Speaking of which, you’re going to love what I have in store for you today!
 <<endif>>
 ===
 
@@ -367,9 +390,10 @@ tags:
     <<SetSpeaker Player>>
     Where did you learn how to be such a magnificent engineer, Bryn? Surely, such skills must have been honed over countless years of careful practice.
     <<SetSpeaker Bryn>>
-    The dwarves of Planet Svartallir have always been masters of arcane circuits and runic channels! My foundations came from my grandfather, but more recently I’ve been diving into the ways of my ancestors and experimenting with gear like helms infused with arcane energy.
-    <<SetSpeaker Bryn>>
-    It seems to be going well! But I can’t say for certain, because you’re my first customer!
+    The dwarves of Planet Svartallir have always been masters of arcane circuits and runic channels!
+    My engineering foundations came from my grandfather, but more recently I’ve been diving into the ways of my ancestors and experimenting with gear like helms infused with arcane energy.
+    <<Emote Bryn happy>>
+    It's going well! I can tell because I finally have a repeat customer!
 <<endif>>
 ===
 
@@ -379,8 +403,10 @@ tags:
 <<SetSpeaker Player>><<BranchComplete DefaultDialogue DefaultDialogue>>
 Listen, friend, I have to tell you… I know this might not mean much to you, but I’m going to get you off this ship. Okay?
 <<SetSpeaker Bryn>>
-But, Atlan, why would I want to leave? I have everything I need right here! Gear, crafting supplies, the best friend I could ask for… What more does a dwarf need?
-<<SetSpeaker Player>>
+But, Atlan, why would I want to leave? I have everything I need right here!
+<<Emote Bryn heart>>
+Gear, crafting supplies, the best friend I could ask for… What more does a dwarf need?
+<<SetSpeaker Player confused>>
 … I promise, Bryn.
 ===
 
@@ -392,9 +418,9 @@ tags:
 <<if Visited("BrynBarterSuccess")>>
     [[BrynBarterSuccess1]]
 <<else>>
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player>><<Emote Player heart>>
     I’m positively amazed by your work, as always. Tell me, what do these stunning pieces go for?
-    <<SetSpeaker Bryn>>
+    <<SetSpeaker Bryn>><<Emote Bryn blush>>
     Aw, Atlan! Here, you deserve the friends and family discount!
     <<SetSpeaker Player>>
     Oh, I couldn’t… though if you insist.
@@ -407,13 +433,13 @@ tags:
 <<if Visited("BrynBarterSuccess1")>>
     [[BrynBarterSuccess2]]
 <<else>>
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player>><<Emote Player heart>>
     Bryn, your craftsmanship is unmatched! Just look at the detailing… Magnificent work, as always.
     <<SetSpeaker Bryn>>
     Do you really mean it?
     <<SetSpeaker Player>>
     Without a doubt. You’re an artist.
-    <<SetSpeaker Bryn>>
+    <<SetSpeaker Bryn>><<Emote Bryn happy>>
     And you’re the BEST best friend, Atlan.
 <<endif>>
 ===
@@ -426,14 +452,16 @@ tags:
 <<else>>
     <<SetSpeaker Player>>
     Bryn, your metalwork may be the best I’ve ever seen. And I’ve traveled all over the galaxy.
-    <<SetSpeaker Bryn>>
+    <<SetSpeaker Bryn>><<Emote Bryn blush>>
     I- … I need a moment.
     <<SetSpeaker Player>>
-    Are you alright, friend?
-    <<SetSpeaker Bryn>>
+    You alright, friend?
+    <<SetSpeaker Bryn>><<Emote Bryn blush>>
     ...
-    <<SetSpeaker Bryn>>
-    THAT’S ONE OF THE NICEST THINGS ANYONE HAS EVER SAID TO ME. I would be honored if you took one of these pieces – so here, have a discount.
+    <<Emote Bryn happy>>
+    THAT’S ONE OF THE NICEST THINGS ANYONE HAS EVER SAID TO ME.
+    <<Emote Bryn heart>>
+    I would be honored if you took one of these pieces – so here, have a discount.
 <<endif>>
 ===
 
@@ -445,8 +473,10 @@ tags:
 <<else>>
     <<SetSpeaker Player>>
     How are you today, best friend?
-    <<SetSpeaker Bryn>>
-    ATLAN, THAT’S THE FIRST TIME YOU’VE CALLED ME YOUR BEST FRIEND!!! Do- do you really mean it?
+    <<SetSpeaker Bryn>><<Emote Bryn happy>>
+    ATLAN, THAT’S THE FIRST TIME YOU’VE CALLED ME YOUR BEST FRIEND!!!
+    <<Emote Bryn blush>>
+    Do- do you really mean it?
     <<SetSpeaker Player>>
     Depends. If I say yes, do I get the friends and family discount?
     <<SetSpeaker Bryn>>
@@ -464,7 +494,7 @@ tags:
 <<else>>
     <<SetSpeaker Player>>
     Bryn! What a pleasant sight you are. Tell me, what do I have to say to you to get that friends and family discount?
-    <<SetSpeaker Bryn>>
+    <<SetSpeaker Bryn>><<Emote Bryn heart>>
     For you, best friend? Consider it yours!
 <<endif>>
 ===
@@ -477,8 +507,11 @@ tags:
 <<else>>
     <<SetSpeaker Player>>
     Bryn, I’ve been meaning to tell you… Thank you. I’m so grateful for your services. I’m sure I wouldn’t have made it this far without you.
-    <<SetSpeaker Bryn>>
-    No, Atlan! You’re incredible! You have to believe in yourself more! You would have made it just as far without me, except I would have been much, much sadder for never having known you! What can I do to show YOU my gratitude for you letting me know you?
+    <<SetSpeaker Bryn>><<Emote Bryn surprise>>
+    No, Atlan! You’re incredible! You have to believe in yourself more!
+    <<Emote Bryn sad>>
+    You would have made it just as far without me, except I would have been much, much sadder for never having known you!
+    What can I do to show YOU my gratitude for you letting me know you?
     <<SetSpeaker Player>>
     Oh, I couldn’t accept anything… But if you’re offering, perhaps a discount?
 <<endif>>
@@ -492,8 +525,8 @@ tags:
 <<else>>
     <<SetSpeaker Player>>
     Bryn, have I ever mentioned what magnificent hair you have?
-    <<SetSpeaker Bryn>>
-    You have not! Thank you, best friend – to compliment my hair is one of the highest compliments a dwarf could ask for!
+    <<SetSpeaker Bryn>><<Emote Bryn heart>>
+    You have not! Thank you, best friend – to compliment my hair is one of the highest compliments a dwarf could receive!
 <<endif>>
 ===
 
@@ -502,7 +535,7 @@ tags:
 ---
 <<SetSpeaker Player>><<BranchComplete BarterSuccess BarterSuccess>>
 Bryn, why, you seem extra dashing today. Do anything different? Perhaps a few extra braids in your hair? Trying out a new cologne?
-<<SetSpeaker Bryn>>
+<<SetSpeaker Bryn>><<Emote Bryn sweat>>
 Nope! Though, you did arrive just after I completed my pre-mid-afternoon workout warm ups!
 ===
 
@@ -516,9 +549,9 @@ tags:
 <<else>>
     <<SetSpeaker Player>>
     You have quite the eye for detail, Bryn.
-    <<SetSpeaker Bryn>>
+    <<SetSpeaker Bryn>><<Emote Bryn sad>>
     Aw, thanks Atlan! But I’m not sure eyes have much to do with it.
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player>><<Emote Player sweat>>
     Oh, I didn’t mean– ah, I just meant. You’re very talented.
 <<endif>>
 ===
@@ -533,10 +566,12 @@ tags:
     So I’ve been thinking, Bryn – just hear me out – what if you and I became business partners? I could sell your gear far and wide throughout the galaxy!
     <<SetSpeaker Bryn>>
     What a glorious idea! Tell me more!
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player>><<Emote Player sweat>>
     Well, I… I hadn’t gotten that far yet. But maybe we could start with a discount on your products? Just so I can test more of them, you know.
-    <<SetSpeaker Bryn>>
-    Hmm. Without a proper business proposal, I’m not sure I can agree to those terms! Rest assured, however, that you are still my best friend!
+    <<SetSpeaker Bryn>><<Emote Bryn sad>>
+    Hmm. Without a proper business proposal, I’m not sure I can agree to those terms!
+    <<Emote Bryn happy>>
+    Rest assured, however, that you are still my best friend!
 <<endif>>
 ===
 
@@ -547,10 +582,10 @@ tags:
     [[BrynBarterFail3]]
 <<else>>
     <<SetSpeaker Player>>
-    Hey, best friend. I’m in a bit of a rush – don’t suppose you could offer me a discount?
-    <<SetSpeaker Bryn>>
+    Hey, Bryn. I’m in a bit of a rush – don’t suppose you could offer me a discount?
+    <<SetSpeaker Bryn>><<Emote Bryn sad>>
     Atlan, best friend, I would LOVE to but I seem to be running a bit short on electrum after I donated almost all of mine to a neshorn rescue organization back on Planet Svartallir.
-    <<SetSpeaker Bryn>>
+    <<Emote Bryn happy>>
     But on the bright side, some neshorns will be very happy thanks to your generosity!
 <<endif>>
 ===
@@ -561,11 +596,11 @@ tags:
 <<if Visited("BrynBarterFail3")>>
     [[BrynBarterFail4]]
 <<else>>
-    <<SetSpeaker Bryn>>
+    <<SetSpeaker Bryn>><<Emote Bryn sad>>
     Best friend, I’m so so so sorry, but I have to tell you… my prices are a bit high today because I’m trying to raise electrum for an elven princess on Planet Silvestria who reached out to me personally for help escaping her war-torn nation.
     <<SetSpeaker Player>>
     Bryn, you know those comms are all just scams, right? You shouldn’t actually transfer her the money.
-    <<SetSpeaker Bryn>>
+    <<SetSpeaker Bryn>><<Emote Bryn question>>
     BUT IF I DON’T, HOW WILL SHE ESCAPE FROM THE ASSASSINS, ATLAN!?
 <<endif>>
 ===
@@ -582,7 +617,7 @@ tags:
     I did and you are! Why? Is everything alright?
     <<SetSpeaker Player>>
     I was just concerned by your exceedingly high prices, is all.
-    <<SetSpeaker Bryn>>
+    <<SetSpeaker Bryn>><<Emote Bryn heart>>
     Oh, I see. You’re concerned about my financial stability! See, this is why you’re my best friend – you’re so thoughtful!
 <<endif>>
 ===
@@ -599,7 +634,7 @@ tags:
     Not at all! I’m considering adopting a stjernehund and I need some extra electrum.
     <<SetSpeaker Player>>
     Bryn, are you sure getting a pet on this ship is the best idea? I mean, would you even have room for it?
-    <<SetSpeaker Bryn>>
+    <<SetSpeaker Bryn>><<Emote Bryn happy>>
     Not to worry! I have plenty of room in my heart for both a human best friend and a furry four-legged best friend!
 <<endif>>
 ===
@@ -614,10 +649,10 @@ tags:
     I’m feeling a bit short on electrum today, Bryn. Anything you can do to help?
     <<SetSpeaker Bryn>>
     I’m always here to help, best friend! Here, only the finest gear selection for you today!
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player>><<Emote Player sweat>>
     Ah, those are some steep price tags. You sure there’s nothing you can do to help with that?
-    <<SetSpeaker Bryn>>
-    I am helping! Like I said, I’m providing the finest gear selection!
+    <<SetSpeaker Bryn>><<Emote Bryn happy>>
+    I am helping! Like I said, I’m providing the finest gear selection so that you can go out and collect some more electrum!
 <<endif>>
 ===
 
@@ -626,12 +661,13 @@ tags:
 ---
 <<SetSpeaker Player>><<BranchComplete BarterFail BarterFail>>
 So Bryn, might I be able to get some sort of discount card for being your favorite customer?
-<<SetSpeaker Bryn>>
+<<SetSpeaker Bryn>><<Emote Bryn surprise>>
 I treat all my customers equally! No favoritism here, nope! None from me! You’ll have to go elsewhere if you’re looking for cheap, I only supply quality!
-<<SetSpeaker Player>>
+<<SetSpeaker Player confused>>
 Why are you yelling?
 <<SetSpeaker Bryn>>
-<i>Psst</i>. I’m trying to get better at marketing my wares. So sorry about everything I said about not picking favorites, I promise you’re still my favorite best friend!
+<i>Psst</i>. I’m trying to get better at marketing my wares.
+So sorry about everything I said about not picking favorites, I promise you’re still my favorite best friend!
 ===
 
 
@@ -695,28 +731,28 @@ Hope you find something you like!
 title: BrynRepeatable4
 tags:
 ---
-<<SetSpeaker Bryn>>
+<<SetSpeaker Bryn>><<Emote Bryn happy>>
 I’m here to help!
 ===
 
 title: BrynRepeatable5
 tags:
 ---
-<<SetSpeaker Bryn>>
+<<SetSpeaker Bryn>><<Emote Bryn heart>>
 Glad you’re checking in, best friend!
 ===
 
 title: BrynRepeatable6
 tags:
 ---
-<<SetSpeaker Bryn>>
+<<SetSpeaker Bryn>><<Emote Bryn heart>>
 Stay safe out there, best friend!
 ===
 
 title: BrynRepeatable7
 tags:
 ---
-<<SetSpeaker Bryn>>
+<<SetSpeaker Bryn>><<Emote Bryn happy>>
 Remember, best friend: <i>Kemst þó hægt fari!</i>
 ===
 
@@ -730,6 +766,6 @@ Let me know if there’s anything I can do to help you on your quest, best frien
 title: BrynRepeatable9
 tags:
 ---
-<<SetSpeaker Bryn>>
+<<SetSpeaker Bryn>><<Emote Bryn happy>>
 You’ve got this, best friend! I believe in you!
 ===
