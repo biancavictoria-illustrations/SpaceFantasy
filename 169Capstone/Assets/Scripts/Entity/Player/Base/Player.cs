@@ -86,7 +86,12 @@ public class Player : MonoBehaviour
             health.tempPlayerGodModeToggle = false;
         }
 
-        health.Damage(health.maxHitpoints, DamageSourceType.DeathPit);
+        DamageSourceType damageSource = DamageSourceType.DeathPit;
+        if(GameManager.instance.currentSceneName == GameManager.LICH_ARENA_STRING_NAME){
+            damageSource = DamageSourceType.DeathPitTimeLichArena;
+        }
+
+        health.Damage(health.maxHitpoints, damageSource);
     }
 
     public SpeakerData GetSpeakerData()
