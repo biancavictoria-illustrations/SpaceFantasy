@@ -67,11 +67,11 @@ tags:
 // <<if Visited("TimeLichEnemyKilledTimeLich")>>
 //     [[TimeLichEnemyKilledTimeLich1]]
 // <<else>>
-<<SetSpeaker Player>><<BranchComplete EnemyKilled EnemyKilledTimeLich>>
+<<SetSpeaker Player angry>><<Emote Player angry>><<BranchComplete EnemyKilled EnemyKilledTimeLich>>
 <i>How?</i> How are you still here? How is all of this still happening? I <i>killed</i> you!
 <<SetSpeaker TimeLich>>
 Did I not tell you your attempts were futile?
-<<SetSpeaker Player>>
+<<SetSpeaker Player angry>>
 I’ve killed you before, I’ll do it again. As many times as it takes.
 // <<endif>>
 ===
@@ -141,7 +141,11 @@ tags:
     <<SetSpeaker TimeLich>>
     You approach on the verge of death, yet still you dare to face me? Your arrogance may be unmatched.
     <<SetSpeaker Player>>
-    Don’t worry. I’m sure that’s one area where you’ve still got me beat.
+    Don’t worry.
+    <<SetSpeaker Player confused>><<Emote Player sad>>
+    <i>Eugh...</i>
+    <<SetSpeaker Player>>
+    I’m sure that’s one area where you’ve still got me beat.
 <<endif>>
 ===
 
@@ -179,7 +183,7 @@ tags:
     I’ve never considered myself much of a hero. Just an opportunist.
     But you must be the Captain – or do you prefer Wizard?
     <<SetSpeaker TimeLich neutral ???>>
-    The Captain? ... Oh, young one, you know nothing of what is going on here.
+    The Captain? ... Oh, young hero, you know nothing of what is going on here.
     <<SetSpeaker TimeLich>>
     I am the Time Lich, and this is my domain.
     <<SetSpeaker Player>>
@@ -211,7 +215,7 @@ tags:
     Altruism has nothing to do with it, Cap’n. You see, I just couldn’t pass up the temptation of looting this fine spacecraft.
     As soon as I stepped foot inside, I got stuck like the rest of your crew. I’m just trying to save my own skin.
     <<SetSpeaker TimeLich>>
-    Perhaps. Whatever your motivation, your attempts are futile.    
+    Perhaps. Whatever you tell yourself of your motivation, your attempts are futile.    
 <<endif>>
 ===
 
@@ -222,7 +226,7 @@ tags:
     [[TimeLichDefaultDialogue3]]
 <<else>>
     <<SetSpeaker TimeLich>>
-    I know who you are. I know everything about you.
+    I know who you are, young adventurer. I know everything about you.
     <<SetSpeaker Player>>
     You might control this ship and all your monsters inside it, but I’m not one of your minions.
     <<SetSpeaker TimeLich>>
@@ -262,13 +266,13 @@ tags:
 <<if Visited("TimeLichDefaultDialogue5")>>
     [[TimeLichDefaultDialogue6]]
 <<else>>
-    <<SetSpeaker TimeLich>>
+    <<SetSpeaker TimeLich>><<Emote TimeLich question>>
     Again? Why? Why subject yourself to death after death?
     <<SetSpeaker Player>>
     I tend to do my best work when the odds are against me.
     <<SetSpeaker TimeLich>>
-    You are a scoundrel and a fool. But no matter. You will grow tired of this existence and come to understand the futility of your attempts.
-    But take your time. I have plenty of it to spare.
+    You are a fool. But no matter. You will grow tired of this existence and come to understand the futility of your attempts.
+    But take your time, if you must. I have plenty of it to spare.
 <<endif>>
 ===
 
@@ -281,7 +285,9 @@ tags:
     <<SetSpeaker Player>>
     Time’s up, Lich.
     <<SetSpeaker TimeLich>>
-    I am the god of this ship. You are nothing. Nothing but a pirate. A scoundrel. A vagabond. <i>Nothing.</i> You will not usurp me.    
+    I am the god of this ship. You are nothing.
+    Nothing but a pirate. A scoundrel. A vagabond. <i>Nothing.</i>
+    You will not usurp me.    
 <<endif>>
 ===
 
@@ -292,12 +298,12 @@ tags:
     [[TimeLichDefaultDialogue8]]
 <<else>>
     <<SetSpeaker TimeLich>>
-    I have come to realize I sense a familiar arcane trace on you. How… fascinating, to learn that even <i>he</i> has lent his aid.
+    I sense a familiar arcane trace on you. How… fascinating, to learn that even <i>he</i> has lent his aid.
     <<SetSpeaker Player>>
-    Everyone on this ship wants you gone. They’re <i>all</i> helping me. Your whole crew has betrayed you, Cap’n.
+    Everyone on this ship wants you gone. They’re <i>all</i> helping me. Your whole crew has betrayed you, Cap’n - even your own apprentice.
     <<SetSpeaker TimeLich>>
-    How endearing. You still think you know all. No matter.
-    His betrayal is meaningless, just as your attempts are futile.
+    How endearing your ignorance is, at times.
+    No matter. His betrayal is meaningless, just as your attempts are futile.
 <<endif>>
 ===
 
@@ -309,10 +315,12 @@ You must know… I remember you.
 <<SetSpeaker Player>>
 I would hope so, after all our fights. Would hate to think I hadn’t made an impression by now.
 <<SetSpeaker TimeLich>>
-No… No, Atlan. I <i>remember</i> you. <i>Give up.</i>
+No… No, Atlan. I <i>remember</i> you.
+<<SetSpeaker TimeLich angry>>
+<i>Give up.</i>
 <<SetSpeaker Player>>
 You claim to know me. You know I won’t give up.
-<<SetSpeaker TimeLich>>
+<<SetSpeaker TimeLich angry>>
 … Come, then. If we must.
 ===
 
@@ -321,10 +329,11 @@ You claim to know me. You know I won’t give up.
 title: TimeLichBarterFail
 tags:
 ---
-<<SetSpeaker Player>><<BranchComplete BarterFail BarterFail>>
+<<SetSpeaker Player angry>><<BranchComplete BarterFail BarterFail>>
 You have the power to stop this. What do you have to gain from keeping everyone trapped here?
 <<SetSpeaker TimeLich>>
-You have resorted to begging. How pathetic. And I was just beginning to respect your determination.
+You have resorted to begging. How pathetic.
+And I was just beginning to respect your determination.
 ===
 
 
@@ -343,14 +352,14 @@ I’m not feeling particularly wise today.
 title: TimeLichHasDeusExMachina
 tags:
 ---
-<<SetSpeaker TimeLich angry>>
+<<SetSpeaker TimeLich angry>><<Emote TimeLich question>>
 Where- where did you get that?
 <<SetSpeaker Player>>
 What, this hourglass? Looks a lot like the one on top of your staff.
 A friend gave it to me.
 <<SetSpeaker TimeLich>>
 He is no friend of yours, to give you <i>that</i> only to send you to face me once more.
-<<SetSpeaker TimeLich angry>>
+<<SetSpeaker TimeLich angry>><<Emote TimeLich angry>>
 He must have known I would take out this insult on <i>you</i>.
 // TODO: More of these?
 ===

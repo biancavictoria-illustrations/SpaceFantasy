@@ -118,7 +118,9 @@ title: StellanDialogueCompletedBrynDefaultDialogue1
 tags:
 ---
 <<SetSpeaker Stellan>><<BranchComplete DialogueCompleted DialogueCompletedBrynDefaultDialogue>>
-Bryn is... joyful. And kind. And outgoing - so incredibly, annoyingly outgoing.
+Bryn is... joyful. And kind. And outgoing.
+<<Emote Stellan angry>>
+So incredibly, <i>annoyingly</i> outgoing.
 If he so much as hears you walk by his station, you cannot avoid a conversation with him.
 ... But he always has something uplifting to say.
 <<SetSpeaker Player>>
@@ -144,6 +146,7 @@ tags:
     Speaking from personal experience on that one?
     <<SetSpeaker Stellan>>
     Nonsense. She did, however, once light my cloak on fire.
+    <<Emote Stellan sad>>
     I believe that may be a sign of affection, coming from her.
 <<endif>>
 ===
@@ -161,7 +164,7 @@ tags:
     In her case, "helping" meant "setting various substances on fire," or combining two arcane reagents that I <i>explicitly</i> told her not to combine, just to see what dangers I had been hiding from her.
     <<SetSpeaker Player>>
     Sounds like Rhi.
-    <<SetSpeaker Stellan>>
+    <<SetSpeaker Stellan>><<Emote Stellan surprise>>
     "Rhi"?
     You're getting awfully comfortable on this ship, Atlan.
     <<SetSpeaker Player>>
@@ -178,8 +181,10 @@ tags:
 You were close with them. The other crew members.
 <<SetSpeaker Stellan>>
 They were my coworkers-
-<<SetSpeaker Player>>
-Shut up, Stellan, you clearly speak of them as <i>friends</i>. Don't try to act like you've always been this detached from everyone and everything on this ship.
+<<SetSpeaker Player angry>><<Emote Player angry>>
+Shut up, Stellan, you clearly speak of them as <i>friends</i>.
+<<SetSpeaker Player confused>>
+Don't try to act like you've always been this detached from everyone and everything on this ship.
 You were the <i>Captain's apprentice</i>. You must have known... everyone.
 <<SetSpeaker Stellan sad>>
 ...
@@ -233,8 +238,9 @@ tags:
     <<SetSpeaker Stellan>>
     The caelarae are a myth. Stories told to elven children of sentient stars who watch over them in the night. Guardians. Protectors.
     I was named after one by my elven mother – supposedly, Stellan the caelara would watch over me when she left me to the mercy of my human father.
+    <<Emote Stellan angry>>
     Little good that did me.
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>>
     You’re certain they’re a myth?
     <<SetSpeaker Stellan>>
     I was.
@@ -251,7 +257,7 @@ tags:
     I’ve been on my own for most of my life. But I have vague memories of my mother telling me my eyes were full of golden starlight.
     <<SetSpeaker Stellan>>
     Drivel. If you truly are descended from a caelara, surely the bloodline is so diluted that it hardly matters–
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player angry>><<Emote Player question>>
     Not a chance that you believe that. Tell me, Stellan, what exactly have you been doing to me?
     You once told me your magic only unlocks hidden potential. And these Star Shards you use to do it – you mean to tell me they’re not connected to me being descended from a <i>sentient star?</i>
     <<SetSpeaker Stellan sad>>
@@ -264,7 +270,7 @@ tags:
 title: StellanDialogueCompletedDoctorDefaultDialogue54
 tags:
 ---
-<<SetSpeaker Player angry>><<BranchComplete DialogueCompleted DialogueCompletedDoctorDefaultDialogue5>>
+<<SetSpeaker Player angry>><<Emote Player angry>><<BranchComplete DialogueCompleted DialogueCompletedDoctorDefaultDialogue5>>
 So you’ve been experimenting on me this whole time? You suspected my bloodline and wanted to see what would happen if you used those Star Shards on me?
 <<SetSpeaker Stellan>>
 I may have suspected certain things. But if I was wrong, it’s not like it would have hurt you.
@@ -287,7 +293,7 @@ tags:
 <<if $firstClearRunNumber > 0 and $firstClearRunNumber < 5>>
     <<SetSpeaker Stellan>>
     Well, that is certainly a concerning look. Tell me, what new horrors did you uncover on this ship-
-    <<SetSpeaker Player angry>>
+    <<SetSpeaker Player angry>><<Emote Player angry>>
     How many times must I kill the Lich before you tell me what's really going on here?
     Why does everything still reset, even when I beat him? Why are we still here? If you know something, if you’re <i>hiding</i> something–
     <<SetSpeaker Stellan>>  // rolling eyes, for the first one
@@ -298,12 +304,12 @@ tags:
     Well, that is certainly a concerning look. Tell me, what new horrors did you uncover on this ship, the likes of which presumably killed you in inventively horrific ways?
     <<SetSpeaker Player confused>>
     I killed him.
-    <<SetSpeaker Stellan>>
+    <<SetSpeaker Stellan>><<Emote Stellan surprise>>
     ...
     ... What?
     <<SetSpeaker Player confused>>
     I killed the Lich.
-    <<SetSpeaker Player angry>>
+    <<SetSpeaker Player angry>><<Emote Player angry>>
     Why did everything reset? Why are we still here? What’s going on? If you know something, if you’re <i>hiding</i> something–
     <<SetSpeaker Stellan>>  // rolling eyes, for the first one
     Tone down the aggression, Atlan. You’ve only made it this far because of me.
@@ -348,13 +354,13 @@ tags:
         <<SetSpeaker Stellan>>
         Atlan, you-
         You fell in a slime pit.
+        <<Emote Stellan angry>>
         You bested the Lich as soon as you arrived here, and now you- you slip and fall and <i>that</i> is your glorious death?
     <<else>>    // Otherwise
-        <<SetSpeaker Stellan>>
-        You were <i>right there,</i> Atlan! And you... you fell in a <i>pit</i>?
-        You <i>absolute fool</i>, how could you let this happen?
+        <<SetSpeaker Stellan>><<Emote Stellan angry>>
+        You were <i>right there,</i> Atlan! And you... you fell in a <i>pit</i>? You <i>absolute fool</i>, how could you let this happen?
     <<endif>>   // Play regardless
-    <<SetSpeaker Player angry>>
+    <<SetSpeaker Player angry>><<Emote Player surprise>>
     Hey, do you have any idea how overwhelming facing him can be? I had a lot to be dealing with, so yeah, I slipped up!
     I don't see you trying to go up against him.
     <<SetSpeaker Stellan sad>>
@@ -381,7 +387,7 @@ tags:
     <<SetSpeaker Stellan>>
     You're a fool. You caught him off guard initially, nothing more. But unfortunately, you’re the best option we’ve got. So here, let me see if I can help you not get killed as quickly next time.
 <<elseif Visited("StellanEnemyKilledTimeLich")>> // If you've killed the lich before and just now died to him for the first time
-    <<SetSpeaker Stellan>>
+    <<SetSpeaker Stellan>><<Emote Stellan angry>>
     You beat him on your first try, and <i>now</i> you fail? You are growing careless, Atlan.
     <<SetSpeaker Player>>
     I can take him. I've done it before.
@@ -423,8 +429,9 @@ tags:
     ...
     <<SetSpeaker Stellan>>
     You’re right. I do know about him.
-    I know that he will never, ever go easy on you. He will never leave you an opening you can exploit. He is relentless. He has no weaknesses, only power. It has consumed him.
-    <<SetSpeaker Player>>
+    I know that he will never, ever go easy on you. He will never leave you an opening you can exploit.
+    He is relentless. He has no weaknesses, only power. It has consumed him.
+    <<SetSpeaker Player>><<Emote Player sad>>
     … Great.
 <<endif>>
 ===
@@ -441,13 +448,18 @@ tags:
     … You should know. He’s not who you think he is.
     <<SetSpeaker Player>>
     What, are you about to tell me the Lich is secretly just <i>misunderstood?</i>
-    <<SetSpeaker Stellan>>
-    No, Atlan, listen to me. He wasn’t the Captain. This wasn’t his tower, originally. He took it. He killed the Wizard.
+    <<SetSpeaker Stellan>><<Emote Stellan angry>>
+    No, Atlan, listen to me.
+    He wasn’t the Captain. This wasn’t his tower, originally. He took it. He killed the Wizard.
     <<SetSpeaker Player>>
     I don’t see how that changes much, personally.
     <<SetSpeaker Stellan>>
-    … I have seen your desire for loot. For wealth. For fame. I tell you this to warn you, friend.
-    Be cautious of ambition. It changes a person. Ambition alone has the power to twist a person into a monstrous shell of what he once was.
+    Atlan, I have seen your desire for loot. For wealth. For renown throughout the galaxy. I tell you this to warn you.
+    Be cautious of ambition.
+    <<SetSpeaker Stellan sad>>
+    It... changes a person.
+    <<SetSpeaker Stellan>>
+    Ambition alone has the power to twist a person into a monstrous shell of what he once was.
 <<endif>>
 ===
 
@@ -462,7 +474,7 @@ The same as you and me, and many others on this ship. Nothing but a kid with amb
 Did you know him personally?
 <<SetSpeaker Stellan sad>>
 Once.
-<<SetSpeaker Player>>
+<<SetSpeaker Player confused>>
 … I’m sorry.
 ===
 
@@ -489,10 +501,10 @@ tags:
     [[StellanKilledByBeetleBoss2]]
 <<else>>
     <<SetSpeaker Player>>
-    That six-legged monster - the Brute Pest, you called it. It was an experiment?
+    That six-legged monster - the Brute Pest, you called it. It was an experiment? Experimenting with <i>what</i>?
     <<SetSpeaker Stellan>>
     Stretching the bounds of the arcane and the biological by individuals playing at being gods. Just because they could.
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>>
     What was it before it became... whatever it is now?
     <<SetSpeaker Stellan sad>>
     <i>Who</i>.
@@ -506,11 +518,10 @@ tags:
 ---
 <<SetSpeaker Player>><<BranchComplete KilledBy KilledByBeetleBoss>><<BranchComplete EnemyKilled EnemyKilledBeetleBoss>>
 So are you ever going to tell me? Who <i>was</i> the Brute Pest?
-<<SetSpeaker Stellan>>
+<<SetSpeaker Stellan>><<Emote Stellan angry>>
 Does it matter anymore? Do you understand why I'm telling you any of this at all?
-You need to understand, Atlan. The Lich is the real monster here. All he is capable of is...
-What you see in that sad, pathetic creature. Destruction and torment disguised as abominations of supposed discovery.
-The Lich cannot be stopped.
+You need to understand, Atlan. The Lich is the real monster here. All he is capable of is what you see in that sad, pathetic creature.
+Destruction and torment disguised as abominations of supposed discovery. The Lich cannot be stopped.
 <<SetSpeaker Player>>
 We'll see about that-
 <<SetSpeaker Stellan>>
@@ -534,19 +545,18 @@ tags:
 <<else>>
     <<SetSpeaker Stellan>>
     Is that… residual slime ooze clinging to your sleeve? You let yourself be killed by a slime?
-    <<SetSpeaker Stellan>>
     A <i>slime</i>, Atlan?
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player>><<Emote Player angry>>
     A particularly <i>ferocious</i> slime, yes, Stellan. Your point?
     <<SetSpeaker Stellan>>
-    You still think you stand a chance against <i>him</i>?
+    You still think you stand a chance against the <i>Lich</i>?
 <<endif>>
 ===
 
 title: StellanKilledBySlime1
 tags:
 ---
-<<SetSpeaker Stellan>><<BranchComplete KilledBy KilledBySlime>>
+<<SetSpeaker Stellan>><<Emote Stellan question>><<BranchComplete KilledBy KilledBySlime>>
 Really, Atlan? Really? A slime. Again?
 <<SetSpeaker Player>>
 Have you ever actually encountered one of those things? They may seem harmless, but you know they’re vicious, right?
@@ -561,7 +571,7 @@ tags:
 Atlan?
 <<SetSpeaker Player>>
 Yes, Stellan?
-<<SetSpeaker Stellan>>
+<<SetSpeaker Stellan>><<Emote Stellan angry>>
 You fell in a slime pit, Atlan.
 <<SetSpeaker Player>>
 Yes, well, your work place is rather unsafe. There are violations <i>everywhere.</i>
@@ -621,7 +631,7 @@ Have you thought about going any faster? I am exceedingly bored of this ship.
 I have gotten myself killed 30 times trying to save your ass, and this is how you thank me for my sacrifice?
 <<SetSpeaker Stellan sad>>
 ... {$completedRuns}.
-<<SetSpeaker Player>>
+<<SetSpeaker Player>><<Emote Player surprise>>
 … What?
 <<SetSpeaker Stellan>>
 You have gotten yourself killed {$completedRuns} times. Not 30.
@@ -663,7 +673,7 @@ tags:
     <<SetSpeaker Stellan sad>>
     It was only a fluke. You're stuck here. Just like the rest of us.
 <<elseif $headNode is "KilledByTimeLich">>  // If you made it to the lich but died on run 1
-    <<SetSpeaker Stellan neutral ???>>
+    <<SetSpeaker Stellan neutral ???>><<Emote Stellan question>>
     How did you reach him...?
     <<SetSpeaker Player>><<Emote Player surprise>>
     <i>Uugh</i>... I'm... alive?
@@ -749,7 +759,7 @@ tags:
 <<elseif $firstClearRunNumber > 0 and $firstClearRunNumber < 3>>
     <<SetSpeaker Stellan>>
     The inevitability of your death will continue if you don't stop being so careless.
-    <<SetSpeaker Player angry>>
+    <<SetSpeaker Player angry>><<Emote Player angry>>
     Well, at least I'm doing <i>something</i> instead of wallowing in self-pity.
     <<SetSpeaker Player>>
     Make yourself useful and help me understand what's going on here. Who is the Captain of this ship? It didn't even ping on my radar, I assumed it was abandoned.
@@ -770,14 +780,14 @@ tags:
     The Captain?
     <<SetSpeaker Stellan>>
     The Wizard of this tower is long dead. I was once his apprentice. But the Lich rules this ship now.
-    <<SetSpeaker Player angry>>
+    <<SetSpeaker Player angry>><<Emote Player angry>>
     Then why didn't killing him break us all out of this godsforsaken loop?
     <<SetSpeaker Stellan>>
     He's a <i>Lich</i>, Atlan. He wields time as a weapon to use against us. Killing him doesn't matter while his loop keeps him from a true death.
 <<else>>
     <<SetSpeaker Stellan>>
     The inevitability of your death will continue if you don't stop being so careless.
-    <<SetSpeaker Player angry>>
+    <<SetSpeaker Player angry>><<Emote Player angry>>
     Well, at least I'm doing <i>something</i> instead of wallowing in self-pity.
     <<SetSpeaker Player>>
     Make yourself useful and help me understand what's going on here. Who is the Captain of this ship? It didn't even ping on my radar, I assumed it was abandoned.
@@ -797,12 +807,12 @@ tags:
     [[StellanDefaultDialogue4]]
 <<else>>
     <<SetSpeaker Player>>
-    If you’ve got all this fancy magic to make me stronger, why don’t you just do it all at once? Pump me full of magic juice and send me out to conquer this ship?
+    If you’ve got all this fancy magic to make me stronger, why don’t you just do it all at once? Pump me full of magic and send me out to conquer this ship?
     <<SetSpeaker Stellan>>
     Well, first of all, you would die. Without time to adjust in increments, your body would surely burn up from that much arcane energy at once.
     <<SetSpeaker Player>>
     But we’re stuck in a time loop – I’d just come right back.
-    <<SetSpeaker Stellan>>
+    <<SetSpeaker Stellan>><<Emote Stellan angry>>
     Yes. Without the magic having taken hold. Thus wasting our limited supply of Star Shards – the second limiting factor here, as I can only do so much as the resources you bring me allow.
     <<SetSpeaker Stellan>>
     And finally… because I can’t turn you into a <i>god,</i> Atlan. I can only enhance or unlock hidden potential. Believe me. There are boundaries of the arcane that should not be crossed.
@@ -890,8 +900,8 @@ tags:
     <<SetSpeaker Player>>
     You seem to know far more about what’s going on here than anyone else I’ve encountered on this ship. No one else even seems to find it particularly pressing that we get out of here.
     <<SetSpeaker Stellan>>
-    I’m not certain the others you’ve encountered realize they’re trapped. It’s… complicated.
-    But the time loop has plucked everyone from a different moment, and when things reset, memories and perceptions of what they’ve been through and how long they’ve gone through it get hazy.
+    I’m not certain any of the others you've encountered realize they’re trapped. It’s… complicated.
+    The time loop has plucked everyone from a different moment, and when things reset, memories and perceptions of what they’ve been through and how long they’ve gone through it get hazy.
 <<endif>>
 ===
 
@@ -905,7 +915,7 @@ tags:
     Had enough yet?
     <<SetSpeaker Player>>
     What’s one more death to a man who could face countless more before finally facing the gods?
-    <<SetSpeaker Stellan>>
+    <<SetSpeaker Stellan>><<Emote Stellan angry>>
     Atlan, you are a scoundrel and a fool and one day you are going to get yourself killed enough times that those very gods will board this ship and drag you to the afterlife with their own hands for making such a mockery of their law.
     Until that day… What can I do to help?
 <<endif>>
@@ -919,7 +929,7 @@ tags:
 <<else>>
     <<SetSpeaker Stellan>>
     Tell me, has the Captain's Log been a valuable resource for you?
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player>><<Emote Player surprise>>
     What, this? Thought it was junk. I was keeping it on me to sell as a vintage antique when I leave this place-
     <<SetSpeaker Stellan>>
     No need to get defensive, Atlan. If I had a problem with you pocketing my old mentor's journal for yourself, I would have brought it up much sooner.
@@ -938,7 +948,7 @@ What was he like?
 <<SetSpeaker Stellan>>
 Stubborn. He... spent more time telling me what I <i>couldn't</i> do than teaching me what I <i>could</i>.
 His wisdom was immeasurable.
-<<SetSpeaker Player>>
+<<SetSpeaker Player confused>>
 ... Losing him must have been hard on you.
 <<SetSpeaker Stellan sad>>
 ...
