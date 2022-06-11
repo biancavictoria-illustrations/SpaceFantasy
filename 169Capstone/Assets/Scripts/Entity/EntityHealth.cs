@@ -145,7 +145,7 @@ public class EntityHealth : MonoBehaviour
     // Need a bool to check for slime pit otherwise you could DODGE falling in a slime pit and fall for eternity
     public bool Damage(float damage, DamageSourceType damageSource)
     {
-        if( gameObject.tag == "Player" && damageSource != DamageSourceType.DeathPit && damageSource != DamageSourceType.DefeatedTimeLichEndRunDeath ){
+        if( gameObject.tag == "Player" && damageSource != DamageSourceType.DeathPit && damageSource != DamageSourceType.DeathPitTimeLichArena && damageSource != DamageSourceType.DefeatedTimeLichEndRunDeath ){
             // TEMP for dev
             if( tempPlayerGodModeToggle ){
                 return currentHitpoints <= 0;
