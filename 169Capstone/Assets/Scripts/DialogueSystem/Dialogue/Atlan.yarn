@@ -51,14 +51,13 @@ tags:
 ---
 <<SetSpeaker Player shocked>><<Emote Player surprise>>
 What...?
-<<SetSpeaker Player>>
 I feel... different.
 ===
 
 title: PlayerCaptainsLogDialogueTriggered
 tags:
 ---
-<<SetSpeaker Player>>
+<<SetSpeaker Player>><<Emote Player surprise>>
 The Captain's Log...
 Looks pretty old, but maybe it has a map.
 ===
@@ -84,7 +83,7 @@ tags:
     I'm getting a comm? From who? ... Answer comm.
     <<SetSpeaker Stellan comm ???>>
     Not bad. Take the elevator up, if you feel ready for the real challenge. But I have a feeling I will be meeting you face-to-face soon.
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>>
     Huh. Maybe he's the Wizard of this tower.
 <<else>>    // Second run
     <<SetSpeaker Player confused>><<Emote Player question>>
@@ -193,10 +192,10 @@ tags:
     <<SetSpeaker TimeLich angry>>
     It is not... time...
 <<elseif $num is 3>>
-    <<SetSpeaker TimeLich angry>>
+    <<SetSpeaker TimeLich angry>><<Emote TimeLich angry>>
     You cannot... kill... time itself...
 <<else>>
-    <<SetSpeaker TimeLich angry>>
+    <<SetSpeaker TimeLich angry>><<Emote TimeLich angry>>
     Accept... your fate...
 <<endif>>
 ===
@@ -204,8 +203,9 @@ tags:
 title: PlayerTimeLichDeathDialogueTriggeredFINAL
 tags:
 ---
-<<SetSpeaker TimeLich angry>>
+<<SetSpeaker TimeLich angry>><<Emote TimeLich angry>>
 <i>Uugh!</i>
+<<Emote TimeLich question>>
 ... How...?
 <<SetSpeaker Player>>
 All the time in the world made you complacent, old man.

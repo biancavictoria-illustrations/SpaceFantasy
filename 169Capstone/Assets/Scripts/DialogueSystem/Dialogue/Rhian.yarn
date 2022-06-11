@@ -78,7 +78,7 @@ tags:
 <<else>>
     <<SetSpeaker Player>>
     Hey, Rhian, quick question about this ship–
-    <<SetSpeaker Rhian>>
+    <<SetSpeaker Rhian>><<Emote Rhian surprise>>
     Nevermind that! Guess what? Today I found out what happens if you light a lute on fire.
     <<SetSpeaker Player>>
     Okay. What happened?
@@ -96,10 +96,12 @@ tags:
     <<SetSpeaker Player>>
     So, Rhian, about this ship–
     <<SetSpeaker Rhian>>
-    Atlan, wait! I have to tell you, I found this <i>insane</i> sniper in storage! It has a laser scope and everything!
+    Atlan, wait! I have to tell you, I found this <i>insane</i> sniper in storage!
+    <<Emote Rhian heart>>
+    It has a laser scope and everything!
     <<SetSpeaker Player>>
     Sounds cool, but I’m not much of a sniper guy–
-    <<SetSpeaker Rhian>>
+    <<SetSpeaker Rhian>><<Emote Rhian angry>>
     Well, good thing it’s not for you then isn’t it! Not everything is about you, Atlan!
 <<endif>>
 ===
@@ -116,8 +118,10 @@ tags:
     Hang on, check this out. I found this ridiculous rocket launcher down in storage, and you’ll never guess what it shoots.
     <<SetSpeaker Player>>
     R–
-    <<SetSpeaker Rhian>>
-    IT SHOOTS ROCKETS! <i>Entire rockets,</i> Atlan! This thing is the best.
+    <<SetSpeaker Rhian>><<Emote Rhian surprise>>
+    IT SHOOTS ROCKETS! <i>Entire rockets,</i> Atlan!
+    <<Emote Rhian heart>>
+    This thing is the best.
 <<endif>>
 ===
 
@@ -130,10 +134,11 @@ tags:
     <<SetSpeaker Player>>
     Is the ship–
     <<SetSpeaker Rhian>>
-    Wait, <i>wait,</i> look at THIS! Look what I found! It’s… a… revolver! Can you believe it? They stopped making models like this <i>centuries</i> ago!
+    Wait, <i>wait,</i> look at THIS! Look what I found! It’s… a… revolver!
+    Can you believe it? It's... like... acoustic. No frilly tech! They stopped making models like this <i>centuries</i> ago!
     <<SetSpeaker Player>>
     It’s beautiful.
-    <<SetSpeaker Rhian>>
+    <<SetSpeaker Rhian>><<Emote Rhian question>>
     Beautiful? <i>Beautiful?</i> Atlan, it’s a MASTERPIECE!
 <<endif>>
 ===
@@ -148,11 +153,10 @@ tags:
     So–
     <<SetSpeaker Rhian>>
     Hey, Atlan, look. I just… wanted to say. I really appreciate you talking to me all the time. Honestly, my parents never took my interests very seriously. They wanted me to be a bard, like them, but music was never really my thing, y’know? They even specifically named me <i>Rhiannon</i> after the legendary halfling lutist but like… Music was just that thing I did as a kid because I didn’t know any better and I was just going along with whatever my parents wanted for me, but as I grew up, I realized there was another kind of music I was more interested in.
-    <<SetSpeaker Rhian>>
     Weapons make their own music, you just have to know how to make them sing. And I do. But my parents just… never really got <i>me.</i> But you’ve taken the time to talk to me, and I’ve seen you out there, a bit, and I know you <i>get it.</i> You know how to make your weapons sing, too.
-    <<SetSpeaker Rhian>>
+    <<Emote Rhian blush>>
     What I’m trying to say is… I think you’re pretty cool. And I appreciate you. Or whatever.
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>>
     … Thanks, Rhian.
     <<SetSpeaker Rhian>>
     Now buy some weapons or get out of my sight.
@@ -165,8 +169,8 @@ tags:
 <<SetSpeaker Player>><<BranchComplete DefaultDialogue DefaultDialogue>>
 So, Rhian, I’ve been trying to ask… do you know about what’s going on here?
 <<SetSpeaker Rhian>>
-Oh, on the ship? Yeah, there’s all sorts of screwed up stuff going on. My memory gets all weird about it and it’s hard to keep track of how many times I’ve even seen <i>you</i> run through here but I definitely know SOMETHING is up. And very, very wrong.
-<<SetSpeaker Rhian>>
+Oh, on the ship? Yeah, there’s all sorts of screwed up stuff going on.
+My memory gets all weird about it and it’s hard to keep track of how many times I’ve even seen <i>you</i> run through here but I definitely know SOMETHING is up. And very, very wrong.
 But whatever. As long as I get to hang out here, I don’t really care about what’s going on out there.
 ===
 
@@ -178,7 +182,7 @@ tags:
 // Get a random number 0 - 6 and go to that node
 <<set $num to RandomNum(7)>>
 <<if $num is 0>>
-    <<SetSpeaker Rhian>>
+    <<SetSpeaker Rhian>><<Emote Rhian heart>>
     <i>Ahh,</i> the sweet, sweet symphony of a rail gun.
 <<elseif $num is 1>>
     [[RhianRepeatable1]]
@@ -198,14 +202,14 @@ tags:
 title: RhianRepeatable1
 tags:
 ---
-<<SetSpeaker Rhian>>
+<<SetSpeaker Rhian>><<Emote Rhian angry>>
 What, you just gonna stand there staring or are you gonna buy something?
 ===
 
 title: RhianRepeatable2
 tags:
 ---
-<<SetSpeaker Rhian>>
+<<SetSpeaker Rhian>><<Emote Rhian angry>>
 Need something sharpened? Well, DO IT YOURSELF! What, do I look like I’m gonna hold your hand or something? Learn how to sharpen your own blade for a change!
 ===
 
@@ -219,7 +223,7 @@ You looking for weapons? I got weapons. They’re some pretty badass weapons.
 title: RhianRepeatable4
 tags:
 ---
-<<SetSpeaker Rhian>>
+<<SetSpeaker Rhian>><<Emote Rhian happy>>
 You looking to shoot something? Stab something? Blow something up? Maybe laser something in the face? Well, you came to the right place!
 ===
 
@@ -233,7 +237,7 @@ So much to shoot, so little time… Come on, let’s hurry this along!
 title: RhianRepeatable6
 tags:
 ---
-<<SetSpeaker Rhian>>
+<<SetSpeaker Rhian>><<Emote Rhian happy>>
 You sure know how to make your weapons sing.
 ===
 
@@ -245,9 +249,9 @@ tags:
 <<if Visited("RhianLowHealth")>>
     [[RhianLowHealth1]]
 <<else>>
-    <<SetSpeaker Rhian>>
+    <<SetSpeaker Rhian>><<Emote Rhian sad>>
     Gods, Atlan, you smell <i>terrible.</i> Is that what death smells like? Are you dying? I think you might be dying.
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>><<Emote Player sweat>>
     Thanks for the vote of confidence, Rhi.
 <<endif>>
 ===
@@ -260,7 +264,7 @@ tags:
 <<else>>
     <<SetSpeaker Rhian>>
     Just so we’re clear, Atlan, you’re supposed to use the things I sell you on <i>enemies.</i> Not, y’know, your own foot?
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>><<Emote Player sweat>>
     … Maybe I’ll just take my electrum elsewhere. Buy some armor.
     <<SetSpeaker Rhian>>
     <i>Pfft,</i> who needs <i>armor?</i> Just get a bigger, better gun and kill the bad guys before they can kill you!
@@ -273,9 +277,9 @@ tags:
 <<if Visited("RhianLowHealth2")>>
     [[RhianLowHealth3]]
 <<else>>
-    <<SetSpeaker Rhian>>
+    <<SetSpeaker Rhian>><<Emote Rhian surprise>>
     <i>Eugh,</i> Atlan! You, uh, doin’ okay there buddy?
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>><<Emote Player sweat>>
     Never better. Now show me what you got before I pass out.
 <<endif>>
 ===
@@ -288,11 +292,11 @@ tags:
 <<else>>
     <<SetSpeaker Rhian>>
     Uh, Atlan? Can a human survive <i>that much</i> blood loss? Not that I’m concerned or anything, I’m sure you’ve got this all under control.
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>><<Emote Player sweat>>
     All according to plan. But, uh, I don’t suppose you have any super special just-for-emergencies kill-everything-in-sight-instantly weapons I could try out?
     <<SetSpeaker Rhian>>
     Gods, I wish. Even if I did, you think I’d sell them to you? In this shape, you’d lose it as soon as you step outside my shop! I’m not <i>wasting</i> something like that!
-    <<SetSpeaker Player>>
+    <<SetSpeaker Player confused>><<Emote Player sad>>
     Great. Cool. Thanks, Rhi.
 <<endif>>
 ===
@@ -300,9 +304,9 @@ tags:
 title: RhianLowHealth4
 tags:
 ---
-<<SetSpeaker Rhian>><<BranchComplete LowHealth LowHealth>>
+<<SetSpeaker Rhian>><<Emote Rhian surprise>><<BranchComplete LowHealth LowHealth>>
 Whoa, Atlan, that’s um… that’s a lot of blood. That’s a <i>lot</i> of blood. Like a lot.
-<<SetSpeaker Player>>
+<<SetSpeaker Player confused>><<Emote Player sweat>>
 I noticed.
 <<SetSpeaker Rhian>>
 Uh… well… good luck out there?
@@ -316,7 +320,7 @@ tags:
 <<if Visited("RhianBarterSuccess")>>
     [[RhianBarterSuccess1]]
 <<else>>
-    <<SetSpeaker Rhian>>
+    <<SetSpeaker Rhian>><<Emote Rhian surprise>>
     Atlan! Oh my gods, is all that for me? You’re so thoughtful! How did you know I was looking for slime ooze?
     <<SetSpeaker Player>>
     What, you want all this goop from my boots?
@@ -335,7 +339,7 @@ tags:
 <<else>>
     <<SetSpeaker Player>>
     Rhi, is that a new bandolier? It looks lovely on you.
-    <<SetSpeaker Rhian>>
+    <<SetSpeaker Rhian>><<Emote Rhian happy>>
     I know! And <i>look at how many pockets it has!</i> I was able to buy it with all that electrum you’ve been bringing me.
     You know what? Take a discount today. Consider this… a customer loyalty program!
     <<SetSpeaker Player>>
@@ -353,7 +357,7 @@ No. Why?
 <<SetSpeaker Player>>
 Oh, it’s a horrible place. Seedy bars, gambling dens, black market weapons deals everywhere you look.
 I actually won this here ray gun in a, uh, particularly high stakes game of cards. You find loads of people pawning off gear like this to feed their gambling problems. Or other addictions.
-<<SetSpeaker Rhian>>
+<<SetSpeaker Rhian>><<Emote Rhian happy>>
 … Promise me you’ll take me someday! Please, I’ll do anything – I’ll even give you a discount!
 <<SetSpeaker Player>>
 I’m sure we can work something out.
@@ -368,14 +372,14 @@ tags:
     [[RhianBarterFail1]]
 <<else>>
     <<SetSpeaker Rhian>>
-    Guess what? I found this super cool sword down in storage, it’s like as big as I am but it’s perfectly weighted. I swear I’ve never seen such flawless metallurgy.
+    Guess what? I found this super cool sword down in storage, it’s like as big as I am but it’s perfectly weighted. I swear I’ve never seen such flawless metallurgy!
     <<SetSpeaker Player>>
     Where is it? I’ll take a look.
-    <<SetSpeaker Rhian>>
+    <<SetSpeaker Rhian>><<Emote Rhian question>>
     What, no, it’s not for <i>you.</i> It’s not for <i>sale.</i>
     <<SetSpeaker Player>>
     But you said it’s too big for you!
-    <<SetSpeaker Rhian>>
+    <<SetSpeaker Rhian>><<Emote Rhian surprise>>
     I said <i>no such thing!</i> Come on, look at my B-tier stuff.
     <<SetSpeaker Player>>
     If you’re admitting it’s B-tier, I should get a discount.
@@ -395,8 +399,10 @@ tags:
     <<SetSpeaker Player>>
     Depends on what you’re getting. And where. Got any ideas?
     <<SetSpeaker Rhian>>
-    Oh, yeah, loads. In fact, for the amount of tattoos I want, I’m raising my prices today. Gonna need <i>lots</i> of electrum to afford all that. Good thinking, Atlan.
-    <<SetSpeaker Player>>
+    Oh, yeah, loads. In fact, for the amount of tattoos I want, I’m raising my prices today. Gonna need <i>lots</i> of electrum to afford all that.
+    <<Emote Rhian happy>>
+    Good thinking, Atlan.
+    <<SetSpeaker Player>><<Emote Player sad>>
     That definitely wasn’t what I was suggesting.
 <<endif>>
 ===
@@ -408,6 +414,6 @@ tags:
 Hey, Atlan, check this out! It’s a laser scope you can shine directly into the eyes of your enemies to blind them <i>and</i> get that perfect shot!
 <<SetSpeaker Player>>
 You sure you can <i>reach</i> their eyes?
-<<SetSpeaker Rhian>>
+<<SetSpeaker Rhian>><<Emote Rhian angry>>
 Oh, I get it. Because I’m short. Well, JOKES ON YOU. I’m raising my prices JUST FOR TALL JERKS LIKE YOU. Ha. Take that.
 ===
