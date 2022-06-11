@@ -241,14 +241,14 @@ public class DialogueManager : MonoBehaviour
                     sortedStoryBeats.Add(beat);
                 }
                 // If the beat type is numRuns, check conditions and add it to the pool if necessary
-                else if( beatType == StoryBeatType.NumRuns ){
+                else if( beatType == StoryBeatType.NumRuns && NPC.ActiveNPC ){
                     // Separate from currentNumRunRemoveValue, if one has passed the threshold in which we're okay with seeing runNum dialogue, remove it
                     int opportunityPassedRemoveValue = 0;
                     int currentRunNumber = GameManager.instance.currentRunNumber;
                     foreach(int num in NPC.ActiveNPC.GetNumRunDialogueList()){
                         int difference = currentRunNumber - num;
                         // If THIS NPC has something to say about your number of runs within threshold runs, add it to the pool
-                        if( difference <= numRunsThreshold && difference >= 0 ){
+                        if( difference <= numRunsThreshold && difference >= 0 && !visitedNodes.Contains(NPC.ActiveNPC.SpeakerData().SpeakerID() + beat.GetYarnHeadNode()) ){
                             sortedStoryBeats.Add(beat);
                             currentNumRunRemoveValue = num;
                         }
@@ -257,7 +257,7 @@ public class DialogueManager : MonoBehaviour
                             opportunityPassedRemoveValue = num;
                         }
                     }
-                    NPC.ActiveNPC.GetNumRunDialogueList().Remove(opportunityPassedRemoveValue);
+                    NPC.ActiveNPC.GetNumRunDialogueList().Remove(opportunityPassedRemoveValue); // I don't think this saves so there's kinda no point to this...? Not sure
                 }
                 // If the beat type is lowHP, check conditions and maybe add it
                 else if( beatType == StoryBeatType.LowHealth ){
