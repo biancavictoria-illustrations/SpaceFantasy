@@ -182,7 +182,6 @@ public class DialogueManager : MonoBehaviour
             return GameManager.instance.firstClearRunNumber;
         });
 
-
         // Add SelectNextTrigger so that we can find the next conditional category of dialogue to play
         dialogueRunner.AddFunction("SelectNextNode", 0, delegate (Yarn.Value[] parameters){
             // Sorted database of all beats available at the moment (all for which conditions are met)
@@ -278,19 +277,29 @@ public class DialogueManager : MonoBehaviour
                 }
             }
 
-            // This doesn't actually work bc every time NPC start runs it resets its num run dialogue list
-            // Is this necessary? It won't run again as long as it's marked complete, and it won't run to begin with unless the num run matches
-            // CONFIRM this can be removed before deleting it completely
-            // if( sortedStoryBeats.Max.GetBeatType() == StoryBeatType.NumRuns ){
-            //     NPC.ActiveNPC.GetNumRunDialogueList().Remove(currentNumRunRemoveValue);
-            // }
-
-            Debug.Log("PLAYING DIALOGUE INTERACTION for " + NPC.ActiveNPC.SpeakerData().SpeakerID() + ": " + sortedStoryBeats.Max.GetYarnHeadNode());
+            // Debug.Log("PLAYING DIALOGUE INTERACTION for " + NPC.ActiveNPC.SpeakerData().SpeakerID() + ": " + sortedStoryBeats.Max.GetYarnHeadNode());
 
             // Return the highest priority beat
             return sortedStoryBeats.Max.GetYarnHeadNode();
         });
 
+        dialogueRunner.AddFunction("Stat", 1, delegate (Yarn.Value[] parameters){
+            string statValue = parameters[0].AsString;
+            switch(statValue){
+                case "STR":
+                    return Player.instance.stats.Strength();
+                case "DEX":
+                    return Player.instance.stats.Dexterity();
+                case "CON":
+                    return Player.instance.stats.Constitution();
+                case "INT":
+                    return Player.instance.stats.Intelligence();
+                case "WIS":
+                    return Player.instance.stats.Wisdom();
+            }
+            Debug.LogError("No stat value found for stat code: " + statValue);
+            return -1;
+        });
 
         // I don't think this is being used anywhere...
         // Add a function to tell yarn which node in that conditional branch to play

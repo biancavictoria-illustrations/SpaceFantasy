@@ -662,6 +662,23 @@ tags:
     Your apparent success against <i>him</i>?
     <<SetSpeaker Stellan sad>>
     It was only a fluke. You're stuck here. Just like the rest of us.
+<<elseif $headNode is "KilledByTimeLich">>  // If you made it to the lich but died on run 1
+    <<SetSpeaker Stellan neutral ???>>
+    How did you reach him...?
+    <<SetSpeaker Player>><<Emote Player surprise>>
+    <i>Uugh</i>... I'm... alive?
+    <<SetSpeaker Stellan neutral ???>>
+    Yes, yes, it's a time loop. How miraculous and novel. Even death won't set us free. Now get on your feet and quit looking so ill. Who are you and what are you doing on this ship?
+    <<SetSpeaker Player>>
+    Name's Atlan. Came in here looking for loot. Maybe some electrum, if anyone left any lying around. Now I'm just trying to get off this godsforsaken ship.
+    <<SetSpeaker Stellan neutral ???>>
+    Ah, yes. The wayward adventurer. You do look like a pirate. Perhaps a <i>scoundrel,</i> if you prefer. And don’t you correct me by claiming to be a “trader” or “privateer,” as if those words mean anything besides “common thief.”
+    <<SetSpeaker Player>>
+    Can't fault a man for trying to steal from an abandoned wizard's tower. Didn't realize it wouldn't be so abandoned on the inside.
+    <<SetSpeaker Stellan neutral ???>>
+    Nevertheless, it was ambition that brought you here. The misguided arrogance that you could handle whatever threats might lurk within.
+    <<SetSpeaker Stellan sad ???>>
+    And now, you're stuck. Just like the rest of us.
 <<else>>
     <<SetSpeaker Stellan neutral ???>>
     Well, you certainly don’t belong here.

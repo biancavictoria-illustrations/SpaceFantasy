@@ -44,13 +44,14 @@ tags:
     [[TimeLichLowHealth]]
 <<elseif $headNode is "BarterFail">>
     [[TimeLichBarterFail]]
+
+<<elseif not Visited("TimeLichLowWis") and Stat("WIS") < 10>>   // Special
+    [[TimeLichLowWis]]
+
 <<elseif $headNode is "DefaultDialogue">>
     [[TimeLichDefaultDialogue]]
 <<elseif $headNode is "Repeatable">>
     [[TimeLichRepeatable]]
-
-<<elseif $headNode is "TYPE">>      // *** TODO *** (low WIS type)
-    [[TimeLichTYPE]]
 
 <<else>>
     [[TimeLichRepeatable]]
@@ -172,7 +173,8 @@ tags:
     [[TimeLichDefaultDialogue1]]
 <<elseif GetCurrentRunNum() is 1>>
     <<SetSpeaker TimeLich neutral ???>>
-    Ahh... the wayward adventurer. A young hero, wreaking havoc in a ship he knows nothing about.
+    Well, you certainly don’t belong here.
+    A wayward adventurer. A young hero wreaking havoc in a ship, making it so far only to die.
     <<SetSpeaker Player>>
     I’ve never considered myself much of a hero. Just an opportunist.
     But you must be the Captain – or do you prefer Wizard?
@@ -327,12 +329,10 @@ You have resorted to begging. How pathetic. And I was just beginning to respect 
 
 
 
-title: TimeLichTYPE
+title: TimeLichLowWis
 tags:
 ---
-// *** TODO ***
-// Triggered if particularly low WIS
-<<SetSpeaker TimeLich>><<BranchComplete TYPE TYPE>>
+<<SetSpeaker TimeLich>>
 You’ll not be a quitter if you submit. Indeed, you would be wise to accept the fate time has written for you.
 <<SetSpeaker Player>>
 I’m not feeling particularly wise today.
