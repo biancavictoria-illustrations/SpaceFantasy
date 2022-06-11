@@ -52,8 +52,8 @@ public class DialogueEmote : MonoBehaviour
     private void DeactivateOnLineComplete()
     {
         if(emoteIsActive){
-            ToggleEmoteActive(false);
             rectTransform.localScale = Vector3.zero;
+            ToggleEmoteActive(false);
         }
     }
 }
