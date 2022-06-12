@@ -132,9 +132,6 @@ public class JournalContentDisplay : MonoBehaviour
                 return;
             }
 
-            // TODO: If Cap panel is active and then go to REDACTED, it's not deactivating
-            // cap panel
-
             SetDefaultValues(content);
 
             // Top Header Panel
@@ -152,7 +149,7 @@ public class JournalContentDisplay : MonoBehaviour
                 mainBodyContent.text = "<b>PERFORMANCE REVIEW:</b>\n" + content.ReportNotes();
             }
             else{
-                mainBodyContent.text = RESEARCH_PREFIX + content.ReportNotes();
+                mainBodyContent.text = content.ReportNotes();
             }
         }
 
@@ -244,6 +241,9 @@ public class JournalContentDisplay : MonoBehaviour
             }
             if(galaxyPanel){
                 galaxyPanel.SetActive(false);
+            }
+            if(captainPanel){
+                captainPanel.SetActive(false);
             }
         }
     }
