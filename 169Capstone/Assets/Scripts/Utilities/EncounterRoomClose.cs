@@ -11,6 +11,7 @@ public class EncounterRoomClose : MonoBehaviour
     [SerializeField] private Room room;
     [SerializeField] private EnemyGen enemyGen;
     [SerializeField] private GameObject bossPrefab;
+    [SerializeField] private GameObject lightHolder;
     [SerializeField] private Color newColor;
     [SerializeField] private Light sceneLight;
     [SerializeField] private bool isBossRoom;
@@ -36,6 +37,7 @@ public class EncounterRoomClose : MonoBehaviour
                 if(light.type == LightType.Directional)
                 {
                     sceneLight = light;
+                    sceneLight.enabled = false;
                     break;
                 }
             }
@@ -80,6 +82,8 @@ public class EncounterRoomClose : MonoBehaviour
             {
                 oldColor = sceneLight.color;
                 sceneLight.color = newColor;
+                sceneLight.enabled = true;
+                
 
                 GameObject boss = Instantiate(bossPrefab, room.transform.position, room.transform.rotation);
                 boi = boss.GetComponent<Beetle>();
@@ -118,6 +122,8 @@ public class EncounterRoomClose : MonoBehaviour
             {
                 elevator.GetComponent<Collider>().enabled = true;
 
+                sceneLight.enabled = false;
+                lightHolder.SetActive(true);
                 sceneLight.color = oldColor;
                 // Debug.Log("Room Open");
             }
