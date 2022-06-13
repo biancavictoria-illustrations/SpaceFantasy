@@ -5,8 +5,8 @@ using UnityEngine.AI;
 
 public class FallingDebris : MonoBehaviour
 {
-    private const float startingHeight = 10;
-    private const float gravity = 12;
+    private const float startingHeight = 20;
+    private const float gravity = 15;
 
     public float damage = 8;
 

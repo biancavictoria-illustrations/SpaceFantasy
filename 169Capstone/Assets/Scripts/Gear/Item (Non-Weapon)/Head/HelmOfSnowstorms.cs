@@ -30,7 +30,7 @@ public class HelmOfSnowstorms : Head
         hurtCircleScript = circle.GetComponentInChildren<HurtCircle>();
 
         // Initialize the scripts so they know what to do
-        slowCircleScript.Initialize("Enemy", "Pit", .20f, data.equipmentBaseData.Duration(), data.equipmentBaseData.Radius());
+        slowCircleScript.Initialize(Player.instance, "Enemy", "Pit", .20f, data.equipmentBaseData.Duration(), data.equipmentBaseData.Radius());
         hurtCircleScript.Initialize("Enemy", player.stats.getWISDamage(false) * data.equipmentBaseData.BaseDamage(), 
                                                 data.equipmentBaseData.Duration(), DamageSourceType.Player, data.equipmentBaseData.Radius());
         

@@ -26,6 +26,8 @@ public class Lich : Enemy
     private bool canSummon = true;
     private float meteorFrequency { get { return isPhase2 ? phase2MeteorFrequency : phase1MeteorFrequency; } }
 
+    protected override void OnTierIncrease(int newTier) {}
+    
     protected override void Start()
     {
         base.Start();
@@ -46,6 +48,13 @@ public class Lich : Enemy
         attackToAnimationTrigger.Add(logic.attacks[0], "isMagicMissile");
         attackToAnimationTrigger.Add(logic.attacks[1], "isMeteorShower");
         attackToAnimationTrigger.Add(logic.attacks[2], "isSummoning");
+
+        this.currentTier = GameManager.instance.gameTimer.enemyTier;
+        float newMaxHitPoints = Mathf.FloorToInt(stats.getMaxHitPoints() * (1 + healthIncreasePerTier * currentTier));
+        float hitPointDiff = newMaxHitPoints - health.maxHitpoints;
+        health.maxHitpoints = newMaxHitPoints;
+        health.currentHitpoints += hitPointDiff;
+        health.SetStartingHealthUI();
     }
 
     protected override IEnumerator EnemyLogic() //special
@@ -96,7 +105,7 @@ public class Lich : Enemy
         Vector3 towardsPlayer = player.transform.position - transform.position;
         towardsPlayer.y = 0;
         GameObject missile = Instantiate(missilePrefab, transform.position + transform.up + transform.forward, Quaternion.FromToRotation(transform.position, player.transform.position));
-        missile.GetComponent<Projectile>().Initialize("Player", logic.baseDamage * nextAttack.damageMultiplier, DamageSourceType.TimeLich, towardsPlayer);
+        missile.GetComponent<Projectile>().Initialize("Player", logic.baseDamage * nextAttack.damageMultiplier * (1 + damageIncreasePerTier * currentTier), DamageSourceType.TimeLich, towardsPlayer);
     }
 
     public void MeteorShower()
@@ -138,7 +147,7 @@ public class Lich : Enemy
     public void TimeDilation()
     {
         SlowCircle slowScript = Instantiate(slowCirclePrefab, player.transform.position, Quaternion.identity).GetComponent<SlowCircle>();
-        slowScript.Initialize("Player", "Enemy", 0.5f, 10, radius: 8, fadeInDuration: 1);
+        slowScript.Initialize(this, "Player", "Enemy", 0.5f, 10, radius: 8, fadeInDuration: 1);
     }
 
     private IEnumerator MeteorRoutine()
@@ -148,7 +157,7 @@ public class Lich : Enemy
         while(count < nextAttack.duration/meteorFrequency)
         {
             GameObject meteor = Instantiate(meteorPrefab, player.transform.position, Quaternion.identity);
-            meteor.GetComponent<FallingMeteor>().damage = logic.baseDamage * nextAttack.damageMultiplier;
+            meteor.GetComponent<FallingMeteor>().damage = logic.baseDamage * nextAttack.damageMultiplier * (1 + damageIncreasePerTier * currentTier);
             ++count;
             yield return new WaitForSeconds(meteorFrequency);
         }

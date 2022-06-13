@@ -29,9 +29,6 @@ public abstract class Pathing : MonoBehaviour
         //Start the enemy randomly flipped left or right
         if(sprite)
             sprite.flipX = Random.value > 0.5f;
-        
-        if(player == null)
-            player = GameObject.FindWithTag("Player").GetComponent<Transform>();
 
         if(gameManager == null)
             gameManager = GameManager.instance;
@@ -39,6 +36,9 @@ public abstract class Pathing : MonoBehaviour
 
     void Update()
     {
+        if(player == null)
+            player = Player.instance.transform;
+
         HandleMovement();
     }
 }

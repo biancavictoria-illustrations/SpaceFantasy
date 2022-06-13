@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class LichPathing : Pathing
 {
@@ -9,6 +10,12 @@ public class LichPathing : Pathing
 
     private bool canPath = true;
     private Vector3 destination;
+    private NavMeshPath path;
+
+    void Awake()
+    {
+        path = new NavMeshPath();
+    }
 
     protected override void HandleMovement()
     {
@@ -37,25 +44,39 @@ public class LichPathing : Pathing
             if(destination == Vector3.zero)
             {
                 int numTries = 0;
+                Dictionary<Vector3, float> positionsWithWeights = new Dictionary<Vector3, float>();
                 bool successfulDest = false;
                 do
                 {
-                    //Get the vector pointing from the player toward this enemy, and adjust the angle a bit
-                    Vector2 fromPlayer = new Vector2(transform.position.x - player.position.x, transform.position.z - player.position.z);
-                    float angle = Mathf.Atan2(fromPlayer.y, fromPlayer.x) + Random.Range(-Mathf.PI/4, Mathf.PI/4);
-
                     //Set the distance to be generally within the attack range
                     float magnitude = Random.Range(nearAttackRange + 1, attackRadius - 1);
+                    float angle = Random.Range(0, 2 * Mathf.PI);
 
                     //Set the destination to a point that is a combination of the above angle and magnitude relative to the player
                     Vector3 offset = new Vector3(Mathf.Cos(angle), 0,  Mathf.Sin(angle)) * magnitude;
                     destination = player.position + offset;
-                    successfulDest = agent.SetDestination(destination);
+                    successfulDest = agent.CalculatePath(destination, path);
+                    if(successfulDest)
+                    {
+                        NavMeshHit hit = new NavMeshHit();
+                        NavMesh.SamplePosition(destination, out hit, 1, NavMesh.AllAreas);
+                        if(hit.mask == NavMesh.GetAreaFromName("Unfavorable"))
+                        {
+                            angle = Random.Range(0, 2 * Mathf.PI);
+                            offset = new Vector3(Mathf.Cos(angle), 0,  Mathf.Sin(angle)) * magnitude;
+                            destination = player.position + offset;
+                            successfulDest = agent.CalculatePath(destination, path);
+                        }
+                    }
                     ++numTries;
                 }
                 while(!successfulDest && numTries < 20); //Try to find a valid point 20 times before giving up
 
-                if(!successfulDest) //If we couldn't find a valid point in 20 attempts, wait 0.5 seconds before trying again
+                if (successfulDest) //If we couldn't find a valid point in 20 attempts, wait 0.5 seconds before trying again
+                {
+                    agent.Warp(destination);
+                }
+                else
                 {
                     StartCoroutine(DisablePathing(0.5f));
                     destination = Vector3.zero;

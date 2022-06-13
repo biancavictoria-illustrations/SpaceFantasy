@@ -7,7 +7,7 @@ public class Beetle : Enemy
     private delegate void CoroutineCallback();
 
     private const float phase1SlamFrequency = 0.25f;
-    private const float phase2SlamFrequency = 0.125f;
+    private const float phase2SlamFrequency = 0.05f;
 
     public Room bossRoomScript;
     [SerializeField] private EnemyLogic phase1logic;
@@ -34,6 +34,8 @@ public class Beetle : Enemy
     // {
     //     base.Awake();
     // }
+
+    protected override void OnTierIncrease(int newTier) {}
 
     protected override void Start()
     {
@@ -71,6 +73,13 @@ public class Beetle : Enemy
         path = attackToPathType[nextAttack];
         path.enabled = true;
         path.attackRadius = nextAttack.attackRange;
+
+        this.currentTier = GameManager.instance.gameTimer.enemyTier;
+        float newMaxHitPoints = Mathf.FloorToInt(stats.getMaxHitPoints() * (1 + healthIncreasePerTier * currentTier));
+        float hitPointDiff = newMaxHitPoints - health.maxHitpoints;
+        health.maxHitpoints = newMaxHitPoints;
+        health.currentHitpoints += hitPointDiff;
+        health.SetStartingHealthUI();
     }
 
     protected override IEnumerator EnemyLogic() //special
@@ -82,7 +91,7 @@ public class Beetle : Enemy
         path.attacking = true;
         shockwaveCount = 0;
 
-        while(!attackToAnimationTrigger.ContainsKey(nextAttack))    // CHASE TODO: Changed from if to while here too cuz it was still not containing stuff but this "while" seems bad (he got stuck when it was "if")
+        if(!attackToAnimationTrigger.ContainsKey(nextAttack))
             nextAttack = logic.attacks[Random.Range(0, logic.attacks.Count)];
 
         if(attackToAnimationTrigger[nextAttack] == "isCharge")
@@ -121,13 +130,6 @@ public class Beetle : Enemy
         nextAttack = logic.attacks[Random.Range(0, logic.attacks.Count)];
         if(previousAttack == nextAttack)
             nextAttack = logic.attacks[Random.Range(0, logic.attacks.Count)]; //Reroll next attack to try to prevent duplicate attacks
-
-        // If we try to trigger something in a phase that doesn't have that attack, do something else
-        // CHASE TODO: Plz make this better (like have a local version of attacks that updates after phase 2)
-        // I just did this to avoid errors cuz it threw an error for slam no longer being in the dictionary before
-        while(!attackToPathType.ContainsKey(nextAttack)){
-            nextAttack = logic.attacks[Random.Range(0, logic.attacks.Count)];
-        }
 
         path = attackToPathType[nextAttack];
         path.attackRadius = nextAttack.attackRange;
@@ -187,7 +189,7 @@ public class Beetle : Enemy
             for(int i = 0; i < 3; ++i)
             {
                 Vector3 towardsPlayer = transform.forward;
-                towardsPlayer += new Vector3(Random.Range(-0.25f, 0.25f), 0, Random.Range(-0.25f, 0.25f));
+                towardsPlayer += new Vector3(Random.Range(-0.4f, 0.4f), 0, Random.Range(-0.4f, 0.4f));
                 towardsPlayer.y = 0;
                 GameObject missile = Instantiate(missilePrefab, transform.position + transform.up + transform.forward*4, Quaternion.FromToRotation(transform.position, player.transform.position));
                 missile.transform.localScale *= 2;
@@ -195,12 +197,6 @@ public class Beetle : Enemy
                 missile.GetComponent<Projectile>().Initialize("Player", damageAmount, DamageSourceType.BeetleBoss, towardsPlayer);
             }
         }));
-
-        // CHASE TODO: Fine tune this, if you'd like. It drops a LOT cuz it drops with each missile firing
-        // It uh. it's a lot. but i feel like it should be? the fight is baby easy remember? we need to make it a lot harder and THIS SURE DOES
-        if(isPhase2){
-            dropDebrisRoutine = StartCoroutine(Phase2DropDebrisRoutine());
-        }
     }
 
     private IEnumerator ChargeRoutine()
@@ -222,15 +218,10 @@ public class Beetle : Enemy
             Vector3 direction = transform.forward;
             direction.y = 0;
 
-            float speed = stats.getMoveSpeed() * 2; // CHASE TODO: Maybe up this in phase 2?
-
-            // CHASE TODO: I'm having a hard time getting the debris to fall in this attack
-            if(isPhase2){
-                dropDebrisRoutine = StartCoroutine(Phase2DropDebrisRoutine());
-            }
+            float speed = stats.getMoveSpeed() * (isPhase2 ? 3 : 2);
 
             RaycastHit hit;
-            while(!Physics.SphereCast(transform.position, 3f, transform.forward, out hit, 0.5f, LayerMask.GetMask("Environment", "Player")))
+            while(!Physics.SphereCast(transform.position, 3f, transform.forward, out hit, speed*Time.fixedDeltaTime, LayerMask.GetMask("Environment", "Player")))
             {
                 yield return new WaitForFixedUpdate();
                 transform.position += direction * speed * Time.fixedDeltaTime;
@@ -241,6 +232,10 @@ public class Beetle : Enemy
                 float damageAmount = logic.baseDamage * nextAttack.damageMultiplier * (1 + damageIncreasePerTier * currentTier);
                 player.GetComponent<EntityHealth>().Damage(damageAmount, DamageSourceType.BeetleBoss);
                 player.GetComponent<Movement>().ApplyExternalVelocity(direction * speed * 2);
+            }
+
+            if(isPhase2){
+                dropDebrisRoutine = StartCoroutine(Phase2DropDebrisRoutine());
             }
 
             animator.SetTrigger("ChargeStun");
@@ -288,7 +283,7 @@ public class Beetle : Enemy
     private IEnumerator Phase2DropDebrisRoutine()
     {
         int count = 0;
-        while(count < nextAttack.duration/slamDebrisFrequency)
+        while(count < 0.5f/slamDebrisFrequency)
         {
             GameObject debris = Instantiate(debrisPrefab, transform.position, Quaternion.identity);
             
@@ -339,6 +334,9 @@ public class Beetle : Enemy
         attackToAnimationTrigger.Add(logic.attacks[1], "isShockwave");
         // attackToAnimationTrigger.Add(logic.attacks[2], "isSlam");
         attackToAnimationTrigger.Add(logic.attacks[2], "isArcaneMissiles");
+
+        meleePath.speed *= 2f;
+        rangedPath.speed *= 2f;
     }
 
     private void checkForHalfHealth(EntityHealth health, float damage)

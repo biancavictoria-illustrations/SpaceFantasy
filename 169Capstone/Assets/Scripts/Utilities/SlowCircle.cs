@@ -22,6 +22,7 @@ public class SlowCircle : MonoBehaviour
         get { return _canSlow; }
     }
 
+    private Object creator;
     private HashSet<Collider> slowTargets;
     private HashSet<Collider> speedTargets;
     private int enemyLayer;
@@ -36,13 +37,14 @@ public class SlowCircle : MonoBehaviour
         speedTargets = new HashSet<Collider>();
     }
 
-    public void Initialize(string enemyLayer, string friendlyLayer, float speedChangePercent, float lifetime, float radius = 1, float damageInterval = 0.5f, float fadeInDuration = 1)
+    public void Initialize(Object creator, string enemyLayer, string friendlyLayer, float speedChangePercent, float lifetime, float radius = 1, float damageInterval = 0.5f, float fadeInDuration = 1)
     {
-        Initialize(LayerMask.NameToLayer(enemyLayer), LayerMask.NameToLayer(friendlyLayer), speedChangePercent, lifetime, radius, damageInterval, fadeInDuration);
+        Initialize(creator, LayerMask.NameToLayer(enemyLayer), LayerMask.NameToLayer(friendlyLayer), speedChangePercent, lifetime, radius, damageInterval, fadeInDuration);
     }
 
-    public void Initialize(int enemyLayer, int friendlyLayer, float speedChangePercent, float lifetime, float radius = 1, float damageInterval = 0.5f, float fadeInDuration = 1)
+    public void Initialize(Object creator, int enemyLayer, int friendlyLayer, float speedChangePercent, float lifetime, float radius = 1, float damageInterval = 0.5f, float fadeInDuration = 1)
     {
+        this.creator = creator;
         this.enemyLayer = enemyLayer;
         this.friendlyLayer = friendlyLayer;
         this.speedChangePercent = speedChangePercent;
@@ -66,7 +68,7 @@ public class SlowCircle : MonoBehaviour
             if(moveScript != null)
             {
                 slowTargets.Add(other);
-                Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, -speedChangePercent);
+                Player.instance.stats.SetBonusForStat(creator, StatType.MoveSpeed, EntityStats.BonusType.multiplier, -speedChangePercent);
             }
             else if(pathScript != null)
             {
@@ -79,7 +81,7 @@ public class SlowCircle : MonoBehaviour
             if(moveScript != null)
             {
                 speedTargets.Add(other);
-                Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, speedChangePercent);
+                Player.instance.stats.SetBonusForStat(creator, StatType.MoveSpeed, EntityStats.BonusType.multiplier, speedChangePercent);
             }
             else if(pathScript != null)
             {
@@ -178,9 +180,9 @@ public class SlowCircle : MonoBehaviour
         if(moveScript != null)
         {
             if(enable)
-                Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, -speedChangePercent);
+                Player.instance.stats.SetBonusForStat(creator, StatType.MoveSpeed, EntityStats.BonusType.multiplier, -speedChangePercent);
             else
-                Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, 1);
+                Player.instance.stats.SetBonusForStat(creator, StatType.MoveSpeed, EntityStats.BonusType.multiplier, 0);
         }
         else if(pathScript != null)
         {
@@ -208,9 +210,9 @@ public class SlowCircle : MonoBehaviour
         if(moveScript != null)
         {
             if(enable)
-                Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, speedChangePercent);
+                Player.instance.stats.SetBonusForStat(creator, StatType.MoveSpeed, EntityStats.BonusType.multiplier, speedChangePercent);
             else
-                Player.instance.stats.SetBonusForStat(this, StatType.MoveSpeed, EntityStats.BonusType.multiplier, 1);
+                Player.instance.stats.SetBonusForStat(creator, StatType.MoveSpeed, EntityStats.BonusType.multiplier, 0);
         }
         else if(pathScript != null)
         {
