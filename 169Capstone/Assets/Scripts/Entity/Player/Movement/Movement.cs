@@ -396,8 +396,6 @@ public class Movement : MonoBehaviour
 
     private bool IsInCombat(Room roomScript)
     {
-        int enemyCount = Physics.OverlapSphere(transform.position, 15, LayerMask.GetMask("Enemy")).Length;
-        Debug.Log(enemyCount);
-        return (roomScript != null && roomScript.hasEnemies()) || enemyCount > 0;
+        return (roomScript != null && roomScript.hasEnemies()) || Physics.OverlapSphere(transform.position, 15, LayerMask.GetMask("Enemy")).Length > 0;
     }
 }

@@ -28,9 +28,9 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
     private const int MIN_STAT_NUM_TIMES_PURCHASABLE = 10;
     private const int MAX_STAT_NUM_TIMES_PURCHASABLE = 5;
     
-    private const int STAT_BASE_COST = 5;
-    private const float STAT_MIN_COST_INCREASE = 2.5f;
-    private const int STAT_MAX_COST_INCREASE = 5;
+    private const int STAT_BASE_COST = 2;
+    private const float STAT_MIN_COST_INCREASE = 2f;
+    private const int STAT_MAX_COST_INCREASE = 4;
 
     [SerializeField] private TMP_Text costText;
     [SerializeField] private TMP_Text skillLevelText;
@@ -427,21 +427,21 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
                 return;
             case PermanentUpgradeType.ArmorPlating:
                 upgradeName = "Armor Plating";
-                upgradeBaseCost = 10;
+                upgradeBaseCost = 5;
                 costIncreasePerLevel = 5;
                 totalUpgradeLevels = PermanentUpgradeManager.maxArmorPlatingLevels;
                 UpdateBaseDescriptionValues();
                 return;
             case PermanentUpgradeType.ExtensiveTraining:
                 upgradeName = "Extensive Training";
-                upgradeBaseCost = 10;
+                upgradeBaseCost = 5;
                 costIncreasePerLevel = 5;
                 totalUpgradeLevels = PermanentUpgradeManager.maxExtensiveTrainingLevels;
                 UpdateBaseDescriptionValues();
                 return;
             case PermanentUpgradeType.Natural20:
                 upgradeName = "Natural 20";
-                upgradeBaseCost = 20;
+                upgradeBaseCost = 10;
                 costIncreasePerLevel = 0;
                 totalUpgradeLevels = PermanentUpgradeManager.maxNatural20Levels;
                 baseDescription = "Increase base Critical Hit Chance to <color=" + InGameUIManager.SLIME_GREEN_COLOR + ">" + PermanentUpgradeManager.instance.natural20BonusPerLevel*100 + "%</color>.";
