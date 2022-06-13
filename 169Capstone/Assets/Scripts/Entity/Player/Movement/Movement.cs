@@ -51,14 +51,14 @@ public class Movement : MonoBehaviour
     void Start()
     {        
         Collider[] colliders = Physics.OverlapSphere(transform.position, 0.1f, LayerMask.GetMask("RoomBounds"));
-
+        
         foreach(Collider col in colliders)
         {
             if(col.bounds.Contains(transform.position))
             {
                 Room roomScript = col.GetComponent<Room>();
                 if(roomScript != null){
-                    AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, roomScript.hasEnemies());
+                    AudioManager.Instance.playMusic(AudioManager.MusicTrack.Level1, false);
                     roomScript.enableAllMinimapSprites();
                 }                    
                 break;
@@ -70,18 +70,20 @@ public class Movement : MonoBehaviour
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, 0.1f, LayerMask.GetMask("RoomBounds"));
 
+        Room roomScript = null;
         foreach(Collider col in colliders)
         {
             if(col.bounds.Contains(transform.position))
             {
-                Room roomScript = col.GetComponent<Room>();
+                roomScript = col.GetComponent<Room>();
                 if(roomScript != null){
-                    AudioManager.Instance.toggleCombat(roomScript.hasEnemies());
                     roomScript.enableAllMinimapSprites();
                 }                    
                 break;
             }
         }
+
+        AudioManager.Instance.toggleCombat(IsInCombat(roomScript));
     }
 
     void FixedUpdate()
@@ -360,7 +362,15 @@ public class Movement : MonoBehaviour
         RaycastHit hit;
         if(!isJumping && Physics.SphereCast(transform.position + Vector3.up * player.radius, player.radius, Vector3.down, out hit, 0.1f, LayerMask.GetMask("Environment")))
         {
-            fallingVelocity = -10000;
+            if(Physics.Raycast(transform.position + Vector3.up * player.radius, Vector3.down, out hit, 0.1f, LayerMask.GetMask("Environment")))
+            {
+                fallingVelocity = -10000;
+            }
+            else
+            {
+                fallingVelocity = 0;
+            }
+
             isGrounded = true;
             animator.SetBool("IsJumping", false);
         }
@@ -382,5 +392,12 @@ public class Movement : MonoBehaviour
 
         direction += Vector3.up * fallingVelocity;
         player.Move(direction);
+    }
+
+    private bool IsInCombat(Room roomScript)
+    {
+        int enemyCount = Physics.OverlapSphere(transform.position, 15, LayerMask.GetMask("Enemy")).Length;
+        Debug.Log(enemyCount);
+        return (roomScript != null && roomScript.hasEnemies()) || enemyCount > 0;
     }
 }

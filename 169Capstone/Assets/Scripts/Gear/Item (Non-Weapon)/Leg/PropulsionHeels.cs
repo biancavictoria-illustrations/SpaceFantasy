@@ -24,9 +24,9 @@ public class PropulsionHeels : Leg
         base.ActivateLegs();
 
         direction = controller.velocity.normalized;
+        direction = new Vector3(direction.x, 0, direction.z).normalized;
         if(direction == Vector3.zero)
             direction = playerModel.forward;
-        direction = new Vector3(direction.x, 0, direction.z).normalized;
         
         InputManager.instance.preventInputOverride = true;
         routine = StartCoroutine(dashRoutine());
