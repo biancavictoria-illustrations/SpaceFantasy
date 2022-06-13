@@ -88,7 +88,11 @@ public class EntityHealth : MonoBehaviour
     public float maxHitpoints;
     public float currentHitpoints;
 
+    [Tooltip("All enemies need this (except technically those in the lich fight arena)")]
     [SerializeField] private EnemyDropGenerator enemyDropGenerator;
+    [Tooltip("ONLY FOR MINI BOSSES - the single item this boss drops that connects to the NPC")]
+    [SerializeField] private EquipmentBaseData dropOverride;
+
     [SerializeField] private GameObject coinPrefab;
     [SerializeField] private GameObject starShardPrefab;
 
@@ -327,8 +331,16 @@ public class EntityHealth : MonoBehaviour
             
             // If we're NOT in the lich fight, maybe drop something
             if(GameManager.instance.currentSceneName != GameManager.LICH_ARENA_STRING_NAME){
-                if(enemyDropGenerator)
-                    enemyDropGenerator.GetDrop(GameManager.instance.gearTier, transform);
+                if(enemyDropGenerator){
+                    // If it's a mini boss, drop the designated item
+                    if(enemyID == EnemyID.BeetleBoss){
+                        enemyDropGenerator.GetDrop(GameManager.instance.gearTier, transform, rarity: ItemRarity.Legendary, dropOverride);
+                    }
+                    // Otherwise, randomly generate a new drop
+                    else{
+                        enemyDropGenerator.GetDrop(GameManager.instance.gearTier, transform);
+                    }
+                }
                 else
                     Debug.LogWarning("No enemy drop generator found for enemy: " + enemyID);
             }

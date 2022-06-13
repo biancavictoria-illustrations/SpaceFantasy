@@ -12,31 +12,43 @@ public class EnemyDropGenerator : ScriptableObject
     [SerializeField] private GameObject dropItemPrefab;
 
     // Called by the enemey health script when the enemy dies
-    public void GetDrop(int tier, Transform pos)
+    // If you pass in an equipmentBaseData override, you MUST ALSO pass in a rarity override!
+    public void GetDrop(int tier, Transform pos, ItemRarity rarity = ItemRarity.enumSize, EquipmentBaseData equipmentBaseData = null)
     {
-        // Select the drop table that coordinates with the current tier
-        DropTable dropTableObjectForTier = dropTables[tier];
-        Dictionary<DropTable.ItemSlotRarityKey, float> dropTable = dropTableObjectForTier.DropTableDictionary();
+        // If no equipment base data override is passed in, generate new values for stuff
+        // If an equipmentBaseData value is passed in, auto drop (no chance of drop, it just drops)
+        if(equipmentBaseData == null){
+            // Select the drop table that coordinates with the current tier
+            DropTable dropTableObjectForTier = dropTables[tier];
+            Dictionary<DropTable.ItemSlotRarityKey, float> dropTable = dropTableObjectForTier.DropTableDictionary();
 
-        // Generate a random number, 0 - 1, to determine item type and rarity
-        float chance = Random.Range(0.0f, 1f);
-        InventoryItemSlot itemType = InventoryItemSlot.enumSize;
-        ItemRarity rarity = ItemRarity.enumSize;
+            // Generate a random number, 0 - 1, to determine item type and rarity
+            float chance = Random.Range(0.0f, 1f);
+            InventoryItemSlot itemType = InventoryItemSlot.enumSize;
 
-        float itemDropChanceValueFromTable = 0;  // The chance of this selected item dropping, as input in the drop table
-        try{
-            // Get the first match for an item with this drop chance (bc values are cumulative, this won't return the same thing every time)
-            KeyValuePair<DropTable.ItemSlotRarityKey, float> matchEntry = dropTable.First( entry => chance <= entry.Value );
-            itemDropChanceValueFromTable = matchEntry.Value;
-            itemType = matchEntry.Key.itemType;
-            rarity = matchEntry.Key.rarity;
+            float itemDropChanceValueFromTable = 0;  // The chance of this selected item dropping, as input in the drop table
+            try{
+                // Get the first match for an item with this drop chance (bc values are cumulative, this won't return the same thing every time)
+                KeyValuePair<DropTable.ItemSlotRarityKey, float> matchEntry = dropTable.First( entry => chance <= entry.Value );
+                itemDropChanceValueFromTable = matchEntry.Value;
+
+                itemType = matchEntry.Key.itemType;
+                
+                // If rarity is enumSize at this point (no override provided), generate it
+                if(rarity == ItemRarity.enumSize)
+                    rarity = matchEntry.Key.rarity;
+            }
+            catch{
+                return;     // If the drop chance value is > all possible drop chance values in the list, don't drop anything
+            }
+
+            // Get the equipment data for the right type of equipment, if no override is passed in
+            equipmentBaseData = GetEquipmentBaseData(itemType);
         }
-        catch{
-            return;     // If the drop chance value is > all possible drop chance values in the list, don't drop anything
+
+        if(rarity == ItemRarity.enumSize){
+            Debug.LogError("No rarity override passed in for drop generation with equipmentBaseData override! If passing in a specific item to drop, must also pass in the rarity!");
         }
-        
-        // Get the equipment data for the right type of equipment
-        EquipmentBaseData equipmentBaseData = GetEquipmentBaseData(itemType);
 
         // Create item to drop in physical space from prefab
         GameObject dropItemObject = Instantiate(dropItemPrefab);

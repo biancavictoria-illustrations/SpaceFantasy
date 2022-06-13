@@ -82,6 +82,7 @@ Transform:
   m_Children:
   - {fileID: 7746888967629464194}
   - {fileID: 8340758941239993263}
+  - {fileID: 6152774549505332186}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -202,6 +203,7 @@ MonoBehaviour:
   maxHitpoints: 0
   currentHitpoints: 0
   enemyDropGenerator: {fileID: 11400000, guid: f8177299486ba1944824b2e1d87947c1, type: 2}
+  dropOverride: {fileID: 11400000, guid: 7764cffafe14f7e45bd11a8912457c4e, type: 2}
   coinPrefab: {fileID: 2286606508243086693, guid: f3ef54a734253dd4ab1b1be7a889606a,
     type: 3}
   starShardPrefab: {fileID: 2207105199061856247, guid: 29b3dbaab14d2f74891aeae9638a35ee,
@@ -220,6 +222,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats: {fileID: 11400000, guid: 0b871eb0689ce0640b4803f19f70d777, type: 2}
+--- !u!1 &5317147639080032745
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6152774549505332186}
+  - component: {fileID: 1155027268665543470}
+  m_Layer: 0
+  m_Name: Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6152774549505332186
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5317147639080032745}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4941471536871962135}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &1155027268665543470
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5317147639080032745}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 2.16
+  m_Height: 6.86
+  m_Direction: 2
+  m_Center: {x: 0, y: 2.71, z: 0.36}
 --- !u!95 &145690342985362840
 Animator:
   serializedVersion: 3

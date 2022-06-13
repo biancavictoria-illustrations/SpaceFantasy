@@ -17,7 +17,10 @@ public class Beetle : Enemy
     [SerializeField] private GameObject hurtCirclePrefab;
 
     private Player player;
+
     private Coroutine attackRoutine;
+    private Coroutine dropDebrisRoutine;
+
     private MeleePathing meleePath;
     private RangedPathing rangedPath;
     private Dictionary<AttackLogic, Pathing> attackToPathType;
@@ -79,7 +82,7 @@ public class Beetle : Enemy
         path.attacking = true;
         shockwaveCount = 0;
 
-        if(!attackToAnimationTrigger.ContainsKey(nextAttack))
+        while(!attackToAnimationTrigger.ContainsKey(nextAttack))    // CHASE TODO: Changed from if to while here too cuz it was still not containing stuff but this "while" seems bad (he got stuck when it was "if")
             nextAttack = logic.attacks[Random.Range(0, logic.attacks.Count)];
 
         if(attackToAnimationTrigger[nextAttack] == "isCharge")
@@ -118,6 +121,13 @@ public class Beetle : Enemy
         nextAttack = logic.attacks[Random.Range(0, logic.attacks.Count)];
         if(previousAttack == nextAttack)
             nextAttack = logic.attacks[Random.Range(0, logic.attacks.Count)]; //Reroll next attack to try to prevent duplicate attacks
+
+        // If we try to trigger something in a phase that doesn't have that attack, do something else
+        // CHASE TODO: Plz make this better (like have a local version of attacks that updates after phase 2)
+        // I just did this to avoid errors cuz it threw an error for slam no longer being in the dictionary before
+        while(!attackToPathType.ContainsKey(nextAttack)){
+            nextAttack = logic.attacks[Random.Range(0, logic.attacks.Count)];
+        }
 
         path = attackToPathType[nextAttack];
         path.attackRadius = nextAttack.attackRange;
@@ -163,6 +173,8 @@ public class Beetle : Enemy
             {
                 hurtScript.canDamage = true;
             }
+
+            dropDebrisRoutine = StartCoroutine(Phase2DropDebrisRoutine());
         }
 
         ++shockwaveCount;
@@ -183,6 +195,12 @@ public class Beetle : Enemy
                 missile.GetComponent<Projectile>().Initialize("Player", damageAmount, DamageSourceType.BeetleBoss, towardsPlayer);
             }
         }));
+
+        // CHASE TODO: Fine tune this, if you'd like. It drops a LOT cuz it drops with each missile firing
+        // It uh. it's a lot. but i feel like it should be? the fight is baby easy remember? we need to make it a lot harder and THIS SURE DOES
+        if(isPhase2){
+            dropDebrisRoutine = StartCoroutine(Phase2DropDebrisRoutine());
+        }
     }
 
     private IEnumerator ChargeRoutine()
@@ -204,7 +222,12 @@ public class Beetle : Enemy
             Vector3 direction = transform.forward;
             direction.y = 0;
 
-            float speed = stats.getMoveSpeed() * 2;
+            float speed = stats.getMoveSpeed() * 2; // CHASE TODO: Maybe up this in phase 2?
+
+            // CHASE TODO: I'm having a hard time getting the debris to fall in this attack
+            if(isPhase2){
+                dropDebrisRoutine = StartCoroutine(Phase2DropDebrisRoutine());
+            }
 
             RaycastHit hit;
             while(!Physics.SphereCast(transform.position, 3f, transform.forward, out hit, 0.5f, LayerMask.GetMask("Environment", "Player")))
@@ -260,6 +283,21 @@ public class Beetle : Enemy
         }
 
         path.enabled = true;
+    }
+
+    private IEnumerator Phase2DropDebrisRoutine()
+    {
+        int count = 0;
+        while(count < nextAttack.duration/slamDebrisFrequency)
+        {
+            GameObject debris = Instantiate(debrisPrefab, transform.position, Quaternion.identity);
+            
+            float damageAmount = logic.baseDamage * nextAttack.damageMultiplier * (1 + damageIncreasePerTier * currentTier);
+            debris.GetComponent<FallingDebris>().damage = damageAmount;
+
+            ++count;
+            yield return new WaitForSeconds(slamDebrisFrequency);
+        }
     }
 
     private IEnumerator turnTowardsPlayerRoutine(float duration, float variance = 0, CoroutineCallback callback = null)
