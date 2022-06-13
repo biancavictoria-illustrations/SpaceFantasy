@@ -36,9 +36,6 @@ public abstract class Pathing : MonoBehaviour
 
     void Update()
     {
-        if(player == null)
-            player = Player.instance.transform;
-
         HandleMovement();
     }
 }

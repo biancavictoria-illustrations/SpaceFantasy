@@ -9,12 +9,14 @@ public class PropulsionHeels : Leg
     private Vector3 direction;
     private Coroutine routine;
     private CharacterController controller;
+    private Transform playerModel;
 
     protected override void Start()
     {
         base.Start();
 
         controller = player.GetComponent<CharacterController>();
+        playerModel = player.GetComponent<Movement>().model;
     }
 
     protected override void ActivateLegs()
@@ -22,6 +24,10 @@ public class PropulsionHeels : Leg
         base.ActivateLegs();
 
         direction = controller.velocity.normalized;
+        if(direction == Vector3.zero)
+            direction = playerModel.forward;
+        direction = new Vector3(direction.x, 0, direction.z).normalized;
+        
         InputManager.instance.preventInputOverride = true;
         routine = StartCoroutine(dashRoutine());
     }

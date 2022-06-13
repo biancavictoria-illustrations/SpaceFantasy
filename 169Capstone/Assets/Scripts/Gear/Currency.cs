@@ -31,6 +31,7 @@ public class Currency : MonoBehaviour
     {
         if(gravitateToPlayer && (maxGravitationRange <= 0 || Vector3.Distance(Player.instance.transform.position, transform.position) < maxGravitationRange) && !isGravitating)
         {
+            gameObject.layer = LayerMask.NameToLayer("Currency");
             isGravitating = true;
             StartCoroutine(gravitateTowardPlayerRoutine());
         }

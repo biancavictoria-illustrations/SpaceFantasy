@@ -12,6 +12,9 @@ public class RangedPathing : Pathing
 
     protected override void HandleMovement()
     {
+        if(player == null)
+            player = Player.instance.transform;
+            
         float distance = Vector3.Distance(player.position, transform.position);
 
         if(!canPath || InAttackRange() || !canMove)
@@ -81,6 +84,9 @@ public class RangedPathing : Pathing
 
     public override bool InAttackRange()
     {
+        if(player == null)
+            player = Player.instance.transform;
+
         float distance = Vector3.Distance(player.position, transform.position);
 
         //If still moving toward the destination point

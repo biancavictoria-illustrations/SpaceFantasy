@@ -6,6 +6,9 @@ public class MeleePathing : Pathing
 {
     protected override void HandleMovement()
     {
+        if(player == null)
+            player = Player.instance.transform;
+            
         float distance = Vector3.Distance(player.position, transform.position);
 
         if(InAttackRange() || !canMove || agent.remainingDistance > 2 * provokedRadius)
@@ -41,6 +44,9 @@ public class MeleePathing : Pathing
 
     public override bool InAttackRange()
     {
+        if(player == null)
+            player = Player.instance.transform;
+
         return Vector3.Distance(player.position, transform.position) <= attackRadius;
     }
 }

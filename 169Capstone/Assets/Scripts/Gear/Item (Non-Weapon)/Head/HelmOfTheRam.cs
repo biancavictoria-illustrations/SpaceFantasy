@@ -98,9 +98,12 @@ public class HelmOfTheRam : Head
             EntityHealth enemy = hit.collider.GetComponent<EntityHealth>();
             enemy.Damage(player.stats.getSTRDamage(false) * 2, DamageSourceType.Player);
 
-            Pathing path = enemy.GetComponent<Pathing>();
-            if(path != null)
-                pushRoutine = StartCoroutine(pushEnemyRoutine(path));
+            if(!enemy.isBossEnemy)
+            {
+                Pathing path = enemy.GetComponent<Pathing>();
+                if(path != null)
+                    pushRoutine = StartCoroutine(pushEnemyRoutine(path));
+            }
         }
         
         StopCoroutine(durationRoutine);
