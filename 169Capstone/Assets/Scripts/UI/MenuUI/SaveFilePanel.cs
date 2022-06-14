@@ -62,6 +62,7 @@ public class SaveFilePanel : MonoBehaviour
 
     public void SlotSelected()
     {
+        AudioManager.Instance.stopMusic(true);
         if(slotIsFull){
             GameManager.instance.LoadGame(slotNumber);        
         }
