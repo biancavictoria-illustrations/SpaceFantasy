@@ -63,6 +63,10 @@ public class HurtCircle : MonoBehaviour
     {
         while(true)
         {
+            if(target == null){
+                yield break;
+            }
+
             if(canDamage)
             {
                 yield return new WaitForSeconds(damageInterval);

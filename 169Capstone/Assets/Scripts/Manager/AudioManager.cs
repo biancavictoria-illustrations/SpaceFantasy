@@ -191,4 +191,49 @@ public class AudioManager : MonoBehaviour
 
         playMusic(track, isCombat);
     }
+
+    #region Play SFX
+        public void SetupSFXOnStart(string SFXName, FMOD.Studio.EventInstance FMODevent, GameObject source)
+        {
+            if(SFXName != ""){
+                FMODevent = FMODUnity.RuntimeManager.CreateInstance(SFXName);
+                FMODevent.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(source));
+                // FMODUnity.RuntimeManager.AttachInstanceToGameObject(hitSFXEvent, transform);
+            }
+        }
+
+        public void PlaySFX(string SFXName, FMOD.Studio.EventInstance FMODevent)
+        {
+            if(SFXName == ""){
+                Debug.Log("No SFX found");
+                return;
+            }
+            // FMODUnity.RuntimeManager.AttachInstanceToGameObject(FMODevent, source.transform);
+            FMODevent.start();
+        }
+        
+        public void PlaySFX(string SFXName, FMOD.Studio.EventInstance FMODevent, GameObject source)
+        {
+            if(SFXName == ""){
+                Debug.Log("No SFX found");
+                return;
+            }
+
+            // FMODevent.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(source));
+
+            // FMODUnity.RuntimeManager.AttachInstanceToGameObject(FMODevent, source.transform, GetComponent<Rigidbody>()); do we need the rigidbody?
+            FMODUnity.RuntimeManager.AttachInstanceToGameObject(FMODevent, source.transform);        
+            FMODevent.start();
+        }
+
+        public void PlaySFX(string SFXName, GameObject source)
+        {
+            if(SFXName == ""){
+                Debug.Log("No SFX found");
+                return;
+            }
+
+            FMODUnity.RuntimeManager.PlayOneShot(SFXName, source.transform.position);
+        }
+    #endregion
 }

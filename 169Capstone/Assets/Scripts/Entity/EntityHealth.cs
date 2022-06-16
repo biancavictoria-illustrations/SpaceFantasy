@@ -96,6 +96,11 @@ public class EntityHealth : MonoBehaviour
     [SerializeField] private GameObject coinPrefab;
     [SerializeField] private GameObject starShardPrefab;
 
+    #region SFX
+        [FMODUnity.EventRef] public string hitSFX;
+        private FMOD.Studio.EventInstance hitSFXEvent;
+    #endregion
+
     private EnemyHealthBar enemyHealthUI;
     public bool isBossEnemy {get; private set;}
     public EnemyID enemyID {get; private set;}
@@ -137,7 +142,9 @@ public class EntityHealth : MonoBehaviour
     void Start()
     {
         OnDeath.AddListener(onEntityDeath);
-        OnCrit.AddListener(onPlayerCrit);        
+        OnCrit.AddListener(onPlayerCrit);
+        
+        AudioManager.Instance.SetupSFXOnStart(hitSFX, hitSFXEvent, gameObject);
     }
 
     public void SetStartingHealthUI()
@@ -159,7 +166,6 @@ public class EntityHealth : MonoBehaviour
             float dodgeChance = Player.instance.stats.getDodgeChance();
             float rolledChance = Random.Range(0.0f, 1f);
             if( rolledChance <= dodgeChance ){
-                // TODO: Trigger dodge floating text!
                 InGameUIManager.instance.ShowFloatingText(null, 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1f, gameObject, "dodge");
                 return currentHitpoints <= 0;
             }
@@ -201,7 +207,10 @@ public class EntityHealth : MonoBehaviour
             
             OnDeath.Invoke(this);
         }
-        
+
+        // AudioManager.Instance.PlaySFX(hitSFX, ref hitSFXEvent, gameObject);
+        AudioManager.Instance.PlaySFX(hitSFX, gameObject);
+
         ManageLowHealthOverlay();
 
         return currentHitpoints <= 0;
