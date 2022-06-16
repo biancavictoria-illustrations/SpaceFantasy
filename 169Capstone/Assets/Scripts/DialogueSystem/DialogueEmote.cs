@@ -45,6 +45,7 @@ public class DialogueEmote : MonoBehaviour
         emoteIsActive = set;
 
         if(set){
+            AudioManager.Instance.PlaySFX(emoteType);
             LeanTween.scale( gameObject, new Vector3(1,1,1), scaleDuration ).setEase(LeanTweenType.easeOutElastic).setIgnoreTimeScale(true);
         }
     }

@@ -24,6 +24,7 @@ public class SceneTransitionDoor : MonoBehaviour
     {
         GameManager.instance.inElevatorAnimation = true;
 
+        PlayElevatorSFX();
         FindObjectOfType<ScreenFade>().FadeOut(1f);
         
         elevatorHelper.AddListenerToAnimationEnd(() => {
@@ -68,6 +69,16 @@ public class SceneTransitionDoor : MonoBehaviour
         if(other.gameObject.layer == LayerMask.NameToLayer("Player")){
             ActiveDoor = null;
             AlertTextUI.instance.DisablePrimaryAlert();
+        }
+    }
+
+    private void PlayElevatorSFX()
+    {
+        if( goToSceneName == GameManager.EPILOGUE_SCENE_STRING_NAME ){
+            AudioManager.Instance.PlaySFX(AudioManager.SFX.ElevatorDown, gameObject);
+        }
+        else{
+            AudioManager.Instance.PlaySFX(AudioManager.SFX.ElevatorUp, gameObject);
         }
     }
 }

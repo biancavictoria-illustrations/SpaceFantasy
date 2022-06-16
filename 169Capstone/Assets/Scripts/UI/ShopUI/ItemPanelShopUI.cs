@@ -54,6 +54,7 @@ public class ItemPanelShopUI : MonoBehaviour, ISelectHandler, IDeselectHandler, 
             return;
         }
 
+        AudioManager.Instance.PlaySFX(AudioManager.SFX.ItemPurchase);
         PlayerInventory.instance.SetTempCurrency(PlayerInventory.instance.tempCurrency - currentCostValue);
     }
 

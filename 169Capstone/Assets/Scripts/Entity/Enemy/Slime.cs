@@ -8,6 +8,8 @@ public class Slime : Enemy
     private SpriteRenderer spriteRenderer;
     [SerializeField] private GameObject explosionObject;
 
+    [SerializeField][FMODUnity.EventRef] private string attackSFX;
+
     protected override void Start()
     {
         base.Start();
@@ -42,6 +44,8 @@ public class Slime : Enemy
         Transform player = Player.instance.transform;
         if(Physics.Raycast(transform.position + Vector3.up, player.position - transform.position, out hit, nextAttack.attackRange))
         {
+            AudioManager.Instance.PlaySFX(attackSFX, gameObject);
+            
             float damageAmount = logic.baseDamage * nextAttack.damageMultiplier * (1 + damageIncreasePerTier * currentTier);
             return hit.collider.tag == "Player" ? hit.collider.GetComponent<EntityHealth>().Damage(damageAmount, DamageSourceType.Slime) : false;
         }

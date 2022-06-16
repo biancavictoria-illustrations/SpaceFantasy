@@ -96,10 +96,7 @@ public class EntityHealth : MonoBehaviour
     [SerializeField] private GameObject coinPrefab;
     [SerializeField] private GameObject starShardPrefab;
 
-    #region SFX
-        [FMODUnity.EventRef] public string hitSFX;
-        private FMOD.Studio.EventInstance hitSFXEvent;
-    #endregion
+    [FMODUnity.EventRef] public string hitSFX;
 
     private EnemyHealthBar enemyHealthUI;
     public bool isBossEnemy {get; private set;}
@@ -143,8 +140,6 @@ public class EntityHealth : MonoBehaviour
     {
         OnDeath.AddListener(onEntityDeath);
         OnCrit.AddListener(onPlayerCrit);
-        
-        AudioManager.Instance.SetupSFXOnStart(hitSFX, hitSFXEvent, gameObject);
     }
 
     public void SetStartingHealthUI()
@@ -208,8 +203,13 @@ public class EntityHealth : MonoBehaviour
             OnDeath.Invoke(this);
         }
 
-        // AudioManager.Instance.PlaySFX(hitSFX, ref hitSFXEvent, gameObject);
-        AudioManager.Instance.PlaySFX(hitSFX, gameObject);
+        // If player fell in a pit, play that SFX
+        if(gameObject.tag == "Player" && damageSource == DamageSourceType.DeathPit || damageSource == DamageSourceType.DeathPitTimeLichArena){
+            AudioManager.Instance.PlaySFX(AudioManager.SFX.FellInSlimePit, gameObject);
+        }
+        else if( !damageSource.ToString().Contains("Trap") ){   // Otherwise, play this entity's unique hit SFX (if it has one) (unless it's trap damage cuz that gets weird)
+            AudioManager.Instance.PlaySFX(hitSFX, gameObject);
+        }
 
         ManageLowHealthOverlay();
 
@@ -309,6 +309,9 @@ public class EntityHealth : MonoBehaviour
             // Tell the story manager what the player was killed by
             StoryManager.instance.KilledEventOccurred(damageSourceCausedPlayerDeath, StoryBeatType.KilledBy);            
             GameManager.instance.playerDeath = true;
+
+            AudioManager.Instance.stopMusic(true);
+            AudioManager.Instance.PlaySFX(AudioManager.SFX.TimelineResetDeath, gameObject);
         }
         else
         {
@@ -356,11 +359,15 @@ public class EntityHealth : MonoBehaviour
             
             for(int i = 0; i < TEMPCOINDROPAMOUNT; ++i)
             {
+                AudioManager.Instance.PlaySFX(AudioManager.SFX.ElectrumDrop, gameObject);
                 Instantiate(coinPrefab, transform.position, Quaternion.identity);
             }
 
             if(Random.value <= TEMPSTARSHARDDROPCHANCE)
+            {
+                AudioManager.Instance.PlaySFX(AudioManager.SFX.StarShardDrop, gameObject);
                 Instantiate(starShardPrefab, transform.position, Quaternion.identity);
+            }
 
             // If you killed the mini boss, trigger Stellan's comm to tell you to go to the elevator
             if(enemyID == EnemyID.BeetleBoss){

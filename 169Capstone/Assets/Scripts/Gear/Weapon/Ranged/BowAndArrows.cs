@@ -21,6 +21,10 @@ public class BowAndArrows : Equipment
     [SerializeField] private GameObject arrowUIPrefab;
     private ArrowUI arrowUI;
 
+    [SerializeField][FMODUnity.EventRef] private string chargeSFX;
+    [SerializeField][FMODUnity.EventRef] private string shootSFXFullyCharged;
+    [SerializeField][FMODUnity.EventRef] private string shootSFXNormal;
+
     void Start()
     {
         player = Player.instance;
@@ -43,6 +47,8 @@ public class BowAndArrows : Equipment
             holdingAttack = true;
             movement.isAttacking = true;
             playerAnim.animator.SetBool("IsBowAttacking", true);
+
+            AudioManager.Instance.PlaySFX(chargeSFX, Player.instance.gameObject);   // TODO: Disable if you shoot before this finishes playing
         }
 
         if(playerAnim.attackActive)
@@ -54,6 +60,13 @@ public class BowAndArrows : Equipment
 
                 if(heldTime > maxHoldTime + superChargeDuration)
                     heldTime = maxHoldTime + superChargeDuration;
+
+                if(heldTime > maxHoldTime && heldTime < maxHoldTime + superChargeDuration){
+                    arrowUI.flash = true;
+                }
+                else{
+                    arrowUI.flash = false;
+                }
             }
             else if(holdingAttack)
             {
@@ -74,13 +87,18 @@ public class BowAndArrows : Equipment
             Debug.LogError("Projectile prefab " + arrowPrefab + " did not contain a Projectile script.");
         }
 
-        float damageMultiplier;
-        if(heldTime > maxHoldTime && heldTime < maxHoldTime + superChargeDuration)
-            damageMultiplier = 2;
-        else
+        float damageMultiplier = 1;
+        bool autoCrit = false;
+        if(heldTime > maxHoldTime && heldTime < maxHoldTime + superChargeDuration){ // If fully charged
+            autoCrit = true;
+            AudioManager.Instance.PlaySFX(shootSFXFullyCharged, Player.instance.gameObject);
+        }
+        else{
             damageMultiplier = Mathf.Lerp(minDamagePercent, maxDamagePercent, heldTime/maxHoldTime);
+            AudioManager.Instance.PlaySFX(shootSFXNormal, Player.instance.gameObject);
+        }
         
-        projectileScript.Initialize(LayerMask.NameToLayer("Enemy"), player.stats.getDEXDamage() * damageMultiplier, DamageSourceType.Player, InputManager.instance.cursorLookDirection, speed: 20 * Mathf.Lerp(1, 2, heldTime/maxHoldTime));
+        projectileScript.Initialize(LayerMask.NameToLayer("Enemy"), player.stats.getDEXDamage(true, autoCrit) * damageMultiplier, DamageSourceType.Player, InputManager.instance.cursorLookDirection, speed: 20 * Mathf.Lerp(1, 2, heldTime/maxHoldTime));
 
         playerAnim.animator.SetBool("IsBowAttacking", false);
         heldTime = 0;

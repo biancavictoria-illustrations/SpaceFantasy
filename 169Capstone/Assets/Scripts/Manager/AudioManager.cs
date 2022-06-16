@@ -10,7 +10,33 @@ public class AudioManager : MonoBehaviour
             TitleMusic,
             Level1,
             BossMusic,
-            LichMusic
+            LichMusic,
+            MainHubAmbient
+        }
+
+        public enum SFX
+        {
+            StarShardDrop,
+            ElectrumDrop,
+
+            SwordWoosh,
+
+            TimelineResetDeath,
+            TimelineResetRespawn,
+
+            FellInSlimePit,
+
+            ElevatorUp,
+            ElevatorDown,
+
+            DrinkPotion,
+
+            GearSwap,
+            ItemPurchase,
+
+            CaptainsLogAlert,
+            ButtonHover,
+            ButtonClick,
         }
     #endregion
 
@@ -40,6 +66,33 @@ public class AudioManager : MonoBehaviour
         [SerializeField][FMODUnity.EventRef] private string level1MusicTrack;
         [SerializeField][FMODUnity.EventRef] private string bossMusicTrack;
         [SerializeField][FMODUnity.EventRef] private string lichMusicTrack;
+        [SerializeField][FMODUnity.EventRef] private string mainHubAmbientTrack;
+
+        [Header("SFX")]
+        [SerializeField][FMODUnity.EventRef] private string starShardDrop;
+        [SerializeField][FMODUnity.EventRef] private string electrumDrop;
+        [SerializeField][FMODUnity.EventRef] private string swordWoosh;
+        [SerializeField][FMODUnity.EventRef] private string timelineResetDeath;
+        [SerializeField][FMODUnity.EventRef] private string timelineResetRespawn;
+        [SerializeField][FMODUnity.EventRef] private string fellInSlimePit;
+        [SerializeField][FMODUnity.EventRef] private string elevatorUp;
+        [SerializeField][FMODUnity.EventRef] private string elevatorDown;
+        [SerializeField][FMODUnity.EventRef] private string gearSwap;
+        [SerializeField][FMODUnity.EventRef] private string itemPurchase;
+        [SerializeField][FMODUnity.EventRef] private string drinkPotion;
+
+        [Header("UI SFX")]
+        [SerializeField][FMODUnity.EventRef] private string dialogueEmoteAngry;
+        [SerializeField][FMODUnity.EventRef] private string dialogueEmoteBlush;
+        [SerializeField][FMODUnity.EventRef] private string dialogueEmoteHappy;
+        [SerializeField][FMODUnity.EventRef] private string dialogueEmoteHeart;
+        [SerializeField][FMODUnity.EventRef] private string dialogueEmoteQuestion;
+        [SerializeField][FMODUnity.EventRef] private string dialogueEmoteSad;
+        [SerializeField][FMODUnity.EventRef] private string dialogueEmoteSurprise;
+        [SerializeField][FMODUnity.EventRef] private string dialogueEmoteSweat;
+        [SerializeField][FMODUnity.EventRef] private string captainsLogAlert;
+        [SerializeField][FMODUnity.EventRef] private string buttonHover;
+        [SerializeField][FMODUnity.EventRef] private string buttonClick;
 
         //VCAs
         private const string masterVCAPath = "vca:/Master";
@@ -135,6 +188,11 @@ public class AudioManager : MonoBehaviour
                 musicInstance.release();
                 musicInstance = FMODUnity.RuntimeManager.CreateInstance(lichMusicTrack);
                 break;
+            case MusicTrack.MainHubAmbient:
+                musicInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                musicInstance.release();
+                musicInstance = FMODUnity.RuntimeManager.CreateInstance(mainHubAmbientTrack);
+                break;
         }
         musicInstance.start();
     }
@@ -205,35 +263,138 @@ public class AudioManager : MonoBehaviour
         public void PlaySFX(string SFXName, FMOD.Studio.EventInstance FMODevent)
         {
             if(SFXName == ""){
-                Debug.Log("No SFX found");
                 return;
             }
+
             // FMODUnity.RuntimeManager.AttachInstanceToGameObject(FMODevent, source.transform);
             FMODevent.start();
+            FMODevent.release();
         }
         
         public void PlaySFX(string SFXName, FMOD.Studio.EventInstance FMODevent, GameObject source)
         {
             if(SFXName == ""){
-                Debug.Log("No SFX found");
                 return;
             }
 
-            // FMODevent.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(source));
-
             // FMODUnity.RuntimeManager.AttachInstanceToGameObject(FMODevent, source.transform, GetComponent<Rigidbody>()); do we need the rigidbody?
-            FMODUnity.RuntimeManager.AttachInstanceToGameObject(FMODevent, source.transform);        
+            FMODUnity.RuntimeManager.AttachInstanceToGameObject(FMODevent, source.transform);
+            
             FMODevent.start();
+            FMODevent.release();
+        }
+
+        public void PlaySFX(string SFXName)
+        {
+            if(SFXName == ""){
+                return;
+            }
+            FMODUnity.RuntimeManager.PlayOneShot(SFXName);
         }
 
         public void PlaySFX(string SFXName, GameObject source)
         {
             if(SFXName == ""){
-                Debug.Log("No SFX found");
                 return;
             }
-
             FMODUnity.RuntimeManager.PlayOneShot(SFXName, source.transform.position);
+        }
+
+        public void PlaySFX(SFX sfx, GameObject source)
+        {
+            switch(sfx){
+                // Currency
+                case SFX.StarShardDrop:
+                    FMODUnity.RuntimeManager.PlayOneShot(starShardDrop, source.transform.position);
+                    return;
+                case SFX.ElectrumDrop:
+                    FMODUnity.RuntimeManager.PlayOneShot(electrumDrop, source.transform.position);
+                    return;
+
+                // Gear
+                case SFX.SwordWoosh:
+                    FMODUnity.RuntimeManager.PlayOneShot(swordWoosh, source.transform.position);
+                    return;
+
+                // Death stuff
+                case SFX.TimelineResetDeath:
+                    FMODUnity.RuntimeManager.PlayOneShot(timelineResetDeath, source.transform.position);
+                    return;
+                case SFX.TimelineResetRespawn:
+                    FMODUnity.RuntimeManager.PlayOneShot(timelineResetRespawn, source.transform.position);
+                    return;
+
+                // Traps
+                case SFX.FellInSlimePit:
+                    FMODUnity.RuntimeManager.PlayOneShot(fellInSlimePit, source.transform.position);
+                    return;
+
+                case SFX.ElevatorUp:
+                    FMODUnity.RuntimeManager.PlayOneShot(elevatorUp, source.transform.position);
+                    return;
+                case SFX.ElevatorDown:
+                    FMODUnity.RuntimeManager.PlayOneShot(elevatorDown, source.transform.position);
+                    return;
+            }
+            Debug.LogWarning("No SFX found for " + sfx);
+        }
+
+        public void PlaySFX(SFX sfx)
+        {
+            switch(sfx){
+                case SFX.CaptainsLogAlert:
+                    FMODUnity.RuntimeManager.PlayOneShot(captainsLogAlert);
+                    return;
+                case SFX.ButtonHover:
+                    FMODUnity.RuntimeManager.PlayOneShot(buttonHover);
+                    return;
+                case SFX.ButtonClick:
+                    FMODUnity.RuntimeManager.PlayOneShot(buttonClick);
+                    return;
+                
+                case SFX.GearSwap:
+                    FMODUnity.RuntimeManager.PlayOneShot(gearSwap);
+                    return;
+                case SFX.ItemPurchase:
+                    FMODUnity.RuntimeManager.PlayOneShot(itemPurchase);
+                    return;
+
+                case SFX.DrinkPotion:
+                    FMODUnity.RuntimeManager.PlayOneShot(drinkPotion);
+                    return;
+            }
+            Debug.LogWarning("No UI SFX found for " + sfx);
+        }
+
+        public void PlaySFX(DialogueEmoteType emoteType)
+        {
+            switch(emoteType){
+                case DialogueEmoteType.angry:
+                    FMODUnity.RuntimeManager.PlayOneShot(dialogueEmoteAngry);
+                    return;
+                case DialogueEmoteType.blush:
+                    FMODUnity.RuntimeManager.PlayOneShot(dialogueEmoteBlush);
+                    return;
+                case DialogueEmoteType.happy:
+                    FMODUnity.RuntimeManager.PlayOneShot(dialogueEmoteHappy);
+                    return;
+                case DialogueEmoteType.heart:
+                    FMODUnity.RuntimeManager.PlayOneShot(dialogueEmoteHeart);
+                    return;
+                case DialogueEmoteType.question:
+                    FMODUnity.RuntimeManager.PlayOneShot(dialogueEmoteQuestion);
+                    return;
+                case DialogueEmoteType.sad:
+                    FMODUnity.RuntimeManager.PlayOneShot(dialogueEmoteSad);
+                    return;
+                case DialogueEmoteType.surprise:
+                    FMODUnity.RuntimeManager.PlayOneShot(dialogueEmoteSurprise);
+                    return;
+                case DialogueEmoteType.sweat:
+                    FMODUnity.RuntimeManager.PlayOneShot(dialogueEmoteSweat);
+                    return;
+            }
+            Debug.LogWarning("No SFX found for dialogue emote " + emoteType);
         }
     #endregion
 }

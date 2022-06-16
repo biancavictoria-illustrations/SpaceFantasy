@@ -29,6 +29,7 @@ public class AnimationStateController : MonoBehaviour
         attackActive = active > 0;
         if (active == 1)
         {
+            AudioManager.Instance.PlaySFX(AudioManager.SFX.SwordWoosh, Player.instance.gameObject);
             GameObject vfx = Instantiate(swordSlashVFX, Player.instance.transform.position,transform.rotation);
             Destroy(vfx, 1);
         }

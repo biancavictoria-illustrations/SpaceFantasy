@@ -11,14 +11,13 @@ public class ArrowUI : MonoBehaviour
 
     private Material defaultMat;
     private Image arrow;
-    // Start is called before the first frame update
+    
     void Start()
     {
         arrow = GetComponent<Image>();
         defaultMat = arrow.material;
     }
 
-    // Update is called once per frame
     void Update()
     {
         GetFill();
@@ -28,31 +27,34 @@ public class ArrowUI : MonoBehaviour
     {
         arrow.fillAmount = current / maximum;
 
-        if (arrow.fillAmount == 1 && !flash)
-        {
-            flash = true;
+        if(flash){  // If activating the super charge window
             flashWhenFull();
         }
-        else if (arrow.fillAmount == 0)
+        else if(!flash && arrow.fillAmount == 1){   // If the flash is done (past super charge window)
+            ResetMaterial();
+        }
+        else if(arrow.fillAmount == 0)  // If we shot the bow, reset it (in case we shot during the super charge window and still need to reset)
+        {
             flash = false;
+            ResetMaterial();
+        }
     }
 
     private void flashWhenFull()
     {
         Material flash = new Material(defaultMat);
-        Material blue = new Material(defaultMat);
-        blue.color = Color.blue;
+        Material flashColor = new Material(defaultMat);
+        flashColor.color = Color.blue;
         arrow.material = flash;
-        flash.Lerp(defaultMat, blue, 1);
-        Invoke("ResetMaterial", 0.1f);
+        flash.Lerp(defaultMat, flashColor, 1);
     }
 
     private void ResetMaterial()
     {
         Material flash = arrow.material;
-        Material blue = new Material(defaultMat);
-        blue.color = Color.blue;
-        flash.Lerp(blue, defaultMat, 1);
+        Material flashColor = new Material(defaultMat);
+        flashColor.color = Color.blue;
+        flash.Lerp(flashColor, defaultMat, 1);
         arrow.material = defaultMat;
     }
 }
