@@ -11,6 +11,7 @@ public class HurtCircle : MonoBehaviour
     private int enemyLayer;
     private float damage;
     private float damageInterval;
+    private float lifetime;
 
     // The owner of this hurt circle
     private DamageSourceType damageSource;
@@ -31,6 +32,7 @@ public class HurtCircle : MonoBehaviour
         this.damage = damage;
         this.damageInterval = damageInterval;
         this.damageSource = damageSource;
+        this.lifetime = lifetime;
 
         transform.localScale = Vector3.one * radius;
 
@@ -94,7 +96,7 @@ public class HurtCircle : MonoBehaviour
             if(fadeIn)
             {
                 // Set the vfx lifetime to the lifetime of the hurtCircle
-                vfx.SetFloat("GDLifetime", duration);
+                vfx.SetFloat("GDLifetime", lifetime);
             }
             else
             {
