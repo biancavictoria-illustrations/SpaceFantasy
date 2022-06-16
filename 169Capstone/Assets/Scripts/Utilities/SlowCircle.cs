@@ -8,15 +8,18 @@ public class SlowCircle : MonoBehaviour
     public bool canSlow
     {
         set {
+            if(_canSlow != value)
+            {
+                foreach(Collider target in slowTargets)
+                {
+                    toggleSlow(target, value);
+                }
+                foreach(Collider target in speedTargets)
+                {
+                    toggleSpeed(target, value);
+                }
+            }
             _canSlow = value;
-            foreach(Collider target in slowTargets)
-            {
-                toggleSlow(target, value);
-            }
-            foreach(Collider target in speedTargets)
-            {
-                toggleSpeed(target, value);
-            }
         }
 
         get { return _canSlow; }
@@ -29,6 +32,7 @@ public class SlowCircle : MonoBehaviour
     private int friendlyLayer;
     private float speedChangePercent;
     private float damageInterval;
+    private float lifetime;
     private bool _canSlow;
 
     void Awake()
@@ -49,6 +53,7 @@ public class SlowCircle : MonoBehaviour
         this.friendlyLayer = friendlyLayer;
         this.speedChangePercent = speedChangePercent;
         this.damageInterval = damageInterval;
+        this.lifetime = lifetime;
 
         transform.localScale = Vector3.one * radius;
 
@@ -61,45 +66,45 @@ public class SlowCircle : MonoBehaviour
     void OnTriggerStay(Collider other)
     {
         Movement moveScript = other.GetComponent<Movement>();
-        Pathing pathScript = other.GetComponent<Pathing>();
         Projectile projectileScript = other.GetComponent<Projectile>();
-        if(other.gameObject.layer == enemyLayer && !slowTargets.Contains(other))
+
+        if(moveScript != null)
         {
-            if(moveScript != null)
+            if(other.gameObject.layer == enemyLayer)
             {
                 slowTargets.Add(other);
-                Player.instance.stats.SetBonusForStat(creator, StatType.MoveSpeed, EntityStats.BonusType.multiplier, -speedChangePercent);
+                toggleSlow(other, true);
             }
-            else if(pathScript != null)
+            else if(other.gameObject.layer == friendlyLayer)
             {
-                slowTargets.Add(other);
-                pathScript.speed *= (1 - speedChangePercent);
+                speedTargets.Add(other);
+                toggleSpeed(other, true);
             }
         }
-        else if(other.gameObject.layer == friendlyLayer && !speedTargets.Contains(other))
+        else if(!slowTargets.Contains(other) && !speedTargets.Contains(other))
         {
-            if(moveScript != null)
-            {
-                speedTargets.Add(other);
-                Player.instance.stats.SetBonusForStat(creator, StatType.MoveSpeed, EntityStats.BonusType.multiplier, speedChangePercent);
-            }
-            else if(pathScript != null)
-            {
-                speedTargets.Add(other);
-                pathScript.speed *= (1 + speedChangePercent);
-            }
-        }
-        else if(projectileScript != null && !speedTargets.Contains(other))
-        {
-            if(projectileScript.enemyLayer == enemyLayer)
-            {
-                speedTargets.Add(other);
-                projectileScript.speed *= (1 + speedChangePercent);
-            }
-            else
+            if(other.gameObject.layer == enemyLayer)
             {
                 slowTargets.Add(other);
-                projectileScript.speed *= (1 - speedChangePercent);
+                toggleSlow(other, true);
+            }
+            else if(other.gameObject.layer == friendlyLayer)
+            {
+                speedTargets.Add(other);
+                toggleSpeed(other, true);
+            }
+            else if(projectileScript != null)
+            {
+                if(projectileScript.enemyLayer == enemyLayer)
+                {
+                    speedTargets.Add(other);
+                    toggleSpeed(other, true);
+                }
+                else
+                {
+                    slowTargets.Add(other);
+                    toggleSlow(other, true);
+                }
             }
         }
     }
@@ -121,7 +126,7 @@ public class SlowCircle : MonoBehaviour
 
     private IEnumerator fadeSprite(float duration, bool fadeIn)
     {
-       float fadeProgress = 0;
+        float fadeProgress = 0;
         MeshRenderer renderer = GetComponentInChildren<MeshRenderer>();
         VisualEffect vfx = GetComponentInChildren<VisualEffect>();
         if(renderer)
@@ -139,8 +144,8 @@ public class SlowCircle : MonoBehaviour
         {
             if(fadeIn)
             {
-                // Set the vfx lifetime to the lifetime of the hurtCircle
-                vfx.SetFloat("GDLifetime", duration);
+                // Set the vfx lifetime to the lifetime of the slowCircle
+                vfx.SetFloat("GDLifetime", lifetime);
             }
             else
             {
@@ -173,6 +178,9 @@ public class SlowCircle : MonoBehaviour
 
     private void toggleSlow(Collider target, bool enable)
     {
+        if(target == null)
+            return;
+
         Movement moveScript = target.GetComponent<Movement>();
         Pathing pathScript = target.GetComponent<Pathing>();
         Projectile projectileScript = target.GetComponent<Projectile>();
@@ -202,6 +210,8 @@ public class SlowCircle : MonoBehaviour
 
     private void toggleSpeed(Collider target, bool enable)
     {
+        if(target == null)
+            return;
         
         Movement moveScript = target.GetComponent<Movement>();
         Pathing pathScript = target.GetComponent<Pathing>();
