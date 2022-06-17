@@ -77,19 +77,19 @@ tags:
     <<SetSpeaker Player>>
     I think you mean <i>impressed.</i>
     <<SetSpeaker Stellan comm>>
-    Take the elevator up, if you feel ready for the real challenge. But I have a feeling I will be seeing you face-to-face again soon.
+    Return to the elevator you came in on. Take it up to the next floor, if you feel ready for the real challenge. But I have a feeling I will be seeing you face-to-face again soon.
 <<elseif $runNum is 1>>  // If you've never met Stellan before (first run)
     <<SetSpeaker Player confused>><<Emote Player question>>
     I'm getting a comm? From who? ... Answer comm.
     <<SetSpeaker Stellan comm ???>>
-    Not bad. Take the elevator up, if you feel ready for the real challenge. But I have a feeling I will be meeting you face-to-face soon.
+    Not bad. Return to the elevator you came in on. Take it up to the next floor, if you feel ready for the real challenge. But I have a feeling I will be meeting you face-to-face soon.
     <<SetSpeaker Player confused>>
     Huh. Maybe he's the Wizard of this tower.
 <<else>>    // Second run
     <<SetSpeaker Player confused>><<Emote Player question>>
     I'm getting a comm? From who? ... Answer comm.
     <<SetSpeaker Stellan comm ???>>
-    Not bad. Take the elevator up, if you feel ready for the real challenge. But I have a feeling I will be seeing you face-to-face soon.
+    Not bad. Return to the elevator you came in on. Take it up to the next floor, if you feel ready for the real challenge. But I have a feeling I will be seeing you face-to-face soon.
     <<SetSpeaker Player confused>>
     Huh.
 <<endif>>
@@ -104,14 +104,14 @@ tags:
     <<SetSpeaker Player>>
     Him again... Answer comm.
     <<SetSpeaker Stellan comm ???>>
-    Same as last time: Take the elevator up.
+    Same as last time: Take the entry elevator up.
     <<SetSpeaker Stellan commSad ???>>
     ... See you soon.
 <<else>>
     <<SetSpeaker Player>>
     Answer comm.
     <<SetSpeaker Stellan comm>>
-    Same as last time: Take the elevator up.
+    Same as last time: Take the entry elevator up.
     <<SetSpeaker Stellan commSad>>
     ... See you soon.
 <<endif>>
@@ -124,13 +124,13 @@ tags:
 <<set $num to RandomNum(4)>>
 <<if $num is 0>>
     <<SetSpeaker Stellan comm>>
-    Same as always. Take the elevator up.
+    Same as always. Take the entry elevator up.
 <<elseif $num is 1>>
     <<SetSpeaker Stellan comm>>
-    He's waiting for you. Go find the elevator.
+    He's waiting for you. Return to the elevator you came in on.
 <<elseif $num is 2>>
     <<SetSpeaker Stellan commSad>>
-    Take the elevator up. ... I'll see you soon.
+    Take the entry elevator up. ... I'll see you soon.
 <<else>>
     <<SetSpeaker Stellan commSad>>
     Go on, then. Up the elevator to another pointless death.

@@ -70,6 +70,8 @@ public class ShopUIStellan : MonoBehaviour
 
     [HideInInspector] public UpgradePanel activeUpgradeInFocus;
 
+    [HideInInspector] public static bool journalAlertTriggeredOnShopClose = false;
+
     private bool lichUpgradeActive = false;
 
     void Start()
@@ -186,6 +188,12 @@ public class ShopUIStellan : MonoBehaviour
         AlertTextUI.instance.EnableShopAlert();
 
         InGameUIManager.instance.OnStellanShopUIOpen(false);
+
+        if(journalAlertTriggeredOnShopClose){
+            AlertTextUI.instance.EnableJournalUpdatedAlert();
+            StartCoroutine(AlertTextUI.instance.RemoveSecondaryAlertAfterSeconds());
+            journalAlertTriggeredOnShopClose = false;
+        }
     }
 
     public void ResetButtonClicked()

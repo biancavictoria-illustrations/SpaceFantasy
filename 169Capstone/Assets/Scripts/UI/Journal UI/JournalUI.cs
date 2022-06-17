@@ -9,6 +9,8 @@ public class JournalUI : MonoBehaviour
 
     [SerializeField] private JournalSidebarTabGroup[] tabGroups;
 
+    [SerializeField] private Selectable topButton;
+
     private GameObject devPanel;    // TEMP
 
     public void ToggleJournalActive(bool set)
@@ -25,6 +27,9 @@ public class JournalUI : MonoBehaviour
 
         if(GameManager.instance.InSceneWithRandomGeneration())
             InGameUIManager.instance.ToggleMiniMap(!set);
+
+        if(set)
+            topButton.Select();
 
         if(!set && GameManager.instance.currentSceneName == GameManager.MAIN_HUB_STRING_NAME){
             InGameUIManager.instance.ToggleRunUI(false, false, false, false);

@@ -16,6 +16,8 @@ public class ShopUI : MonoBehaviour
 
     [SerializeField] protected SpeakerID shopkeeper;
 
+    [HideInInspector] public static bool journalAlertTriggeredOnShopClose = false;
+
     void Start()
     {
         foreach(ItemPanelShopUI panel in itemPanels){
@@ -47,6 +49,12 @@ public class ShopUI : MonoBehaviour
         AlertTextUI.instance.EnableShopAlert();
 
         InGameUIManager.instance.MoveCurrencyToForegroundOfShop(shopkeeper, false);
+
+        if(journalAlertTriggeredOnShopClose){
+            AlertTextUI.instance.EnableJournalUpdatedAlert();
+            StartCoroutine(AlertTextUI.instance.RemoveSecondaryAlertAfterSeconds());
+            journalAlertTriggeredOnShopClose = false;
+        }
     }
 
     public virtual void SetShopUIInteractable(bool set)
