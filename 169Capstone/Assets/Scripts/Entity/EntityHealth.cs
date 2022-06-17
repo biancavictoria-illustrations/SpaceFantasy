@@ -96,6 +96,8 @@ public class EntityHealth : MonoBehaviour
     [SerializeField] private GameObject coinPrefab;
     [SerializeField] private GameObject starShardPrefab;
 
+    [FMODUnity.EventRef] public string hitSFX;
+
     private EnemyHealthBar enemyHealthUI;
     public bool isBossEnemy {get; private set;}
     public EnemyID enemyID {get; private set;}
@@ -137,7 +139,7 @@ public class EntityHealth : MonoBehaviour
     void Start()
     {
         OnDeath.AddListener(onEntityDeath);
-        OnCrit.AddListener(onPlayerCrit);        
+        OnCrit.AddListener(onPlayerCrit);
     }
 
     public void SetStartingHealthUI()
@@ -159,7 +161,6 @@ public class EntityHealth : MonoBehaviour
             float dodgeChance = Player.instance.stats.getDodgeChance();
             float rolledChance = Random.Range(0.0f, 1f);
             if( rolledChance <= dodgeChance ){
-                // TODO: Trigger dodge floating text!
                 InGameUIManager.instance.ShowFloatingText(null, 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1f, gameObject, "dodge");
                 return currentHitpoints <= 0;
             }
@@ -201,7 +202,15 @@ public class EntityHealth : MonoBehaviour
             
             OnDeath.Invoke(this);
         }
-        
+
+        // If player fell in a pit, play that SFX
+        if(gameObject.tag == "Player" && damageSource == DamageSourceType.DeathPit || damageSource == DamageSourceType.DeathPitTimeLichArena){
+            AudioManager.Instance.PlaySFX(AudioManager.SFX.FellInSlimePit, gameObject);
+        }
+        else if( !damageSource.ToString().Contains("Trap") ){   // Otherwise, play this entity's unique hit SFX (if it has one) (unless it's trap damage cuz that gets weird)
+            AudioManager.Instance.PlaySFX(hitSFX, gameObject);
+        }
+
         ManageLowHealthOverlay();
 
         return currentHitpoints <= 0;
@@ -300,6 +309,9 @@ public class EntityHealth : MonoBehaviour
             // Tell the story manager what the player was killed by
             StoryManager.instance.KilledEventOccurred(damageSourceCausedPlayerDeath, StoryBeatType.KilledBy);            
             GameManager.instance.playerDeath = true;
+
+            AudioManager.Instance.stopMusic(true);
+            AudioManager.Instance.PlaySFX(AudioManager.SFX.TimelineResetDeath, gameObject);
         }
         else
         {
@@ -347,11 +359,15 @@ public class EntityHealth : MonoBehaviour
             
             for(int i = 0; i < TEMPCOINDROPAMOUNT; ++i)
             {
+                AudioManager.Instance.PlaySFX(AudioManager.SFX.ElectrumDrop, gameObject);
                 Instantiate(coinPrefab, transform.position, Quaternion.identity);
             }
 
             if(Random.value <= TEMPSTARSHARDDROPCHANCE)
+            {
+                AudioManager.Instance.PlaySFX(AudioManager.SFX.StarShardDrop, gameObject);
                 Instantiate(starShardPrefab, transform.position, Quaternion.identity);
+            }
 
             // If you killed the mini boss, trigger Stellan's comm to tell you to go to the elevator
             if(enemyID == EnemyID.BeetleBoss){

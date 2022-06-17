@@ -65,6 +65,7 @@ public class GearSwapUI : MonoBehaviour
     {
         newItem.EquipGeneratedItem();
         CloseGearSwapUI();
+        AudioManager.Instance.PlaySFX(AudioManager.SFX.GearSwap);
         
         // Deal with UI alerts
         if(PlayerInventory.hasPickedSomethingUpThisRun){

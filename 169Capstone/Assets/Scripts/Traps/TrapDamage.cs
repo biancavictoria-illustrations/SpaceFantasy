@@ -9,7 +9,24 @@ public class TrapDamage : MonoBehaviour
 
     public DamageSourceType damageSource;
 
-    // Start is called before the first frame update
+    [SerializeField][FMODUnity.EventRef] private string trapLoopingSFX;
+
+    void Start()
+    {
+        if(GameManager.instance.InSceneWithRandomGeneration()){
+            FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener(StartOnGenerationComplete);
+        }
+        else{
+            StartOnGenerationComplete();
+        }
+    }
+
+    public void StartOnGenerationComplete()
+    {
+        if(trapLoopingSFX != "")
+            AudioManager.Instance.PlaySFX(trapLoopingSFX, gameObject);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.GetComponent<EntityHealth>() != null)

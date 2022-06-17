@@ -279,11 +279,11 @@ public class PlayerStats : EntityStats
             return damage;
         }
 
-        public virtual float getDEXDamage(bool enableCrit = true)
+        public virtual float getDEXDamage(bool enableCritChance = true, bool autoCrit = false)
         {
             float damage = dexterity * DEXDamageMultiplier + DEXDamageFlatBonus;
-            if(enableCrit){
-                damage += CalculateCritValue(damage);
+            if(enableCritChance || autoCrit){
+                damage += CalculateCritValue(damage, autoCrit);
             }
             return damage;
         }
@@ -306,13 +306,11 @@ public class PlayerStats : EntityStats
             return damage;
         }
 
-        private float CalculateCritValue(float baseDamage)
+        private float CalculateCritValue(float baseDamage, bool autoCrit = false)
         {
-            //EntityHealth healthScript = GetComponent<EntityHealth>();
             float chance = Random.Range(0.0f, 1f);
-            if(chance <= getCritChance()){
+            if(chance <= getCritChance() || autoCrit){
                 float crit = getCritDamage();
-                //healthScript.OnCrit.Invoke(healthScript, crit);
                 return baseDamage * crit;
             }
             return 0f;
@@ -383,11 +381,11 @@ public class PlayerStats : EntityStats
 
     private void SetFirstRunStatValues()
     {
-        strength = 10;
-        dexterity = 10;
-        constitution = 10;
-        intelligence = 10;
-        wisdom = 10;
+        strength = 8;
+        dexterity = 8;
+        constitution = 8;
+        intelligence = 8;
+        wisdom = 8;
         charisma = 10;
     }
 

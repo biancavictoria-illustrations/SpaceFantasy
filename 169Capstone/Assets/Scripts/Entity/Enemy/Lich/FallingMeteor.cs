@@ -13,8 +13,13 @@ public class FallingMeteor : MonoBehaviour
     private Rigidbody rb;
     private NavMeshAgent agent;
 
+    [SerializeField][FMODUnity.EventRef] private string meteorFallSFX;
+    [SerializeField][FMODUnity.EventRef] private string meteorImpactSFX;
+
     void Start()
     {
+        AudioManager.Instance.PlaySFX(meteorFallSFX, gameObject);
+
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
 
@@ -39,6 +44,8 @@ public class FallingMeteor : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        AudioManager.Instance.PlaySFX(meteorImpactSFX, gameObject);
+        
         if(other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             other.GetComponent<EntityHealth>().Damage(damage, DamageSourceType.TimeLich);

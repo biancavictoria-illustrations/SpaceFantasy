@@ -57,8 +57,15 @@ public class PlayerInventory : MonoBehaviour
         }
 
         EntityHealth playerHealth = Player.instance.health;
+
+        if(playerHealth.currentHitpoints >= playerHealth.maxHitpoints){
+            return;
+        }
+
         float healedHitPoints = playerHealth.maxHitpoints * Player.instance.stats.getHealingEfficacy();
         playerHealth.Heal(healedHitPoints);
+
+        AudioManager.Instance.PlaySFX(AudioManager.SFX.DrinkPotion);
 
         healthPotionQuantity--;
         InGameUIManager.instance.SetHealthPotionValue(healthPotionQuantity);

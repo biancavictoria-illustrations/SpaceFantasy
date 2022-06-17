@@ -178,11 +178,14 @@ public class AlertTextUI : MonoBehaviour
     #endregion
 
     #region Journal Alerts
+        // sometimes they don't work after dialogue... (it's for shopkeepers cuz their shops open........)
         public void EnableOpenJournalAlert()
         {
             SetSecondaryAlertText(true, openJournalControlIcon, openJournalControlString, "OPEN CAPTAIN'S LOG");
             secondaryAlertTextIsActive = true;
             openJournalAlertIsActive = true;
+
+            AudioManager.Instance.PlaySFX(AudioManager.SFX.CaptainsLogAlert);
         }
 
         public void EnableJournalUpdatedAlert()
@@ -190,6 +193,8 @@ public class AlertTextUI : MonoBehaviour
             SetSecondaryAlertText(true, openJournalControlIcon, openJournalControlString, "CAPTAIN'S LOG UPDATED");
             secondaryAlertTextIsActive = true;
             openJournalAlertIsActive = true;
+            
+            AudioManager.Instance.PlaySFX(AudioManager.SFX.CaptainsLogAlert);
         }
     #endregion
 

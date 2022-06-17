@@ -197,8 +197,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2546701154199705118}
   - component: {fileID: 5058330188579002701}
-  - component: {fileID: 14099820788447176}
   - component: {fileID: 719290207582283361}
+  - component: {fileID: 4076381057449598386}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -263,14 +263,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &14099820788447176
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7258079406355180831}
-  m_Enabled: 1
 --- !u!114 &719290207582283361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,6 +294,20 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!114 &4076381057449598386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7258079406355180831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attenuationObject: {fileID: 7643758985477745940}
+  ListenerNumber: -1
 --- !u!1 &7643758985477745940
 GameObject:
   m_ObjectHideFlags: 0
@@ -393,6 +399,7 @@ MonoBehaviour:
   dropOverride: {fileID: 0}
   coinPrefab: {fileID: 0}
   starShardPrefab: {fileID: 0}
+  hitSFX: event:/SFX/Player Stuff/PlayerHit
   tempPlayerGodModeToggle: 0
 --- !u!114 &3199020426167894423
 MonoBehaviour:
@@ -476,6 +483,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 3497098114046577830}
+  animationStateController: {fileID: 6606636088262213845}
   model: {fileID: 7379179739272091356}
   player: {fileID: 4294933676052933463}
   smoothing: 0.1
@@ -541,6 +549,7 @@ MonoBehaviour:
   animator: {fileID: 3497098114046577830}
   swordSlashVFX: {fileID: 228944277661541549, guid: 266fa4f21e1560d4ea26058a81116b50,
     type: 3}
+  defaultFootstepsSFX: event:/SFX/Player Stuff/PlayerWalking
 --- !u!1 &7945500420484517094
 GameObject:
   m_ObjectHideFlags: 0

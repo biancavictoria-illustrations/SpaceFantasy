@@ -12,6 +12,8 @@ public class Robert : Enemy
     private SpriteRenderer spriteRenderer;
     [SerializeField] private GameObject explosionObject;
 
+    [SerializeField][FMODUnity.EventRef] private string attackSFX;
+
     protected override void Start()
     {
         base.Start();
@@ -45,6 +47,8 @@ public class Robert : Enemy
             Destroy(projectileObject);
             Debug.LogError("Projectile prefab " + projectilePrefab + " did not contain a Projectile script.");
         }
+
+        AudioManager.Instance.PlaySFX(attackSFX, gameObject);
 
         float damageAmount = logic.baseDamage * nextAttack.damageMultiplier * (1 + damageIncreasePerTier * currentTier);
         projectileScript.Initialize(LayerMask.NameToLayer("Player"), damageAmount, DamageSourceType.Robert, player.position + Vector3.up*2 - projectileSpawnPoint.position);

@@ -7,6 +7,9 @@ public class WristRocket : Accessories
     private Movement movement;
     [SerializeField] GameObject rocketPrefab;
 
+    [SerializeField][FMODUnity.EventRef] private string rocketFireSFX;
+    [SerializeField][FMODUnity.EventRef] private string rocketImpactSFX;
+
     protected override void Start()
     {
         base.Start();
@@ -34,8 +37,10 @@ public class WristRocket : Accessories
 
     private void Fire()
     {
+        AudioManager.Instance.PlaySFX( rocketFireSFX, player.gameObject );
+        
         GameObject rocket = Instantiate(rocketPrefab, player.transform.position + Vector3.up * 2, player.transform.rotation);
         Projectile projectileScript = rocket.GetComponent<Projectile>();
-        projectileScript.Initialize("Enemy", player.stats.getINTDamage(), DamageSourceType.Player, InputManager.instance.cursorLookDirection, radius: data.equipmentBaseData.Radius(), speed: 30);
+        projectileScript.Initialize("Enemy", player.stats.getINTDamage(), DamageSourceType.Player, InputManager.instance.cursorLookDirection, radius: data.equipmentBaseData.Radius(), speed: 30, projectileImpactSFX: rocketImpactSFX);
     }
 }
