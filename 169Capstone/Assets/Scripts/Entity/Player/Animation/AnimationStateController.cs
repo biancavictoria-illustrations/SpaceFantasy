@@ -24,6 +24,8 @@ public class AnimationStateController : MonoBehaviour
 
     [SerializeField] private GameObject swordSlashVFX;
 
+    [SerializeField][FMODUnity.EventRef] private string defaultFootstepsSFX;
+
     public void ActivateHitbox(int active)
     {
         attackActive = active > 0;
@@ -33,6 +35,15 @@ public class AnimationStateController : MonoBehaviour
             GameObject vfx = Instantiate(swordSlashVFX, Player.instance.transform.position,transform.rotation);
             Destroy(vfx, 1);
         }
+    }
+
+    public void PlayFootstepsSFX()
+    {
+        if(GameManager.instance.inElevatorAnimation || LoadScreen.instance.sceneIsLoading || InputManager.instance.preventInputOverride){
+            return;
+        }
+
+        AudioManager.Instance.PlaySFX(defaultFootstepsSFX, gameObject);
     }
 
     public void EndAttack()

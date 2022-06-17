@@ -18,6 +18,10 @@ public class Lich : Enemy
     [SerializeField] private GameObject robertPrefab;
     [SerializeField] private GameObject slowCirclePrefab;
 
+    [SerializeField][FMODUnity.EventRef] private string teleportSFX;
+    [SerializeField][FMODUnity.EventRef] private string summonEnemiesSFX;
+    [SerializeField][FMODUnity.EventRef] private string timeSphereAttackSFX;
+
     private Player player;
     private Coroutine attackRoutine;
     private Dictionary<AttackLogic, string> attackToAnimationTrigger;
@@ -60,6 +64,7 @@ public class Lich : Enemy
     protected override IEnumerator EnemyLogic() //special
     {
         animator.SetBool("isMoving", true);
+        AudioManager.Instance.PlaySFX(teleportSFX, gameObject);
         yield return new WaitUntil(() => path.InAttackRange() && !path.attacking);
         
         animator.SetBool("isMoving", false);
@@ -117,6 +122,8 @@ public class Lich : Enemy
     {
         canSummon = false;
 
+        AudioManager.Instance.PlaySFX(summonEnemiesSFX, gameObject);
+
         int numEnemies = isPhase2 ? 4 : 2;
         numEnemies += Random.Range(0, 2);
 
@@ -146,6 +153,8 @@ public class Lich : Enemy
 
     public void TimeDilation()
     {
+        AudioManager.Instance.PlaySFX(timeSphereAttackSFX, gameObject);
+
         SlowCircle slowScript = Instantiate(slowCirclePrefab, player.transform.position, Quaternion.identity).GetComponent<SlowCircle>();
         slowScript.Initialize(this, "Player", "Enemy", 0.5f, 10, radius: 8, fadeInDuration: 1);
     }

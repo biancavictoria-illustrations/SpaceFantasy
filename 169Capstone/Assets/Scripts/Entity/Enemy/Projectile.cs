@@ -18,16 +18,20 @@ public class Projectile : MonoBehaviour
     private Rigidbody rb;
     private int _radius = 0;
 
+    [FMODUnity.EventRef] private string _projectileImpactSFX;
+
     // Projectile's owner
     private DamageSourceType damageSource;
 
-    public void Initialize(string enemyLayer, float damage, DamageSourceType damageSource, Vector3 direction, int radius = 0, float? speed = null)
+    public void Initialize(string enemyLayer, float damage, DamageSourceType damageSource, Vector3 direction, int radius = 0, float? speed = null, string projectileImpactSFX = "")
     {
-        Initialize(LayerMask.NameToLayer(enemyLayer), damage, damageSource, direction, radius, speed);
+        Initialize(LayerMask.NameToLayer(enemyLayer), damage, damageSource, direction, radius, speed, projectileImpactSFX);
     }
 
-    public void Initialize(int enemyLayer, float damage, DamageSourceType damageSource, Vector3 direction, int radius = 0, float? speed = null)
+    public void Initialize(int enemyLayer, float damage, DamageSourceType damageSource, Vector3 direction, int radius = 0, float? speed = null, string projectileImpactSFX = "")
     {
+        _projectileImpactSFX = projectileImpactSFX;
+
         _radius = radius;
         rb = GetComponent<Rigidbody>();
         if(rb == null)
@@ -109,5 +113,8 @@ public class Projectile : MonoBehaviour
                 propBreak.BreakProp();
             }
         }
+
+        if(_projectileImpactSFX != "")
+            AudioManager.Instance.PlaySFX(_projectileImpactSFX, gameObject);
     }
 }

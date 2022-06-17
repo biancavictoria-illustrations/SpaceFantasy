@@ -8,6 +8,7 @@ public class Movement : MonoBehaviour
     private const float baseMoveSpeed = 10;
 
     public Animator animator;
+    public AnimationStateController animationStateController;
     public float speed { get { return baseMoveSpeed * stats.getMoveSpeed(); }}
     public Transform model;
     public CharacterController player;
@@ -32,7 +33,6 @@ public class Movement : MonoBehaviour
     private InputAction moveRight;
     private InputAction moveUp;
     private InputAction moveDown;
-    private InputAction jump;
 
     private PlayerStats stats;
     
@@ -45,7 +45,6 @@ public class Movement : MonoBehaviour
         moveRight = controls.FindAction("MoveRight");
         moveUp = controls.FindAction("MoveUp");
         moveDown = controls.FindAction("MoveDown");
-        jump = controls.FindAction("Jump");
     }
 
     void Start()
@@ -108,9 +107,6 @@ public class Movement : MonoBehaviour
 
         moveDown.canceled += x => OnMoveDownCanceled();
         moveDown.Enable();
-
-        jump.canceled += x => OnJumpCanceled();
-        jump.Enable();
     }
 
     void OnDisable()
@@ -126,9 +122,6 @@ public class Movement : MonoBehaviour
 
         moveDown.canceled -= x => OnMoveDownCanceled();
         moveDown.Disable();
-
-        jump.canceled -= x => OnJumpCanceled();
-        jump.Disable();
     }
 
     public void ApplyExternalVelocity(Vector3 velocity)
@@ -277,11 +270,6 @@ public class Movement : MonoBehaviour
         animator.SetBool("IsJumping", true);
     }
 
-    public void OnJumpCanceled()
-    {
-        //If we need to put code for what happens when the player lets go of jump
-    }
-
     private void CheckForIdle()
     {
         if(animator != null && verticalMove == 0 && horizontalMove == 0){
@@ -370,9 +358,12 @@ public class Movement : MonoBehaviour
             {
                 fallingVelocity = 0;
             }
-
-            isGrounded = true;
-            animator.SetBool("IsJumping", false);
+            
+            if(!isGrounded){
+                isGrounded = true;
+                animationStateController.PlayFootstepsSFX();
+                animator.SetBool("IsJumping", false);
+            }
         }
         else
         {

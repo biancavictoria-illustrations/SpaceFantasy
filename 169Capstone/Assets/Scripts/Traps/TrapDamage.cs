@@ -9,8 +9,7 @@ public class TrapDamage : MonoBehaviour
 
     public DamageSourceType damageSource;
 
-    [SerializeField][FMODUnity.EventRef] private string trapSFX;
-    // private FMOD.Studio.EventInstance trapSFXEvent;
+    [SerializeField][FMODUnity.EventRef] private string trapLoopingSFX;
 
     void Start()
     {
@@ -24,14 +23,10 @@ public class TrapDamage : MonoBehaviour
 
     public void StartOnGenerationComplete()
     {
-        // trapSFXEvent = FMODUnity.RuntimeManager.CreateInstance(trapSFX);
-        // AudioManager.Instance.SetupSFXOnStart(trapSFX, trapSFXEvent, gameObject);
-        // AudioManager.Instance.PlaySFX(trapSFX, trapSFXEvent, gameObject);
-        if(trapSFX != "")
-            AudioManager.Instance.PlaySFX(trapSFX, gameObject);
+        if(trapLoopingSFX != "")
+            AudioManager.Instance.PlaySFX(trapLoopingSFX, gameObject);
     }
 
-    // Start is called before the first frame update
     private void OnTriggerEnter(Collider other)
     {
         if(other.GetComponent<EntityHealth>() != null)
