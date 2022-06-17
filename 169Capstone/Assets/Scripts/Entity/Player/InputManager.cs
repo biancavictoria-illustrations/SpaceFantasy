@@ -173,6 +173,7 @@ public class InputManager : MonoBehaviour
 
         // If you're in range of a door, walk through it
         else if(SceneTransitionDoor.ActiveDoor){
+            AudioManager.Instance.stopMusic(true);  // So that it doesn't persist into load screen
             AlertTextUI.instance.DisablePrimaryAlert();
             AlertTextUI.instance.DisableSecondaryAlert();
             SceneTransitionDoor.ActiveDoor.ChangeScene();

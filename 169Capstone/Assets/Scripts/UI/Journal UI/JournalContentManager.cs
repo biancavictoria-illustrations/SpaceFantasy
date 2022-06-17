@@ -73,11 +73,36 @@ public class JournalContentManager : MonoBehaviour
             journalUnlockStatusDatabase[id] = true;
         }
 
-        // TODO: Fix this! not calling the alert when it's a dialogue interaction trigger to unlock...?
+        // If we're triggering journal alerts
         if(flag){
-            AlertTextUI.instance.EnableJournalUpdatedAlert();
-            StartCoroutine(AlertTextUI.instance.RemoveSecondaryAlertAfterSeconds());
-        }        
+            // If there is an active NPC and that person is a shopkeeper, wait to trigger alert until shop closes
+            if(NPC.ActiveNPC != null && NPC.ActiveNPC.SpeakerData().IsShopkeeper()){
+                // If it's Stellan, tell his special UI to do the thing
+                if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.Stellan){
+                    // Except if it's run 1 Stellan, in which case trigger it immediately cuz his shop isn't open yet (== 2 cuz run num updated on end of run)
+                    if(GameManager.instance.currentRunNumber == 2){
+                        TriggerJournalAlert();
+                    }
+                    else{
+                        ShopUIStellan.journalAlertTriggeredOnShopClose = true;
+                    }
+                }
+                // If it's not Stellan, use the generic shopUI
+                else{
+                    ShopUI.journalAlertTriggeredOnShopClose = true;
+                }
+            }
+            // If this alert is NOT triggered by a shopkeeper, trigger the alert now
+            else{
+                TriggerJournalAlert();
+            }
+        }
+    }
+
+    private void TriggerJournalAlert()
+    {
+        AlertTextUI.instance.EnableJournalUpdatedAlert();
+        StartCoroutine(AlertTextUI.instance.RemoveSecondaryAlertAfterSeconds());
     }
 
     public void SetJournalStatusOnLoad( Save.JournalContentStatus[] journalContentSaveStatus )

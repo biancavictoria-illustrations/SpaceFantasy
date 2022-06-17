@@ -94,7 +94,6 @@ public class InGameUIManager : MonoBehaviour
     public DamageUIOverlay damageUIOverlay;
 
     public FloatingTextManager floatingTextManager;
-    
 
     void Awake()
     {
@@ -539,7 +538,7 @@ public class InGameUIManager : MonoBehaviour
 
         public void CloseNPCShop(SpeakerData shopkeeper, bool closeWithESCKey = false)
         {
-            AlertTextUI.instance.EnableShopAlert();        
+            AlertTextUI.instance.EnableShopAlert();
 
             if(shopkeeper.SpeakerID() == SpeakerID.Bryn){
                 brynShopUI.CloseShopUI(closeWithESCKey);

@@ -63,13 +63,15 @@ public class HurtCircle : MonoBehaviour
     {
         while(true)
         {
-            if(target == null){
-                yield break;
-            }
-
             if(canDamage)
             {
                 yield return new WaitForSeconds(damageInterval);
+
+                // Make sure the target is still alive after waiting
+                if(target == null || target.gameObject == null){
+                    yield break;
+                }
+
                 target.Damage(damage, damageSource);
             }
             else
