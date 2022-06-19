@@ -75,8 +75,10 @@ public class EncounterRoomClose : MonoBehaviour
             enemiesSpawned = true;
 
             // Enables the force field object
-            foreach(GameObject ff in forceFields)
+            foreach(GameObject ff in forceFields){
                 ff.SetActive(true);
+                ff.GetComponent<SFXTrigger>().PlaySFX();
+            }
 
             if(isBossRoom)
             {
@@ -115,8 +117,10 @@ public class EncounterRoomClose : MonoBehaviour
         // Debug.Log("Enemy Died");
         if (!room.hasEnemies())
         {
-            foreach(GameObject ff in forceFields)
+            foreach(GameObject ff in forceFields){
                 ff.SetActive(false);
+                ff.GetComponent<SFXTrigger>().PlaySecondarySFX();
+            }
             
             if(isBossRoom)
             {

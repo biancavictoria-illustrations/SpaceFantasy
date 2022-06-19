@@ -35,8 +35,14 @@ public class AudioManager : MonoBehaviour
             ItemPurchase,
 
             CaptainsLogAlert,
+            CaptainsLogOpen,
+            CaptainsLogClose,
+
             ButtonHover,
             ButtonClick,
+
+            Tick,
+            Tock
         }
     #endregion
 
@@ -93,6 +99,10 @@ public class AudioManager : MonoBehaviour
         [SerializeField][FMODUnity.EventRef] private string captainsLogAlert;
         [SerializeField][FMODUnity.EventRef] private string buttonHover;
         [SerializeField][FMODUnity.EventRef] private string buttonClick;
+        [SerializeField][FMODUnity.EventRef] private string tickSFX;
+        [SerializeField][FMODUnity.EventRef] private string tockSFX;
+        [SerializeField][FMODUnity.EventRef] private string captainsLogOpen;
+        [SerializeField][FMODUnity.EventRef] private string captainsLogClose;
 
         //VCAs
         private const string masterVCAPath = "vca:/Master";
@@ -251,14 +261,14 @@ public class AudioManager : MonoBehaviour
     }
 
     #region Play SFX
-        public void SetupSFXOnStart(string SFXName, FMOD.Studio.EventInstance FMODevent, GameObject source)
-        {
-            if(SFXName != ""){
-                FMODevent = FMODUnity.RuntimeManager.CreateInstance(SFXName);
-                FMODevent.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(source));
-                // FMODUnity.RuntimeManager.AttachInstanceToGameObject(hitSFXEvent, transform);
-            }
-        }
+        // public void SetupSFXOnStart(string SFXName, FMOD.Studio.EventInstance FMODevent, GameObject source)
+        // {
+        //     if(SFXName != ""){
+        //         FMODevent = FMODUnity.RuntimeManager.CreateInstance(SFXName);
+        //         FMODevent.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(source));
+        //         // FMODUnity.RuntimeManager.AttachInstanceToGameObject(hitSFXEvent, transform);
+        //     }
+        // }
 
         public void PlaySFX(string SFXName, FMOD.Studio.EventInstance FMODevent)
         {
@@ -345,6 +355,13 @@ public class AudioManager : MonoBehaviour
                 case SFX.CaptainsLogAlert:
                     FMODUnity.RuntimeManager.PlayOneShot(captainsLogAlert);
                     return;
+                case SFX.CaptainsLogOpen:
+                    FMODUnity.RuntimeManager.PlayOneShot(captainsLogOpen);
+                    return;
+                case SFX.CaptainsLogClose:
+                    FMODUnity.RuntimeManager.PlayOneShot(captainsLogClose);
+                    return;
+
                 case SFX.ButtonHover:
                     FMODUnity.RuntimeManager.PlayOneShot(buttonHover);
                     return;
@@ -361,6 +378,13 @@ public class AudioManager : MonoBehaviour
 
                 case SFX.DrinkPotion:
                     FMODUnity.RuntimeManager.PlayOneShot(drinkPotion);
+                    return;
+                
+                case SFX.Tick:
+                    FMODUnity.RuntimeManager.PlayOneShot(tickSFX);
+                    return;
+                case SFX.Tock:
+                    FMODUnity.RuntimeManager.PlayOneShot(tockSFX);
                     return;
             }
             Debug.LogWarning("No UI SFX found for " + sfx);

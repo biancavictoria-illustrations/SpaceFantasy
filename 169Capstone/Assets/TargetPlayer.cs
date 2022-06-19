@@ -23,6 +23,8 @@ public class TargetPlayer : MonoBehaviour
     public float delayRate = 2.0f;
     public float shootRate = 3.0f;
 
+    [SerializeField][FMODUnity.EventRef] private string shootSFX;
+
     void Awake()
     {
         // If main level (do this in awake to add a listener)
@@ -134,6 +136,8 @@ public class TargetPlayer : MonoBehaviour
 
     public void ShootProjectile()
     {
+        AudioManager.Instance.PlaySFX(shootSFX, gameObject);
+
         int proSpawn = Random.Range(1, 5);
         if (proSpawn == 1)
         {

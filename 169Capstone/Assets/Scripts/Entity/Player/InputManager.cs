@@ -27,8 +27,9 @@ public class InputManager : MonoBehaviour
 
     [HideInInspector] public bool isInMainMenu = false;
 
+    [SerializeField][FMODUnity.EventRef] private string itemOnCooldownSFX;
+
     public bool latestInputIsController {get; private set;}
-    // public InputDevice currentDevice {get; private set;}
 
     [HideInInspector] public Vector3 cursorLookDirection;
 
@@ -354,12 +355,12 @@ public class InputManager : MonoBehaviour
     public void OnAccessoryAbility()
     {
         // If we can't move at all OR if this cooldown is currently active, return (using cooldown status from UI because we want to continue the cooldown if you swapped items)
-        if (!CanAcceptGameplayInput() || InGameUIManager.instance.GetCooldownUIFromSlot(InventoryItemSlot.Accessory).isActive){
+        if (!CanAcceptGameplayInput()){
             return;
         }
 
-        // If we have something equipped and it's currently active, return
-        if( PlayerInventory.instance.ItemSlotIsFull(InventoryItemSlot.Accessory) && ((NonWeaponItem)PlayerInventory.instance.gear[InventoryItemSlot.Accessory]).durationRoutine != null ){
+        if(ItemSlotIsActiveOrCooldown(InventoryItemSlot.Accessory)){
+            AudioManager.Instance.PlaySFX(itemOnCooldownSFX);
             return;
         }
 
@@ -369,12 +370,12 @@ public class InputManager : MonoBehaviour
     public void OnHelmetAbility()
     {
         // If we can't move at all OR if this cooldown is currently active, return (using cooldown status from UI because we want to continue the cooldown if you swapped items)
-        if(!CanAcceptGameplayInput() || InGameUIManager.instance.GetCooldownUIFromSlot(InventoryItemSlot.Helmet).isActive){
+        if(!CanAcceptGameplayInput()){
             return;
         }
 
-        // If we have something equipped and it's currently active, return
-        if( PlayerInventory.instance.ItemSlotIsFull(InventoryItemSlot.Helmet) && ((NonWeaponItem)PlayerInventory.instance.gear[InventoryItemSlot.Helmet]).durationRoutine != null ){
+        if(ItemSlotIsActiveOrCooldown(InventoryItemSlot.Helmet)){
+            AudioManager.Instance.PlaySFX(itemOnCooldownSFX);
             return;
         }
 
@@ -384,16 +385,29 @@ public class InputManager : MonoBehaviour
     public void OnBootsAbility()
     {
         // If we can't move at all OR if this cooldown is currently active, return (using cooldown status from UI because we want to continue the cooldown if you swapped items)
-        if(!CanAcceptGameplayInput() || InGameUIManager.instance.GetCooldownUIFromSlot(InventoryItemSlot.Legs).isActive){
+        if(!CanAcceptGameplayInput()){
             return;
         }
 
-        // If we have something equipped and it's currently active, return
-        if( PlayerInventory.instance.ItemSlotIsFull(InventoryItemSlot.Legs) && ((NonWeaponItem)PlayerInventory.instance.gear[InventoryItemSlot.Legs]).durationRoutine != null ){
+        if(ItemSlotIsActiveOrCooldown(InventoryItemSlot.Legs)){
+            AudioManager.Instance.PlaySFX(itemOnCooldownSFX);
             return;
         }
 
         useLegs.Invoke();
+    }
+
+    private bool ItemSlotIsActiveOrCooldown(InventoryItemSlot itemSlot)
+    {
+        if(InGameUIManager.instance.GetCooldownUIFromSlot(itemSlot).isActive){
+            return true;
+        }
+        else if( PlayerInventory.instance.ItemSlotIsFull(itemSlot) && ((NonWeaponItem)PlayerInventory.instance.gear[itemSlot]).durationRoutine != null ){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     public void OnPoint(InputValue input)

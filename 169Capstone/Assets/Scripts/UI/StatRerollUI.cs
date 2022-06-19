@@ -16,12 +16,16 @@ public class StatRerollUI : MonoBehaviour
     [SerializeField] private TMP_Text CHAText;
 
     [SerializeField] private Button continueButton;
+    
+    
 
     // The number of seconds a given number stays on the screen during the reroll animation
     private float statAnimationNumberDuration = 0.1f;
     // The counter that ticks down to completing the animation for the first stat (each die completes one after the next); total duration in sec is statAnimationNumberDuration*this value
     private int numberOfRollAnimations = 20;
     private int addedToEachNextDuration = 4;
+
+    private bool tickTockValue = true;  // True is tick, false is tock
 
     private PlayerStats stats;
     private PermanentUpgradeManager upgradeManager;
@@ -132,10 +136,24 @@ public class StatRerollUI : MonoBehaviour
                     break;
                 case PlayerStatName.CHA:
                     CHAText.text = "" + RandomNumberInStatRange( upgradeManager.charismaMin, upgradeManager.charismaMax );
+                    if(counter % 2 == 0) // Play on every other change, otherwise it goes too fast
+                        PlayTickTockSFX();  // Play on CHA cuz it goes the longest
                     break;
             }
         }
         SetActualStatValues(stat);
+    }
+
+    private void PlayTickTockSFX()
+    {
+        if(tickTockValue){
+            AudioManager.Instance.PlaySFX(AudioManager.SFX.Tick);
+            tickTockValue = false;
+        }
+        else{
+            AudioManager.Instance.PlaySFX(AudioManager.SFX.Tock);
+            tickTockValue = true;
+        }
     }
 
     private int RandomNumberInStatRange(int min, int max)

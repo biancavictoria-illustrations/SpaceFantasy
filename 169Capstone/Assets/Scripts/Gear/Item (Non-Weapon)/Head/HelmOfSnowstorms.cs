@@ -14,12 +14,16 @@ public class HelmOfSnowstorms : Head
 
     private Coroutine destroyEffectCountdownRoutine;
     private GameObject circle;
+
+    private FMOD.Studio.EventInstance snowstormLoopSFXEvent;
+    [SerializeField][FMODUnity.EventRef] private string snowstormLoopSFX;
      
-     protected override void Awake()
-     {
+    protected override void Awake()
+    {
         base.Awake();
-     }
-     protected override void ActivateHelmet()
+    }
+
+    protected override void ActivateHelmet()
     {
         base.ActivateHelmet();
         // Save the instance of the snow circle
@@ -37,6 +41,12 @@ public class HelmOfSnowstorms : Head
         // set the lifetime of the ground decal to the duration from the item
         snowVFX.SetFloat("GDLifetime", data.equipmentBaseData.Duration());
 
+        // Setup & start the looping snowstorm SFX
+        snowstormLoopSFXEvent = FMODUnity.RuntimeManager.CreateInstance(snowstormLoopSFX);
+        snowstormLoopSFXEvent.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(circle));
+        FMODUnity.RuntimeManager.AttachInstanceToGameObject(snowstormLoopSFXEvent, circle.transform);
+        snowstormLoopSFXEvent.start();
+
         destroyEffectCountdownRoutine = StartCoroutine(destroyEffectCountdown(data.equipmentBaseData.Duration(), fadeOutTime));
     }
 
@@ -50,6 +60,7 @@ public class HelmOfSnowstorms : Head
 
         // after a delay destroy the circle, the damage and slow scripts will be destroyed but the vfx need time to dissapear
         yield return new WaitForSeconds(fadeOutDuration);
+        snowstormLoopSFXEvent.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         Destroy(circle);
         Debug.Log("Destroy Called");
     }

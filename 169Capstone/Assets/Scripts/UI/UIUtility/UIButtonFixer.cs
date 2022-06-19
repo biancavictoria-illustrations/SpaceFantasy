@@ -9,6 +9,8 @@ public class UIButtonFixer : MonoBehaviour, IPointerEnterHandler, ISelectHandler
 {
     [SerializeField] private bool playSFXOnHover = true;
     [SerializeField] private bool playSFXOnClick = true;
+    
+    [FMODUnity.EventRef] public string buttonClickSFXOverride;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -48,7 +50,13 @@ public class UIButtonFixer : MonoBehaviour, IPointerEnterHandler, ISelectHandler
 
     private void TriggerClickSFX()
     {
-        if(playSFXOnClick)
-            AudioManager.Instance.PlaySFX(AudioManager.SFX.ButtonClick);
+        if(playSFXOnClick){
+            if(buttonClickSFXOverride != ""){
+                AudioManager.Instance.PlaySFX(buttonClickSFXOverride);
+            }
+            else{
+                AudioManager.Instance.PlaySFX(AudioManager.SFX.ButtonClick);
+            }            
+        }
     }
 }

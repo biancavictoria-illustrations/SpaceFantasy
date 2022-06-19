@@ -18,6 +18,10 @@ public class HelmOfTheRam : Head
     private CharacterController controller;
     private GameObject chargeVFXInstance;
 
+    private FMOD.Studio.EventInstance chargeLoopSFXEvent;
+    [SerializeField][FMODUnity.EventRef] private string chargeLoopSFX;    
+    [SerializeField][FMODUnity.EventRef] private string impactSFX;
+
     protected override void Start()
     {
         base.Start();
@@ -32,6 +36,12 @@ public class HelmOfTheRam : Head
 
         Transform model = player.GetComponent<Movement>().model;
         chargeVFXInstance = Instantiate(chargeVFX, player.transform.position, model.rotation, model);
+
+        // Setup & start the looping charge SFX
+        chargeLoopSFXEvent = FMODUnity.RuntimeManager.CreateInstance(impactSFX);
+        chargeLoopSFXEvent.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(Player.instance.gameObject));
+        FMODUnity.RuntimeManager.AttachInstanceToGameObject(chargeLoopSFXEvent, Player.instance.transform);
+        chargeLoopSFXEvent.start();
         
         movement.isAttacking = true;
         movement.animator.SetBool("IsRunning", true);
@@ -105,6 +115,9 @@ public class HelmOfTheRam : Head
                     pushRoutine = StartCoroutine(pushEnemyRoutine(path));
             }
         }
+        else if(hit.collider.gameObject.layer == LayerMask.NameToLayer("Environment")){
+            AudioManager.Instance.PlaySFX(impactSFX, Player.instance.gameObject);
+        }
         
         StopCoroutine(durationRoutine);
         durationRoutine = null;
@@ -117,6 +130,8 @@ public class HelmOfTheRam : Head
     {
         if(chargeVFXInstance != null)
             Destroy(chargeVFXInstance);
+        
+        chargeLoopSFXEvent.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 
         movement.isAttacking = false;
         InputManager.instance.preventInputOverride = false;

@@ -14,6 +14,13 @@ public class BeetleAnimatorController : MonoBehaviour
 
     public Beetle beetle;
 
+    [SerializeField][FMODUnity.EventRef] private string footstepsSFX;
+
+    public void PlayFootstepsSFX()
+    {
+        AudioManager.Instance.PlaySFX(footstepsSFX, gameObject);
+    }
+
     public void SetCooldown()
     {
         beetle.SetCooldown();

@@ -28,8 +28,13 @@ public class JournalUI : MonoBehaviour
         if(GameManager.instance.InSceneWithRandomGeneration())
             InGameUIManager.instance.ToggleMiniMap(!set);
 
-        if(set)
+        if(set){
+            AudioManager.Instance.PlaySFX(AudioManager.SFX.CaptainsLogOpen);
             topButton.Select();
+        }
+        else{
+            AudioManager.Instance.PlaySFX(AudioManager.SFX.CaptainsLogClose);
+        }
 
         if(!set && GameManager.instance.currentSceneName == GameManager.MAIN_HUB_STRING_NAME){
             InGameUIManager.instance.ToggleRunUI(false, false, false, false);
@@ -45,5 +50,5 @@ public class JournalUI : MonoBehaviour
     {
         AlertTextUI.instance.EnableJournalUpdatedAlert();
         StartCoroutine(AlertTextUI.instance.RemoveSecondaryAlertAfterSeconds());
-    }    
+    }
 }

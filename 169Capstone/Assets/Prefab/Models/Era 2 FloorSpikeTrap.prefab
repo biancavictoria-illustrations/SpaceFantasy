@@ -28,6 +28,7 @@ MonoBehaviour:
   damage: 2
   constDamage: 0
   damageSource: 10
+  trapLoopingSFX: 
 --- !u!65 &202104754
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -56,6 +57,7 @@ MonoBehaviour:
   damage: 2
   constDamage: 0
   damageSource: 10
+  trapLoopingSFX: 
 --- !u!65 &202104748
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -84,6 +86,7 @@ MonoBehaviour:
   damage: 2
   constDamage: 0
   damageSource: 10
+  trapLoopingSFX: 
 --- !u!1 &4176371032005905868
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,6 +97,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3656540263591040886}
   - component: {fileID: 3833718329600192857}
+  - component: {fileID: 1462883613420717414}
   m_Layer: 0
   m_Name: Era 2 FloorSpikeTrap
   m_TagString: Untagged
@@ -135,6 +139,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1462883613420717414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4176371032005905868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3f6fa7ea8a5a4e4794dd1a642fcb6da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activatedSFX: event:/SFX/EnvironmentStuff/SpikeTrap
 --- !u!65 &202104750
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -163,6 +180,7 @@ MonoBehaviour:
   damage: 2
   constDamage: 0
   damageSource: 10
+  trapLoopingSFX: 
 --- !u!65 &202104746
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -191,6 +209,7 @@ MonoBehaviour:
   damage: 2
   constDamage: 0
   damageSource: 10
+  trapLoopingSFX: 
 --- !u!1001 &5594924221453997369
 PrefabInstance:
   m_ObjectHideFlags: 0

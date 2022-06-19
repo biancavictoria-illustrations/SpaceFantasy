@@ -16,6 +16,12 @@ public class Beetle : Enemy
     [SerializeField] private GameObject missilePrefab;
     [SerializeField] private GameObject hurtCirclePrefab;
 
+    [SerializeField][FMODUnity.EventRef] private string arcaneBarrageAttackSFX;
+    [SerializeField][FMODUnity.EventRef] private string phase1DebrisAttackSFX;
+    [SerializeField][FMODUnity.EventRef] private string shockwaveAttackSFX;
+    [SerializeField][FMODUnity.EventRef] private string chargeIntoWallSFX;
+    [SerializeField][FMODUnity.EventRef] private string deathSFX;
+
     private Player player;
 
     private Coroutine attackRoutine;
@@ -150,6 +156,8 @@ public class Beetle : Enemy
 
     public void ShockwaveAttack()
     {
+        AudioManager.Instance.PlaySFX(shockwaveAttackSFX, gameObject);
+
         float distance = Vector3.Distance(player.transform.position, transform.position);
         if(distance < nextAttack.attackRange * (1 + 0.25f * shockwaveCount))
         {
@@ -184,6 +192,8 @@ public class Beetle : Enemy
 
     public void ShootMissile()
     {
+        AudioManager.Instance.PlaySFX(arcaneBarrageAttackSFX, gameObject);
+
         StartCoroutine(turnTowardsPlayerRoutine(nextAttack.windDown, variance: 0.25f, callback: () => 
         {
             for(int i = 0; i < 3; ++i)
@@ -233,6 +243,9 @@ public class Beetle : Enemy
                 player.GetComponent<EntityHealth>().Damage(damageAmount, DamageSourceType.BeetleBoss);
                 player.GetComponent<Movement>().ApplyExternalVelocity(direction * speed * 2);
             }
+            else if(hit.collider.gameObject.layer == LayerMask.NameToLayer("Environment")){
+                AudioManager.Instance.PlaySFX(chargeIntoWallSFX, gameObject);
+            }
 
             if(isPhase2){
                 dropDebrisRoutine = StartCoroutine(Phase2DropDebrisRoutine());
@@ -252,6 +265,8 @@ public class Beetle : Enemy
     private IEnumerator SlamRoutine()
     {
         path.enabled = false;
+
+        AudioManager.Instance.PlaySFX(phase1DebrisAttackSFX, gameObject);
 
         if(isPhase2)
         {
@@ -347,6 +362,7 @@ public class Beetle : Enemy
 
     private void stopBossMusic(EntityHealth health)
     {
+        AudioManager.Instance.PlaySFX(deathSFX, gameObject);
         AudioManager.Instance.queueMusicAfterFadeOut(AudioManager.MusicTrack.Level1, false);
     }
 }

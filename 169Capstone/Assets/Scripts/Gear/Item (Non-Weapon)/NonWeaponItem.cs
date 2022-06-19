@@ -12,6 +12,9 @@ public abstract class NonWeaponItem : Equipment
 
     public Coroutine cooldownRoutine {get; protected set;}
     public Coroutine durationRoutine {get; protected set;}
+
+    [Tooltip("Optional ONE OFF SFX to play right when the item is triggered - if something needs to loop, handle that in the unique item script")]
+    [SerializeField][FMODUnity.EventRef] private string itemActivationSFXOneOff;
     
     protected Player player;
 
@@ -29,6 +32,10 @@ public abstract class NonWeaponItem : Equipment
         {
             clearToFire = false;
             anim.animator.SetBool("IsUse" + slot, true);
+
+            if(itemActivationSFXOneOff != ""){
+                AudioManager.Instance.PlaySFX(itemActivationSFXOneOff, Player.instance.gameObject);
+            }
         }
     }
 
