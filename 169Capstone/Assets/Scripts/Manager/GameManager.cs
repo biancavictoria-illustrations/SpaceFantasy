@@ -180,6 +180,7 @@ public class GameManager : MonoBehaviour
     #region Scene Load Stuff
         void OnSceneLoad(Scene scene, LoadSceneMode mode)
         {
+            string prevSceneName = currentSceneName;
             currentSceneName = scene.name;
 
             AudioManager.Instance.stopMusic(true);
@@ -204,8 +205,8 @@ public class GameManager : MonoBehaviour
                     InputManager.instance.preventInputOverride = false;
                 });
 
-                // TODO: If not coming from title screen?
-                AudioManager.Instance.PlaySFX(AudioManager.SFX.TimelineResetRespawn, gameObject);   // NOT WORKING
+                if(prevSceneName != TITLE_SCREEN_STRING_NAME)
+                    AudioManager.Instance.PlaySFX(AudioManager.SFX.TimelineResetRespawn, Player.instance.gameObject);
 
                 // Trigger the fade in
                 fade.FadeIn(0.5f);                
@@ -218,13 +219,14 @@ public class GameManager : MonoBehaviour
                 PlayerInventory.instance.SetRunStartHealthPotionQuantity();
 
                 InGameUIManager.instance.gameObject.SetActive(false);   // Activated in RemoveLoadScreen()
-                AudioManager.Instance.PlaySFX(AudioManager.SFX.ElevatorDown, gameObject);   // NOT WORKING
 
                 FindObjectOfType<FloorGenerator>().OnGenerationComplete.AddListener( () =>
                 {
                     fade.SetOpaque();
                     LoadScreen.instance.RemoveLoadScreen();
                     fade.FadeIn(1f);
+
+                    AudioManager.Instance.PlaySFX(AudioManager.SFX.ElevatorDown, Player.instance.gameObject);
 
                     // For an average run (beyond run # 1)
                     if(currentRunNumber != 1){
@@ -246,7 +248,7 @@ public class GameManager : MonoBehaviour
 
             // === LICH FIGHT ROOM ===
             else if(currentSceneName == LICH_ARENA_STRING_NAME){
-                AudioManager.Instance.PlaySFX(AudioManager.SFX.ElevatorDown, gameObject);   // NOT WORKING
+                AudioManager.Instance.PlaySFX(AudioManager.SFX.ElevatorDown, Player.instance.gameObject);
                 inElevatorAnimation = true;
                 FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {
                     inElevatorAnimation = false;
@@ -262,7 +264,7 @@ public class GameManager : MonoBehaviour
             else if(currentSceneName == EPILOGUE_SCENE_STRING_NAME){
                 StoryManager.instance.ResetAllNPCTalkedToValues();
 
-                AudioManager.Instance.PlaySFX(AudioManager.SFX.ElevatorUp, gameObject);   // NOT WORKING
+                AudioManager.Instance.PlaySFX(AudioManager.SFX.ElevatorUp, Player.instance.gameObject);
 
                 inElevatorAnimation = true;
                 FindObjectOfType<ElevatorAnimationHelper>().AddListenerToAnimationEnd( () => {

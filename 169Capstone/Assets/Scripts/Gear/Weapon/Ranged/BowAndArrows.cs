@@ -21,6 +21,7 @@ public class BowAndArrows : Equipment
     [SerializeField] private GameObject arrowUIPrefab;
     private ArrowUI arrowUI;
 
+    private FMOD.Studio.EventInstance chargeSFXEvent;
     [SerializeField][FMODUnity.EventRef] private string chargeSFX;
     [SerializeField][FMODUnity.EventRef] private string shootSFXFullyCharged;
     [SerializeField][FMODUnity.EventRef] private string shootSFXNormal;
@@ -48,7 +49,11 @@ public class BowAndArrows : Equipment
             movement.isAttacking = true;
             playerAnim.animator.SetBool("IsBowAttacking", true);
 
-            AudioManager.Instance.PlaySFX(chargeSFX, Player.instance.gameObject);   // TODO: Disable if you shoot before this finishes playing
+            // Setup & start the charge SFX
+            chargeSFXEvent = FMODUnity.RuntimeManager.CreateInstance(chargeSFX);
+            chargeSFXEvent.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(Player.instance.gameObject));
+            FMODUnity.RuntimeManager.AttachInstanceToGameObject(chargeSFXEvent, Player.instance.transform);
+            chargeSFXEvent.start();
         }
 
         if(playerAnim.attackActive)
@@ -89,11 +94,17 @@ public class BowAndArrows : Equipment
 
         float damageMultiplier = 1;
         bool autoCrit = false;
+        
+        // Stop the charge SFX early
+        chargeSFXEvent.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+
         if(heldTime > maxHoldTime && heldTime < maxHoldTime + superChargeDuration){ // If fully charged
             autoCrit = true;
+            // chargeSFXEvent.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             AudioManager.Instance.PlaySFX(shootSFXFullyCharged, Player.instance.gameObject);
         }
         else{
+            // chargeSFXEvent.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
             damageMultiplier = Mathf.Lerp(minDamagePercent, maxDamagePercent, heldTime/maxHoldTime);
             AudioManager.Instance.PlaySFX(shootSFXNormal, Player.instance.gameObject);
         }
