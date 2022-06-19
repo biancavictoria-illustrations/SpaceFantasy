@@ -47,6 +47,7 @@ MonoBehaviour:
   weaponModel: {fileID: 0}
   dropItemPrefab: {fileID: 936317186558681456, guid: 0ebe962c7adf2124bbd8ce4a7ecb6415,
     type: 3}
+  outOfPotionsSFX: event:/SFX/Player Stuff/OutOfPotions
 --- !u!114 &3483883763402212278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,7 +182,7 @@ MonoBehaviour:
   journalContentManager: {fileID: 8399444011503290125}
   playerDeath: 0
   nonBossEnemiesKilledThisRun: 0
-  enemiesKilledToGearTierUp: 3
+  gearTierUISaveValue: 0
   gameTimer: {fileID: 5921089470156801829}
   epilogueTriggered: 0
 --- !u!114 &5915198418683075109
@@ -209,4 +210,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runTimer: 0
+  enemyTierUISaveValue: 0
   runTotalTimer: 0
+  timerHasStartedForRun: 0

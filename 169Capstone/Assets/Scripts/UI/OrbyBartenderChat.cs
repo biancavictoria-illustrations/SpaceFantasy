@@ -14,6 +14,9 @@ public class OrbyBartenderChat : MonoBehaviour
     [SerializeField] private GameObject orbyDialogueBox; 
     [SerializeField] private TMP_Text chatText;
 
+    [SerializeField][FMODUnity.EventRef] private string orbyTalkSFX;
+    [SerializeField][FMODUnity.EventRef] private string orbyAngrySFX;
+
     public const string orbyDialogue0 = "beep boop";
     public const string orbyDialogue1 = "beep beep";
     public const string orbyDialogue2 = "zworp zworp";
@@ -48,18 +51,23 @@ public class OrbyBartenderChat : MonoBehaviour
     {
         if(numberOfInteracts == INTERACTS_BEFORE_ORBY_PISSED){
             chatText.text = annoyedOrbyDialogue1;
+            AudioManager.Instance.PlaySFX(orbyTalkSFX, gameObject);
             return;
         }
         else if(numberOfInteracts == INTERACTS_BEFORE_ORBY_PISSED + 1){
             chatText.text = annoyedOrbyDialogue2;
+            AudioManager.Instance.PlaySFX(orbyTalkSFX, gameObject);
             return;
         }
         else if(numberOfInteracts == INTERACTS_BEFORE_ORBY_PISSED + 2){
             canInteractWithOrby = false;
             AlertTextUI.instance.DisablePrimaryAlert();
             chatText.text = angryOrbyDialogue;
+            AudioManager.Instance.PlaySFX(orbyAngrySFX, gameObject);
             return;
         }
+
+        AudioManager.Instance.PlaySFX(orbyTalkSFX, gameObject);
 
         // Randomly pick from the options of Orby dialogue
         int num = Random.Range(0,9);
@@ -102,8 +110,10 @@ public class OrbyBartenderChat : MonoBehaviour
 
         orbyDialogueIsActive = true;
         numberOfInteracts++;
+        
         PickNewOrbyDialogue();
         orbyDialogueBox.gameObject.SetActive(true);
+
         StartCoroutine(OrbyDialogueTimeOut());
     }
 

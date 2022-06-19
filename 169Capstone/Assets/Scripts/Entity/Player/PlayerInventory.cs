@@ -19,6 +19,8 @@ public class PlayerInventory : MonoBehaviour
     public int tempCurrency {get; private set;}
     public int permanentCurrency {get; private set;}
 
+    [SerializeField][FMODUnity.EventRef] private string outOfPotionsSFX;
+
     [HideInInspector] public static bool hasPickedSomethingUpThisRun = false;
 
     public static bool hasCaptainsLog = true;
@@ -52,7 +54,8 @@ public class PlayerInventory : MonoBehaviour
     public void UseHealthPotion()
     {
         if(healthPotionQuantity == 0){
-            // TODO: probably give UI feedback, like a little "no potions!" pop up
+            InGameUIManager.instance.EnableNoPotionsAlert();
+            AudioManager.Instance.PlaySFX(outOfPotionsSFX);
             return;
         }
 

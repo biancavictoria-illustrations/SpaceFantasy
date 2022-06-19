@@ -44,16 +44,16 @@ public class FallingMeteor : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        AudioManager.Instance.PlaySFX(meteorImpactSFX, gameObject);
-        
         if(other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
+            AudioManager.Instance.PlaySFX(meteorImpactSFX, gameObject);
             other.GetComponent<EntityHealth>().Damage(damage, DamageSourceType.TimeLich);
             Destroy(gameObject);
         }
 
         if(other.gameObject.layer == LayerMask.NameToLayer("Environment"))
         {
+            AudioManager.Instance.PlaySFX(meteorImpactSFX, gameObject);
             Destroy(gameObject);
         }
     }

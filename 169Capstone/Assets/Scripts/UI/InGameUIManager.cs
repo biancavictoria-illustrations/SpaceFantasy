@@ -189,6 +189,13 @@ public class InGameUIManager : MonoBehaviour
         expandedMapOverlay.SetActive(set);
         SetGameUIActive(!set);
         ToggleMiniMap(!set);
+
+        if(set){
+            AudioManager.Instance.PlaySFX(AudioManager.SFX.CaptainsLogOpen);
+        }
+        else{
+            AudioManager.Instance.PlaySFX(AudioManager.SFX.CaptainsLogClose);
+        }
     }
 
     public void ToggleMiniMap(bool set)
@@ -510,6 +517,18 @@ public class InGameUIManager : MonoBehaviour
         public void SetHealthPotionValue(int numPotions)
         {
             healthPotionValue.text = "" + numPotions;
+        }
+
+        public void EnableNoPotionsAlert()
+        {
+            StartCoroutine(NoPotionsAlertRoutine());
+        }
+
+        private IEnumerator NoPotionsAlertRoutine()
+        {
+            healthPotionValue.text = "<color=" + MAGENTA_COLOR + "><size=130%>" + PlayerInventory.instance.healthPotionQuantity;
+            yield return new WaitForSecondsRealtime(0.4f);
+            healthPotionValue.text = "" + PlayerInventory.instance.healthPotionQuantity;
         }
     #endregion  
 

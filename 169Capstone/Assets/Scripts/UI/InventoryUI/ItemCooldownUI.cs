@@ -14,15 +14,10 @@ public class ItemCooldownUI : MonoBehaviour
 
     [SerializeField] private ItemControlButton itemControlButton;
 
-    public bool isActive {get; private set;}
+    public bool isActive {get; private set;}    // DO NOT set to false in Start (that makes it set itself to false after being enabled for the first time, causing weird bugs)
 
     private float maxCooldownValue;
     [HideInInspector] public float counter;
-
-    void Start()
-    {
-        isActive = false;
-    }
 
     public InventoryItemSlot GetItemSlot()
     {

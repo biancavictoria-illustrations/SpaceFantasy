@@ -14,6 +14,8 @@ public class FallingDebris : MonoBehaviour
     private NavMeshAgent agent;
     private float currentVelocity;
 
+    [SerializeField][FMODUnity.EventRef] private string debrisImpactSFX;
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -48,12 +50,14 @@ public class FallingDebris : MonoBehaviour
     {
         if(other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
+            AudioManager.Instance.PlaySFX(debrisImpactSFX, gameObject);
             other.GetComponent<EntityHealth>().Damage(damage, DamageSourceType.BeetleBoss);
             Destroy(gameObject);
         }
 
         if(other.gameObject.layer == LayerMask.NameToLayer("Environment"))
         {
+            AudioManager.Instance.PlaySFX(debrisImpactSFX, gameObject);
             Destroy(gameObject);
         }
     }

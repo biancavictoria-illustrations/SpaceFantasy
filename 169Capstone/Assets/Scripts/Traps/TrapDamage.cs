@@ -9,6 +9,7 @@ public class TrapDamage : MonoBehaviour
 
     public DamageSourceType damageSource;
 
+    private FMOD.Studio.EventInstance trapLoopingSFXEvent;
     [SerializeField][FMODUnity.EventRef] private string trapLoopingSFX;
 
     void Start()
@@ -21,10 +22,27 @@ public class TrapDamage : MonoBehaviour
         }
     }
 
-    public void StartOnGenerationComplete()
+    void OnDisable()
     {
-        if(trapLoopingSFX != "")
-            AudioManager.Instance.PlaySFX(trapLoopingSFX, gameObject);
+        StopLoopingSFX();
+    }
+
+    private void StartOnGenerationComplete()
+    {
+        if(trapLoopingSFX != ""){
+            // Setup and start SFX
+            trapLoopingSFXEvent = FMODUnity.RuntimeManager.CreateInstance(trapLoopingSFX);
+            trapLoopingSFXEvent.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
+            FMODUnity.RuntimeManager.AttachInstanceToGameObject(trapLoopingSFXEvent, transform);
+            trapLoopingSFXEvent.start();
+        }
+    }
+
+    public void StopLoopingSFX()
+    {
+        if(trapLoopingSFX != ""){
+            trapLoopingSFXEvent.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -42,9 +60,7 @@ public class TrapDamage : MonoBehaviour
             if (other.GetComponent<EntityHealth>() != null)
             {
                 other.GetComponent<EntityHealth>().Damage(damage, damageSource);
-
             }
         }
-        
     }
 }

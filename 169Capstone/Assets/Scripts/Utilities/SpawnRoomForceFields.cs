@@ -10,8 +10,6 @@ public class SpawnRoomForceFields : MonoBehaviour
     [SerializeField] private GameObject CaptainsLog;
     [SerializeField] private GameObject swordLight;
 
-    // TODO: Activate force fields on generation complete?
-
     void Start()
     {
         if(GameManager.instance.InSceneWithRandomGeneration())
@@ -25,8 +23,10 @@ public class SpawnRoomForceFields : MonoBehaviour
     }
     public void RoomOpenOnObjectInteracted()
     {
-        foreach(GameObject ff in forceFields)
+        foreach(GameObject ff in forceFields){
             ff.SetActive(false);
+            ff.GetComponent<SFXTrigger>().PlaySecondarySFX();
+        }
     }
 
     private void StartOnGenerationComplete()
@@ -35,8 +35,10 @@ public class SpawnRoomForceFields : MonoBehaviour
             return;
         }
         // Enables the force field object
-        foreach(GameObject ff in forceFields)
+        foreach(GameObject ff in forceFields){
             ff.SetActive(true);
+            // Don't play the SFX here because they should be up from the start
+        }
 
         if(GameManager.instance.currentRunNumber == 1 && GameManager.instance.currentSceneName == GameManager.GAME_LEVEL1_STRING_NAME)
         {
