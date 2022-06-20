@@ -65,21 +65,23 @@ public class TargetPlayer : MonoBehaviour
         {
             transform.localRotation = Quaternion.Lerp(Quaternion.Euler(from), Quaternion.Euler(to), timeCount * turnRate);
             timeCount += Time.deltaTime;
+
+           
         }
 
-        if(transform.localRotation.eulerAngles == to && turn && !shootPlayer)
-        {
-            turn = false;
-            from = to;
-            to.y += 90;
+         if(transform.localRotation.eulerAngles == to && turn && !shootPlayer)
+            {
+                turn = false;
+                from = to;
+                to.y += 90;
 
-            if (to.y == 360)
-                to.y = 0;
+                if (to.y == 360)
+                    to.y = 0;
 
-            timeCount = 0;
+                timeCount = 0;
 
-            StartCoroutine(waitInterval());
-        }
+                StartCoroutine(waitInterval());
+            }
 
         if(shootPlayer && timer <= 0)
         {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PropJumpBreak : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
@@ -12,7 +12,7 @@ public class PropJumpBreak : MonoBehaviour
         }
     }
 
-    public void BreakProp()
+    public virtual void BreakProp()
     {
         Destroy(gameObject);
     }
