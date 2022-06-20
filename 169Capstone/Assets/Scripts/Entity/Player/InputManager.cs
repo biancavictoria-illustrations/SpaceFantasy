@@ -28,6 +28,7 @@ public class InputManager : MonoBehaviour
     [HideInInspector] public bool isInMainMenu = false;
 
     [SerializeField][FMODUnity.EventRef] private string itemOnCooldownSFX;
+    [SerializeField][FMODUnity.EventRef] private string progressDialogueSound;
 
     public bool latestInputIsController {get; private set;}
 
@@ -230,6 +231,7 @@ public class InputManager : MonoBehaviour
     {
         // input.isPressed confirms this is only run on KEY DOWN, not both key down AND then also key up
         if(isInDialogue && input.isPressed && !PauseMenu.GameIsPaused && !DialogueManager.instance.dialogueUI.IsMidDialogueLineDisplay){
+            AudioManager.Instance.PlaySFX(progressDialogueSound);
             DialogueManager.instance.dialogueUI.MarkLineComplete();
         }
     }
