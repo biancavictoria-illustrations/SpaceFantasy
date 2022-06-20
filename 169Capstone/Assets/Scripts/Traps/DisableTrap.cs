@@ -11,13 +11,14 @@ public class DisableTrap : PropJumpBreak
 
     protected override void OnTriggerEnter(Collider other)
     {
-
     }
 
     public override void BreakProp()
     {
         targetPlayer.enabled = false;
+
         lineOfSight.enabled = false;
+        StopCoroutine(lineOfSight.delayFireCoroutine);
 
         if(fX != null)
         {

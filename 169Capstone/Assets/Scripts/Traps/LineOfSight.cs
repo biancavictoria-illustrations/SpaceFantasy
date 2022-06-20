@@ -7,7 +7,12 @@ public class LineOfSight : MonoBehaviour
     public TargetPlayer targetPlayer;
     private bool turnVal;
     private bool turretActive = false;
+    public Coroutine delayFireCoroutine;
 
+    private void Start()
+    {        
+    }
+   
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Player")
@@ -16,9 +21,8 @@ public class LineOfSight : MonoBehaviour
             targetPlayer.turn = false;
             turretActive = true;
             if(!targetPlayer.shootPlayer)
-                StartCoroutine(DelayFire());
-        }
-            
+                delayFireCoroutine = StartCoroutine(DelayFire());
+        }            
     }
 
     private void OnTriggerExit(Collider other)
@@ -30,7 +34,6 @@ public class LineOfSight : MonoBehaviour
             // Debug.Log(targetPlayer.turn);
             // targetPlayer.turn = true;
         }
-
     }
 
     private IEnumerator DelayFire()
@@ -39,7 +42,7 @@ public class LineOfSight : MonoBehaviour
         yield return new WaitForSeconds(targetPlayer.delayRate);
         
         targetPlayer.turn = true;
-        
+
         if (turretActive == false)
         {
             yield break;
@@ -49,6 +52,6 @@ public class LineOfSight : MonoBehaviour
         targetPlayer.shootPlayer = true;
         
         targetPlayer.timer = targetPlayer.shootRate;
-        targetPlayer.ShootProjectile();
+        // targetPlayer.ShootProjectile();
     }
 }
