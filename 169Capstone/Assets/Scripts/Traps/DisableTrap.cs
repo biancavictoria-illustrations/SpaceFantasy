@@ -2,13 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DisableTrap : MonoBehaviour
+public class DisableTrap : PropJumpBreak
 {
-    public MonoBehaviour trap;
+    public TargetPlayer targetPlayer;
+    public LineOfSight lineOfSight;
+    [SerializeField] private GameObject fX;
+     [SerializeField] private GameObject fX2;
 
-    private void OnTriggerEnter(Collider other)
+    protected override void OnTriggerEnter(Collider other)
     {
-        if (other.tag != "Enemy")
-            trap.enabled = !trap.enabled;
+
+    }
+
+    public override void BreakProp()
+    {
+        targetPlayer.enabled = false;
+        lineOfSight.enabled = false;
+
+        if(fX != null)
+        {
+            fX.SetActive(false);
+            
+        }
+        if(fX2 != null)
+        {
+            fX2.SetActive(false);
+            
+        }
     }
 }
