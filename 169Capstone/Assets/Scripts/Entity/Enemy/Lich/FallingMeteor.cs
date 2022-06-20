@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.VFX;
 
 public class FallingMeteor : MonoBehaviour
 {
-    private const float startingHeight = 20;
+    private const float startingHeight = 30;
 
     public float damage = 8;
     public float velocity = 20;
+
+    [SerializeField] private GameObject debrisIndicatorVFX;
 
     private Rigidbody rb;
     private NavMeshAgent agent;
@@ -37,6 +40,12 @@ public class FallingMeteor : MonoBehaviour
         while (count < 100 && !agent.CalculatePath(newPosition, path));
         agent.Warp(newPosition);
         agent.enabled = false;
+
+        GameObject indicator = Instantiate(debrisIndicatorVFX, transform.position, Quaternion.identity);
+        VisualEffect vfx = indicator.GetComponent<VisualEffect>();
+        float fallTime = startingHeight / velocity;
+        vfx.SetFloat("GDLifetime", fallTime);
+        Destroy(indicator, fallTime);
 
         transform.position += Vector3.up * startingHeight;
         rb.velocity = new Vector3(0, -velocity, 0);
