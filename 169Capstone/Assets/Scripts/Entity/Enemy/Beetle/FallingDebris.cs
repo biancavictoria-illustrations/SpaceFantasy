@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.VFX;
 
 public class FallingDebris : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class FallingDebris : MonoBehaviour
     private const float gravity = 15;
 
     public float damage = 8;
+
+    [SerializeField] private GameObject debrisIndicatorVFX;
 
     private Rigidbody rb;
     private NavMeshAgent agent;
@@ -35,6 +38,12 @@ public class FallingDebris : MonoBehaviour
         while (count < 100 && !agent.CalculatePath(newPosition, path));
         agent.Warp(newPosition);
         agent.enabled = false;
+
+        GameObject indicator = Instantiate(debrisIndicatorVFX, transform.position, Quaternion.identity);
+        VisualEffect vfx = indicator.GetComponent<VisualEffect>();
+        float fallTime = Mathf.Sqrt(2 * startingHeight / gravity);
+        vfx.SetFloat("GDLifetime", fallTime);
+        Destroy(indicator, fallTime);
 
         transform.position += Vector3.up * startingHeight;
         currentVelocity = 0;

@@ -109,7 +109,12 @@ public class BowAndArrows : Equipment
             AudioManager.Instance.PlaySFX(shootSFXNormal, Player.instance.gameObject);
         }
         
-        projectileScript.Initialize(LayerMask.NameToLayer("Enemy"), player.stats.getDEXDamage(true, autoCrit) * damageMultiplier, DamageSourceType.Player, InputManager.instance.cursorLookDirection, speed: 20 * Mathf.Lerp(1, 2, heldTime/maxHoldTime));
+        Vector3 arrowDirection = InputManager.instance.cursorLookDirection;
+        if(arrowDirection == Vector3.zero)
+        {
+            arrowDirection = player.GetComponent<Movement>().model.forward;
+        }
+        projectileScript.Initialize(LayerMask.NameToLayer("Enemy"), player.stats.getDEXDamage(true, autoCrit) * damageMultiplier, DamageSourceType.Player, arrowDirection, speed: 20 * Mathf.Lerp(1, 2, heldTime/maxHoldTime));
 
         playerAnim.animator.SetBool("IsBowAttacking", false);
         heldTime = 0;
