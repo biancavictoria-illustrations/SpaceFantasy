@@ -44,6 +44,7 @@ public class Currency : MonoBehaviour
             switch (type)
             {
                 case CurrencyType.Coin:
+                    AudioManager.Instance.PlaySFX(AudioManager.SFX.ElectrumDrop, Player.instance.gameObject);
                     PlayerInventory.instance.SetTempCurrency(PlayerInventory.instance.tempCurrency + 1);
                     break;
                 case CurrencyType.StarShard:
