@@ -108,6 +108,7 @@ public class Beetle : Enemy
         else if(attackToAnimationTrigger[nextAttack] == "isArcaneMissiles")
         {
             path.enabled = false;
+            AudioManager.Instance.PlaySFX(arcaneBarrageAttackSFX, gameObject);
             StartCoroutine(turnTowardsPlayerRoutine(nextAttack.windUp, callback: () => animator.SetTrigger("isArcaneMissiles")));
         }
         else
@@ -192,7 +193,6 @@ public class Beetle : Enemy
 
     public void ShootMissile()
     {
-        AudioManager.Instance.PlaySFX(arcaneBarrageAttackSFX, gameObject);
 
         StartCoroutine(turnTowardsPlayerRoutine(nextAttack.windDown, variance: 0.25f, callback: () => 
         {
