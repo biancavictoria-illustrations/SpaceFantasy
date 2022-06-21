@@ -20,6 +20,7 @@ public class AudioManager : MonoBehaviour
             ElectrumDrop,
 
             SwordWoosh,
+            BreakProp,
 
             TimelineResetDeath,
             TimelineResetRespawn,
@@ -78,6 +79,7 @@ public class AudioManager : MonoBehaviour
         [SerializeField][FMODUnity.EventRef] private string starShardDrop;
         [SerializeField][FMODUnity.EventRef] private string electrumDrop;
         [SerializeField][FMODUnity.EventRef] private string swordWoosh;
+        [SerializeField][FMODUnity.EventRef] private string breakProp;
         [SerializeField][FMODUnity.EventRef] private string timelineResetDeath;
         [SerializeField][FMODUnity.EventRef] private string timelineResetRespawn;
         [SerializeField][FMODUnity.EventRef] private string fellInSlimePit;
@@ -344,6 +346,9 @@ public class AudioManager : MonoBehaviour
                     return;
                 case SFX.ElevatorDown:
                     FMODUnity.RuntimeManager.PlayOneShot(elevatorDown, source.transform.position);
+                    return;
+                case SFX.BreakProp:
+                    FMODUnity.RuntimeManager.PlayOneShot(breakProp, source.transform.position);
                     return;
             }
             Debug.LogWarning("No SFX found for " + sfx);

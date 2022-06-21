@@ -8,12 +8,14 @@ public class PropJumpBreak : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
+            AudioManager.Instance.PlaySFX(AudioManager.SFX.BreakProp, gameObject);
             Destroy(gameObject);
         }
     }
 
     public virtual void BreakProp()
     {
+        AudioManager.Instance.PlaySFX(AudioManager.SFX.BreakProp, gameObject);
         Destroy(gameObject);
     }
 }
