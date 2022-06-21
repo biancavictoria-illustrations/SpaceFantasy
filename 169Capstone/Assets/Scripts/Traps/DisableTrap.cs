@@ -18,7 +18,11 @@ public class DisableTrap : PropJumpBreak
         targetPlayer.enabled = false;
 
         lineOfSight.enabled = false;
-        StopCoroutine(lineOfSight.delayFireCoroutine);
+        if(lineOfSight.delayFireCoroutine != null)
+        {
+            StopCoroutine(lineOfSight.delayFireCoroutine);
+        }
+        
 
         if(fX != null)
         {
