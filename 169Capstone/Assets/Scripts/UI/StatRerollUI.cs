@@ -37,7 +37,7 @@ public class StatRerollUI : MonoBehaviour
         ToggleActiveStatus(true);
 
         // Don't let us leave until the animation is done
-        if(!tempSkipStatRerollToggle)
+        if(!tempSkipStatRerollToggle || GameManager.instance.currentRunNumber == 2)
             continueButton.interactable = false;
         else    // TEMP
             continueButton.Select();
