@@ -258,8 +258,8 @@ public class InputManager : MonoBehaviour
         else if(GameManager.instance.statRerollUIOpen){
             if(GameManager.instance.currentRunNumber != 2){
                 InGameUIManager.instance.statRerollUI.DisableStatRerollUI();
-                return;
             }
+            return;
         }
         else if(mapIsOpen){
             OnToggleMinimap(input);
