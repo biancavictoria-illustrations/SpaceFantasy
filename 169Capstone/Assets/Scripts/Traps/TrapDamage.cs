@@ -35,10 +35,12 @@ public class TrapDamage : MonoBehaviour
             trapLoopingSFXEvent.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject));
             FMODUnity.RuntimeManager.AttachInstanceToGameObject(trapLoopingSFXEvent, transform);
             trapLoopingSFXEvent.start();
+
+            Player.instance.health.OnDeath.AddListener(StopLoopingSFX);
         }
     }
 
-    public void StopLoopingSFX()
+    public void StopLoopingSFX(EntityHealth health = null)
     {
         if(trapLoopingSFX != ""){
             trapLoopingSFXEvent.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
