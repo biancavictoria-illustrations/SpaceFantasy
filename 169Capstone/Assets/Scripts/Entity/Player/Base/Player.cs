@@ -26,6 +26,8 @@ public class Player : MonoBehaviour
             instance = this;
             Debug.Log(instance);
         }
+
+        health = GetComponent<EntityHealth>();
     }
 
     void Start()
@@ -46,7 +48,6 @@ public class Player : MonoBehaviour
     {
         stats = GetComponent<PlayerStats>();
 
-        health = gameObject.GetComponent<EntityHealth>();
         health.maxHitpoints = stats.getMaxHitPoints();
         health.currentHitpoints = stats.getMaxHitPoints();
         health.SetStartingHealthUI();
