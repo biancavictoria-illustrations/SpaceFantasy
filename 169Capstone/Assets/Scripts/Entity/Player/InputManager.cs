@@ -255,7 +255,7 @@ public class InputManager : MonoBehaviour
             InGameUIManager.instance.gearSwapUI.CloseGearSwapUI();
             return;            
         }
-        else if(GameManager.instance.statRerollUIOpen){ // Should this one be here?
+        else if(GameManager.instance.statRerollUIOpen && GameManager.instance.currentRunNumber != 2){
             InGameUIManager.instance.statRerollUI.DisableStatRerollUI();
             return;
         }

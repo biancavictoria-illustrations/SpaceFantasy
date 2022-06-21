@@ -17,7 +17,6 @@ public class DevPanel : MonoBehaviour
 
     private static bool speedBoost = false;
     private static bool godMode = false;
-    private static bool skipStatReroll = false;
     private static bool superJump = false;
     private static bool fastGearTier = false;
 
@@ -42,11 +41,6 @@ public class DevPanel : MonoBehaviour
         if(godMode){
             noDamageToggle.isOn = true;
             NoDamage();
-        }
-
-        if(skipStatReroll){
-            skipStatRerollToggle.isOn = true;
-            SkipStatReroll();
         }
 
         if(superJump){
@@ -121,21 +115,6 @@ public class DevPanel : MonoBehaviour
             Player.instance.GetComponent<Movement>().jumpSpeed = 30;
             UIUtils.SetImageColorFromHex( superJumpToggle.GetComponent<Image>(), "#FFFFFF" );
             superJump = false;
-        }
-    }
-
-    // Toggle
-    public void SkipStatReroll()
-    {
-        if(skipStatRerollToggle.isOn){
-            StatRerollUI.tempSkipStatRerollToggle = true;
-            UIUtils.SetImageColorFromHex( skipStatRerollToggle.GetComponent<Image>(), InGameUIManager.TURQUOISE_COLOR );
-            skipStatReroll = true;
-        }
-        else{
-            StatRerollUI.tempSkipStatRerollToggle = false;
-            UIUtils.SetImageColorFromHex( skipStatRerollToggle.GetComponent<Image>(), "#FFFFFF" );
-            skipStatReroll = false;
         }
     }
 

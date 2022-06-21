@@ -30,17 +30,17 @@ public class StatRerollUI : MonoBehaviour
     private PlayerStats stats;
     private PermanentUpgradeManager upgradeManager;
 
-    public static bool tempSkipStatRerollToggle = false;
-
     public void EnableStatRerollUI()
     {
         ToggleActiveStatus(true);
 
         // Don't let us leave until the animation is done if it's the first run with stat reroll (run 2)
-        if(!tempSkipStatRerollToggle || GameManager.instance.currentRunNumber > 2)
+        if(GameManager.instance.currentRunNumber == 2){
             continueButton.interactable = false;
-        else    // TEMP
+        }
+        else{
             continueButton.Select();
+        }
 
         // For convenience, save these locally
         stats = Player.instance.GetComponent<PlayerStats>();
