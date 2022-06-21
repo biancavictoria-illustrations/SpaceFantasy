@@ -279,4 +279,13 @@ public class DevPanel : MonoBehaviour
             s.interactable = set;
         }
     }
+
+    public void UnlockAllJournalEntries()
+    {
+        JournalContentID[] list = new JournalContentID[(int)JournalContentID.enumSize];
+        for(int i = 0; i < (int)JournalContentID.enumSize; i++){
+            list[i] = (JournalContentID)i;
+        }
+        GameManager.instance.journalContentManager.UnlockJournalEntry(list);
+    }
 }
