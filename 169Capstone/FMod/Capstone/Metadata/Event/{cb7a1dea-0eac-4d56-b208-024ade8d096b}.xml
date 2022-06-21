@@ -5,7 +5,7 @@
 			<value>StatRerollTick</value>
 		</property>
 		<property name="outputFormat">
-			<value>0</value>
+			<value>1</value>
 		</property>
 		<relationship name="folder">
 			<destination>{d8f5e258-82e4-4222-856b-387b4d32498e}</destination>
@@ -68,11 +68,18 @@
 	<object class="EventAutomatableProperties" id="{191d61f2-c0f7-41b6-b5da-c18df0f55d26}" />
 	<object class="MarkerTrack" id="{6ff695be-9351-44d8-9339-d7a8b449dd5f}" />
 	<object class="GroupTrack" id="{725ecad6-93ad-4387-b039-62f410a53dc0}">
+		<relationship name="modules">
+			<destination>{93d8282f-c8c6-431d-ab6c-9bd4bfd2ba7c}</destination>
+		</relationship>
 		<relationship name="mixerGroup">
 			<destination>{7357ff4f-58d5-44d2-99fa-c936871143ce}</destination>
 		</relationship>
 	</object>
-	<object class="Timeline" id="{ae04f1af-38c9-4dce-9f80-59899ac15336}" />
+	<object class="Timeline" id="{ae04f1af-38c9-4dce-9f80-59899ac15336}">
+		<relationship name="modules">
+			<destination>{93d8282f-c8c6-431d-ab6c-9bd4bfd2ba7c}</destination>
+		</relationship>
+	</object>
 	<object class="ActionSheet" id="{9c55c4fc-bd55-4ee9-b121-b4655dcfeaf8}">
 		<relationship name="modules">
 			<destination>{1e06a4a5-ee0a-4a82-a4c3-b5b44ab70a39}</destination>
@@ -96,6 +103,14 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{8483061b-2f42-4892-8d88-c808837422c1}" />
+	<object class="SingleSound" id="{93d8282f-c8c6-431d-ab6c-9bd4bfd2ba7c}">
+		<property name="length">
+			<value>0.75</value>
+		</property>
+		<relationship name="audioFile">
+			<destination>{6b724065-84d4-4185-8c43-fbf79ba6b516}</destination>
+		</relationship>
+	</object>
 	<object class="EventMixerGroup" id="{7357ff4f-58d5-44d2-99fa-c936871143ce}">
 		<property name="name">
 			<value>Audio 1</value>
