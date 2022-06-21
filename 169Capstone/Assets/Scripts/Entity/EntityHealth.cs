@@ -359,7 +359,6 @@ public class EntityHealth : MonoBehaviour
             
             for(int i = 0; i < TEMPCOINDROPAMOUNT; ++i)
             {
-                AudioManager.Instance.PlaySFX(AudioManager.SFX.ElectrumDrop, gameObject);
                 Instantiate(coinPrefab, transform.position, Quaternion.identity);
             }
 
