@@ -19,6 +19,8 @@ public class FallingMeteor : MonoBehaviour
     [SerializeField][FMODUnity.EventRef] private string meteorFallSFX;
     [SerializeField][FMODUnity.EventRef] private string meteorImpactSFX;
 
+    [SerializeField] private GameObject explosionObject;
+
     void Start()
     {
         AudioManager.Instance.PlaySFX(meteorFallSFX, gameObject);
@@ -65,5 +67,12 @@ public class FallingMeteor : MonoBehaviour
             AudioManager.Instance.PlaySFX(meteorImpactSFX, gameObject);
             Destroy(gameObject);
         }
+    }
+
+    void OnDestroy()
+    {
+        GameObject explosion = Instantiate(explosionObject);
+        Destroy(explosion, 3);
+        explosion.transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
     }
 }

@@ -12,6 +12,7 @@ public class FallingDebris : MonoBehaviour
     public float damage = 8;
 
     [SerializeField] private GameObject debrisIndicatorVFX;
+    [SerializeField] private GameObject explosionObject;
 
     private Rigidbody rb;
     private NavMeshAgent agent;
@@ -69,5 +70,12 @@ public class FallingDebris : MonoBehaviour
             AudioManager.Instance.PlaySFX(debrisImpactSFX, gameObject);
             Destroy(gameObject);
         }
+    }
+
+     void OnDestroy()
+    {
+        GameObject explosion = Instantiate(explosionObject);
+        Destroy(explosion, 3);
+        explosion.transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
     }
 }
