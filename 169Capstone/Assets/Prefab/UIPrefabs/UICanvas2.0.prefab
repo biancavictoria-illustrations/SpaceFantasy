@@ -1790,6 +1790,13 @@ MonoBehaviour:
   - {fileID: 8121611654253045304}
   - {fileID: 8323694426629844183}
   - {fileID: 9167614748761622487}
+  - {fileID: 9167614748761622487}
+  - {fileID: 8323694426629844183}
+  - {fileID: 8121611654253045304}
+  - {fileID: 5028186023928373978}
+  - {fileID: 4786202221552630657}
+  - {fileID: 4019867199016170688}
+  - {fileID: 486566759510282450}
   tabIdle: {r: 0.3529412, g: 0.41568628, b: 0.41960785, a: 1}
   tabHover: {r: 0.105882354, g: 0.78039217, b: 0.69803923, a: 1}
   tabActive: {r: 1, g: 1, b: 1, a: 1}
@@ -3706,9 +3713,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <b>CRIT CHANCE:</b> Lorem ipsum dolor sit amet, consectetur adipiscing
-    elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-    ad minim veniam, quis nostrud exercitation.
+  m_text: <b>CRIT CHANCE:</b> Grants a percent chance of dealing a "critical hit,"
+    increasing the damage of an attack by a percentage equal to Crit Damage. Increases
+    by +1% per Intelligence point.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a73a0ab187217cd4dac968e6c52f09f1, type: 2}
   m_sharedMaterial: {fileID: 581323203041391508, guid: a73a0ab187217cd4dac968e6c52f09f1,
@@ -5202,9 +5209,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <b>CRIT DAMAGE:</b> Lorem ipsum dolor sit amet, consectetur adipiscing
-    elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-    ad minim veniam, quis nostrud exercitation.
+  m_text: <b>CRIT DAMAGE:</b> Increases the damage of "critical hits" by a percentage
+    equal to Crit Damage, starting at +100%.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a73a0ab187217cd4dac968e6c52f09f1, type: 2}
   m_sharedMaterial: {fileID: 581323203041391508, guid: a73a0ab187217cd4dac968e6c52f09f1,
@@ -9171,7 +9177,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'ID:  ######'
+  m_text: 'ID:  629312'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a73a0ab187217cd4dac968e6c52f09f1, type: 2}
   m_sharedMaterial: {fileID: 581323203041391508, guid: a73a0ab187217cd4dac968e6c52f09f1,
@@ -11777,9 +11783,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <b>DODGE CHANCE:</b> Lorem ipsum dolor sit amet, consectetur adipiscing
-    elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-    ad minim veniam, quis nostrud exercitation.
+  m_text: <b>DODGE CHANCE:</b> Grants a percent chance of avoiding incoming damage.
+    Increases by +0.5% per Dexterity point.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a73a0ab187217cd4dac968e6c52f09f1, type: 2}
   m_sharedMaterial: {fileID: 581323203041391508, guid: a73a0ab187217cd4dac968e6c52f09f1,
@@ -16876,9 +16881,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <b>DEFENSE:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-    minim veniam, quis nostrud exercitation.
+  m_text: <b>DEFENSE:</b> Reduces incoming damage by a percentage equal to the Defense
+    value. Increases by +0.5% per Strength point.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a73a0ab187217cd4dac968e6c52f09f1, type: 2}
   m_sharedMaterial: {fileID: 581323203041391508, guid: a73a0ab187217cd4dac968e6c52f09f1,
@@ -23030,9 +23034,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <b>COOLDOWN REDUCTION:</b> Lorem ipsum dolor sit amet, consectetur adipiscing
-    elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-    ad minim veniam, quis nostrud exercitation.
+  m_text: <b>HASTE:</b> Decreases the duration of equipment cooldowns. Increases
+    by 1% per Wisdom point.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a73a0ab187217cd4dac968e6c52f09f1, type: 2}
   m_sharedMaterial: {fileID: 581323203041391508, guid: a73a0ab187217cd4dac968e6c52f09f1,
@@ -25376,7 +25379,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 186901224355097077}
   m_HandleRect: {fileID: 5054487222927325936}
   m_Direction: 2
-  m_Value: 1.0000002
+  m_Value: 1
   m_Size: 0.67649764
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -26015,9 +26018,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <b>ATTACK SPEED:</b> Lorem ipsum dolor sit amet, consectetur adipiscing
-    elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-    ad minim veniam, quis nostrud exercitation.
+  m_text: <b>ATTACK SPEED:</b> Determines the speed and frequency of attacks, starting
+    at 100%.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a73a0ab187217cd4dac968e6c52f09f1, type: 2}
   m_sharedMaterial: {fileID: 581323203041391508, guid: a73a0ab187217cd4dac968e6c52f09f1,
@@ -34280,9 +34282,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <b>TRAP DAMAGE RESIST:</b> Lorem ipsum dolor sit amet, consectetur adipiscing
-    elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-    ad minim veniam, quis nostrud exercitation.
+  m_text: <b>TRAP DAMAGE RESIST:</b> Reduces damage dealt by traps by a percentage
+    equal to the Trap Damage Resist value. Increases by +1% per Constitution point.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a73a0ab187217cd4dac968e6c52f09f1, type: 2}
   m_sharedMaterial: {fileID: 581323203041391508, guid: a73a0ab187217cd4dac968e6c52f09f1,
@@ -34779,9 +34780,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <b>MOVE SPEED:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-    minim veniam, quis nostrud exercitation.
+  m_text: <b>MOVE SPEED:</b> Determines the speed of walking, starting at 100%.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a73a0ab187217cd4dac968e6c52f09f1, type: 2}
   m_sharedMaterial: {fileID: 581323203041391508, guid: a73a0ab187217cd4dac968e6c52f09f1,
@@ -50769,6 +50768,10 @@ MonoBehaviour:
   - {fileID: 6481993240417605303}
   - {fileID: 7574219731510178693}
   - {fileID: 8673171610151126608}
+  - {fileID: 8673171610151126608}
+  - {fileID: 7574219731510178693}
+  - {fileID: 6481993240417605303}
+  - {fileID: 4048787702261753721}
   tabIdle: {r: 1, g: 1, b: 1, a: 0}
   tabHover: {r: 0.03529412, g: 0.23921569, b: 0.34901962, a: 1}
   tabActive: {r: 0.105882354, g: 0.78039217, b: 0.69803923, a: 1}
@@ -56943,6 +56946,13 @@ MonoBehaviour:
   - {fileID: 4063201567618971142}
   - {fileID: 4596153561036681053}
   - {fileID: 5363152923980390428}
+  - {fileID: 5363152923980390428}
+  - {fileID: 4596153561036681053}
+  - {fileID: 4063201567618971142}
+  - {fileID: 2795158504333457318}
+  - {fileID: 1544115805856224608}
+  - {fileID: 1019892945580668939}
+  - {fileID: 188370302084387595}
   - {fileID: 5363152923980390428}
   - {fileID: 4596153561036681053}
   - {fileID: 4063201567618971142}
