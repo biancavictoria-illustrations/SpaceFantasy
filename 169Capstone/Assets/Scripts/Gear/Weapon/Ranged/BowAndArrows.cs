@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BowAndArrows : Equipment
 {
-    private const float minDamagePercent = 0.25f;
+    private const float minDamagePercent = 0.5f;
     private const float maxDamagePercent = 1f;
     private const float maxHoldTime = 0.5f;
     private const float superChargeDuration = 0.5f;
