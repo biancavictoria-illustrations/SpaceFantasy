@@ -16,8 +16,6 @@ public class StatRerollUI : MonoBehaviour
     [SerializeField] private TMP_Text CHAText;
 
     [SerializeField] private Button continueButton;
-    
-    
 
     // The number of seconds a given number stays on the screen during the reroll animation
     private float statAnimationNumberDuration = 0.1f;
@@ -29,6 +27,8 @@ public class StatRerollUI : MonoBehaviour
 
     private PlayerStats stats;
     private PermanentUpgradeManager upgradeManager;
+
+    private Coroutine coroutineWithSFX;
 
     public void EnableStatRerollUI()
     {
@@ -60,7 +60,7 @@ public class StatRerollUI : MonoBehaviour
         StartCoroutine(RerollAnimationRoutine(PlayerStatName.CON, numberOfRollAnimations + addedToEachNextDuration*2));
         StartCoroutine(RerollAnimationRoutine(PlayerStatName.INT, numberOfRollAnimations + addedToEachNextDuration*3));
         StartCoroutine(RerollAnimationRoutine(PlayerStatName.WIS, numberOfRollAnimations + addedToEachNextDuration*4));
-        StartCoroutine(RerollAnimationRoutine(PlayerStatName.CHA, numberOfRollAnimations + addedToEachNextDuration*5));
+        coroutineWithSFX = StartCoroutine(RerollAnimationRoutine(PlayerStatName.CHA, numberOfRollAnimations + addedToEachNextDuration*5));
     }
 
     public void DisableStatRerollUI()
@@ -79,6 +79,10 @@ public class StatRerollUI : MonoBehaviour
     {
         statRerollPanel.SetActive(set);
         GameManager.instance.statRerollUIOpen = set;
+
+        if(!set && coroutineWithSFX != null){   // TODO: TEST THIS!!!
+            StopCoroutine(coroutineWithSFX);
+        }
     }
 
     // Called once the animation is complete to set the actual value you rolled

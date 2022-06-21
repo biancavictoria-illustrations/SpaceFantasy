@@ -96,6 +96,7 @@ public class GameManager : MonoBehaviour
         currentRunNumber = 1;
         hasKilledTimeLich = false;
         firstClearRunNumber = -1;
+        epilogueTriggered = false;
 
         nonBossEnemiesKilledThisRun = 0;
         gearTier = 0;

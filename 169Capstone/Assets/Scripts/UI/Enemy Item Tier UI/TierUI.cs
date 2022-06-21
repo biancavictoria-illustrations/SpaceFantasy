@@ -42,11 +42,15 @@ public class TierUI : MonoBehaviour
         else if(tierUIType == TierUIType.ThreatLevel){
             GameManager.instance.gameTimer.SetEnemyTierUI(this);
             tierSlider.maxValue = GameTimer.secondsPerEnemyTier;
+
             GameManager.instance.gameTimer.OnTierIncrease.AddListener(UpdateEnemyTierUIOnTierUp);
-            UpdateTierUIOnTierUp(1 + "", 2 + "", InGameUIManager.MAGENTA_COLOR);
+            // int startingEnemyTier = GameManager.instance.gameTimer.enemyTier;
+            // UpdateTierUIOnTierUp(startingEnemyTier+1 + "", startingEnemyTier+2 + "", InGameUIManager.MAGENTA_COLOR);
+            
+            UpdateEnemyTierUIOnTierUp(GameManager.instance.gameTimer.enemyTier);
 
             if(GameManager.instance.currentSceneName != GameManager.GAME_LEVEL1_STRING_NAME){
-                UpdateEnemyTierUIOnTierUp(GameManager.instance.gameTimer.enemyTier);
+                // UpdateEnemyTierUIOnTierUp(GameManager.instance.gameTimer.enemyTier);
                 tierSlider.value = GameManager.instance.gameTimer.enemyTierUISaveValue;
             }
         }

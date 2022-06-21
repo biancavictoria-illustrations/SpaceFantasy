@@ -344,9 +344,10 @@ public class EntityHealth : MonoBehaviour
             // If we're NOT in the lich fight, maybe drop something
             if(GameManager.instance.currentSceneName != GameManager.LICH_ARENA_STRING_NAME){
                 if(enemyDropGenerator){
-                    // If it's a mini boss, drop the designated item
+                    // If it's a mini boss, drop the designated item & a bunch of star shards
                     if(enemyID == EnemyID.BeetleBoss){
                         enemyDropGenerator.GetDrop(GameManager.instance.gearTier, transform, rarity: ItemRarity.Legendary, dropOverride);
+                        DropStarShard(15);
                     }
                     // Otherwise, randomly generate a new drop
                     else{
@@ -357,15 +358,14 @@ public class EntityHealth : MonoBehaviour
                     Debug.LogWarning("No enemy drop generator found for enemy: " + enemyID);
             }
             
+            // Currency drops
             for(int i = 0; i < TEMPCOINDROPAMOUNT; ++i)
             {
                 Instantiate(coinPrefab, transform.position, Quaternion.identity);
             }
-
             if(Random.value <= TEMPSTARSHARDDROPCHANCE)
             {
-                AudioManager.Instance.PlaySFX(AudioManager.SFX.StarShardDrop, gameObject);
-                Instantiate(starShardPrefab, transform.position, Quaternion.identity);
+                DropStarShard();
             }
 
             // If you killed the mini boss, trigger Stellan's comm to tell you to go to the elevator
@@ -376,8 +376,34 @@ public class EntityHealth : MonoBehaviour
             }
 
             Destroy(gameObject);
-        }
-        
+        }   
+    }
+
+    private void DropStarShard(int numberOfStarShards = 1)
+    {
+        // Spawn the first star shard right where the enemy died
+        GameObject firstStarShard = Instantiate(starShardPrefab, transform.position, Quaternion.identity);
+        AudioManager.Instance.PlaySFX(AudioManager.SFX.StarShardDrop, firstStarShard);
+
+        numberOfStarShards--;
+
+        // TODO: BOUNDS CHECK -> don't let stuff spawn outside room bounds (which can happen with the offset)
+        // If we're spawning more than one, loop through the rest with random positions
+        if(numberOfStarShards > 0){
+            // Set offset value for randomly generating offset vector positions
+            // (if we spawn all star shards in a single spot, they explode cuz physics)
+            float offsetValue = 4;
+
+            // Loop through the remaining # of star shards to spawn until we've spawned all of them
+            while(numberOfStarShards > 0){
+                // Randomly generate a new offset
+                Vector3 offset = new Vector3( Random.Range(-offsetValue, offsetValue), Random.Range(-offsetValue, offsetValue), Random.Range(-offsetValue, offsetValue) );
+
+                // Instantiate a ss at the enemies position with offset
+                Instantiate(starShardPrefab, transform.position + offset, Quaternion.identity);
+                numberOfStarShards--;
+            }
+        }     
     }
 
     private void onPlayerCrit(EntityHealth health, float critDamage)

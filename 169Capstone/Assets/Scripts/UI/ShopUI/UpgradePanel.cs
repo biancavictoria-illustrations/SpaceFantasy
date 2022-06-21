@@ -465,7 +465,7 @@ public class UpgradePanel : MonoBehaviour, ISelectHandler, IDeselectHandler, IPo
                 upgradeBaseCost = 90;
                 costIncreasePerLevel = 0;
                 totalUpgradeLevels = PermanentUpgradeManager.maxTimeLichThingLevels;
-                baseDescription = "The missing piece of the puzzle: The Lich's phylactery.";
+                baseDescription = "The missing piece of the puzzle: The Lich's phylactery.\n\n<color=" + InGameUIManager.MAGENTA_COLOR + ">Increases starting <b>Threat Level</b> to <b>" + (GameTimer.STARTING_ENEMY_TIER_WITH_DEUS_EX+1) + "</b>.</color>";
                 return;
         }
         Debug.LogWarning("No data found for upgrade type: " + upgradeType);

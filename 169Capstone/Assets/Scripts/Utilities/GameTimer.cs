@@ -9,7 +9,9 @@ public class GameTimer : MonoBehaviour
 
     public class EnemyTierIncrease : UnityEvent<int> {}
 
-    public int enemyTier {get; private set;}
+    public int enemyTier {get; private set;}    // 0 indexed but player facing starts at 1
+    public const int STARTING_ENEMY_TIER_WITH_DEUS_EX = 4;
+
     private float time;
     [HideInInspector] public bool runTimer;
     public int minutes {get; private set;}
@@ -59,13 +61,15 @@ public class GameTimer : MonoBehaviour
         enemyTierUI = ui;
     }
 
-    public void ResetTimer()
+    public void ResetTimer(int enemyTierOverride = 0)
     {
         timerHasStartedForRun = false;
         time = 0;
         minutes = 0;
         seconds = 0;
-        enemyTier = 0;
+
+        // Set enemyTier to enemyTierOverride in case you have the dues ex machina and need to start at a higher tier
+        enemyTier = enemyTierOverride;
     }
 
     private void setDisplayTime()

@@ -157,7 +157,13 @@ public class InGameUIManager : MonoBehaviour
 
         InputManager.instance.RunGameTimer(setRunUIActive, setTimerUIActive);
         if(resetTimer){
-            GameManager.instance.gameTimer.ResetTimer();
+            int enemyStartingTier = 0;
+
+            if(PermanentUpgradeManager.instance.GetSkillLevel(PermanentUpgradeType.TimeLichKillerThing) > 0){
+                enemyStartingTier = GameTimer.STARTING_ENEMY_TIER_WITH_DEUS_EX;
+            }
+            
+            GameManager.instance.gameTimer.ResetTimer(enemyStartingTier);
         }
     }
 
