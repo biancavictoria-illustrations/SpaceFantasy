@@ -36,8 +36,8 @@ public class StatRerollUI : MonoBehaviour
     {
         ToggleActiveStatus(true);
 
-        // Don't let us leave until the animation is done
-        if(!tempSkipStatRerollToggle || GameManager.instance.currentRunNumber == 2)
+        // Don't let us leave until the animation is done if it's the first run with stat reroll (run 2)
+        if(!tempSkipStatRerollToggle || GameManager.instance.currentRunNumber > 2)
             continueButton.interactable = false;
         else    // TEMP
             continueButton.Select();
