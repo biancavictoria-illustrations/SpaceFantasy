@@ -80,7 +80,7 @@ public class StatRerollUI : MonoBehaviour
         statRerollPanel.SetActive(set);
         GameManager.instance.statRerollUIOpen = set;
 
-        if(!set && coroutineWithSFX != null){   // TODO: TEST THIS!!!
+        if(!set && coroutineWithSFX != null){
             StopCoroutine(coroutineWithSFX);
         }
     }
