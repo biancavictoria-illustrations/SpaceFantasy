@@ -8,19 +8,19 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    // TODO: Make sure these are all correct and up to date when building
-    public const string TITLE_SCREEN_STRING_NAME = "MainMenu";
-    public const string MAIN_HUB_STRING_NAME = "Main Hub";
-    public const string GAME_LEVEL1_STRING_NAME = "GenerationSetup";
-    public const string LICH_ARENA_STRING_NAME = "Lich Fight";
-    public const string EPILOGUE_SCENE_STRING_NAME = "EpilogueScene";
+    // NOTE: Make sure these are all correct and up to date always
+    #region Scene Names
+        public const string TITLE_SCREEN_STRING_NAME = "MainMenu";
+        public const string MAIN_HUB_STRING_NAME = "Main Hub";
+        public const string GAME_LEVEL1_STRING_NAME = "GenerationSetup";
+        public const string LICH_ARENA_STRING_NAME = "Lich Fight";
+        public const string EPILOGUE_SCENE_STRING_NAME = "EpilogueScene";
+    #endregion
 
     private const float hitStopDuration = 0.05f;
 
     public string currentSceneName {get; private set;}
     public static bool generationComplete = true;
-
-    // public const float DEFAULT_AUTO_DIALOGUE_WAIT_TIME = 1.1f;
 
     public int currentRunNumber {get; private set;}
 
@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool inElevatorAnimation;
 
     [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private Transform playerTransform; // is this used for anything anywhere
+    // [SerializeField] private Transform playerTransform; // is this used for anything anywhere
 
     [SerializeField] private GearManagerObject gearManager;
     public JournalContentManager journalContentManager;
@@ -292,6 +292,7 @@ public class GameManager : MonoBehaviour
                 sm.talkedToDoctor = false;
                 sm.talkedToRhian = false;
                 sm.talkedToLich = false;
+                epilogueTriggered = false;
 
                 DialogueManager dm = DialogueManager.instance;
                 dm.SetStellanCommTriggered(false);
