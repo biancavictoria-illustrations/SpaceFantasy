@@ -61,7 +61,7 @@ public class FallingDebris : MonoBehaviour
         if(other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             AudioManager.Instance.PlaySFX(debrisImpactSFX, gameObject);
-            other.GetComponent<EntityHealth>().Damage(damage, DamageSourceType.BeetleBoss);
+            other.GetComponent<EntityHealth>().Damage(new DamageData(damage,false), DamageSourceType.BeetleBoss);
             Destroy(gameObject);
         }
 

@@ -72,7 +72,7 @@ public class HurtCircle : MonoBehaviour
                     yield break;
                 }
 
-                target.Damage(damage, damageSource);
+                target.Damage(new DamageData(damage, false), damageSource);
             }
             else
             {

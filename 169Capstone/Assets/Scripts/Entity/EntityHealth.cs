@@ -29,6 +29,16 @@ public enum DamageSourceType{
     enumSize
 }
 
+public struct DamageData{
+    public float damageValue;
+    public bool isCrit;
+
+    public DamageData(float _damageValue, bool _isCrit){
+        damageValue = _damageValue;
+        isCrit = _isCrit;
+    }
+}
+
 public class EntityHealth : MonoBehaviour
 {
     #region OnDeath
@@ -67,23 +77,23 @@ public class EntityHealth : MonoBehaviour
         private OnHitEvent onHit;
     #endregion
 
-    #region OnCrit
-        public class OnCritEvent : UnityEvent<EntityHealth, float> {}
+    // #region OnCrit
+    //     public class OnCritEvent : UnityEvent<EntityHealth, float> {}
 
-        public OnCritEvent OnCrit
-        {
-            get
-            {
-                if (onCrit == null)
-                    onCrit = new OnCritEvent();
+    //     public OnCritEvent OnCrit
+    //     {
+    //         get
+    //         {
+    //             if (onCrit == null)
+    //                 onCrit = new OnCritEvent();
 
-                return onCrit;
-            }
+    //             return onCrit;
+    //         }
 
-            set { onCrit = value; }
-        }
-        private OnCritEvent onCrit;
-    #endregion
+    //         set { onCrit = value; }
+    //     }
+    //     private OnCritEvent onCrit;
+    // #endregion
 
     public float maxHitpoints;
     public float currentHitpoints;
@@ -139,7 +149,7 @@ public class EntityHealth : MonoBehaviour
     void Start()
     {
         OnDeath.AddListener(onEntityDeath);
-        OnCrit.AddListener(onPlayerCrit);
+        // OnCrit.AddListener(onPlayerCrit);
     }
 
     public void SetStartingHealthUI()
@@ -149,8 +159,10 @@ public class EntityHealth : MonoBehaviour
     }
 
     // Need a bool to check for slime pit otherwise you could DODGE falling in a slime pit and fall for eternity
-    public bool Damage(float damage, DamageSourceType damageSource)
+    public bool Damage(DamageData damageData, DamageSourceType damageSource)
     {
+        float damage = damageData.damageValue;
+
         if( gameObject.tag == "Player" && damageSource != DamageSourceType.DeathPit && damageSource != DamageSourceType.DeathPitTimeLichArena && damageSource != DamageSourceType.DefeatedTimeLichEndRunDeath ){
             // TEMP for dev
             if( tempPlayerGodModeToggle ){
@@ -161,7 +173,7 @@ public class EntityHealth : MonoBehaviour
             float dodgeChance = Player.instance.stats.getDodgeChance();
             float rolledChance = Random.Range(0.0f, 1f);
             if( rolledChance <= dodgeChance ){
-                InGameUIManager.instance.ShowFloatingText(null, 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1f, gameObject, "dodge");
+                InGameUIManager.instance.ShowFloatingText(null, 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1f, gameObject, "dodge", false);
                 return currentHitpoints <= 0;
             }
 
@@ -181,11 +193,12 @@ public class EntityHealth : MonoBehaviour
 
         currentHitpoints -= damage;
         OnHit.Invoke(this, damage);
+
         if (gameObject.tag == "Player")
-            InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(damage), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1f, gameObject, "damage-player");
+            InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(damage), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1f, gameObject, "damage-player", false);
         else
-            InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(damage), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1f, gameObject, "damage-enemy");
-        
+            InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(damage), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1f, gameObject, "damage-enemy", damageData.isCrit);
+
         SetCurrentHealthUI();
 
         if(currentHitpoints <= 0)
@@ -219,7 +232,7 @@ public class EntityHealth : MonoBehaviour
     public void Heal(float health)
     {
         currentHitpoints += health;
-        InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(health), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1f, gameObject, "health");
+        InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(health), 30, transform.position + (Vector3.up * 3), Vector3.up * 100, 1f, gameObject, "health", false);
 
         if(currentHitpoints > maxHitpoints)
         {
@@ -406,8 +419,8 @@ public class EntityHealth : MonoBehaviour
         }     
     }
 
-    private void onPlayerCrit(EntityHealth health, float critDamage)
-    {
-        InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(critDamage), 35, transform.position + (Vector3.up * 3), Vector3.up * 25, 1.5f, gameObject, "crit");
-    }
+    // private void onPlayerCrit(EntityHealth health, float critDamage)
+    // {
+    //     InGameUIManager.instance.ShowFloatingText(UIUtils.GetTruncatedDecimalForUIDisplay(critDamage), 35, transform.position + (Vector3.up * 3), Vector3.up * 25, 1.5f, gameObject, "crit");
+    // }
 }

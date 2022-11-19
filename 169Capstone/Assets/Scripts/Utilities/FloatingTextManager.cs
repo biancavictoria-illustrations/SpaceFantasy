@@ -32,7 +32,7 @@ public class FloatingTextManager : MonoBehaviour
             txt.UpdateFloatingText();
     }
 
-    public void Show(string msg, int fontSize, Vector3 position, Vector3 motion, float duration, GameObject parent, string type)
+    public void Show(string msg, int fontSize, Vector3 position, Vector3 motion, float duration, GameObject parent, string type, bool isCrit)
     {
         FloatingText floatingText = GetFloatingText(parent, type, duration);
 
@@ -44,11 +44,11 @@ public class FloatingTextManager : MonoBehaviour
                 break;
             case "damage-enemy":
                 floatingText.stat += float.Parse(msg);
-                floatingText.txt.text = UIUtils.GetTruncatedDecimalForUIDisplay(floatingText.stat);
-                break;
-            case "crit":
-                floatingText.stat += float.Parse(msg);
-                floatingText.txt.text = "<color=" + InGameUIManager.STR_GOLD_COLOR + ">" + UIUtils.GetTruncatedDecimalForUIDisplay(floatingText.stat) + "</color>";
+                if(!isCrit)
+                    floatingText.txt.text = UIUtils.GetTruncatedDecimalForUIDisplay(floatingText.stat);
+                else{
+                    floatingText.txt.text = "<size=150%><color=" + InGameUIManager.STR_GOLD_COLOR + ">" + UIUtils.GetTruncatedDecimalForUIDisplay(floatingText.stat) + "</color></size>";
+                }
                 break;
             case "health":
                 floatingText.stat += float.Parse(msg);

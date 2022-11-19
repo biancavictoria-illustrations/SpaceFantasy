@@ -270,50 +270,58 @@ public class PlayerStats : EntityStats
     #endregion
 
     #region Damage Values
-        public virtual float getSTRDamage(bool enableCrit = true)
+        public virtual DamageData getSTRDamage(bool enableCrit = true)
         {
             float damage = strength * STRDamageMultiplier + STRDamageFlatBonus;
             if(enableCrit){
-                damage += CalculateCritValue(damage);
+                DamageData critValue = CalculateCritValue(damage);
+                damage += critValue.damageValue;
+                return new DamageData(damage, critValue.isCrit);
             }
-            return damage;
+            return new DamageData(damage, false);
         }
 
-        public virtual float getDEXDamage(bool enableCritChance = true, bool autoCrit = false)
+        public virtual DamageData getDEXDamage(bool enableCritChance = true, bool autoCrit = false)
         {
             float damage = dexterity * DEXDamageMultiplier + DEXDamageFlatBonus;
             if(enableCritChance || autoCrit){
-                damage += CalculateCritValue(damage, autoCrit);
+                DamageData critValue = CalculateCritValue(damage, autoCrit);
+                damage += critValue.damageValue;
+                return new DamageData(damage, critValue.isCrit);
             }
-            return damage;
+            return new DamageData(damage, false);
         }
 
-        public virtual float getWISDamage(bool enableCrit = true)
+        public virtual DamageData getWISDamage(bool enableCrit = true)
         {
             float damage = wisdom * WISDamageMultiplier + WISDamageFlatBonus;
             if(enableCrit){
-                damage += CalculateCritValue(damage);
+                DamageData critValue = CalculateCritValue(damage);
+                damage += critValue.damageValue;
+                return new DamageData(damage, critValue.isCrit);
             }
-            return damage;
+            return new DamageData(damage, false);
         }
 
-        public virtual float getINTDamage(bool enableCrit = true)
+        public virtual DamageData getINTDamage(bool enableCrit = true)
         {
             float damage = intelligence * INTDamageMultiplier + INTDamageFlatBonus;
             if(enableCrit){
-                damage += CalculateCritValue(damage);
+                DamageData critValue = CalculateCritValue(damage);
+                damage += critValue.damageValue;
+                return new DamageData(damage, critValue.isCrit);
             }
-            return damage;
+            return new DamageData(damage, false);
         }
 
-        private float CalculateCritValue(float baseDamage, bool autoCrit = false)
+        private DamageData CalculateCritValue(float baseDamage, bool autoCrit = false)
         {
             float chance = Random.Range(0.0f, 1f);
             if(chance <= getCritChance() || autoCrit){
                 float crit = getCritDamage();
-                return baseDamage * crit;
+                return new DamageData(baseDamage * crit, true);
             }
-            return 0f;
+            return new DamageData(0f, false);
         }
     #endregion
 
@@ -551,13 +559,13 @@ public class PlayerStats : EntityStats
 
             // Primary Lines ONLY
             case StatType.STRDamage:
-                return getSTRDamage(false);
+                return getSTRDamage(false).damageValue;
             case StatType.DEXDamage:
-                return getDEXDamage(false);
+                return getDEXDamage(false).damageValue;
             case StatType.INTDamage:
-                return getINTDamage(false);
+                return getINTDamage(false).damageValue;
             case StatType.WISDamage:
-                return getWISDamage(false);    
+                return getWISDamage(false).damageValue;
         }
         Debug.LogError("No current value found for stat type: " + type);
         return -1;

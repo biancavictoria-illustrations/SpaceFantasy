@@ -51,7 +51,7 @@ public class Robert : Enemy
         AudioManager.Instance.PlaySFX(attackSFX, gameObject);
 
         float damageAmount = logic.baseDamage * nextAttack.damageMultiplier * (1 + damageIncreasePerTier * currentTier);
-        projectileScript.Initialize(LayerMask.NameToLayer("Player"), damageAmount, DamageSourceType.Robert, player.position + Vector3.up*2 - projectileSpawnPoint.position);
+        projectileScript.Initialize(LayerMask.NameToLayer("Player"), new DamageData(damageAmount,false), DamageSourceType.Robert, player.position + Vector3.up*2 - projectileSpawnPoint.position);
     }
 
     private void FlashWhenHit(EntityHealth health, float damage)

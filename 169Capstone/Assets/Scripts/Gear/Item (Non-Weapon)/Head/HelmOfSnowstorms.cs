@@ -35,7 +35,7 @@ public class HelmOfSnowstorms : Head
 
         // Initialize the scripts so they know what to do
         slowCircleScript.Initialize(Player.instance, "Enemy", "Pit", .20f, data.equipmentBaseData.Duration(), data.equipmentBaseData.Radius());
-        hurtCircleScript.Initialize("Enemy", player.stats.getWISDamage(false) * data.equipmentBaseData.BaseDamage(), 
+        hurtCircleScript.Initialize("Enemy", player.stats.getWISDamage(false).damageValue * data.equipmentBaseData.BaseDamage(), 
                                                 data.equipmentBaseData.Duration(), DamageSourceType.Player, data.equipmentBaseData.Radius());
         
         // set the lifetime of the ground decal to the duration from the item

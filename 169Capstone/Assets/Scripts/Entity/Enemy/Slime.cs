@@ -47,7 +47,7 @@ public class Slime : Enemy
             AudioManager.Instance.PlaySFX(attackSFX, gameObject);
             
             float damageAmount = logic.baseDamage * nextAttack.damageMultiplier * (1 + damageIncreasePerTier * currentTier);
-            return hit.collider.tag == "Player" ? hit.collider.GetComponent<EntityHealth>().Damage(damageAmount, DamageSourceType.Slime) : false;
+            return hit.collider.tag == "Player" ? hit.collider.GetComponent<EntityHealth>().Damage(new DamageData(damageAmount,false), DamageSourceType.Slime) : false;
         }
         else
         {

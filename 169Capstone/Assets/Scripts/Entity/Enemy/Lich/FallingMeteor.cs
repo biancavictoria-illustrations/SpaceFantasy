@@ -58,7 +58,7 @@ public class FallingMeteor : MonoBehaviour
         if(other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             AudioManager.Instance.PlaySFX(meteorImpactSFX, gameObject);
-            other.GetComponent<EntityHealth>().Damage(damage, DamageSourceType.TimeLich);
+            other.GetComponent<EntityHealth>().Damage(new DamageData(damage,false), DamageSourceType.TimeLich);
             Destroy(gameObject);
         }
 

@@ -92,7 +92,7 @@ public class Player : MonoBehaviour
             damageSource = DamageSourceType.DeathPitTimeLichArena;
         }
 
-        health.Damage(health.maxHitpoints, damageSource);
+        health.Damage(new DamageData(health.maxHitpoints, false), damageSource);
     }
 
     public SpeakerData GetSpeakerData()

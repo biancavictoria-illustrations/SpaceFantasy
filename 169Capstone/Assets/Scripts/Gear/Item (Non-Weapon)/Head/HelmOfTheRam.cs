@@ -106,7 +106,7 @@ public class HelmOfTheRam : Head
         if(hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
             EntityHealth enemy = hit.collider.GetComponent<EntityHealth>();
-            enemy.Damage(player.stats.getSTRDamage(false) * 2, DamageSourceType.Player);
+            enemy.Damage(new DamageData(player.stats.getSTRDamage(false).damageValue * 2, false), DamageSourceType.Player);
 
             if(!enemy.isBossEnemy)
             {

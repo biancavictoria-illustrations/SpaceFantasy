@@ -523,7 +523,7 @@ public class DialogueManager : MonoBehaviour
             }
             // If there's no active NPC and we're in the lich fight room AND the epilogue has NOT been triggered, kill Atlan
             else if( GameManager.instance.currentSceneName == GameManager.LICH_ARENA_STRING_NAME && !GameManager.instance.epilogueTriggered ){
-                Player.instance.health.Damage( Player.instance.health.maxHitpoints, DamageSourceType.DefeatedTimeLichEndRunDeath );
+                Player.instance.health.Damage( new DamageData(Player.instance.health.maxHitpoints, false), DamageSourceType.DefeatedTimeLichEndRunDeath );
             }
             // If there's no active NPC, deal with not lich-fight post-auto dialogue stuff
             else{

@@ -151,7 +151,7 @@ public class TargetPlayer : MonoBehaviour
                 Debug.LogError("Projectile prefab " + projectilePrefab + " did not contain a Projectile script.");
             }
 
-            projectileScript.Initialize(LayerMask.NameToLayer("Player"), damage, DamageSourceType.TurretTrap, playerTransform.position + Vector3.up * 2 - projectileSpawnPoint.position);
+            projectileScript.Initialize(LayerMask.NameToLayer("Player"), new DamageData(damage, false), DamageSourceType.TurretTrap, playerTransform.position + Vector3.up * 2 - projectileSpawnPoint.position);
         }
         else if (proSpawn == 2)
         {
@@ -163,7 +163,7 @@ public class TargetPlayer : MonoBehaviour
                 Debug.LogError("Projectile prefab " + projectilePrefab + " did not contain a Projectile script.");
             }
 
-            projectileScript.Initialize(LayerMask.NameToLayer("Player"), damage, DamageSourceType.TurretTrap, playerTransform.position + Vector3.up * 2 - projectileSpawnPoint.position);
+            projectileScript.Initialize(LayerMask.NameToLayer("Player"), new DamageData(damage, false), DamageSourceType.TurretTrap, playerTransform.position + Vector3.up * 2 - projectileSpawnPoint.position);
         }
         else if (proSpawn == 3)
         {
@@ -175,7 +175,7 @@ public class TargetPlayer : MonoBehaviour
                 Debug.LogError("Projectile prefab " + projectilePrefab + " did not contain a Projectile script.");
             }
 
-            projectileScript.Initialize(LayerMask.NameToLayer("Player"), damage, DamageSourceType.TurretTrap, playerTransform.position + Vector3.up * 2 - projectileSpawnPoint.position);
+            projectileScript.Initialize(LayerMask.NameToLayer("Player"), new DamageData(damage, false), DamageSourceType.TurretTrap, playerTransform.position + Vector3.up * 2 - projectileSpawnPoint.position);
         }
         else if (proSpawn == 4)
         {
@@ -187,7 +187,7 @@ public class TargetPlayer : MonoBehaviour
                 Debug.LogError("Projectile prefab " + projectilePrefab + " did not contain a Projectile script.");
             }
 
-            projectileScript.Initialize(LayerMask.NameToLayer("Player"), damage, DamageSourceType.TurretTrap, playerTransform.position + Vector3.up * 2 - projectileSpawnPoint.position);
+            projectileScript.Initialize(LayerMask.NameToLayer("Player"), new DamageData(damage, false), DamageSourceType.TurretTrap, playerTransform.position + Vector3.up * 2 - projectileSpawnPoint.position);
         }
         
         

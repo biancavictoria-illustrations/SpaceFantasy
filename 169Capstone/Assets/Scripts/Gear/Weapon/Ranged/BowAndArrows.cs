@@ -114,7 +114,9 @@ public class BowAndArrows : Equipment
         {
             arrowDirection = player.GetComponent<Movement>().model.forward;
         }
-        projectileScript.Initialize(LayerMask.NameToLayer("Enemy"), player.stats.getDEXDamage(true, autoCrit) * damageMultiplier, DamageSourceType.Player, arrowDirection, speed: 20 * Mathf.Lerp(1, 2, heldTime/maxHoldTime));
+        DamageData damageData = player.stats.getDEXDamage(true, autoCrit);
+        damageData.damageValue = damageData.damageValue * damageMultiplier;
+        projectileScript.Initialize(LayerMask.NameToLayer("Enemy"), damageData, DamageSourceType.Player, arrowDirection, speed: 20 * Mathf.Lerp(1, 2, heldTime/maxHoldTime));
 
         playerAnim.animator.SetBool("IsBowAttacking", false);
         heldTime = 0;

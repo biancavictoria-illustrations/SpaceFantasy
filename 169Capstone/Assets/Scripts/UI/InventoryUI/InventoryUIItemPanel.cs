@@ -580,13 +580,13 @@ public class InventoryUIItemPanel : MonoBehaviour
         if( itemSlot != InventoryItemSlot.Weapon || itemPanelType != ItemPanelType.NewItemToCompare || !PlayerInventory.instance.ItemSlotIsFull(itemSlot) ){
             switch(code){
                 case DescriptionVariableCode.SD:
-                    return Player.instance.stats.getSTRDamage(false);
+                    return Player.instance.stats.getSTRDamage(false).damageValue;
                 case DescriptionVariableCode.DD:
-                    return Player.instance.stats.getDEXDamage(false);
+                    return Player.instance.stats.getDEXDamage(false).damageValue;
                 case DescriptionVariableCode.ID:
-                    return Player.instance.stats.getINTDamage(false);
+                    return Player.instance.stats.getINTDamage(false).damageValue;
                 case DescriptionVariableCode.WD:
-                    return Player.instance.stats.getWISDamage(false);
+                    return Player.instance.stats.getWISDamage(false).damageValue;
             }
         }
 

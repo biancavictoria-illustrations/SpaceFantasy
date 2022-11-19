@@ -51,7 +51,7 @@ public class TrapDamage : MonoBehaviour
     {
         if(other.GetComponent<EntityHealth>() != null)
         {
-            other.GetComponent<EntityHealth>().Damage(damage, damageSource);
+            other.GetComponent<EntityHealth>().Damage(new DamageData(damage, false), damageSource);
         }
     }
 
@@ -61,7 +61,7 @@ public class TrapDamage : MonoBehaviour
         {
             if (other.GetComponent<EntityHealth>() != null)
             {
-                other.GetComponent<EntityHealth>().Damage(damage, damageSource);
+                other.GetComponent<EntityHealth>().Damage(new DamageData(damage, false), damageSource);
             }
         }
     }

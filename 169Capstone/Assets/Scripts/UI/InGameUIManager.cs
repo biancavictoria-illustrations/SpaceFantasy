@@ -219,9 +219,9 @@ public class InGameUIManager : MonoBehaviour
         }
     }
 
-    public void ShowFloatingText(string msg, int fontSize, Vector3 position, Vector3 motion, float duration, GameObject parent, string type)
+    public void ShowFloatingText(string msg, int fontSize, Vector3 position, Vector3 motion, float duration, GameObject parent, string type, bool isCrit)
     {
-        floatingTextManager.Show(msg, fontSize, position, motion, duration, parent, type);
+        floatingTextManager.Show(msg, fontSize, position, motion, duration, parent, type, isCrit);
     }
 
     #region Item UI

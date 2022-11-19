@@ -14,7 +14,7 @@ public class Projectile : MonoBehaviour
     public int enemyLayer;
 
     [SerializeField] private float _speed;
-    private float damage;
+    private DamageData damageData;
     private Rigidbody rb;
     private int _radius = 0;
 
@@ -23,12 +23,12 @@ public class Projectile : MonoBehaviour
     // Projectile's owner
     private DamageSourceType damageSource;
 
-    public void Initialize(string enemyLayer, float damage, DamageSourceType damageSource, Vector3 direction, int radius = 0, float? speed = null, string projectileImpactSFX = "")
+    public void Initialize(string enemyLayer, DamageData damageData, DamageSourceType damageSource, Vector3 direction, int radius = 0, float? speed = null, string projectileImpactSFX = "")
     {
-        Initialize(LayerMask.NameToLayer(enemyLayer), damage, damageSource, direction, radius, speed, projectileImpactSFX);
+        Initialize(LayerMask.NameToLayer(enemyLayer), damageData, damageSource, direction, radius, speed, projectileImpactSFX);
     }
 
-    public void Initialize(int enemyLayer, float damage, DamageSourceType damageSource, Vector3 direction, int radius = 0, float? speed = null, string projectileImpactSFX = "")
+    public void Initialize(int enemyLayer, DamageData damageData, DamageSourceType damageSource, Vector3 direction, int radius = 0, float? speed = null, string projectileImpactSFX = "")
     {
         _projectileImpactSFX = projectileImpactSFX;
 
@@ -42,7 +42,7 @@ public class Projectile : MonoBehaviour
         }
 
         this.enemyLayer = enemyLayer;
-        this.damage = damage;
+        this.damageData = damageData;
         this.damageSource = damageSource;
 
         if(speed != null)
@@ -67,7 +67,7 @@ public class Projectile : MonoBehaviour
         {
             EntityHealth enemyHealth = other.GetComponent<EntityHealth>();
             if(enemyHealth)
-                enemyHealth.Damage(damage, damageSource);
+                enemyHealth.Damage(damageData, damageSource);
 
             if(_radius != 0)
             {
@@ -104,7 +104,7 @@ public class Projectile : MonoBehaviour
             EntityHealth enemyHealth = hit.GetComponent<EntityHealth>();
             if(enemyHealth)
             {
-                enemyHealth.Damage(damage, damageSource);
+                enemyHealth.Damage(damageData, damageSource);
             }
             
             PropJumpBreak propBreak = hit.GetComponent<PropJumpBreak>();
