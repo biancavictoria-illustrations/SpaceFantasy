@@ -109,4 +109,9 @@ public abstract class Enemy : MonoBehaviour
         health.currentHitpoints += hitPointDiff;
         health.SetStartingHealthUI();
     }
+
+    public EntityHealth GetHealth()
+    {
+        return health;
+    }
 }

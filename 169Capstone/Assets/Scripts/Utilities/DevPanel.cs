@@ -12,6 +12,7 @@ public class DevPanel : MonoBehaviour
     public Toggle skipStatRerollToggle;
     public Toggle superJumpToggle;
     public Toggle fastGearTierToggle;
+    public Toggle maxDamageToggle;
 
     public Toggle devPanelToggle;
 
@@ -19,6 +20,7 @@ public class DevPanel : MonoBehaviour
     private static bool godMode = false;
     private static bool superJump = false;
     private static bool fastGearTier = false;
+    private static bool maxDamage = false;
 
     private static bool devPanelOpen = false;
     
@@ -55,6 +57,15 @@ public class DevPanel : MonoBehaviour
         else{
             fastGearTierToggle.isOn = false;   
             ToggleFastGearTier();
+        }
+
+        if(maxDamage){
+            maxDamageToggle.isOn = true;   
+            MaxDamage();
+        }
+        else{
+            maxDamageToggle.isOn = false;   
+            MaxDamage();
         }
 
         if(devPanelOpen){
@@ -136,6 +147,27 @@ public class DevPanel : MonoBehaviour
             Player.instance.stats.SetMoveSpeedBase(1f);
             UIUtils.SetImageColorFromHex( moveSpeedToggle.GetComponent<Image>(), "#FFFFFF" );
             speedBoost = false;
+        }
+    }
+
+    // Toggle
+    public void MaxDamage()
+    {
+        if(Player.instance == null){
+            maxDamageToggle.isOn = false;
+            maxDamage = false;
+            return;
+        }
+
+        if(maxDamageToggle.isOn){
+            Player.instance.stats.SetBonusForStat(Player.instance, StatType.STRDamage, EntityStats.BonusType.flat, 1000);
+            UIUtils.SetImageColorFromHex( maxDamageToggle.GetComponent<Image>(), InGameUIManager.TURQUOISE_COLOR );
+            maxDamage = true;
+        }
+        else{
+            Player.instance.stats.SetBonusForStat(Player.instance, StatType.STRDamage, EntityStats.BonusType.flat, 0);
+            UIUtils.SetImageColorFromHex( maxDamageToggle.GetComponent<Image>(), "#FFFFFF" );
+            maxDamage = false;
         }
     }
 

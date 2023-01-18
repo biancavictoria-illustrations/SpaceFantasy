@@ -519,6 +519,9 @@ public class DialogueManager : MonoBehaviour
                 else if(NPC.ActiveNPC.SpeakerData().SpeakerID() == SpeakerID.TimeLich){
                     FindObjectOfType<Lich>().canAttack = true;
                     InGameUIManager.instance.bossHealthBar.SetBossHealthBarActive(true, EnemyID.TimeLich);
+
+                    // Enable the force field
+                    FindObjectOfType<ForceFieldController>().EnableForceFields();  
                 }
             }
             // If there's no active NPC and we're in the lich fight room AND the epilogue has NOT been triggered, kill Atlan

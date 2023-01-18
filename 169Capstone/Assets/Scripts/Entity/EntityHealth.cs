@@ -313,8 +313,10 @@ public class EntityHealth : MonoBehaviour
 
     private void onEntityDeath(EntityHealth health)
     {
-        if(health != this)
+        // If the thing that died was NOT this creature
+        if(health != this){
             return;
+        }
 
         // Debug.Log("Death");
         if(gameObject.tag == "Player")
@@ -351,6 +353,23 @@ public class EntityHealth : MonoBehaviour
 
                     // Trigger auto dialogue from player since this script is about to get destroyed
                     Player.instance.StartAutoDialogueFromPlayer();
+
+                    if(GameManager.instance.epilogueTriggered){
+                        // Unlock the elevator
+                        FindObjectOfType<SceneTransitionDoor>().GetComponent<Collider>().enabled = true;                    
+                        
+                        // Disable the force field & enable guard rails
+                        ForceFieldController ffc = FindObjectOfType<ForceFieldController>();
+                        ffc.DisableForceFields();
+                        ffc.EnableGuardRails();
+
+                        // Kill all other enemies in the room
+                        foreach(Enemy e in FindObjectsOfType<Enemy>()){
+                            if(e.GetHealth().enemyID != EnemyID.TimeLich){
+                                Destroy(e.gameObject);
+                            }
+                        }
+                    }                    
                 }
             }
             
